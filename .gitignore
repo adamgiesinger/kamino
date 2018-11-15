@@ -86,3 +86,6 @@ fabric.properties
 
 # API keys
 api.dart
+lib/database_backup.zip
+lib/view/search/api_key.dart
+lib/view/search/api_key.dart

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'api_key.dart';
+import 'package:kamino/api.dart';
 
 class Movie {
   final String mediaType;
@@ -31,7 +31,7 @@ class API {
 
   static const String _url =
       "https://api.themoviedb.org/3/search/multi?"
-      "api_key=$api_key&language=en-US"
+      "api_key=$tvdb_api_key&language=en-US"
       "&query={1}&include_adult=false";
 
   Future<List<Movie>>  get(String query) async {

@@ -9,40 +9,46 @@ import 'package:kamino/ui/uielements.dart';
 
  */
 
-class HomePage {
-  build(BuildContext context) {
-    return new SafeArea(
-        child: new Container(
-            padding: EdgeInsets.only(top: 5.0),
-            color: backgroundColor,
-            child: new ListView(children: [
-              new Card(
-                  color: const Color(0xFF404040),
-                  child: new Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: const Icon(Icons.playlist_play),
-                          title: TitleText('Continue Watching'),
-                          subtitle: const Text(
-                              "Start watching right where you left off..."
-                          ),
-                        )
-                      ])),
-              new Card(
-                  color: const Color(0xFF404040),
-                  child: new Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: const Icon(Icons.trending_up),
-                        title: TitleText('Trending on ApolloTV'),
-                        subtitle: const Text('What others are watching.'),
-                      )
-                    ],
-                  )),
+class Homepage extends StatefulWidget{
+  @override
+  HomePageState createState() => new HomePageState();
+}
 
-              /*
+class HomePageState extends State<Homepage>{
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+        padding: EdgeInsets.only(top: 5.0),
+        color: backgroundColor,
+        child: new ListView(children: [
+          new Card(
+              color: const Color(0xFF404040),
+              child: new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: const Icon(Icons.playlist_play),
+                      title: TitleText('Continue Watching'),
+                      subtitle: const Text(
+                          "Start watching right where you left off..."
+                      ),
+                    )
+                  ])),
+          new Card(
+              color: const Color(0xFF404040),
+              child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: const Icon(Icons.trending_up),
+                    title: TitleText('Trending on ApolloTV'),
+                    subtitle: const Text('What others are watching.'),
+                  )
+                ],
+              )),
+
+          /*
           new MaterialButton(
             onPressed: (){
               Navigator.push(
@@ -56,6 +62,6 @@ class HomePage {
             color: Theme.of(context).primaryColor,
           )
           */
-            ])));
+        ]));
   }
 }
