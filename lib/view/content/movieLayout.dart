@@ -50,7 +50,8 @@ class MovieLayout{
     return new FloatingActionButton.extended(
       onPressed: (){
         api.playMovie(
-          model.title
+          model.title,
+          context
         );
       },
       icon: Icon(Icons.play_arrow),

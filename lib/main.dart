@@ -22,7 +22,7 @@ var themeData = ThemeData(
 
 const primaryColor = const Color(0xFF8147FF);
 const secondaryColor = const Color(0xFF303A47);
-const backgroundColor = const Color(0xFF26282C);
+const backgroundColor = const Color(0xFF27282C);
 const highlightColor = const Color(0x968147FF);
 const appName = "ApolloTV";
 

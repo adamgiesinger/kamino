@@ -22,7 +22,6 @@ dependencies:
 
   # App Dependencies
   auto_size_text: ^0.2.1
-  # For more information visit: https://apollotv.gitbook.io/kamino/setting-up-your-repository
   cplayer:
     path: "cplayer"
   package_info: ^0.3.2

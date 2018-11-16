@@ -31,15 +31,19 @@ class API {
   final http.Client _client = http.Client();
 
   static const String _url =
-      "https://api.themoviedb.org/3/search/multi?"
-      "api_key=${api.tvdb_api_key}&language=en-US"
-      "&query={1}&include_adult=false";
+      "${api.tvdb_root_url}/search/multi${api.tvdb_default_arguments}" +
+      "&include_adult=false&query=";
 
   Future<List<Movie>>  get(String query) async {
     List<Movie> list = [];
 
+    print(_url);
+
     await _client
-        .get(Uri.parse(_url.replaceFirst("{1}", query)))
+        .get(Uri.parse(_url + query))
+        .catchError((error){
+          print("An error occurred: " + error);
+        })
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
