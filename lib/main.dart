@@ -11,6 +11,7 @@ import 'pages/home.dart';
 // Import views
 import 'view/search.dart';
 import 'view/settings.dart';
+import 'package:kamino/view/home/tv_shows/tv_home.dart';
 
 const primaryColor = const Color(0xFF8147FF);
 const secondaryColor = const Color(0xFF241644);
@@ -63,20 +64,35 @@ class KaminoApp extends StatefulWidget {
   HomeAppState createState() => new HomeAppState();
 }
 
-class HomeAppState extends State<KaminoApp> {
+class HomeAppState extends State<KaminoApp> with AutomaticKeepAliveClientMixin<KaminoApp>{
+  List<Widget> _tabScreens = [new Homepage(), new TVHome()];
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return new Scaffold(
         appBar: AppBar(
           title: TitleText(appName),
           // MD2: make the color the same as the background.
           backgroundColor: backgroundColor,
           // Remove box-shadow
-          elevation: 0.00,
+          elevation: 5.0,
 
           // Center title
           centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(
+                    const IconData(
+                        0xe90a, fontFamily: 'apollotv-icons')),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => new SearchView())
+                  );
+                }
+            ),
+          ],
         ),
         drawer: Drawer(
             child: ListView(
@@ -91,7 +107,8 @@ class HomeAppState extends State<KaminoApp> {
                         alignment: Alignment.bottomCenter),
                     color: const Color(0xFF000000))),
             ListTile(
-                leading: const Icon(Icons.library_books), title: Text("News")),
+                leading: const Icon(Icons.library_books), title: Text("News"),
+            ),
             Divider(),
             ListTile(
                 leading: const Icon(Icons.gavel), title: Text('Disclaimer')),
@@ -108,60 +125,47 @@ class HomeAppState extends State<KaminoApp> {
                 })
           ],
         )),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton.extended(
-            label: const Text("Search",
-                style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'GlacialIndifference',
-                    letterSpacing: 0.2,
-                    fontSize: 18.0)),
-            icon: Icon(const IconData(0xe90a, fontFamily: 'apollotv-icons')),
-            backgroundColor: Theme.of(context).primaryColor,
-            elevation: 12.0,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchView())
-              );
-            }),
-        bottomNavigationBar: BottomAppBar(
-          color: const Color(0xFF252525),
-          child: new Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              IconButton(
-                  onPressed: () {
-                    // TODO: button code
-                  },
-                  icon: Icon(
-                      const IconData(0xe900, fontFamily: 'apollotv-icons')),
-                  color: Theme.of(context).primaryColor),
-              IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.movie),
-                  color: Colors.grey.shade400,
-                  tooltip: "Movies"),
-              Padding(
-                padding: const EdgeInsets.only(left: 125.0),
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.live_tv),
-                  color: Colors.grey.shade400,
-                ),
+
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+            onTap: onTabTapped,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(const IconData(0xe900, fontFamily: 'apollotv-icons')),
+                backgroundColor: backgroundColor,
+                title: Text("Discover"),
               ),
-              IconButton(
-                onPressed: null,
+              BottomNavigationBarItem(
+                icon: Icon(Icons.movie),
+                backgroundColor: backgroundColor,
+                title: Text("Movies"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.live_tv),
+                backgroundColor: backgroundColor,
+                title: Text("TV Shows"),
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(Icons.favorite_border),
-                color: Colors.grey.shade400,
+                backgroundColor: backgroundColor,
+                title: Text("Favourites"),
               ),
             ],
-          ),
-          elevation: 18.0,
         ),
 
         // Body content
-        body: HomePage().build(context));
+        body: _tabScreens[_currentIndex],
+    );
   }
+
+  void onTabTapped(int index) {
+    print("The index is:    $index");
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  // TODO: implement wantKeepAlive
+  @override
+  bool get wantKeepAlive => true;
 }
