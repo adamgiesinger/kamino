@@ -8,7 +8,7 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/tvshow.dart';
 
-import 'package:kamino/api.dart' as api;
+import 'package:kamino/vendor/config/official.dart' as api;
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/movieLayout.dart';
@@ -48,6 +48,8 @@ class _ContentOverviewState extends State<ContentOverview> {
         _data = data;
       });
     });
+
+    super.initState();
   }
 
   // Load the data from the source.

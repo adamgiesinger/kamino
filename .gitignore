@@ -84,5 +84,5 @@ fabric.properties
 .idea/codeStyles/Project.xml
 .idea/
 
-# API keys
-api.dart
+# Vendor Configuration
+lib/vendor/*

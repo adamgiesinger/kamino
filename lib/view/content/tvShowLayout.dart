@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/view/content/seasonOverview.dart';
+import 'package:kamino/view/content/episodePicker.dart';
 
 class TVShowLayout{
 
@@ -24,10 +25,7 @@ class TVShowLayout{
                       )
                   ),
 
-                  SizedBox(
-                      height: 208.0,
-                      child: _generateSeasonsCards(context, _data)
-                  )
+                  _generateSeasonsCards(context, _data)
                 ],
               )
               /* ./Seasons Cards */
@@ -40,52 +38,63 @@ class TVShowLayout{
 
   static Widget _generateSeasonsCards(BuildContext context, TVShowContentModel _data){
     if(_data.seasons.length > 0){
-      return ListView.builder(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: _data.seasons.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: index == 0
-                ? const EdgeInsets.only(left: 18.0)
-                : const EdgeInsets.only(left: 0.0),
-            child: InkWell(
-              onTap: (){
-                _openEpisodesView(context, _data, index);
-              },
-              splashColor: Colors.white,
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Card(
-                        child: ClipRRect(
-                          borderRadius: new BorderRadius.circular(5.0),
-                          child: Container(
-                            child: _data.seasons[index]["poster_path"] != null
-                                ? Image.network(
-                              "http://image.tmdb.org/t/p/w500" +
-                                  _data.seasons[index]["poster_path"],
-                              fit: BoxFit.fill,
-                              height: 185.0,
-                            ) : Image.asset(
-                              "assets/images/no_image_detail.jpg",
-                              fit: BoxFit.fill,
-                              width: 130.0,
-                              height: 185.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+      return new Column(
+        children: _data.seasons.map((season) {
+          var seasonIndex = _data.seasons.indexOf(season);
+
+          // Format 'air date'.
+          var airDate = "Ongoing";
+
+          if(season["air_date"] != null){
+            airDate = new DateFormat.yMMMMd("en_US").format(
+                DateTime.parse(season["air_date"])
+            );
+          }
+
+          // Determine season image
+          var image = null;
+          if(season["poster_path"] != null){
+            image = "http://image.tmdb.org/t/p/w500" + season["poster_path"];
+          }
+
+          // Create leading widget
+          Widget leadingWidget = new Icon(Icons.live_tv);
+          if(image != null){
+            leadingWidget = new Image(
+              image: (
+                  NetworkImage(image)
               ),
-            ),
+              height: 92,
+              width: 46,
+            );
+          }
+
+          // Return Card & GestureDetector
+          return new GestureDetector(
+              onTap: (){
+                _openEpisodesView(context, _data, seasonIndex);
+              },
+              child: Card(
+                color: const Color(0xFF404040),
+                child: new Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: leadingWidget,
+                        title: TitleText(season["name"]),
+                        subtitle: Text(
+                            "${season["episode_count"]} episode${season["episode_count"] != 1 ? "s" : "" } \u2022 $airDate"
+                        ),
+                      )
+                    ]
+                )
+              )
           );
-      });
+        }).toList()
+      );
     }
+
+    return Container();
   }
 
   static void _openEpisodesView(
@@ -93,15 +102,13 @@ class TVShowLayout{
     TVShowContentModel _data,
     int index
   ){
-    List _payload = [
-      _data.id,
-      _data.seasons[index]["season_number"],
-      _data.seasons,
-    ];
-
     Navigator.push(
         context,
-        SlideLeftRoute(builder: (context) => SeasonOverview(inputList: _payload))
+        FadeRoute(builder: (context) => EpisodePicker(
+            contentId: _data.id,
+            showContentModel: _data,
+            seasonIndex: _data.seasons[index]["season_number"]
+        ))
     );
   }
 

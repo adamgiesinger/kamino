@@ -4,12 +4,18 @@ PODS:
   - Flutter (1.0.0)
   - flutter_statusbarcolor (0.0.1):
     - Flutter
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - package_info (0.0.1):
     - Flutter
   - screen (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
+  - sqflite (0.0.1):
+    - Flutter
+    - FMDB (~> 2.7.2)
   - uni_links (0.0.1):
     - Flutter
   - video_player (0.0.1):
@@ -22,8 +28,13 @@ DEPENDENCIES:
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - screen (from `.symlinks/plugins/screen/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - FMDB
 
 EXTERNAL SOURCES:
   cplayer:
@@ -38,6 +49,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/screen/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
   video_player:
@@ -47,9 +60,11 @@ SPEC CHECKSUMS:
   cplayer: bb7e0640e97d56e39f98a9e55b4b6ec1517777ef
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
   flutter_statusbarcolor: ccc8f90efe5e571f817aaed60dac5382d2cec98d
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   package_info: d7c98b64f60add4c2908b9d94d82a45d3c8827ad
   screen: 22ab9c4a784112d4b21ad7d80e81729e0afdaa65
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
+  sqflite: 801b6b0983f722fa29baf00d1476e4556ada6de4
   uni_links: 5ee5240df5cbffc52d9e7f8017a576b6a6bc5141
   video_player: 906796a841943c8d370ac7c13b18039aa9b56498
 

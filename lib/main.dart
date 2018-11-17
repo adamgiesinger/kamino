@@ -12,22 +12,32 @@ import 'pages/home.dart';
 import 'view/search.dart';
 import 'view/settings.dart';
 
+const primaryColor = const Color(0xFF8147FF);
+const secondaryColor = const Color(0xFF241644);
+const backgroundColor = const Color(0xFF27282C);
+const highlightColor = const Color(0x968147FF);
+const appName = "ApolloTV";
+
 var themeData = ThemeData(
     brightness: Brightness.dark,
     primaryColor: primaryColor,
     accentColor: secondaryColor,
     splashColor: backgroundColor,
     highlightColor: highlightColor,
-    backgroundColor: backgroundColor);
-
-const primaryColor = const Color(0xFF8147FF);
-const secondaryColor = const Color(0xFF303A47);
-const backgroundColor = const Color(0xFF26282C);
-const highlightColor = const Color(0x968147FF);
-const appName = "ApolloTV";
+    backgroundColor: backgroundColor
+);
 
 void main() {
   // MD2: Remove status bar translucency.
+
+  /*
+
+    [ATV: Status Bar Theming Guidelines]
+    -> Primary Brand Color:   Content Page
+    -> Black:                 Important Content / Changing Settings
+
+   */
+
   changeStatusColor(Color color) async {
     try {
       await FlutterStatusbarcolor.setStatusBarColor(color);
@@ -35,7 +45,6 @@ void main() {
       print(e);
     }
   }
-
   changeStatusColor(const Color(0x00000000));
 
   runApp(
