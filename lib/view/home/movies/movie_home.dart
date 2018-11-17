@@ -1,10 +1,4 @@
-import 'package:kamino/api.dart' as api;
-import 'package:kamino/ui/uielements.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/view/home/movies/now_playing.dart';
 import 'package:kamino/view/home/movies/popular_movie.dart';
 import 'package:kamino/view/home/movies/top_rated_movie.dart';

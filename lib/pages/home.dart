@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/main.dart';
+import 'package:kamino/pages/_page.dart';
 import 'package:kamino/ui/uielements.dart';
 
-/*
-
-  U0gg4p2kIERM
-  It's a secret.
-
- */
-
-class Homepage extends StatefulWidget{
+class HomePage extends Page {
   @override
   HomePageState createState() => new HomePageState();
 }
 
-class HomePageState extends State<Homepage>{
-
+class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new Container(
@@ -23,20 +16,40 @@ class HomePageState extends State<Homepage>{
         color: backgroundColor,
         child: new ListView(children: [
           new Card(
-              color: const Color(0xFF404040),
-              child: new Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                      leading: const Icon(Icons.playlist_play),
-                      title: TitleText('Continue Watching'),
-                      subtitle: const Text(
-                          "Start watching right where you left off..."
-                      ),
-                    )
-                  ])),
+            elevation: 5.0,
+            color: const Color(0xFF2F3136),
+            child: new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.lightbulb_outline),
+                  title: TitleText("Welcome to $appName"),
+                  subtitle: const Text("Let's get started by customising your homepage!"),
+                ),
+
+                ButtonTheme.bar(
+                  textTheme: ButtonTextTheme.primary,
+                  layoutBehavior: ButtonBarLayoutBehavior.constrained,
+                  child: ButtonBar(
+                    children: <Widget>[
+                      FlatButton(
+                        child: TitleText(
+                          "Customise...",
+                          fontSize: 16,
+                        ),
+                        onPressed: (){},
+                      )
+                    ],
+                  ),
+                )
+              ]
+            ),
+
+          ),
+
           new Card(
-              color: const Color(0xFF404040),
+              elevation: 3.0,
+              color: const Color(0xFF2F3136),
               child: new Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -46,22 +59,8 @@ class HomePageState extends State<Homepage>{
                     subtitle: const Text('What others are watching.'),
                   )
                 ],
-              )),
-
-          /*
-          new MaterialButton(
-            onPressed: (){
-              Navigator.push(
-                  context,
-                  FadeRoute(builder: (context) => CPlayer(
-                    url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4"
-                  )),
-              );
-            },
-            child: new Text("Debug Player"),
-            color: Theme.of(context).primaryColor,
+              )
           )
-          */
         ]));
   }
 }

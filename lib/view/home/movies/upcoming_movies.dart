@@ -1,4 +1,4 @@
-import 'package:kamino/api.dart' as api;
+import 'package:kamino/vendor/config/official.dart' as api;
 import 'package:kamino/ui/uielements.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';

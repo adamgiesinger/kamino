@@ -4,19 +4,19 @@ import 'package:http/http.dart' as http;
 
 import 'package:kamino/vendor/config/official.dart' as api;
 
-class Movie {
+class SearchResult {
   final String mediaType;
   final int id, pageCount;
   final String title, posterPath,backdropPath, year;
 
-  Movie(this.mediaType, this.id, this.title,
+  SearchResult(this.mediaType, this.id, this.title,
       this.posterPath, this.backdropPath, this.year, this.pageCount);
 
   String get tv => mediaType;
   String get checkPoster => posterPath;
   int get showID => id;
 
-  Movie.fromJson(Map json)
+  SearchResult.fromJson(Map json)
       : mediaType = json["media_type"], id = json["id"],
         title = json["original_name"] != null ?
         json["original_name"]: json["original_title"],
@@ -34,8 +34,8 @@ class API {
       "${api.tvdb_root_url}/search/multi${api.tvdb_default_arguments}" +
       "&include_adult=false&query=";
 
-  Future<List<Movie>>  get(String query) async {
-    List<Movie> list = [];
+  Future<List<SearchResult>>  get(String query) async {
+    List<SearchResult> list = [];
 
     print(_url);
 
@@ -47,7 +47,7 @@ class API {
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((movies) => movies.forEach((movie) => list.add(Movie.fromJson(movie))));
+        .then((movies) => movies.forEach((movie) => list.add(SearchResult.fromJson(movie))));
 
     list.removeWhere((item) => item.mediaType != "movie" && item.mediaType != "tv");
     list.removeWhere((item) => item.id == null);

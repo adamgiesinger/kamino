@@ -1,20 +1,18 @@
-import 'package:kamino/api.dart' as api;
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/vendor/config/official.dart' as api;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:kamino/res/BottomGradient.dart';
 
 const backgroundColor = const Color(0xFF26282C);
 
-class OnAirTV extends StatelessWidget{
+class PopularShows extends StatelessWidget{
 
-  Future<List<OnAirModel>> getTodayShows() async{
+  Future<List<PopularShowsModel>> getTodayShows() async{
 
-    List<OnAirModel> _data = new List();
+    List<PopularShowsModel> _data = new List();
 
-    String url = "https://api.themoviedb.org/3/tv/on_the_air?"
+    String url = "https://api.themoviedb.org/3/tv/popular?"
         "api_key=${api.tvdb_api_key}&language=en-US&page=";
 
     final http.Client _client = http.Client();
@@ -24,7 +22,7 @@ class OnAirTV extends StatelessWidget{
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((tvShows) => tvShows.forEach((tv) => _data.add(OnAirModel.fromJSON(tv))));
+        .then((tvShows) => tvShows.forEach((tv) => _data.add(PopularShowsModel.fromJSON(tv))));
 
     return _data;
   }
@@ -33,10 +31,10 @@ class OnAirTV extends StatelessWidget{
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return _genOnAirCard(context, screenWidth);
+    return _genPopularCard(context, screenWidth);
   }
 
-  Widget onAirListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
+  Widget popularListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
 
     TextStyle _overlayTextStyle = TextStyle(
         fontFamily: 'GlacialIndifference', color: Colors.white,
@@ -90,7 +88,7 @@ class OnAirTV extends StatelessWidget{
         });
   }
 
-  Widget _genOnAirCard(BuildContext context, double screenWidth){
+  Widget _genPopularCard(BuildContext context, double screenWidth){
 
     return FutureBuilder(
       future: getTodayShows(),
@@ -118,8 +116,8 @@ class OnAirTV extends StatelessWidget{
                           children: <Widget>[
 
                             Padding(
-                              padding: const EdgeInsets.only(left: 12.0, right: 160.0),
-                              child: Text("On The Air", style: TextStyle(
+                              padding: const EdgeInsets.only(left: 12.0, right: 132.0),
+                              child: Text("Popular Shows", style: TextStyle(
                                   fontFamily: 'GlacialIndifference', color: Colors.white,
                                   fontSize: 16.0, fontWeight: FontWeight.bold),
                               ),
@@ -132,7 +130,7 @@ class OnAirTV extends StatelessWidget{
 
                       SizedBox(
                         height: 195.0,
-                        child: onAirListView(context, screenWidth, snapshot),
+                        child: popularListView(context, screenWidth, snapshot),
                       ),
 
                     ],
@@ -147,14 +145,14 @@ class OnAirTV extends StatelessWidget{
   }
 }
 
-class OnAirModel{
+class PopularShowsModel{
 
   final int id;
   final String first_air_date, poster_path, backdrop_path;
   final String name;
   final double popularity;
 
-  OnAirModel.fromJSON(Map json)
+  PopularShowsModel.fromJSON(Map json)
       : id = json["id"],
         first_air_date = json["first_air_date"],
         poster_path = json["poster_path"],

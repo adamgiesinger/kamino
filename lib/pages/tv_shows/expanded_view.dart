@@ -1,10 +1,8 @@
-import 'package:kamino/api.dart' as api;
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/vendor/config/official.dart' as api;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:kamino/res/BottomGradient.dart';
 
 
 const splashColour = Colors.purpleAccent;
