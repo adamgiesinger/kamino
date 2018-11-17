@@ -104,7 +104,11 @@ class TVShowLayout{
   ){
     Navigator.push(
         context,
-        FadeRoute(builder: (context) => EpisodePicker(contentId: _data.id, showContentModel: _data, seasonIndex: _data.seasons[index]["season_number"]))
+        FadeRoute(builder: (context) => EpisodePicker(
+            contentId: _data.id,
+            showContentModel: _data,
+            seasonIndex: _data.seasons[index]["season_number"]
+        ))
     );
   }
 

@@ -4,7 +4,7 @@ import 'package:kamino/models/movie.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/overview.dart';
 
-import 'package:kamino/api.dart' as api;
+import 'package:kamino/vendor/config/official.dart' as api;
 
 class MovieLayout{
 

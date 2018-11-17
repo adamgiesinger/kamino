@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:kamino/api.dart' as api;
+import 'package:kamino/vendor/config/official.dart' as api;
 
 class Movie {
   final String mediaType;
