@@ -6,6 +6,7 @@ import 'package:kamino/res/BottomGradient.dart';
 import 'search/bloc.dart';
 import 'search/model.dart';
 import 'search/provider.dart';
+import 'package:kamino/db_handler.dart';
 
 class SearchView extends StatefulWidget {
   @override
