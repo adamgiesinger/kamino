@@ -62,16 +62,16 @@ class _EpisodePickerState extends State<EpisodePicker> {
     // This is shown whilst the data is loading.
     if (_data == null) {
       return Scaffold(
-          backgroundColor: Colors.black,
-          body: Center(
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(
-                    Theme
-                        .of(context)
-                        .primaryColor
-                ),
-              )
-          )
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: Center(
+            child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(
+                  Theme
+                      .of(context)
+                      .primaryColor
+              ),
+            )
+        )
       );
     }
 
@@ -141,7 +141,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                               context
                             );
                           },
-                          child: new Text("Play '${episode["name"]}'"),
+                          child: new Text("Play Episode"),
                           color: primaryColor,
 
                           height: 40

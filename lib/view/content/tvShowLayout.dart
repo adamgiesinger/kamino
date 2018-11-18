@@ -19,7 +19,7 @@ class TVShowLayout{
                 children: <Widget>[
                   ListTile(
                       title: TitleText(
-                          'Seasons',
+                          'Seasons (${_data.seasons.length})',
                           fontSize: 22.0,
                           textColor: Theme.of(context).primaryColor
                       )
@@ -75,7 +75,8 @@ class TVShowLayout{
                 _openEpisodesView(context, _data, seasonIndex);
               },
               child: Card(
-                color: const Color(0xFF404040),
+                elevation: 2,
+                color: const Color(0xFF2F3136),
                 child: new Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[

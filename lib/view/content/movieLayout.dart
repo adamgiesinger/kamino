@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
+import 'package:kamino/partials/poster.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/overview.dart';
 
@@ -28,7 +29,7 @@ class MovieLayout{
                 ),
 
                 SizedBox(
-                  height: 208.0,
+                  height: 200.0,
                   child: _generateSimilarMovieCards(_data)
                 )
               ],
@@ -78,7 +79,7 @@ class MovieLayout{
         return Padding(
           padding: index == 0
               ? const EdgeInsets.only(left: 18.0)
-              : const EdgeInsets.only(left: 0.0),
+              : const EdgeInsets.only(left: 5.0),
           child: InkWell(
             onTap: () {
                 Navigator.push(
@@ -92,32 +93,15 @@ class MovieLayout{
                 );
             },
             splashColor: Colors.white,
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: Card( child: ClipRRect(
-                      borderRadius: new BorderRadius.circular(5.0),
-                      child: Container(
-                        child: _data.recommendations[index]["poster_path"] != null
-                          ? FadeInImage.assetNetwork(
-                            placeholder: "assets/images/no_image_detail.jpg",
-                            image: "http://image.tmdb.org/t/p/w500" +
-                                _data.recommendations[index]["poster_path"],
-                            fit: BoxFit.fill,
-                            height: 185.0,
-                          ) : Image.asset("assets/images/no_image_detail.jpg",
-                            fit: BoxFit.fill,
-                            width: 130.0,
-                            height: 185.0,
-                          ),
-                      ),
-                    )),
-                  ),
-                ],
-              ),
-            ),
+            child: SizedBox(
+              width: 152,
+              child:  Poster(
+                name: _data.recommendations[index]["title"],
+                background: _data.recommendations[index]["poster_path"],
+                mediaType: 'movie',
+                releaseDate: _data.recommendations[index]["release_date"]
+              )
+            )
           ),
         );
     });

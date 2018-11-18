@@ -149,43 +149,46 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
 
   Widget __buildAppDrawer(){
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          DrawerHeader(
-              child: null,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('images/header.png'),
-                      fit: BoxFit.fitHeight,
-                      alignment: Alignment.bottomCenter),
-                  color: const Color(0xFF000000)
-              )
-          ),
-          ListTile(
-            leading: const Icon(Icons.library_books),
-            title: Text("News")
-          ),
-          Divider(),
-          ListTile(
-            leading: const Icon(Icons.gavel),
-            title: Text('Disclaimer')
-          ),
-          ListTile(
-            leading: const Icon(Icons.favorite),
-            title: Text('Donate')
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () {
-              Navigator.of(context).pop();
+      child: Container(
+        color: const Color(0xFF32353A),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+                child: null,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('images/header.png'),
+                        fit: BoxFit.fitHeight,
+                        alignment: Alignment.bottomCenter),
+                    color: const Color(0xFF000000)
+                )
+            ),
+            ListTile(
+                leading: const Icon(Icons.library_books),
+                title: Text("News")
+            ),
+            Divider(),
+            ListTile(
+                leading: const Icon(Icons.gavel),
+                title: Text('Disclaimer')
+            ),
+            ListTile(
+                leading: const Icon(Icons.favorite),
+                title: Text('Donate')
+            ),
+            ListTile(
+                leading: const Icon(Icons.settings),
+                title: Text('Settings'),
+                onTap: () {
+                  Navigator.of(context).pop();
 
-              Navigator.push(context,
-                  SlideLeftRoute(builder: (context) => SettingsView()));
-            }
-          )
-        ],
+                  Navigator.push(context,
+                      SlideLeftRoute(builder: (context) => SettingsView()));
+                }
+            )
+          ],
+        ),
       )
     );
   }

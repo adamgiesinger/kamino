@@ -97,7 +97,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     // This is shown whilst the data is loading.
     if (_data == null) {
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Center(
           child: CircularProgressIndicator(
             valueColor: new AlwaysStoppedAnimation<Color>(
@@ -110,6 +110,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
     // When the data has loaded we can display the general outline and content-type specific body.
     return new Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
@@ -137,7 +138,6 @@ class _ContentOverviewState extends State<ContentOverview> {
             ];
           },
           body: Container(
-              color: Color(0xFF000000),
               child: ListView(
                   children: <Widget>[
                     // This is the summary line, just below the title.
@@ -189,7 +189,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-                _data.releaseDate != "" ?
+                _data.releaseDate != "" && _data.releaseDate != null ?
                   DateTime.parse(_data.releaseDate).year.toString() :
                   "Unknown",
                 style: TextStyle(
@@ -267,7 +267,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                 width: contextWidth
             )
         ),
-        BottomGradient()
+        BottomGradient(color: Theme.of(context).backgroundColor)
       ],
     );
   }

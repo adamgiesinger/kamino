@@ -37,8 +37,6 @@ class API {
   Future<List<SearchResult>>  get(String query) async {
     List<SearchResult> list = [];
 
-    print(_url);
-
     await _client
         .get(Uri.parse(_url + query))
         .catchError((error){

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class BottomGradient extends StatelessWidget {
   // Positional offset.
   final double offset;
+  final Color color;
 
-  BottomGradient({this.offset: 0.98});
-  BottomGradient.noOffset() : offset = 1.0;
+  BottomGradient({this.offset: 0.98, this.color: const Color(0xFF000000)});
+  BottomGradient.noOffset() : offset = 1.0, color = const Color(0xFF000000);
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +21,9 @@ class BottomGradient extends StatelessWidget {
               0.9
             ],
             colors: <Color>[
-//              Color(0xFF313038),
-//              Color(0x20313038),
-//              Color(0x70000000)
-              Color(0xFF000000),
-              Color(0x20000000),
-              Color(0x70000000)
+              color.withOpacity(1),
+              color.withOpacity(0),
+              color.withOpacity(0)
             ],
           )),
     );
