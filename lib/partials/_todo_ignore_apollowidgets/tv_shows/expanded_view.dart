@@ -1,4 +1,4 @@
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -46,8 +46,7 @@ class ExpandedView extends StatelessWidget{
 
     List<ExpandedTVModel> _data = new List<ExpandedTVModel>();
 
-    String url = "https://api.themoviedb.org/3/tv/${apiSelector()}?"
-        "api_key=${api.tvdb_api_key}&language=en-US&page=";
+    String url = "${tmdb.root_url}/tv/${apiSelector()}${tmdb.default_arguments}&page=";
 
     final http.Client _client = http.Client();
 

@@ -1,21 +1,18 @@
-import 'package:kamino/vendor/config/official.dart' as api;
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:kamino/res/BottomGradient.dart';
 
 const backgroundColor = const Color(0xFF26282C);
 
-class UpcomingMovies extends StatelessWidget{
+class TopRated extends StatelessWidget{
 
-  Future<List<UpcomingMoviesModel>> getUpcoming() async{
+  Future<List<TopRatedModel>> getTodayShows() async{
 
-    List<UpcomingMoviesModel> _data = new List();
+    List<TopRatedModel> _data = new List();
 
-    String url = "https://api.themoviedb.org/3/movie/upcoming?"
-        "api_key=${api.tvdb_api_key}&language=en-US&page=";
+    String url = "${tmdb.root_url}/tv/top_rated${tmdb.default_arguments}&page=";
 
     final http.Client _client = http.Client();
 
@@ -24,7 +21,7 @@ class UpcomingMovies extends StatelessWidget{
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((tvShows) => tvShows.forEach((tv) => _data.add(UpcomingMoviesModel.fromJSON(tv))));
+        .then((tvShows) => tvShows.forEach((tv) => _data.add(TopRatedModel.fromJSON(tv))));
 
     return _data;
   }
@@ -33,10 +30,10 @@ class UpcomingMovies extends StatelessWidget{
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return _upcomingMoviesCard(context, screenWidth);
+    return _genTopRatedCard(context, screenWidth);
   }
 
-  Widget _upcomingMoviesListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
+  Widget topRatedListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
 
     TextStyle _overlayTextStyle = TextStyle(
         fontFamily: 'GlacialIndifference', color: Colors.white,
@@ -90,10 +87,10 @@ class UpcomingMovies extends StatelessWidget{
         });
   }
 
-  Widget _upcomingMoviesCard(BuildContext context, double screenWidth){
+  Widget _genTopRatedCard(BuildContext context, double screenWidth){
 
     return FutureBuilder(
-      future: getUpcoming(),
+      future: getTodayShows(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         switch (snapshot.connectionState){
           case ConnectionState.waiting:
@@ -118,8 +115,8 @@ class UpcomingMovies extends StatelessWidget{
                           children: <Widget>[
 
                             Padding(
-                              padding: const EdgeInsets.only(left: 12.0, right: 160.0),
-                              child: Text("Upcoming Movies", style: TextStyle(
+                              padding: const EdgeInsets.only(left: 12.0, right: 165.0),
+                              child: Text("Top Rated", style: TextStyle(
                                   fontFamily: 'GlacialIndifference', color: Colors.white,
                                   fontSize: 16.0, fontWeight: FontWeight.bold),
                               ),
@@ -132,7 +129,7 @@ class UpcomingMovies extends StatelessWidget{
 
                       SizedBox(
                         height: 195.0,
-                        child: _upcomingMoviesListView(context, screenWidth, snapshot),
+                        child: topRatedListView(context, screenWidth, snapshot),
                       ),
 
                     ],
@@ -147,19 +144,19 @@ class UpcomingMovies extends StatelessWidget{
   }
 }
 
-class UpcomingMoviesModel{
+class TopRatedModel{
 
   final int id;
   final String first_air_date, poster_path, backdrop_path;
   final String name;
   final double popularity;
 
-  UpcomingMoviesModel.fromJSON(Map json)
+  TopRatedModel.fromJSON(Map json)
       : id = json["id"],
         first_air_date = json["first_air_date"],
         poster_path = json["poster_path"],
         backdrop_path = json["backdrop_path"],
-        name = json["original_title"] == null ?
-        json["title"] : json["original_title"],
+        name = json["original_name"] == null ?
+        json["name"] : json["original_name"],
         popularity = json["popularity"];
 }

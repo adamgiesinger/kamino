@@ -8,11 +8,13 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/tvshow.dart';
 
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
+
+import 'package:kamino/vendor/config/official.dart' as api;
 
 /*  CONTENT OVERVIEW WIDGET  */
 ///
@@ -58,13 +60,13 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Get the data from the server.
       http.Response response = await http.get(
-        "${api.tvdb_root_url}/movie/${widget.contentId}${api.tvdb_default_arguments}"
+        "${tmdb.root_url}/movie/${widget.contentId}${tmdb.default_arguments}"
       );
       String json = response.body;
 
       // Get the recommendations data from the server.
       http.Response recommendedDataResponse = await http.get(
-        "${api.tvdb_root_url}/movie/${widget.contentId}/similar${api.tvdb_default_arguments}&page=1"
+        "${tmdb.root_url}/movie/${widget.contentId}/similar${tmdb.default_arguments}&page=1"
       );
       String recommended = recommendedDataResponse.body;
 
@@ -78,7 +80,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Get the data from the server.
       http.Response response = await http.get(
-          "${api.tvdb_root_url}/tv/${widget.contentId}${api.tvdb_default_arguments}"
+          "${tmdb.root_url}/tv/${widget.contentId}${tmdb.default_arguments}"
       );
       String json = response.body;
 
@@ -255,7 +257,7 @@ class _ContentOverviewState extends State<ContentOverview> {
         Container(
             child: _data.backdropPath != null ?
             Image.network(
-                api.tvdb_image_cdn + _data.backdropPath,
+                tmdb.image_cdn + _data.backdropPath,
                 fit: BoxFit.cover,
                 height: 200.0,
                 width: contextWidth

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kamino/view/home/movies/now_playing.dart';
-import 'package:kamino/view/home/movies/popular_movie.dart';
-import 'package:kamino/view/home/movies/top_rated_movie.dart';
-import 'package:kamino/view/home/movies/upcoming_movies.dart';
+import 'now_playing.dart';
+import 'popular_movie.dart';
+import 'top_rated_movie.dart';
+import 'upcoming_movies.dart';
 
 
 const splashColour = Colors.purpleAccent;

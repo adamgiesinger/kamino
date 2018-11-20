@@ -1,4 +1,4 @@
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -6,14 +6,13 @@ import 'dart:convert';
 
 const backgroundColor = const Color(0xFF26282C);
 
-class NowPlaying extends StatelessWidget{
+class PopularShows extends StatelessWidget{
 
-  Future<List<NowPlayingModel>> getNowPlaying() async{
+  Future<List<PopularShowsModel>> getTodayShows() async{
 
-    List<NowPlayingModel> _data = new List();
+    List<PopularShowsModel> _data = new List();
 
-    String url = "https://api.themoviedb.org/3/movie/now_playing?"
-        "api_key=${api.tvdb_api_key}&language=en-US&page=";
+    String url = "${tmdb.root_url}/tv/popular${tmdb.default_arguments}&page=";
 
     final http.Client _client = http.Client();
 
@@ -22,7 +21,7 @@ class NowPlaying extends StatelessWidget{
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((tvShows) => tvShows.forEach((tv) => _data.add(NowPlayingModel.fromJSON(tv))));
+        .then((tvShows) => tvShows.forEach((tv) => _data.add(PopularShowsModel.fromJSON(tv))));
 
     return _data;
   }
@@ -31,10 +30,10 @@ class NowPlaying extends StatelessWidget{
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return _genNowPlayingCard(context, screenWidth);
+    return _genPopularCard(context, screenWidth);
   }
 
-  Widget _nowPlayingListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
+  Widget popularListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
 
     TextStyle _overlayTextStyle = TextStyle(
         fontFamily: 'GlacialIndifference', color: Colors.white,
@@ -88,10 +87,10 @@ class NowPlaying extends StatelessWidget{
         });
   }
 
-  Widget _genNowPlayingCard(BuildContext context, double screenWidth){
+  Widget _genPopularCard(BuildContext context, double screenWidth){
 
     return FutureBuilder(
-      future: getNowPlaying(),
+      future: getTodayShows(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         switch (snapshot.connectionState){
           case ConnectionState.waiting:
@@ -116,8 +115,8 @@ class NowPlaying extends StatelessWidget{
                           children: <Widget>[
 
                             Padding(
-                              padding: const EdgeInsets.only(left: 12.0, right: 160.0),
-                              child: Text("Now Playing", style: TextStyle(
+                              padding: const EdgeInsets.only(left: 12.0, right: 132.0),
+                              child: Text("Popular Shows", style: TextStyle(
                                   fontFamily: 'GlacialIndifference', color: Colors.white,
                                   fontSize: 16.0, fontWeight: FontWeight.bold),
                               ),
@@ -130,7 +129,7 @@ class NowPlaying extends StatelessWidget{
 
                       SizedBox(
                         height: 195.0,
-                        child: _nowPlayingListView(context, screenWidth, snapshot),
+                        child: popularListView(context, screenWidth, snapshot),
                       ),
 
                     ],
@@ -145,19 +144,19 @@ class NowPlaying extends StatelessWidget{
   }
 }
 
-class NowPlayingModel{
+class PopularShowsModel{
 
   final int id;
   final String first_air_date, poster_path, backdrop_path;
   final String name;
   final double popularity;
 
-  NowPlayingModel.fromJSON(Map json)
+  PopularShowsModel.fromJSON(Map json)
       : id = json["id"],
         first_air_date = json["first_air_date"],
         poster_path = json["poster_path"],
         backdrop_path = json["backdrop_path"],
-        name = json["original_title"] == null ?
-        json["title"] : json["original_title"],
+        name = json["original_name"] == null ?
+        json["name"] : json["original_name"],
         popularity = json["popularity"];
 }

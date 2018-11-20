@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
 
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
 
 class Poster extends StatefulWidget {
 
@@ -50,7 +50,7 @@ class PosterState extends State<Poster> {
                 borderRadius: BorderRadius.circular(5),
                 child: new FadeInImage.assetNetwork(
                   placeholder: "assets/images/no_image_detail.jpg",
-                  image: "${api.tvdb_image_cdn}/${widget.background}",
+                  image: "${tmdb.image_cdn}/${widget.background}",
                   fit: BoxFit.cover,
                   height: 752,
                   width: 500,

@@ -1,4 +1,4 @@
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -6,14 +6,13 @@ import 'dart:convert';
 
 const backgroundColor = const Color(0xFF26282C);
 
-class TopRated extends StatelessWidget{
+class OnAirTV extends StatelessWidget{
 
-  Future<List<TopRatedModel>> getTodayShows() async{
+  Future<List<OnAirModel>> getTodayShows() async{
 
-    List<TopRatedModel> _data = new List();
+    List<OnAirModel> _data = new List();
 
-    String url = "https://api.themoviedb.org/3/tv/top_rated?"
-        "api_key=${api.tvdb_api_key}&language=en-US&page=";
+    String url = "${tmdb.root_url}/tv/on_the_air${tmdb.default_arguments}&page=";
 
     final http.Client _client = http.Client();
 
@@ -22,7 +21,7 @@ class TopRated extends StatelessWidget{
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((tvShows) => tvShows.forEach((tv) => _data.add(TopRatedModel.fromJSON(tv))));
+        .then((tvShows) => tvShows.forEach((tv) => _data.add(OnAirModel.fromJSON(tv))));
 
     return _data;
   }
@@ -31,10 +30,10 @@ class TopRated extends StatelessWidget{
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return _genTopRatedCard(context, screenWidth);
+    return _genOnAirCard(context, screenWidth);
   }
 
-  Widget topRatedListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
+  Widget onAirListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
 
     TextStyle _overlayTextStyle = TextStyle(
         fontFamily: 'GlacialIndifference', color: Colors.white,
@@ -88,7 +87,7 @@ class TopRated extends StatelessWidget{
         });
   }
 
-  Widget _genTopRatedCard(BuildContext context, double screenWidth){
+  Widget _genOnAirCard(BuildContext context, double screenWidth){
 
     return FutureBuilder(
       future: getTodayShows(),
@@ -116,8 +115,8 @@ class TopRated extends StatelessWidget{
                           children: <Widget>[
 
                             Padding(
-                              padding: const EdgeInsets.only(left: 12.0, right: 165.0),
-                              child: Text("Top Rated", style: TextStyle(
+                              padding: const EdgeInsets.only(left: 12.0, right: 160.0),
+                              child: Text("On The Air", style: TextStyle(
                                   fontFamily: 'GlacialIndifference', color: Colors.white,
                                   fontSize: 16.0, fontWeight: FontWeight.bold),
                               ),
@@ -130,7 +129,7 @@ class TopRated extends StatelessWidget{
 
                       SizedBox(
                         height: 195.0,
-                        child: topRatedListView(context, screenWidth, snapshot),
+                        child: onAirListView(context, screenWidth, snapshot),
                       ),
 
                     ],
@@ -145,14 +144,14 @@ class TopRated extends StatelessWidget{
   }
 }
 
-class TopRatedModel{
+class OnAirModel{
 
   final int id;
   final String first_air_date, poster_path, backdrop_path;
   final String name;
   final double popularity;
 
-  TopRatedModel.fromJSON(Map json)
+  OnAirModel.fromJSON(Map json)
       : id = json["id"],
         first_air_date = json["first_air_date"],
         poster_path = json["poster_path"],

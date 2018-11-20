@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
 
 class SearchResult {
   final String mediaType;
@@ -31,7 +31,7 @@ class API {
   final http.Client _client = http.Client();
 
   static const String _url =
-      "${api.tvdb_root_url}/search/multi${api.tvdb_default_arguments}" +
+      "${tmdb.root_url}/search/multi${tmdb.default_arguments}" +
       "&include_adult=false&query=";
 
   Future<List<SearchResult>>  get(String query) async {

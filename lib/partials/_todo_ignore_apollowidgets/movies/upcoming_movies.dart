@@ -1,56 +1,19 @@
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'popular_tv.dart';
-import 'top_rated.dart';
-import 'on_the_air.dart';
 
-
-const splashColour = Colors.purpleAccent;
-const primaryColor = const Color(0xFF8147FF);
-const secondaryColor = const Color(0xFF303A47);
 const backgroundColor = const Color(0xFF26282C);
-const highlightColor = const Color(0x968147FF);
 
-class TVHome extends StatefulWidget{
-  @override
-  _TVHomeState createState() => _TVHomeState();
-}
+class UpcomingMovies extends StatelessWidget{
 
-class _TVHomeState extends State<TVHome> with AutomaticKeepAliveClientMixin<TVHome>{
+  Future<List<UpcomingMoviesModel>> getUpcoming() async{
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: backgroundColor,
-      child: ListView(
-        addAutomaticKeepAlives: true,
-        children: <Widget>[
-          AirToday(),
-          OnAirTV(),
-          PopularShows(),
-          TopRated(),
-        ],
-      ),
-    );
-  }
+    List<UpcomingMoviesModel> _data = new List();
 
-  // TODO: implement wantKeepAlive
-  @override
-  bool get wantKeepAlive => true;
-
-}
-
-class AirToday extends StatelessWidget{
-
-  Future<List<AiringTodayModel>> getTodayShows() async{
-
-    List<AiringTodayModel> _data = new List();
-
-    String url = "https://api.themoviedb.org/3/tv/airing_today?"
-        "api_key=${api.tvdb_api_key}&language=en-US&page=";
+    String url = "${tmdb.root_url}/movie/upcoming${tmdb.default_arguments}&page=";
 
     final http.Client _client = http.Client();
 
@@ -59,7 +22,7 @@ class AirToday extends StatelessWidget{
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((tvShows) => tvShows.forEach((tv) => _data.add(AiringTodayModel.fromJSON(tv))));
+        .then((tvShows) => tvShows.forEach((tv) => _data.add(UpcomingMoviesModel.fromJSON(tv))));
 
     return _data;
   }
@@ -68,10 +31,10 @@ class AirToday extends StatelessWidget{
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return _genTodayCard(context, screenWidth);
+    return _upcomingMoviesCard(context, screenWidth);
   }
 
-  Widget airTodayListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
+  Widget _upcomingMoviesListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
 
     TextStyle _overlayTextStyle = TextStyle(
         fontFamily: 'GlacialIndifference', color: Colors.white,
@@ -125,10 +88,10 @@ class AirToday extends StatelessWidget{
         });
   }
 
-  Widget _genTodayCard(BuildContext context, double screenWidth){
+  Widget _upcomingMoviesCard(BuildContext context, double screenWidth){
 
     return FutureBuilder(
-      future: getTodayShows(),
+      future: getUpcoming(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         switch (snapshot.connectionState){
           case ConnectionState.waiting:
@@ -153,8 +116,8 @@ class AirToday extends StatelessWidget{
                           children: <Widget>[
 
                             Padding(
-                              padding: const EdgeInsets.only(left: 12.0, right: 147.0),
-                              child: Text("Airing Today", style: TextStyle(
+                              padding: const EdgeInsets.only(left: 12.0, right: 160.0),
+                              child: Text("Upcoming Movies", style: TextStyle(
                                   fontFamily: 'GlacialIndifference', color: Colors.white,
                                   fontSize: 16.0, fontWeight: FontWeight.bold),
                               ),
@@ -167,7 +130,7 @@ class AirToday extends StatelessWidget{
 
                       SizedBox(
                         height: 195.0,
-                        child: airTodayListView(context, screenWidth, snapshot),
+                        child: _upcomingMoviesListView(context, screenWidth, snapshot),
                       ),
 
                     ],
@@ -182,19 +145,19 @@ class AirToday extends StatelessWidget{
   }
 }
 
-class AiringTodayModel{
+class UpcomingMoviesModel{
 
   final int id;
   final String first_air_date, poster_path, backdrop_path;
   final String name;
   final double popularity;
 
-  AiringTodayModel.fromJSON(Map json)
+  UpcomingMoviesModel.fromJSON(Map json)
       : id = json["id"],
         first_air_date = json["first_air_date"],
         poster_path = json["poster_path"],
         backdrop_path = json["backdrop_path"],
-        name = json["original_name"] == null ?
-        json["name"] : json["original_name"],
+        name = json["original_title"] == null ?
+        json["title"] : json["original_title"],
         popularity = json["popularity"];
 }

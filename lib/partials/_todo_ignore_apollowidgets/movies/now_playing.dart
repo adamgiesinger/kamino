@@ -1,4 +1,5 @@
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -6,14 +7,13 @@ import 'dart:convert';
 
 const backgroundColor = const Color(0xFF26282C);
 
-class OnAirTV extends StatelessWidget{
+class NowPlaying extends StatelessWidget{
 
-  Future<List<OnAirModel>> getTodayShows() async{
+  Future<List<NowPlayingModel>> getNowPlaying() async{
 
-    List<OnAirModel> _data = new List();
+    List<NowPlayingModel> _data = new List();
 
-    String url = "https://api.themoviedb.org/3/tv/on_the_air?"
-        "api_key=${api.tvdb_api_key}&language=en-US&page=";
+    String url = "${tmdb.root_url}/movie/now_playing${tmdb.default_arguments}&page=";
 
     final http.Client _client = http.Client();
 
@@ -22,7 +22,7 @@ class OnAirTV extends StatelessWidget{
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((tvShows) => tvShows.forEach((tv) => _data.add(OnAirModel.fromJSON(tv))));
+        .then((tvShows) => tvShows.forEach((tv) => _data.add(NowPlayingModel.fromJSON(tv))));
 
     return _data;
   }
@@ -31,10 +31,10 @@ class OnAirTV extends StatelessWidget{
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return _genOnAirCard(context, screenWidth);
+    return _genNowPlayingCard(context, screenWidth);
   }
 
-  Widget onAirListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
+  Widget _nowPlayingListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
 
     TextStyle _overlayTextStyle = TextStyle(
         fontFamily: 'GlacialIndifference', color: Colors.white,
@@ -88,10 +88,10 @@ class OnAirTV extends StatelessWidget{
         });
   }
 
-  Widget _genOnAirCard(BuildContext context, double screenWidth){
+  Widget _genNowPlayingCard(BuildContext context, double screenWidth){
 
     return FutureBuilder(
-      future: getTodayShows(),
+      future: getNowPlaying(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         switch (snapshot.connectionState){
           case ConnectionState.waiting:
@@ -117,7 +117,7 @@ class OnAirTV extends StatelessWidget{
 
                             Padding(
                               padding: const EdgeInsets.only(left: 12.0, right: 160.0),
-                              child: Text("On The Air", style: TextStyle(
+                              child: Text("Now Playing", style: TextStyle(
                                   fontFamily: 'GlacialIndifference', color: Colors.white,
                                   fontSize: 16.0, fontWeight: FontWeight.bold),
                               ),
@@ -130,7 +130,7 @@ class OnAirTV extends StatelessWidget{
 
                       SizedBox(
                         height: 195.0,
-                        child: onAirListView(context, screenWidth, snapshot),
+                        child: _nowPlayingListView(context, screenWidth, snapshot),
                       ),
 
                     ],
@@ -145,19 +145,19 @@ class OnAirTV extends StatelessWidget{
   }
 }
 
-class OnAirModel{
+class NowPlayingModel{
 
   final int id;
   final String first_air_date, poster_path, backdrop_path;
   final String name;
   final double popularity;
 
-  OnAirModel.fromJSON(Map json)
+  NowPlayingModel.fromJSON(Map json)
       : id = json["id"],
         first_air_date = json["first_air_date"],
         poster_path = json["poster_path"],
         backdrop_path = json["backdrop_path"],
-        name = json["original_name"] == null ?
-        json["name"] : json["original_name"],
+        name = json["original_title"] == null ?
+        json["title"] : json["original_title"],
         popularity = json["popularity"];
 }

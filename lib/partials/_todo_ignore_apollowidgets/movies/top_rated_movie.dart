@@ -1,4 +1,4 @@
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -6,14 +6,13 @@ import 'dart:convert';
 
 const backgroundColor = const Color(0xFF26282C);
 
-class PopularMovies extends StatelessWidget{
+class TopRatedMovies extends StatelessWidget{
 
-  Future<List<PopularMoviesModel>> getPopular() async{
+  Future<List<TopRatedMoviesModel>> getTopRated() async{
 
-    List<PopularMoviesModel> _data = new List();
+    List<TopRatedMoviesModel> _data = new List();
 
-    String url = "https://api.themoviedb.org/3/movie/popular?"
-        "api_key=${api.tvdb_api_key}&language=en-US&page=";
+    String url = "${tmdb.root_url}/movie/upcoming${tmdb.default_arguments}&page=";
 
     final http.Client _client = http.Client();
 
@@ -22,7 +21,7 @@ class PopularMovies extends StatelessWidget{
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((tvShows) => tvShows.forEach((tv) => _data.add(PopularMoviesModel.fromJSON(tv))));
+        .then((tvShows) => tvShows.forEach((tv) => _data.add(TopRatedMoviesModel.fromJSON(tv))));
 
     return _data;
   }
@@ -31,10 +30,10 @@ class PopularMovies extends StatelessWidget{
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return _genPopularMoviesCard(context, screenWidth);
+    return _topRatedMoviesCard(context, screenWidth);
   }
 
-  Widget _popularMoviesListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
+  Widget _topRatedMoviesListView(BuildContext context, double screenWidth, AsyncSnapshot snapshot){
 
     TextStyle _overlayTextStyle = TextStyle(
         fontFamily: 'GlacialIndifference', color: Colors.white,
@@ -88,10 +87,10 @@ class PopularMovies extends StatelessWidget{
         });
   }
 
-  Widget _genPopularMoviesCard(BuildContext context, double screenWidth){
+  Widget _topRatedMoviesCard(BuildContext context, double screenWidth){
 
     return FutureBuilder(
-      future: getPopular(),
+      future: getTopRated(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         switch (snapshot.connectionState){
           case ConnectionState.waiting:
@@ -117,7 +116,7 @@ class PopularMovies extends StatelessWidget{
 
                             Padding(
                               padding: const EdgeInsets.only(left: 12.0, right: 160.0),
-                              child: Text("Popular Movies", style: TextStyle(
+                              child: Text("Top Rated Movies", style: TextStyle(
                                   fontFamily: 'GlacialIndifference', color: Colors.white,
                                   fontSize: 16.0, fontWeight: FontWeight.bold),
                               ),
@@ -130,7 +129,7 @@ class PopularMovies extends StatelessWidget{
 
                       SizedBox(
                         height: 195.0,
-                        child: _popularMoviesListView(context, screenWidth, snapshot),
+                        child: _topRatedMoviesListView(context, screenWidth, snapshot),
                       ),
 
                     ],
@@ -145,14 +144,14 @@ class PopularMovies extends StatelessWidget{
   }
 }
 
-class PopularMoviesModel{
+class TopRatedMoviesModel{
 
   final int id;
   final String first_air_date, poster_path, backdrop_path;
   final String name;
   final double popularity;
 
-  PopularMoviesModel.fromJSON(Map json)
+  TopRatedMoviesModel.fromJSON(Map json)
       : id = json["id"],
         first_air_date = json["first_air_date"],
         poster_path = json["poster_path"],
