@@ -71,13 +71,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   dart_config:
     dependency: transitive
     description:
@@ -107,7 +100,7 @@ packages:
     source: hosted
     version: "0.6.1"
   flutter_rating:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_rating
       url: "https://pub.dartlang.org"

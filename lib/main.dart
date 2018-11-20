@@ -167,7 +167,7 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
                 child: null,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('images/header.png'),
+                        image: AssetImage('assets/images/header.png'),
                         fit: BoxFit.fitHeight,
                         alignment: Alignment.bottomCenter),
                     color: const Color(0xFF000000)

@@ -101,7 +101,7 @@ class _SettingsViewState extends State<SettingsView> {
                       title: TitleText("$appName ($appVendor Build)"),
                       subtitle:
                           Text("v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
-                      leading: new Image.asset("images/logo.png", width: 36, height: 36)
+                      leading: new Image.asset("assets/images/logo.png", width: 36, height: 36)
                   ),
 
                   // It's okay to remove this, but we'd appreciate it if you
