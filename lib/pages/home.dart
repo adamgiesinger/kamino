@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/pages/_page.dart';
+import 'package:kamino/partials/apollowidgets/home_customise.dart';
 import 'package:kamino/ui/uielements.dart';
 
 class HomePage extends Page {
@@ -15,37 +16,7 @@ class HomePageState extends State<HomePage> {
       padding: EdgeInsets.only(top: 5.0),
       color: backgroundColor,
       child: new ListView(children: [
-        new Card(
-          elevation: 5.0,
-          color: const Color(0xFF2F3136),
-          child: new Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.lightbulb_outline),
-                title: TitleText("Welcome to $appName"),
-                subtitle: const Text("Let's get started by customising your homepage!"),
-              ),
-
-              ButtonTheme.bar(
-                textTheme: ButtonTextTheme.primary,
-                layoutBehavior: ButtonBarLayoutBehavior.constrained,
-                child: ButtonBar(
-                  children: <Widget>[
-                    FlatButton(
-                      child: TitleText(
-                        "Customise...",
-                        fontSize: 16,
-                      ),
-                      onPressed: (){},
-                    )
-                  ],
-                ),
-              )
-            ]
-          ),
-
-        ),
+        HomeCustomiseWidget(),
 
         new Card(
             elevation: 3.0,
@@ -55,7 +26,7 @@ class HomePageState extends State<HomePage> {
               children: <Widget>[
                 ListTile(
                   leading: const Icon(Icons.trending_up),
-                  title: TitleText('Trending on ApolloTV'),
+                  title: TitleText('Trending on $appName'),
                   subtitle: const Text('What others are watching.'),
                 )
               ],

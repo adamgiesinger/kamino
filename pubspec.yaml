@@ -64,6 +64,7 @@ flutter:
     - images/header.png
     - images/easteregg/background.jpg
     - images/easteregg/socks.png
+    - images/logo.png
 
 
   fonts:

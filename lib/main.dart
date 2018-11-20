@@ -25,7 +25,16 @@ var themeData = ThemeData(
   highlightColor: highlightColor,
   backgroundColor: backgroundColor,
   cursorColor: primaryColor,
-  textSelectionHandleColor: primaryColor
+  textSelectionHandleColor: primaryColor,
+  buttonColor: primaryColor,
+  dialogTheme: DialogTheme(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5)
+    )
+  ),
+  buttonTheme: ButtonThemeData(
+    buttonColor: primaryColor
+  )
 );
 
 const primaryColor = const Color(0xFF8147FF);
@@ -75,7 +84,7 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
     // Homepage
     Tab(
         icon: Icon(
-            const IconData(0xe900, fontFamily: 'apollotv-icons')
+            const IconData(0xe90B, fontFamily: 'apollotv-icons')
         )
     ): HomePage(),
 

@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:kamino/animation/transition.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/view/easteregg.dart';
+import 'package:kamino/vendor/config/official.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingsView extends StatefulWidget {
@@ -60,9 +59,8 @@ class _SettingsViewState extends State<SettingsView> {
     return Scaffold(
         appBar: AppBar(
           title: TitleText("Settings"),
-          backgroundColor: const Color(0xFF000000),
-          // Remove box-shadow
-          elevation: 0.00,
+
+          backgroundColor: backgroundColor,
 
           // Center title
           centerTitle: true,
@@ -72,23 +70,42 @@ class _SettingsViewState extends State<SettingsView> {
             color: backgroundColor,
             child: new ListView(
 
-                children: <Widget>[
-                  // App Version
-                  ListTile(
-                      title: TitleText("$appName Version"),
-                      subtitle: Text(
-                          "v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
-                      onTap: () {
-                        versionTapCount += 1;
-                        if (versionTapCount >= 10) {
-                          Navigator.push(context,
-                              SlideLeftRoute(builder: (context) => EasterEggView()));
+                // It's recommended that you give at maximum three examples per setting category.
 
-                          versionTapCount = 0;
-                        }
-                      }
+                children: <Widget>[
+
+                  Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+
+                  ListTile(
+                    title: TitleText("Launchpad"),
+                    subtitle: Text("Modify your $appName launchpad."),
+                    leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
                   ),
 
+                  ListTile(
+                    title: TitleText("Appearance"),
+                    subtitle: Text("Change theme, [...]"),
+                    leading: new Icon(Icons.palette)
+                  ),
+
+                  ListTile(
+                    title: TitleText("Other"),
+                    subtitle: Text("Change language, choose sources, [...]"),
+                    leading: new Icon(Icons.settings),
+                  ),
+
+                  Divider(),
+
+                  // App Version
+                  ListTile(
+                      title: TitleText("$appName ($appVendor Build)"),
+                      subtitle:
+                          Text("v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
+                      leading: new Image.asset("images/logo.png", width: 36, height: 36)
+                  ),
+
+                  // It's okay to remove this, but we'd appreciate it if you
+                  // keep it. <3
                   __buildContributorCard()
                 ]
             )
@@ -120,7 +137,7 @@ class _SettingsViewState extends State<SettingsView> {
               new Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: new Text(
-                      "ApolloTV was made possible by all of these amazing people...",
+                      "$appName was made possible by all of these amazing people...",
                       style: new TextStyle(
                           fontFamily: 'GlacialIndifference',
                           fontSize: 16
