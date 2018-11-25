@@ -14,8 +14,6 @@ import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
 
-import 'package:kamino/vendor/config/official.dart' as api;
-
 /*  CONTENT OVERVIEW WIDGET  */
 ///
 /// The ContentOverview widget allows you to show information about Movie or TV show.

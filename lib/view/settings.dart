@@ -1,10 +1,11 @@
+import 'package:kamino/vendor/index.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/vendor/config/official.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingsView extends StatefulWidget {
@@ -98,7 +99,7 @@ class _SettingsViewState extends State<SettingsView> {
 
                   // App Version
                   ListTile(
-                      title: TitleText("$appName ($appVendor Build)"),
+                      title: TitleText("$appName (${vendorConfigs[0].getName()} Build)"),
                       subtitle:
                           Text("v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
                       leading: new Image.asset("assets/images/logo.png", width: 36, height: 36)
@@ -116,7 +117,7 @@ class _SettingsViewState extends State<SettingsView> {
   Widget __buildContributorCard(){
     return Card(
       elevation: 10.0,
-      color: const Color(0xFF000000),
+      color: const Color(0xFF2F3136),
       child: new Container(
           child: new Column(
             children: <Widget>[
@@ -137,7 +138,7 @@ class _SettingsViewState extends State<SettingsView> {
               new Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0),
                   child: new Text(
-                      "$appName was made possible by all of these amazing people...",
+                      "$appName was made possible by all of these amazing people:",
                       style: new TextStyle(
                           fontFamily: 'GlacialIndifference',
                           fontSize: 16

@@ -87,3 +87,6 @@ fabric.properties
 # Vendor Configuration
 lib/vendor/*
 lib/database_backup.zip
+
+# Android
+android/key.properties

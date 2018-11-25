@@ -1,5 +1,4 @@
 // Import flutter libraries
-import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:kamino/pages/_page.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/vendor/index.dart';
 
 // Import custom libraries / utils
 import 'animation/transition.dart';
@@ -42,6 +42,8 @@ const secondaryColor = const Color(0xFF303A47);
 const backgroundColor = const Color(0xFF26282C);
 const highlightColor = const Color(0x968147FF);
 const appName = "ApolloTV";
+
+var vendorConfigs = ApolloVendor.getVendorConfigs();
 
 void main() {
   // MD2: Remove status bar translucency.

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/view/content/overview.dart';
-
-import 'package:kamino/vendor/config/official.dart' as api;
 
 class MovieLayout{
 
@@ -14,8 +14,6 @@ class MovieLayout{
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
         child: Column(
           children: <Widget>[
-
-
             /* Similar Movies */
             Column(
               mainAxisSize: MainAxisSize.min,
@@ -50,7 +48,24 @@ class MovieLayout{
   static Widget getFloatingActionButton(BuildContext context, MovieContentModel model){
     return new FloatingActionButton.extended(
       onPressed: (){
-        api.playMovie(
+        Interface.showAlert(
+            context,
+            new TitleText('Searching for Sources...'),
+            [
+              Center(
+                child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we're experiencing server issues."),
+              ),
+              Center(
+                child: new CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                )
+              )
+            ],
+            true,
+            [Container()]
+        );
+
+        vendorConfigs[0].playMovie(
           model.title,
           context
         );

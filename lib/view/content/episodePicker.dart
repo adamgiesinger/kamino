@@ -8,8 +8,7 @@ import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/main.dart';
 import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/uielements.dart';
-
-import 'package:kamino/vendor/config/official.dart' as api;
+import 'package:kamino/util/interface.dart';
 
 class EpisodePicker extends StatefulWidget {
   final int contentId;
@@ -117,9 +116,14 @@ class _EpisodePickerState extends State<EpisodePicker> {
                     )
                 ),
 
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Text(episode["overview"])
+                Expanded(
+                  flex: 3,
+                  child: new SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(episode["overview"])
+                    )
+                  )
                 ),
 
                 // Bottom button - Play
@@ -132,10 +136,27 @@ class _EpisodePickerState extends State<EpisodePicker> {
                         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         child: new MaterialButton(
                           onPressed: (){
+                            Interface.showAlert(
+                                context,
+                                new TitleText('Searching for Sources...'),
+                                [
+                                  Center(
+                                    child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we're experiencing server issues."),
+                                  ),
+                                  Center(
+                                      child: new CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                                      )
+                                  )
+                                ],
+                                true,
+                                [Container()]
+                            );
+
                             int seasonNumber = episode["season_number"];
                             int episodeNumber = episode["episode_number"];
 
-                            api.playTVShow(
+                            vendorConfigs[0].playTVShow(
                               widget.showContentModel.title,
                               widget.showContentModel.releaseDate,
                               seasonNumber,

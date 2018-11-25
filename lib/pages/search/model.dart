@@ -30,7 +30,7 @@ class SearchResult {
 class API {
   final http.Client _client = http.Client();
 
-  static const String _url =
+  static String _url =
       "${tmdb.root_url}/search/multi${tmdb.default_arguments}" +
       "&include_adult=false&query=";
 
