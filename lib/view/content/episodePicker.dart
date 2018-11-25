@@ -136,6 +136,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
                         child: new MaterialButton(
                           onPressed: (){
+
                             Interface.showAlert(
                                 context,
                                 new TitleText('Searching for Sources...'),
@@ -149,7 +150,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                       )
                                   )
                                 ],
-                                true,
+                                false,
                                 [Container()]
                             );
 
@@ -161,7 +162,8 @@ class _EpisodePickerState extends State<EpisodePicker> {
                               widget.showContentModel.releaseDate,
                               seasonNumber,
                               episodeNumber,
-                              context
+                              context,
+                              replaceNavigatorContext: true
                             );
                           },
                           child: new Text("Play Episode"),

@@ -47,7 +47,7 @@ class MovieLayout{
   ///
   static Widget getFloatingActionButton(BuildContext context, MovieContentModel model){
     return new FloatingActionButton.extended(
-      onPressed: (){
+      onPressed: () async {
         Interface.showAlert(
             context,
             new TitleText('Searching for Sources...'),
@@ -56,18 +56,19 @@ class MovieLayout{
                 child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we're experiencing server issues."),
               ),
               Center(
-                child: new CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                )
+                  child: new CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                  )
               )
             ],
-            true,
+            false,
             [Container()]
         );
 
-        vendorConfigs[0].playMovie(
+        await vendorConfigs[0].playMovie(
           model.title,
-          context
+          context,
+          replaceNavigatorContext: true
         );
       },
       icon: Icon(Icons.play_arrow),
