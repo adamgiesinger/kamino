@@ -63,7 +63,7 @@ class TopRated extends StatelessWidget{
                           child: Container(
                             child:snapshot.data[index].poster_path != null
                                 ? Image.network(
-                              "http://image.tmdb.org/t/p/w500" +
+                              "${tmdb.image_cdn}" +
                                   snapshot.data[index].poster_path,
                               fit: BoxFit.fill,
                               height: 170.0,

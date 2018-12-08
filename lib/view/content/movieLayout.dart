@@ -55,10 +55,13 @@ class MovieLayout{
               Center(
                 child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we're experiencing server issues."),
               ),
-              Center(
-                  child: new CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                  )
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: Center(
+                    child: new CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                    )
+                )
               )
             ],
             false,
@@ -67,8 +70,7 @@ class MovieLayout{
 
         await vendorConfigs[0].playMovie(
           model.title,
-          context,
-          replaceNavigatorContext: true
+          context
         );
       },
       icon: Icon(Icons.play_arrow),

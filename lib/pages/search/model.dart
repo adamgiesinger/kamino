@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/main.dart';
 
 class SearchResult {
   final String mediaType;
@@ -40,7 +41,7 @@ class API {
     await _client
         .get(Uri.parse(_url + query))
         .catchError((error){
-          print("An error occurred: " + error);
+          log.severe("An error occurred: " + error);
         })
         .then((res) => res.body)
         .then(jsonDecode)

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kamino/animation/transition.dart';
 import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/episodePicker.dart';
+
+import 'package:kamino/api/tmdb.dart' as tmdb;
 
 class TVShowLayout{
 
@@ -54,7 +55,7 @@ class TVShowLayout{
           // Determine season image
           var image = null;
           if(season["poster_path"] != null){
-            image = "http://image.tmdb.org/t/p/w500" + season["poster_path"];
+            image = "${tmdb.image_cdn}" + season["poster_path"];
           }
 
           // Create leading widget
@@ -105,7 +106,7 @@ class TVShowLayout{
   ){
     Navigator.push(
         context,
-        FadeRoute(builder: (context) => EpisodePicker(
+        MaterialPageRoute(builder: (context) => EpisodePicker(
             contentId: _data.id,
             showContentModel: _data,
             seasonIndex: _data.seasons[index]["season_number"]

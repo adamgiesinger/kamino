@@ -1,5 +1,6 @@
 // Import flutter libraries
 import 'dart:collection';
+import 'package:logging/logging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,15 +44,22 @@ const backgroundColor = const Color(0xFF26282C);
 const highlightColor = const Color(0x968147FF);
 const appName = "ApolloTV";
 
+Logger log;
 var vendorConfigs = ApolloVendor.getVendorConfigs();
 
 void main() {
+  Logger.root.level = Level.OFF;
+  Logger.root.onRecord.listen((record) {
+    print("[${record.loggerName}: ${record.level.name}] [${record.time}]: ${record.message}");
+  });
+  log = new Logger(appName);
+
   // MD2: Remove status bar translucency.
   changeStatusColor(Color color) async {
     try {
       await FlutterStatusbarcolor.setStatusBarColor(color);
     } on PlatformException catch (e) {
-      print(e);
+      log.severe("Error updating status bar: $e");
     }
   }
   changeStatusColor(const Color(0x00000000));

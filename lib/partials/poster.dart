@@ -38,6 +38,24 @@ class PosterState extends State<Poster> {
       }
     }
 
+    Widget imageWidget = Container();
+    if(widget.background != null) {
+      imageWidget = new FadeInImage.assetNetwork(
+        placeholder: "assets/images/no_image_detail.jpg",
+        image: "${tmdb.image_cdn}/${widget.background}",
+        fit: BoxFit.cover,
+        height: 752,
+        width: 500,
+      );
+    }else{
+      imageWidget = new Image(
+        image: AssetImage("assets/images/no_image_detail.jpg"),
+        fit: BoxFit.cover,
+        height: 752,
+        width: 500
+      );
+    }
+
     return Container(
       child: Stack(
         fit: StackFit.expand,
@@ -48,13 +66,7 @@ class PosterState extends State<Poster> {
               elevation: 5,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: new FadeInImage.assetNetwork(
-                  placeholder: "assets/images/no_image_detail.jpg",
-                  image: "${tmdb.image_cdn}/${widget.background}",
-                  fit: BoxFit.cover,
-                  height: 752,
-                  width: 500,
-                ),
+                child: imageWidget,
               )
           ),
 

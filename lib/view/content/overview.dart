@@ -132,7 +132,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                       )
                   ),
                   background: _generateBackdropImage(context),
-                  collapseMode: CollapseMode.pin,
+                  collapseMode: CollapseMode.parallax,
                 ),
               ),
             ];

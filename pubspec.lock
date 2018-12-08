@@ -138,6 +138,13 @@ packages:
       url: "https://github.com/terrabythia/flutter_mdns_plugin"
     source: git
     version: "0.0.1"
+  flutter_parallax:
+    dependency: "direct main"
+    description:
+      name: flutter_parallax
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   flutter_rating:
     dependency: "direct main"
     description:
@@ -185,6 +192,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.7"
+  logging:
+    dependency: "direct main"
+    description:
+      name: logging
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.11.3+2"
   matcher:
     dependency: transitive
     description:
