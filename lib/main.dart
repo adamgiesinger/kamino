@@ -54,15 +54,11 @@ void main() {
   });
   log = new Logger(appName);
 
-  // MD2: Remove status bar translucency.
-  changeStatusColor(Color color) async {
-    try {
-      await FlutterStatusbarcolor.setStatusBarColor(color);
-    } on PlatformException catch (e) {
-      log.severe("Error updating status bar: $e");
-    }
-  }
-  changeStatusColor(const Color(0x00000000));
+  // MD2: Force SystemUI dark theme and status bar transparency
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+    statusBarColor: const Color(0x00000000),
+    systemNavigationBarColor: const Color(0xFF000000)
+  ));
 
   runApp(
     new MaterialApp(
