@@ -4,7 +4,6 @@ import 'package:logging/logging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:kamino/pages/_page.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/vendor/index.dart';
@@ -39,9 +38,9 @@ var themeData = ThemeData(
 );
 
 const primaryColor = const Color(0xFF8147FF);
-const secondaryColor = const Color(0xFF303A47);
+const secondaryColor = const Color(0x168147FF);
 const backgroundColor = const Color(0xFF26282C);
-const highlightColor = const Color(0x968147FF);
+const highlightColor = const Color(0x268147FF);
 const appName = "ApolloTV";
 
 Logger log;
@@ -62,12 +61,13 @@ void main() {
 
   runApp(
     new MaterialApp(
-        title: appName,
-        home: KaminoApp(),
-        theme: themeData,
+      title: appName,
+      home: KaminoApp(),
+      theme: themeData,
 
-        // Hide annoying debug banner
-        debugShowCheckedModeBanner: false),
+      // Hide annoying debug banner
+      debugShowCheckedModeBanner: false
+    ),
   );
 }
 
@@ -84,19 +84,19 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
   LinkedHashMap<Tab, Page> _pages = {
     // Favorites
     Tab(
-        icon: Icon(Icons.favorite)
+      icon: Icon(Icons.favorite)
     ): FavoritesPage(),
 
     // Homepage
     Tab(
-        icon: Icon(
-            const IconData(0xe90B, fontFamily: 'apollotv-icons')
-        )
+      icon: Icon(
+          const IconData(0xe90B, fontFamily: 'apollotv-icons')
+      )
     ): HomePage(),
 
     // Search
     Tab(
-        icon: Icon(Icons.search)
+      icon: Icon(Icons.search),
     ): SearchPage()
   } as LinkedHashMap<Tab, Page>;
 
@@ -109,17 +109,6 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
         vsync: this,
         initialIndex: 1
     );
-
-//    _tabController.addListener((){
-//      setState((){
-//        if(_tabController.indexIsChanging){ return; }
-//        if(_pages.values.toList()[_tabController.index] != null) {
-//          _currentTitle = _pages.values.toList()[_tabController.index].getTitle();
-//        }
-//      });
-//    });
-//
-//    _currentTitle = _pages.values.toList()[_tabController.index].getTitle();
   }
 
   @override
@@ -193,14 +182,16 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
                 title: Text('Donate')
             ),
             ListTile(
-                leading: const Icon(Icons.settings),
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.of(context).pop();
+              enabled: true,
+              leading: const Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.of(context).pop();
 
-                  Navigator.push(context,
-                      SlideLeftRoute(builder: (context) => SettingsView()));
-                }
+                Navigator.push(context, SlideLeftRoute(
+                    builder: (context) => SettingsView()
+                ));
+              }
             )
           ],
         ),

@@ -36,6 +36,8 @@ class ContentOverview extends StatefulWidget {
 /// _data will be a ContentModel. You should look at an example model to cast this to your content type.
 ///
 class _ContentOverviewState extends State<ContentOverview> {
+
+  ScrollController _controller;
   ContentModel _data;
 
   @override
@@ -49,6 +51,7 @@ class _ContentOverviewState extends State<ContentOverview> {
       });
     });
 
+    _controller = new ScrollController();
     super.initState();
   }
 
@@ -112,62 +115,69 @@ class _ContentOverviewState extends State<ContentOverview> {
     return new Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                actions: <Widget>[
-                  IconButton(icon: Icon(Icons.favorite_border, color: Colors.white), onPressed: null),
-                ],
-                expandedHeight: 200.0,
-                floating: false,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: Text(
-                      _data.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                          fontFamily: 'GlacialIndifference'
-                      )
-                  ),
-                  background: _generateBackdropImage(context),
-                  collapseMode: CollapseMode.parallax,
-                ),
-              ),
-            ];
-          },
-          body: Container(
-              child: ListView(
-                  children: <Widget>[
-                    // This is the summary line, just below the title.
-                    _generateOverviewWidget(context),
-
-                    // Content Widgets
-                    Padding(
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
-                        child: Column(
-                          children: <Widget>[
-                            /*
-                              * If you're building a row widget, it should have a horizontal
-                              * padding of 24 (narrow) or 16 (wide).
-                              *
-                              * If your row is relevant to the last, use a vertical padding
-                              * of 5, otherwise use a vertical padding of 5 - 10.
-                              *
-                              * Relevant means visually and by context.
-                            */
-                            _generateGenreChipsRow(context),
-                            _generateInformationCards(),
-
-                            // Context-specific layout
-                            _generateLayout(widget.contentType)
-                          ],
-                        )
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              actions: <Widget>[
+                IconButton(icon: Icon(Icons.favorite_border, color: Colors.white), onPressed: null),
+              ],
+              expandedHeight: 200.0,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text(
+                    _data.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(
+                        fontFamily: 'GlacialIndifference'
                     )
-                  ]
-              )
+                ),
+                background: _generateBackdropImage(context),
+                collapseMode: CollapseMode.parallax,
+              ),
+            ),
+          ];
+        },
+        body: Container(
+          child: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (notification){
+              if(notification.leading){
+                notification.disallowGlow();
+              }
+            },
+            child: ListView(
+                children: <Widget>[
+                  // This is the summary line, just below the title.
+                  _generateOverviewWidget(context),
+
+                  // Content Widgets
+                  Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Column(
+                        children: <Widget>[
+                          /*
+                            * If you're building a row widget, it should have a horizontal
+                            * padding of 24 (narrow) or 16 (wide).
+                            *
+                            * If your row is relevant to the last, use a vertical padding
+                            * of 5, otherwise use a vertical padding of 5 - 10.
+                            *
+                            * Relevant means visually and by context.
+                          */
+                          _generateGenreChipsRow(context),
+                          _generateInformationCards(),
+
+                          // Context-specific layout
+                          _generateLayout(widget.contentType)
+                        ],
+                      )
+                  )
+                ]
+            ),
           )
+        )
       ),
 
       floatingActionButton: _getFloatingActionButton(

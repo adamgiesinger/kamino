@@ -23,7 +23,7 @@ class BottomGradient extends StatelessWidget {
             colors: <Color>[
               color.withOpacity(1),
               color.withOpacity(0),
-              color.withOpacity(0)
+              color.withOpacity(0.5)
             ],
           )),
     );

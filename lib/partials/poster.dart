@@ -87,7 +87,7 @@ class PosterState extends State<Poster> {
                       padding: EdgeInsets.only(bottom: 2, left: 10, right: 10),
                       child: TitleText(
                         widget.name,
-                        fontSize: 16,
+                        fontSize: 16
                       )
                   ),
 
