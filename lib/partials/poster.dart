@@ -81,6 +81,7 @@ class PosterState extends State<Poster> {
           Align(
               alignment: Alignment.bottomCenter,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   new Padding(

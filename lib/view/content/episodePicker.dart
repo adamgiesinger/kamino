@@ -66,7 +66,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
     return new Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: TitleText(_season != null ? "${_season.name} - ${widget.showContentModel.title}" : "Loading..."),
+        title: TitleText(_season != null ? "${widget.showContentModel.title} - ${_season.name}" : "Loading..."),
         centerTitle: true,
       ),
       body: _season == null ?
@@ -122,8 +122,12 @@ class _EpisodePickerState extends State<EpisodePicker> {
 
                   Padding(
                       padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
-                      child: Text(
-                          episode["overview"]
+                      child: ConcealableText(
+                        episode["overview"],
+                        revealLabel: "Show more...",
+                        concealLabel: "Show less...",
+
+                        maxLines: 4
                       )
                   ),
 
@@ -144,12 +148,12 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                           child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we don't have the content you're looking for."),
                                         ),
                                         Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Center(
-                                                child: new CircularProgressIndicator(
-                                                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                                                )
+                                          padding: EdgeInsets.only(top: 20),
+                                          child: Center(
+                                            child: new CircularProgressIndicator(
+                                              valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
                                             )
+                                          )
                                         )
                                       ],
                                       false,
