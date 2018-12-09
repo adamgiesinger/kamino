@@ -149,6 +149,7 @@ class SearchPageState extends State<SearchPage> {
                                   keyboardAppearance: Brightness.dark,
                                   onEditingComplete: () {
                                     resultBloc.query.add(_searchControl.text);
+                                    FocusScope.of(context).requestFocus(new FocusNode());
                                   },
                                   textInputAction: TextInputAction.search,
                                   textCapitalization: TextCapitalization.words
@@ -168,6 +169,7 @@ class SearchPageState extends State<SearchPage> {
                         splashColor: const Color(0x10FFFFFF),
                         onTap: (){
                           resultBloc.query.add(_searchControl.text);
+                          FocusScope.of(context).requestFocus(new FocusNode());
                         },
                         child: Container(
                             padding: const EdgeInsets.all(10.0),
