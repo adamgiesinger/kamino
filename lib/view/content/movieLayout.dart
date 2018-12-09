@@ -61,7 +61,7 @@ class MovieLayout{
                           new TitleText('Searching for Sources...'),
                           [
                             Center(
-                              child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we're experiencing server issues."),
+                              child: Text("BETA NOTE: If you find yourself waiting more than 30 seconds, there's a good chance we're experiencing server issues."),
                             ),
                             Padding(
                                 padding: EdgeInsets.symmetric(vertical: 20),

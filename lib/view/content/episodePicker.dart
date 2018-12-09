@@ -149,7 +149,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                       new TitleText('Searching for Sources...'),
                                       [
                                         Center(
-                                          child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we don't have the content you're looking for."),
+                                          child: Text("BETA NOTE: If you find yourself waiting more than 30 seconds, there's a good chance we don't have the content you're looking for."),
                                         ),
                                         Padding(
                                             padding: EdgeInsets.only(top: 20),
