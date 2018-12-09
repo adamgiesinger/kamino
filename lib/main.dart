@@ -190,7 +190,7 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
               onTap: () {
                 Navigator.of(context).pop();
 
-                Navigator.push(context, SlideLeftRoute(
+                Navigator.push(context, SlideRightRoute(
                     builder: (context) => SettingsView()
                 ));
               }
