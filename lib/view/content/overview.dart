@@ -37,7 +37,8 @@ class ContentOverview extends StatefulWidget {
 ///
 class _ContentOverviewState extends State<ContentOverview> {
 
-  ScrollController _controller;
+  TextSpan _titleSpan = TextSpan();
+  bool _longTitle = false;
   ContentModel _data;
 
   @override
@@ -48,10 +49,27 @@ class _ContentOverviewState extends State<ContentOverview> {
       // draw the UI.
       setState(() {
         _data = data;
+
+        _titleSpan = new TextSpan(
+            text: _data.title,
+            style: TextStyle(
+                fontFamily: 'GlacialIndifference',
+                fontSize: 19
+            )
+        );
+
+        var titlePainter = new TextPainter(
+            text: _titleSpan,
+            maxLines: 1,
+            textAlign: TextAlign.start,
+            textDirection: Directionality.of(context)
+        );
+
+        titlePainter.layout(maxWidth: MediaQuery.of(context).size.width - 160);
+        _longTitle = titlePainter.didExceedMaxLines;
       });
     });
 
-    _controller = new ScrollController();
     super.initState();
   }
 
@@ -114,77 +132,97 @@ class _ContentOverviewState extends State<ContentOverview> {
     // When the data has loaded we can display the general outline and content-type specific body.
     return new Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              actions: <Widget>[
-                IconButton(icon: Icon(Icons.favorite_border, color: Colors.white), onPressed: null),
-              ],
-              expandedHeight: 200.0,
-              floating: false,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: Text(
-                    _data.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(
-                        fontFamily: 'GlacialIndifference'
-                    )
-                ),
-                background: _generateBackdropImage(context),
-                collapseMode: CollapseMode.parallax,
-              ),
-            ),
-          ];
-        },
-        body: Container(
-          child: NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (notification){
-              if(notification.leading){
-                notification.disallowGlow();
-              }
-            },
-            child: ListView(
-                children: <Widget>[
-                  // This is the summary line, just below the title.
-                  _generateOverviewWidget(context),
+      body: Stack(
+        children: <Widget>[
+          NestedScrollView(
+              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverAppBar(
+                    actions: <Widget>[
+                      IconButton(icon: Icon(Icons.favorite_border, color: Colors.white), onPressed: null),
+                    ],
+                    expandedHeight: 200.0,
+                    floating: false,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      centerTitle: true,
+                      title: LayoutBuilder(builder: (context, size){
+                        var titleTextWidget = new RichText(
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            text: _titleSpan
+                        );
 
-                  // Content Widgets
-                  Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: Column(
+                        if(_longTitle) return Container();
+
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: size.maxWidth - 160
+                          ),
+                          child: titleTextWidget
+                        );
+                      }),
+                      background: _generateBackdropImage(context),
+                      collapseMode: CollapseMode.parallax,
+                    ),
+                  ),
+                ];
+              },
+              body: Container(
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (notification){
+                      if(notification.leading){
+                        notification.disallowGlow();
+                      }
+                    },
+                    child: ListView(
                         children: <Widget>[
-                          /*
-                            * If you're building a row widget, it should have a horizontal
-                            * padding of 24 (narrow) or 16 (wide).
-                            *
-                            * If your row is relevant to the last, use a vertical padding
-                            * of 5, otherwise use a vertical padding of 5 - 10.
-                            *
-                            * Relevant means visually and by context.
-                          */
-                          _generateGenreChipsRow(context),
-                          _generateInformationCards(),
+                          // This is the summary line, just below the title.
+                          _generateOverviewWidget(context),
 
-                          // Context-specific layout
-                          _generateLayout(widget.contentType)
-                        ],
-                      )
+                          // Content Widgets
+                          Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.0),
+                              child: Column(
+                                children: <Widget>[
+                                  /*
+                                    * If you're building a row widget, it should have a horizontal
+                                    * padding of 24 (narrow) or 16 (wide).
+                                    *
+                                    * If your row is relevant to the last, use a vertical padding
+                                    * of 5, otherwise use a vertical padding of 5 - 10.
+                                    *
+                                    * Relevant means visually and by context.
+                                  */
+                                  _generateGenreChipsRow(context),
+                                  _generateInformationCards(),
+
+                                  // Context-specific layout
+                                  _generateLayout(widget.contentType)
+                                ],
+                              )
+                          )
+                        ]
+                    ),
                   )
-                ]
+              )
+          ),
+
+          Positioned(
+            left: -7.5,
+            right: -7.5,
+            bottom: 30,
+            child: Container(
+              child: _getFloatingActionButton(
+                widget.contentType,
+                context,
+                _data
+              )
             ),
           )
-        )
-      ),
-
-      floatingActionButton: _getFloatingActionButton(
-          widget.contentType,
-          context,
-          _data
-      ),
+        ],
+      )
     );
   }
 
@@ -194,56 +232,47 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   Widget _generateOverviewWidget(BuildContext context){
     return new Padding(
-      padding: EdgeInsets.only(bottom: 3.0),
-      child: Row(
+      padding: EdgeInsets.only(bottom: 5.0, left: 30, right: 30),
+      child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            _longTitle ? Padding(
+              padding: EdgeInsets.only(bottom: 20),
+              child: TitleText(
+                _data.title,
+                allowOverflow: true,
+                textAlign: TextAlign.center,
+                fontSize: 23,
+              ),
+            ) : Container(),
+
             Text(
                 _data.releaseDate != "" && _data.releaseDate != null ?
-                  DateTime.parse(_data.releaseDate).year.toString() :
-                  "Unknown",
+                  "Released: " + DateTime.parse(_data.releaseDate).year.toString() :
+                  "Unknown Year",
                 style: TextStyle(
                     fontFamily: 'GlacialIndifference',
                     fontSize: 16.0
                 )
             ),
-            new Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.0),
-                child: new Text(
-                    " \u2022 ",
-                    style: TextStyle(
-                        fontFamily: 'GlacialIndifference',
-                        fontSize: 16.0
-                    )
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                StarRating(
+                  rating: _data.rating / 2, // Ratings are out of 10 from our source.
+                  color: Theme.of(context).primaryColor,
+                  borderColor: Theme.of(context).primaryColor,
+                  size: 16.0,
+                  starCount: 5,
+                ),
+                Text(
+                  "  \u2022  ${_data.voteCount} ratings",
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold
+                  )
                 )
-            ),
-            new Text(
-                getOverviewContentTypeName(widget.contentType).toUpperCase(),
-                style: TextStyle(
-                    fontFamily: 'GlacialIndifference',
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold
-                )
-            ),
-            new Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.0),
-                child: new Text(
-                    " \u2022 ",
-                    style: TextStyle(
-                        fontFamily: 'GlacialIndifference',
-                        fontSize: 16.0
-                    )
-                )
-            ),
-            StarRating(
-              rating: _data.rating / 2, // Ratings are out of 10 from our source.
-              color: Theme.of(context).primaryColor,
-              borderColor: Theme.of(context).primaryColor,
-              size: 16.0,
-              starCount: 5,
-            ),
-            Text(
-              " (${_data.voteCount})"
+              ],
             )
           ]
       ),
@@ -277,7 +306,9 @@ class _ContentOverviewState extends State<ContentOverview> {
                 width: contextWidth
             )
         ),
-        BottomGradient(color: Theme.of(context).backgroundColor)
+        !_longTitle ?
+          BottomGradient(color: Theme.of(context).backgroundColor)
+            : BottomGradient(offset: 1, finalStop: 0, color: Theme.of(context).backgroundColor)
       ],
     );
   }
@@ -329,42 +360,47 @@ class _ContentOverviewState extends State<ContentOverview> {
         children: <Widget>[
 
           /* Synopsis */
-          Column(
-            children: <Widget>[
-              ListTile(
-                title: TitleText(
-                    'Synopsis',
-                    fontSize: 22.0,
-                    textColor: Theme.of(context).primaryColor
-                )
-              ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.3, horizontal: 16.0),
-                  child: DefaultTextStyle(
-                    style: TextStyle(
-                      fontSize: 15.0
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          _data.overview != "" ?
-                            _data.overview :
-                            // e.g: 'This TV Show has no synopsis available.'
-                            "This " + getOverviewContentTypeName(widget.contentType) + " has no synopsis available.",
-                          style: TextStyle(
-                            color: Colors.grey
-                          ),
-                          maxLines: 8,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      ],
-                    )
+          Card(
+            elevation: 3,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 20),
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                      title: TitleText(
+                        'Synopsis',
+                        fontSize: 22.0,
+                        textColor: Theme.of(context).primaryColor
+                      )
+                  ),
+                  Container(
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: DefaultTextStyle(
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: const Color(0xFF9A9A9A)
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  ConcealableText(
+                                    _data.overview != "" ?
+                                    _data.overview :
+                                    // e.g: 'This TV Show has no synopsis available.'
+                                    "This " + getOverviewContentTypeName(widget.contentType) + " has no synopsis available.",
+                                    maxLines: 6,
+                                    revealLabel: "Show More...",
+                                    concealLabel: "Show Less...",
+                                  )
+                                ],
+                              )
+                          )
+                      )
                   )
-                )
-              )
-            ],
+                ],
+              ),
+            )
           )
           /* ./Synopsis */
 

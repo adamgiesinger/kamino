@@ -80,7 +80,7 @@ class ConcealableTextState extends State<ConcealableText> {
                     child: Text(
                       isConcealed ? widget.revealLabel : widget.concealLabel,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.bold
                       )
                     )
                   ),

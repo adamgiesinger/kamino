@@ -46,43 +46,56 @@ class MovieLayout{
   /// This should be used to add a play FAB, for example.
   ///
   static Widget getFloatingActionButton(BuildContext context, MovieContentModel model){
-    return new FloatingActionButton.extended(
-      onPressed: () async {
-        Interface.showAlert(
-            context,
-            new TitleText('Searching for Sources...'),
-            [
-              Center(
-                child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we're experiencing server issues."),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Center(
-                    child: new CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                    )
-                )
-              )
-            ],
-            false,
-            [Container()]
-        );
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+        child: new Row(
+            children: <Widget>[
+              Expanded(
+                  child: FloatingActionButton.extended(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)
+                    ),
+                    onPressed: () async {
+                      Interface.showAlert(
+                          context,
+                          new TitleText('Searching for Sources...'),
+                          [
+                            Center(
+                              child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we're experiencing server issues."),
+                            ),
+                            Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                child: Center(
+                                    child: new CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                                    )
+                                )
+                            )
+                          ],
+                          false,
+                          [Container()]
+                      );
 
-        await vendorConfigs[0].playMovie(
-          model.title,
-          context
-        );
-      },
-      icon: Icon(Icons.play_arrow),
-      label: Text(
-        "Play Movie",
-        style: TextStyle(
-            letterSpacing: 0.0,
-            fontFamily: 'GlacialIndifference',
-            fontSize: 16.0
-        ),
-      ),
-      backgroundColor: Theme.of(context).primaryColor,
+                      await vendorConfigs[0].playMovie(
+                        model.title,
+                        context
+                      );
+                    },
+                    icon: Container(),
+                    label: Text(
+                      "Play Movie",
+                      style: TextStyle(
+                        letterSpacing: 0.0,
+                        fontFamily: 'GlacialIndifference',
+                        fontSize: 18.0
+                      ),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                    elevation: 30
+                  )
+              )
+            ]
+        )
     );
   }
 

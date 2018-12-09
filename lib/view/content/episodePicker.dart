@@ -136,10 +136,14 @@ class _EpisodePickerState extends State<EpisodePicker> {
                       child: new SizedBox(
                         width: double.infinity,
                         child: new Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-                            child: new MaterialButton(
+                          padding: EdgeInsets.only(top: 15.0, bottom: 20, left: 15.0, right: 15.0),
+                          child: new SizedBox(
+                            height: 40,
+                            child: new RaisedButton(
+                                shape: new RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.0)
+                                ),
                                 onPressed: (){
-
                                   Interface.showAlert(
                                       context,
                                       new TitleText('Searching for Sources...'),
@@ -148,12 +152,12 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                           child: Text("BETA NOTE: If you find yourself waiting more than 15 seconds, there's a good chance we don't have the content you're looking for."),
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.only(top: 20),
-                                          child: Center(
-                                            child: new CircularProgressIndicator(
-                                              valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                                            padding: EdgeInsets.only(top: 20),
+                                            child: Center(
+                                                child: new CircularProgressIndicator(
+                                                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                                                )
                                             )
-                                          )
                                         )
                                       ],
                                       false,
@@ -171,11 +175,18 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                       context
                                   );
                                 },
-                                child: new Text("Play Episode"),
+                                child: new Text(
+                                  "Play Episode",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'GlacialIndifference'
+                                  ),
+                                ),
                                 color: primaryColor,
 
-                                height: 40
-                            )
+                                elevation: 1
+                            ),
+                          )
                         ),
                       )
                   )
@@ -202,28 +213,36 @@ class _EpisodePickerState extends State<EpisodePicker> {
 
   Widget _generateEpisodeImage(Map episode, ScrollController _controller){
     if (episode["still_path"] == null) {
-      return Center(
-        child: new Parallax.inside(
-          mainAxisExtent: 220.0,
-          child: new Image.asset(
-            "assets/images/no_image_detail.jpg"
-          )
-        ),
-      );
+      return LayoutBuilder(builder: (BuildContext context, BoxConstraints size) {
+        return Center(
+          child: new Parallax.inside(
+              mainAxisExtent: 220.0,
+              child: new Image.asset(
+                "assets/images/no_image_detail.jpg",
+                height: 300,
+                width: size.maxWidth,
+                fit: BoxFit.cover,
+              )
+          ),
+        );
+      });
     }
 
-    return Center(
-      child: new Parallax.inside(
-        mainAxisExtent: 200.0,
-        child: new Image.network(
-          "${tmdb.image_cdn}${episode["still_path"]}",
-          height: 300,
-          fit: BoxFit.cover,
-        )
-        // height: 220.0,
-        // fit: BoxFit.cover,
-      ),
-    );
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints size){
+      return Center(
+        child: new Parallax.inside(
+            mainAxisExtent: 200.0,
+            child: new Image.network(
+              "${tmdb.image_cdn}${episode["still_path"]}",
+              height: 300,
+              width: size.maxWidth,
+              fit: BoxFit.cover,
+            )
+          // height: 220.0,
+          // fit: BoxFit.cover,
+        ),
+      );
+    });
   }
 
 }

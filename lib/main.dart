@@ -34,12 +34,14 @@ var themeData = ThemeData(
   ),
   buttonTheme: ButtonThemeData(
     buttonColor: primaryColor
-  )
+  ),
+  cardColor: cardColor
 );
 
 const primaryColor = const Color(0xFF8147FF);
 const secondaryColor = const Color(0x168147FF);
 const backgroundColor = const Color(0xFF26282C);
+const cardColor = const Color(0xFF2F3136);
 const highlightColor = const Color(0x268147FF);
 const appName = "ApolloTV";
 

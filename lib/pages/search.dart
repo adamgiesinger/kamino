@@ -158,7 +158,8 @@ class SearchPageState extends State<SearchPage> {
                         children: <Widget>[
                           IconButton(
                               icon: Icon(Icons.search,
-                                  size: 28.0, color: Colors.grey),
+                                  size: 28.0, color: Colors.grey
+                              ),
                               onPressed: () {
                                 resultBloc.query.add(_searchControl.text);
                               })
@@ -175,13 +176,18 @@ class SearchPageState extends State<SearchPage> {
                   child: StreamBuilder(
                     stream: resultBloc.log,
                     builder: (context, snapshot) => Container(
-                      margin:
-                      EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Text(snapshot?.data ?? '',
+                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(snapshot.data ?? '',
                           style: TextStyle(
-                              color: Colors.white70,
-                              fontFamily: 'GlacialIndifference',
-                              fontSize: 15.0)),
+                            color: Colors.white70,
+                            fontFamily: 'GlacialIndifference',
+                            fontSize: 15.0
+                          ),
+                          textAlign: TextAlign.center
+                        ),
+                      ),
                     ),
                   ),
                 ),

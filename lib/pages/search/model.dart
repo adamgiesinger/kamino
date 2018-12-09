@@ -46,7 +46,13 @@ class API {
         .then((res) => res.body)
         .then(jsonDecode)
         .then((json) => json["results"])
-        .then((movies) => movies.forEach((movie) => list.add(SearchResult.fromJson(movie))));
+        .then((movies) => movies.forEach((movie){
+          var result = SearchResult.fromJson(movie);
+
+          // Filter out results without a year or backdrop (poster).
+          if(result.year != null && result.posterPath != null)
+            list.add(result);
+        }));
 
     list.removeWhere((item) => item.mediaType != "movie" && item.mediaType != "tv");
     list.removeWhere((item) => item.id == null);
