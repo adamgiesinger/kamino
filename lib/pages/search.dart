@@ -83,7 +83,7 @@ class SearchPageState extends State<SearchPage> {
           } else {
             return Center(
                 child: Text(
-                  "We got nothing...",
+                  "We've got nothing...",
                   style: TextStyle(
                       fontSize: 26.0,
                       fontFamily: 'GlacialIndifference',
@@ -132,39 +132,58 @@ class SearchPageState extends State<SearchPage> {
                         child: new Padding(
                             padding: EdgeInsets.symmetric(
                                 vertical: 12.0, horizontal: 15.0),
-                            child: new TextField(
-                                controller: _searchControl,
-                                autocorrect: true,
-                                cursorColor: primaryColor,
-                                style: TextStyle(
-                                    fontFamily: 'GlacialIndifference',
-                                    fontSize: 18.0,
-                                    color: Colors.white),
-                                decoration: new InputDecoration.collapsed(
-                                    hintText: "Search TV shows and movies...",
-                                    hintStyle: TextStyle(color: Colors.grey)
-                                ),
-                                keyboardAppearance: Brightness.dark,
-                                onEditingComplete: () {
-                                  resultBloc.query.add(_searchControl.text);
-                                },
-                                textInputAction: TextInputAction.search,
-                                textCapitalization: TextCapitalization.words))),
+                            child: Container(
+                              margin: EdgeInsets.only(right: 30),
+                              child: new TextField(
+                                  controller: _searchControl,
+                                  autocorrect: true,
+                                  cursorColor: primaryColor,
+                                  style: TextStyle(
+                                      fontFamily: 'GlacialIndifference',
+                                      fontSize: 18.0,
+                                      color: Colors.white),
+                                  decoration: new InputDecoration.collapsed(
+                                      hintText: "Search TV shows and movies...",
+                                      hintStyle: TextStyle(color: Colors.grey)
+                                  ),
+                                  keyboardAppearance: Brightness.dark,
+                                  onEditingComplete: () {
+                                    resultBloc.query.add(_searchControl.text);
+                                  },
+                                  textInputAction: TextInputAction.search,
+                                  textCapitalization: TextCapitalization.words
+                              )
+                            )
+                        )
+                    ),
                   ),
                   Container(
-                      margin: const EdgeInsets.only(top: 10.0, right: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          IconButton(
-                              icon: Icon(Icons.search,
-                                  size: 28.0, color: Colors.grey
-                              ),
-                              onPressed: () {
-                                resultBloc.query.add(_searchControl.text);
-                              })
-                        ],
-                      ))
+                    margin: const EdgeInsets.only(left: 10.0, top: 10.0),
+                    child: Material(
+                      color: const Color(0x00000000),
+                      child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0)
+                        ),
+                        splashColor: const Color(0x10FFFFFF),
+                        onTap: (){
+                          resultBloc.query.add(_searchControl.text);
+                        },
+                        child: Container(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Icon(Icons.search,
+                                    size: 28.0, color: Colors.grey
+                                )
+                              ],
+                            )
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
