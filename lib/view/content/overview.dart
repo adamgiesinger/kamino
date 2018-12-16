@@ -222,7 +222,8 @@ class _ContentOverviewState extends State<ContentOverview> {
             ),
           )
         ],
-      )
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling
     );
   }
 

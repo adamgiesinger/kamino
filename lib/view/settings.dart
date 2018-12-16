@@ -61,14 +61,14 @@ class _SettingsViewState extends State<SettingsView> {
         appBar: AppBar(
           title: TitleText("Settings"),
 
-          backgroundColor: backgroundColor,
+          backgroundColor: Theme.of(context).backgroundColor,
 
           // Center title
           centerTitle: true,
         ),
         body: new Builder(builder: (BuildContext context) {
           return new Container(
-            color: backgroundColor,
+            color: Theme.of(context).backgroundColor,
             child: new ListView(
 
                 // It's recommended that you give at maximum three examples per setting category.
@@ -184,7 +184,7 @@ class _SettingsViewState extends State<SettingsView> {
                           : <Widget>[
                         new CircularProgressIndicator(
                             valueColor: new AlwaysStoppedAnimation(
-                                primaryColor
+                                Theme.of(context).primaryColor
                             )
                         )
                       ]

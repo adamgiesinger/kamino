@@ -11,7 +11,7 @@ class HomeCustomiseWidget extends ApolloWidget {
       ListTile(
         leading: const Icon(Icons.lightbulb_outline),
         title: Padding(padding: EdgeInsets.only(top: 10), child: TitleText("Welcome to $appName")),
-        subtitle: Text("This is your Launchpad!\nYou can choose what you want to see here..."),
+        subtitle: Padding(padding: EdgeInsets.only(top: 10), child: Text("This is your Launchpad!\nYou can choose what you want to see here...")),
       ),
 
       ButtonTheme.bar(

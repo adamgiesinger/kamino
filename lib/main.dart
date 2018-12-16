@@ -17,38 +17,15 @@ import 'pages/favorites.dart';
 // Import views
 import 'view/settings.dart';
 
-var themeData = ThemeData(
-  brightness: Brightness.dark,
-  primaryColor: primaryColor,
-  accentColor: secondaryColor,
-  splashColor: backgroundColor,
-  highlightColor: highlightColor,
-  backgroundColor: backgroundColor,
-  cursorColor: primaryColor,
-  textSelectionHandleColor: primaryColor,
-  buttonColor: primaryColor,
-  dialogTheme: DialogTheme(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(5)
-    )
-  ),
-  buttonTheme: ButtonThemeData(
-    buttonColor: primaryColor
-  ),
-  cardColor: cardColor
-);
-
-const primaryColor = const Color(0xFF8147FF);
-const secondaryColor = const Color(0x168147FF);
-const backgroundColor = const Color(0xFF26282C);
-const cardColor = const Color(0xFF2F3136);
-const highlightColor = const Color(0x268147FF);
 const appName = "ApolloTV";
 
 Logger log;
-var vendorConfigs = ApolloVendor.getVendorConfigs();
 
-void main() {
+var vendorConfigs = ApolloVendor.getVendorConfigs();
+var themeConfigs = ApolloVendor.getThemeConfigs();
+var activeTheme = 0;
+
+void main(){
   Logger.root.level = Level.OFF;
   Logger.root.onRecord.listen((record) {
     print("[${record.loggerName}: ${record.level.name}] [${record.time}]: ${record.message}");
@@ -65,7 +42,7 @@ void main() {
     new MaterialApp(
       title: appName,
       home: KaminoApp(),
-      theme: themeData,
+      theme: themeConfigs[activeTheme].getThemeData(),
 
       // Hide annoying debug banner
       debugShowCheckedModeBanner: false
@@ -91,8 +68,10 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
 
     // Homepage
     Tab(
-      icon: Icon(
-          const IconData(0xe90B, fontFamily: 'apollotv-icons')
+      icon: Image(
+          //const IconData(0xe90B, fontFamily: 'apollotv-icons')
+        image: AssetImage("assets/images/logo_foreground.png"),
+        height: 32,
       )
     ): HomePage(),
 
@@ -122,27 +101,30 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        backgroundColor: backgroundColor,
+        // backgroundColor: backgroundColor,
         appBar: AppBar(
           title: TitleText(appName),
           // MD2: make the color the same as the background.
-          backgroundColor: backgroundColor,
-          // Remove box-shadow
-          elevation: 0.00,
+          backgroundColor: Theme.of(context).cardColor,
+          elevation: 5.0,
 
           // Center title
           centerTitle: true,
         ),
         drawer: __buildAppDrawer(),
-        bottomNavigationBar: TabBar(
-          controller: _tabController,
-          tabs: _pages.keys.toList(),
+        bottomNavigationBar: Material(
+          color: Theme.of(context).cardColor,
+          child: TabBar(
+              controller: _tabController,
+              tabs: _pages.keys.toList(),
 
-          indicatorColor: primaryColor,
-          indicatorSize: TabBarIndicatorSize.tab,
+              indicatorColor: Theme.of(context).primaryColor,
+              indicatorSize: TabBarIndicatorSize.tab,
 
-          labelColor: primaryColor,
-          unselectedLabelColor: Colors.white30
+              labelColor: Theme.of(context).primaryColor,
+              unselectedLabelColor: Colors.white30
+          ),
+          elevation: 5.0
         ),
 
         // Body content

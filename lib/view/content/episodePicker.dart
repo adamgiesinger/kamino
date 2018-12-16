@@ -64,7 +64,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: TitleText(_season != null ? "${widget.showContentModel.title} - ${_season.name}" : "Loading..."),
         centerTitle: true,
@@ -95,7 +95,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
             }
 
             var card = new Card(
-              color: backgroundColor,
+              color: Theme.of(context).backgroundColor,
               clipBehavior: Clip.antiAlias,
               elevation: 5.0, // Boost shadow...
 
@@ -155,7 +155,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                             padding: EdgeInsets.only(top: 20),
                                             child: Center(
                                                 child: new CircularProgressIndicator(
-                                                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                                                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                                                 )
                                             )
                                         )
@@ -182,7 +182,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                       fontFamily: 'GlacialIndifference'
                                   ),
                                 ),
-                                color: primaryColor,
+                                color: Theme.of(context).primaryColor,
 
                                 elevation: 1
                             ),

@@ -74,7 +74,7 @@ class PosterState extends State<Poster> {
               padding: EdgeInsets.all(3.5),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
-                  child: BottomGradient()
+                  child: BottomGradient(finalStop: 0.025)
               )
           ),
 

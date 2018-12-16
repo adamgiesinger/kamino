@@ -137,7 +137,7 @@ class SearchPageState extends State<SearchPage> {
                               child: new TextField(
                                   controller: _searchControl,
                                   autocorrect: true,
-                                  cursorColor: primaryColor,
+                                  cursorColor: Theme.of(context).primaryColor,
                                   style: TextStyle(
                                       fontFamily: 'GlacialIndifference',
                                       fontSize: 18.0,

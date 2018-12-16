@@ -12,6 +12,7 @@ class FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Theme.of(context).backgroundColor,
       padding: EdgeInsets.only(top: 5.0),
       child: new Column(
         mainAxisSize: MainAxisSize.min,

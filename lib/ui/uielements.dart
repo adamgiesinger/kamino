@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TitleText extends Text {
 
-  TitleText(String data, {double fontSize, Color textColor, bool allowOverflow = false, TextAlign textAlign}) : super(
+  TitleText(String data, {double fontSize : 18, Color textColor, bool allowOverflow = false, TextAlign textAlign}) : super(
     data,
     overflow: (allowOverflow ? null : TextOverflow.ellipsis),
     style: TextStyle(

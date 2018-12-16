@@ -51,11 +51,11 @@ class MovieLayout{
         child: new Row(
             children: <Widget>[
               Expanded(
-                  child: FloatingActionButton.extended(
+                  child: new FloatingActionButton.extended(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0)
                     ),
-                    onPressed: () async {
+                    onPressed: (){
                       Interface.showAlert(
                           context,
                           new TitleText('Searching for Sources...'),
@@ -67,7 +67,7 @@ class MovieLayout{
                                 padding: EdgeInsets.symmetric(vertical: 20),
                                 child: Center(
                                     child: new CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                                     )
                                 )
                             )
@@ -76,9 +76,9 @@ class MovieLayout{
                           [Container()]
                       );
 
-                      await vendorConfigs[0].playMovie(
-                        model.title,
-                        context
+                      vendorConfigs[0].playMovie(
+                          model.title,
+                          context
                       );
                     },
                     icon: Container(),

@@ -14,13 +14,12 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new Container(
       padding: EdgeInsets.only(top: 5.0),
-      color: backgroundColor,
+      color: Theme.of(context).backgroundColor,
       child: new ListView(children: [
         HomeCustomiseWidget(),
 
         new Card(
             elevation: 3.0,
-            color: const Color(0xFF2F3136),
             child: new Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
