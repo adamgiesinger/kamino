@@ -1,4 +1,4 @@
-import 'package:kamino/vendor/index.dart';
+import 'package:kamino/animation/transition.dart';
 
 import 'dart:async';
 
@@ -6,11 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/view/settings/page_appearance.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingsView extends StatefulWidget {
+
   @override
   _SettingsViewState createState() => _SettingsViewState();
+
+  static final buildTypes = [
+    "Pre-Release",
+    "Beta",
+    "Release Candidate",
+    "Stable"
+  ];
+
 }
 
 class _SettingsViewState extends State<SettingsView> {
@@ -57,6 +67,9 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
+
+    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
     return Scaffold(
         appBar: AppBar(
           title: TitleText("Settings"),
@@ -77,16 +90,29 @@ class _SettingsViewState extends State<SettingsView> {
 
                   Padding(padding: EdgeInsets.symmetric(vertical: 5)),
 
-                  ListTile(
-                    title: TitleText("Launchpad"),
-                    subtitle: Text("Modify your $appName launchpad."),
-                    leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+                  Material(
+                    color: Theme.of(context).backgroundColor,
+                    child: ListTile(
+                      title: TitleText("Launchpad"),
+                      subtitle: Text("Modify your $appName launchpad."),
+                      leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+                      onTap: () => {},
+                    ),
                   ),
 
-                  ListTile(
-                    title: TitleText("Appearance"),
-                    subtitle: Text("Change theme, [...]"),
-                    leading: new Icon(Icons.palette)
+                  Material(
+                    color: Theme.of(context).backgroundColor,
+                    child: ListTile(
+                      title: TitleText("Appearance"),
+                      subtitle: Text("Change theme, [...]"),
+                      leading: new Icon(Icons.palette),
+                      enabled: true,
+                      onTap: (){
+                        Navigator.push(context, SlideRightRoute(
+                            builder: (context) => AppearanceSettingsPage()
+                        ));
+                      },
+                    ),
                   ),
 
                   ListTile(
@@ -99,9 +125,8 @@ class _SettingsViewState extends State<SettingsView> {
 
                   // App Version
                   ListTile(
-                      title: TitleText("$appName (${vendorConfigs[0].getName()} Build)"),
-                      subtitle:
-                          Text("v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
+                      title: TitleText("$appName (${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build)"),
+                      subtitle: Text("v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
                       leading: new Image.asset("assets/images/logo.png", width: 36, height: 36)
                   ),
 
@@ -117,7 +142,7 @@ class _SettingsViewState extends State<SettingsView> {
   Widget __buildContributorCard(){
     return Card(
       elevation: 10.0,
-      color: const Color(0xFF2F3136),
+      color: Theme.of(context).cardColor,
       child: new Container(
           child: new Column(
             children: <Widget>[
@@ -195,6 +220,13 @@ class _SettingsViewState extends State<SettingsView> {
           )
       ),
     );
+  }
+
+  String _getBuildType(){
+    int buildType = int.tryParse(_packageInfo.buildNumber.split('').last);
+
+    if(buildType != null) return SettingsView.buildTypes[buildType];
+    return "Unknown";
   }
 
 }

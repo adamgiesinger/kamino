@@ -6,12 +6,18 @@ abstract class ApolloWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Card(
-      elevation: 5.0,
-      color: const Color(0xFF2F3136),
-      child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          children: construct()
+    return new Container(
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: new Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10)
+        ),
+        elevation: 5.0,
+        color: Theme.of(context).cardColor,
+        child: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: construct(context)
+        ),
       ),
     );
   }
@@ -23,6 +29,6 @@ abstract class ApolloWidget extends StatelessWidget {
   ///
   /// This means you should, if at all possible, avoid using [build].
   ///
-  List<Widget> construct();
+  List<Widget> construct(BuildContext context);
 
 }

@@ -22,7 +22,7 @@ class MovieLayout{
                     title: TitleText(
                         'Similar Movies',
                         fontSize: 22.0,
-                        textColor: Theme.of(context).primaryColor
+                        textColor: Colors.white
                     )
                 ),
 
@@ -76,7 +76,8 @@ class MovieLayout{
                           [Container()]
                       );
 
-                      vendorConfigs[0].playMovie(
+                      KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                      appState.getVendorConfigs()[0].playMovie(
                           model.title,
                           context
                       );

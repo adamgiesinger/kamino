@@ -88,7 +88,8 @@ class PosterState extends State<Poster> {
                       padding: EdgeInsets.only(bottom: 2, left: 10, right: 10),
                       child: TitleText(
                         widget.name,
-                        fontSize: 16
+                        fontSize: 16,
+                        textColor: Theme.of(context).accentTextTheme.body1.color,
                       )
                   ),
 
@@ -105,13 +106,15 @@ class PosterState extends State<Poster> {
                           Text(
                               releaseYear,
                               style: TextStyle(
-                                  fontSize: 12
+                                  fontSize: 12,
+                                color: Theme.of(context).accentTextTheme.body1.color
                               )
                           ),
 
                           Icon(
                               widget.mediaType == 'tv' ? Icons.tv : Icons.local_movies,
-                              size: 16
+                              size: 16,
+                            color: Theme.of(context).accentTextTheme.body1.color,
                           )
                         ],
                       )

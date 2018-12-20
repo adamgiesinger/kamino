@@ -1,145 +1,182 @@
 // Import flutter libraries
-import 'dart:collection';
+import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
+import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kamino/pages/_page.dart';
-import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/vendor/index.dart';
 
 // Import custom libraries / utils
 import 'animation/transition.dart';
 // Import pages
 import 'pages/home.dart';
-import 'pages/search.dart';
-import 'pages/favorites.dart';
 // Import views
-import 'view/settings.dart';
+import 'package:kamino/view/settings/settings.dart';
 
 const appName = "ApolloTV";
 
 Logger log;
 
-var vendorConfigs = ApolloVendor.getVendorConfigs();
-var themeConfigs = ApolloVendor.getThemeConfigs();
-var activeTheme = 0;
-
 void main(){
+  // Setup logger
   Logger.root.level = Level.OFF;
   Logger.root.onRecord.listen((record) {
     print("[${record.loggerName}: ${record.level.name}] [${record.time}]: ${record.message}");
   });
   log = new Logger(appName);
 
-  // MD2: Force SystemUI dark theme and status bar transparency
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-    statusBarColor: const Color(0x00000000),
-    systemNavigationBarColor: const Color(0xFF000000)
-  ));
-
   runApp(
-    new MaterialApp(
-      title: appName,
-      home: KaminoApp(),
-      theme: themeConfigs[activeTheme].getThemeData(),
-
-      // Hide annoying debug banner
-      debugShowCheckedModeBanner: false
-    ),
+    KaminoApp()
   );
 }
 
 class KaminoApp extends StatefulWidget {
+
   @override
-  HomeAppState createState() => new HomeAppState();
+  State<StatefulWidget> createState() => KaminoAppState();
+
 }
 
-class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin {
+class KaminoAppState extends State<KaminoApp> {
 
-//  String _currentTitle = appName;
-  TabController _tabController;
+  List<VendorConfiguration> _vendorConfigs;
+  List<ThemeConfiguration> _themeConfigs;
+  String _activeTheme;
+  Color _primaryColorOverride;
 
-  LinkedHashMap<Tab, Page> _pages = {
-    // Favorites
-    Tab(
-      icon: Icon(Icons.favorite)
-    ): FavoritesPage(),
+  KaminoAppState(){
+    // Load vendor and theme configs.
+    _vendorConfigs = ApolloVendor.getVendorConfigs();
+    _themeConfigs = ApolloVendor.getThemeConfigs();
 
-    // Homepage
-    Tab(
-      icon: Image(
-          //const IconData(0xe90B, fontFamily: 'apollotv-icons')
-        image: AssetImage("assets/images/logo_foreground.png"),
-        height: 32,
-      )
-    ): HomePage(),
+    // Validate vendor and theme configs
+    _themeConfigs.forEach((element){
+      if(_themeConfigs.where((consumer) => element.getId() == consumer.getId()).length > 1)
+        throw new Exception("Each theme must have a unique ID. Duplicate ID is: ${element.getId()}");
+    });
 
-    // Search
-    Tab(
-      icon: Icon(Icons.search),
-    ): SearchPage()
-  } as LinkedHashMap<Tab, Page>;
+    // Load active theme and primary color override.
+    _activeTheme = _themeConfigs[0].getId();
+    _primaryColorOverride = null;
 
-  @override
-  void initState(){
-    super.initState();
-
-    _tabController = new TabController(
-        length: _pages.length,
-        vsync: this,
-        initialIndex: 1
+    // Update SystemUI
+    SystemChrome.setSystemUIOverlayStyle(
+        getActiveThemeMeta().getOverlayStyle().copyWith(
+          statusBarColor: const Color(0x00000000),
+          systemNavigationBarColor: getActiveThemeData().cardColor
+        )
     );
   }
 
   @override
-  void destroy(){
-    _tabController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+        title: appName,
+        home: Launchpad(),
+        theme: getActiveThemeData(),
+
+        // Hide annoying debug banner
+        debugShowCheckedModeBanner: false
+    );
   }
+
+  List<VendorConfiguration> getVendorConfigs(){
+    return _vendorConfigs;
+  }
+
+  List<ThemeConfiguration> getThemeConfigs(){
+    return _themeConfigs;
+  }
+
+  String getActiveTheme(){
+    return _activeTheme;
+  }
+
+  ThemeConfigurationAdapter getActiveThemeMeta(){
+    return ThemeConfigurationAdapter.fromConfig(
+        _themeConfigs.singleWhere((consumer) => consumer.getId() == _activeTheme)
+    );
+  }
+
+  ThemeData getActiveThemeData({ bool ignoreOverride: false }){
+    if(_primaryColorOverride != null && !ignoreOverride)
+      return _themeConfigs.singleWhere((consumer) => consumer.getId() == _activeTheme)
+          .getThemeData(primaryColor: _primaryColorOverride);
+
+    return _themeConfigs.singleWhere((consumer) => consumer.getId() == _activeTheme)
+        .getThemeData();
+  }
+
+  void setActiveTheme(String activeTheme){
+    setState((){
+      _activeTheme = activeTheme;
+
+      // MD2: Update SystemUI theme and status bar transparency
+      SystemChrome.setSystemUIOverlayStyle(
+          getActiveThemeMeta().getOverlayStyle().copyWith(
+            statusBarColor: const Color(0x00000000),
+            systemNavigationBarColor: getActiveThemeData().cardColor,
+          )
+      );
+    });
+  }
+
+  Color getPrimaryColorOverride(){
+    return _primaryColorOverride;
+  }
+
+  void setPrimaryColorOverride(Color color){
+    setState(() {
+      _primaryColorOverride = color;
+      setActiveTheme(getActiveTheme());
+    });
+  }
+
+}
+
+class Launchpad extends StatefulWidget {
+
+  @override
+  LaunchpadState createState() => LaunchpadState();
+
+}
+
+class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
     return new Scaffold(
         // backgroundColor: backgroundColor,
         appBar: AppBar(
-          title: TitleText(appName),
+          title: Image.asset(
+            appState.getActiveThemeData().brightness == Brightness.dark ?
+              "assets/images/header_text.png" : "assets/images/header_text_dark.png",
+            width: 125
+          ),
+
           // MD2: make the color the same as the background.
           backgroundColor: Theme.of(context).cardColor,
           elevation: 5.0,
 
           // Center title
-          centerTitle: true,
+          centerTitle: true
         ),
         drawer: __buildAppDrawer(),
-        bottomNavigationBar: Material(
-          color: Theme.of(context).cardColor,
-          child: TabBar(
-              controller: _tabController,
-              tabs: _pages.keys.toList(),
-
-              indicatorColor: Theme.of(context).primaryColor,
-              indicatorSize: TabBarIndicatorSize.tab,
-
-              labelColor: Theme.of(context).primaryColor,
-              unselectedLabelColor: Colors.white30
-          ),
-          elevation: 5.0
-        ),
 
         // Body content
-        body: TabBarView(
-          controller: _tabController,
-          children: _pages.values.toList()
-        )
+        body: HomePage()
     );
   }
 
   Widget __buildAppDrawer(){
     return Drawer(
-      child: Container(
-        color: const Color(0xFF32353A),
-        child: ListView(
+      child: ListView(
+
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
@@ -153,17 +190,41 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
                 )
             ),
             ListTile(
-                leading: const Icon(Icons.library_books),
-                title: Text("News")
+              leading: const Icon(Icons.library_books),
+              title: Text("News")
             ),
             Divider(),
             ListTile(
-                leading: const Icon(Icons.gavel),
-                title: Text('Disclaimer')
+              leading: const Icon(Icons.gavel),
+              title: Text('Legal'),
+              onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
             ),
             ListTile(
-                leading: const Icon(Icons.favorite),
-                title: Text('Donate')
+              leading: const Icon(Icons.favorite),
+              title: Text('Donate'),
+              onTap: () => showDialog(
+                context: context,
+                builder: (BuildContext _ctx){
+                  return AlertDialog(
+                    title: TitleText("Thanks for your interest!"),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text("We're grateful for your support but we don't have donations set up at the moment."),
+                        Container(margin: EdgeInsets.only(top: 15)),
+                        Text("If you're really interested in donating, I recommend joining our Discord server; where you'll find app development discussion and we'll keep you updated on our news.")
+                      ],
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: TitleText("Okay", fontSize: 15),
+                        onPressed: () => Navigator.of(context).pop(),
+                        textColor: Theme.of(context).primaryColor,
+                      )
+                    ],
+                  );
+                }
+              ),
             ),
             ListTile(
               enabled: true,
@@ -178,9 +239,16 @@ class HomeAppState extends State<KaminoApp> with SingleTickerProviderStateMixin 
               }
             )
           ],
-        ),
-      )
+        )
     );
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
 }

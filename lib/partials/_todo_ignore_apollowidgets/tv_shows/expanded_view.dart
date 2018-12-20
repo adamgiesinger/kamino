@@ -46,7 +46,7 @@ class ExpandedView extends StatelessWidget{
 
     List<ExpandedTVModel> _data = new List<ExpandedTVModel>();
 
-    String url = "${tmdb.root_url}/tv/${apiSelector()}${tmdb.default_arguments}&page=";
+    String url = "${tmdb.root_url}/tv/${apiSelector()}${tmdb.defaultArguments}&page=";
 
     final http.Client _client = http.Client();
 
