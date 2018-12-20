@@ -76,7 +76,8 @@ class MovieLayout{
                           [Container()]
                       );
 
-                      vendorConfigs[0].playMovie(
+                      KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                      appState.getVendorConfigs()[0].playMovie(
                           model.title,
                           context
                       );

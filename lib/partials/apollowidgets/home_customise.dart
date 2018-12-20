@@ -6,7 +6,7 @@ import 'package:kamino/ui/uielements.dart';
 class HomeCustomiseWidget extends ApolloWidget {
 
   @override
-  List<Widget> construct() {
+  List<Widget> construct(BuildContext context) {
     return <Widget>[
       ListTile(
         leading: const Icon(Icons.lightbulb_outline),
@@ -20,6 +20,7 @@ class HomeCustomiseWidget extends ApolloWidget {
         child: ButtonBar(
           children: <Widget>[
             FlatButton(
+              textColor: Theme.of(context).primaryTextTheme.body1.color,
               child: TitleText(
                 "Customise...",
                 fontSize: 16,

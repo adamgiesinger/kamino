@@ -12,7 +12,7 @@ class TopRatedMovies extends StatelessWidget{
 
     List<TopRatedMoviesModel> _data = new List();
 
-    String url = "${tmdb.root_url}/movie/upcoming${tmdb.default_arguments}&page=";
+    String url = "${tmdb.root_url}/movie/upcoming${tmdb.defaultArguments}&page=";
 
     final http.Client _client = http.Client();
 

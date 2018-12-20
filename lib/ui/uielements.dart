@@ -46,10 +46,12 @@ class ConcealableTextState extends State<ConcealableText> {
       children: <Widget>[
         LayoutBuilder(builder: (context, size){
           var textSpan = TextSpan(
-            text: widget.text
+            text: widget.text,
+            style: Theme.of(context).primaryTextTheme.body1
           );
 
           var textPainter = TextPainter(
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
             maxLines: widget.maxLines,
             textAlign: TextAlign.start,
             textDirection: Directionality.of(context),

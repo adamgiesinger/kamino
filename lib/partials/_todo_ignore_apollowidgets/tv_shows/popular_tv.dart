@@ -12,7 +12,7 @@ class PopularShows extends StatelessWidget{
 
     List<PopularShowsModel> _data = new List();
 
-    String url = "${tmdb.root_url}/tv/popular${tmdb.default_arguments}&page=";
+    String url = "${tmdb.root_url}/tv/popular${tmdb.defaultArguments}&page=";
 
     final http.Client _client = http.Client();
 

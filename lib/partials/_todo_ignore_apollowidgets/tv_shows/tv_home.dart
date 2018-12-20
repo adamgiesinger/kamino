@@ -49,7 +49,7 @@ class AirToday extends StatelessWidget{
 
     List<AiringTodayModel> _data = new List();
 
-    String url = "${tmdb.root_url}/tv/airing_today${tmdb.default_arguments}&page=";
+    String url = "${tmdb.root_url}/tv/airing_today${tmdb.defaultArguments}&page=";
 
     final http.Client _client = http.Client();
 
