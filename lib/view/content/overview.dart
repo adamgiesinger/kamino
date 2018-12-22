@@ -43,22 +43,28 @@ class _ContentOverviewState extends State<ContentOverview> {
   bool _longTitle = false;
   ContentModel _data;
   String _backdropImagePath;
-  bool _favState = false;
+  bool _favState;
 
-  Widget _unSavedIcon() {
+  Widget _favIconGenerator(bool state){
 
-    return Icon(
-      Icons.favorite_border,
-      color: Colors.white,
-    );
-  }
+    Widget _result;
 
-  Widget _savedIcon() {
+    if(state == true) {
 
-    return Icon(
-      Icons.favorite,
-      color: Colors.red,
-    );
+      _result = Icon(
+        Icons.favorite,
+        color: Colors.red,
+      );
+
+    } else {
+
+      _result = Icon(
+        Icons.favorite_border,
+        color: Colors.white,
+      );
+    }
+
+    return _result;
   }
 
 
@@ -219,7 +225,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                     backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
                       IconButton(
-                        icon: _favState == true ? _savedIcon() : _unSavedIcon(),
+                        icon: _favIconGenerator(_favState),
                         onPressed: (){
                           print("button pressed");
                           _favButtonLogic(context);
