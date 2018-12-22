@@ -62,7 +62,6 @@ flutter:
     - assets/images/header_text_dark.png
     - assets/images/logo.png
     - assets/images/logo_foreground.png
-    - assets/apolloDB.db
 
 
   fonts:

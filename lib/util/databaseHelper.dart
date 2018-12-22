@@ -5,12 +5,11 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 saveFavourites(String name, String contentType, int tmdbid, String url) async{
 
   //get the path of the database file
-  Directory documentDirectory = await getApplicationDocumentsDirectory();
-  String path = join(documentDirectory.path, "assets/apolloDB.db");
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
   var db = ObjectDB(path);
 
   //open connection to the database
@@ -36,8 +35,8 @@ saveFavourites(String name, String contentType, int tmdbid, String url) async{
 Future<bool> isFavourite(int tmdbid) async{
 
   //get the path of the database file
-  Directory documentDirectory = await getApplicationDocumentsDirectory();
-  String path = join(documentDirectory.path, "assets/apolloDB.db");
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
   var db = ObjectDB(path);
 
   //open connection to the database
@@ -59,8 +58,8 @@ Future<bool> isFavourite(int tmdbid) async{
 removeFavourite(int tmdbid) async {
 
   //get the path of the database file
-  Directory documentDirectory = await getApplicationDocumentsDirectory();
-  String path = join(documentDirectory.path, "assets/apolloDB.db");
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
   var db = ObjectDB(path);
 
   //open connection to the database

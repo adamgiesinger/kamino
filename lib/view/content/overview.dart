@@ -43,17 +43,23 @@ class _ContentOverviewState extends State<ContentOverview> {
   bool _longTitle = false;
   ContentModel _data;
   String _backdropImagePath;
-  bool _favState;
+  bool _favState = false;
 
-  Widget _unSavedIcon = Icon(
-    Icons.favorite_border,
-    color: Colors.white,
-  );
+  Widget _unSavedIcon() {
 
-  Widget _savedIcon = Icon(
-    Icons.favorite,
-    color: Colors.red,
-  );
+    return Icon(
+      Icons.favorite_border,
+      color: Colors.white,
+    );
+  }
+
+  Widget _savedIcon() {
+
+    return Icon(
+      Icons.favorite,
+      color: Colors.red,
+    );
+  }
 
 
   @override
@@ -62,6 +68,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     //check if the show is a favourite
     databaseHelper.isFavourite(widget.contentId).then((data) {
 
+      print("initial fav state is $data");
       setState(() {
         _favState = data;
       });
@@ -137,19 +144,25 @@ class _ContentOverviewState extends State<ContentOverview> {
   }
 
   //Logic for the favourites button
-  _favButtonLogic(){
+  _favButtonLogic(BuildContext context){
+
+    print("Id is ${widget.contentId}");
+    print("fav state is currently $_favState");
+
     if (_favState == true) {
 
       //remove the show from the database
-      databaseHelper.removeFavourite(widget.contentId);
+      databaseHelper.removeFavourite(widget.contentId).then((){
 
-      //show notification snackbar
-      final snackBar = SnackBar(content: Text('Removed from favourites'));
-      Scaffold.of(context).showSnackBar(snackBar);
+        //show notification snackbar
+        final snackBar = SnackBar(content: Text('Removed from favourites'));
+        Scaffold.of(context).showSnackBar(snackBar);
 
-      //set fav to false to reflect change
-      setState(() {
-        _favState = false;
+        //set fav to false to reflect change
+        setState(() {
+          _favState = false;
+        });
+
       });
 
     } else if (_favState = false){
@@ -158,15 +171,18 @@ class _ContentOverviewState extends State<ContentOverview> {
           _data.title,
           widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId,
-          tmdb.image_cdn + _data.backdropPath);
+          tmdb.image_cdn + _data.backdropPath).then((){
 
-      //show notification snackbar
-      final snackBar = SnackBar(content: Text('Saved to favourites'));
-      Scaffold.of(context).showSnackBar(snackBar);
+        print("made the save...");
 
-      //set fav to true to reflect change
-      setState(() {
-        _favState = true;
+        //show notification snackbar
+        final snackBar = SnackBar(content: Text('Saved to favourites'));
+        Scaffold.of(context).showSnackBar(snackBar);
+
+        //set fav to true to reflect change
+        setState(() {
+          _favState = true;
+        });
       });
 
     }
@@ -203,8 +219,11 @@ class _ContentOverviewState extends State<ContentOverview> {
                     backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
                       IconButton(
-                        icon: _favState == true ? _savedIcon : _unSavedIcon,
-                        onPressed: _favButtonLogic,
+                        icon: _favState == true ? _savedIcon() : _unSavedIcon(),
+                        onPressed: (){
+                          print("button pressed");
+                          _favButtonLogic(context);
+                        },
                       ),
                     ],
                     expandedHeight: 200.0,
