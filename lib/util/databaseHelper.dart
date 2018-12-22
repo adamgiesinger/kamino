@@ -106,3 +106,21 @@ Future<List<Map>> getFavTVShows() async {
 
   return _result;
 }
+
+Future<List<Map>> getAllFaves() async {
+
+  //get the path of the database file
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
+  var db = ObjectDB(path);
+
+  db.open();
+
+  List<Map> _result = await db.find({
+    "docType": "favourites"
+  });
+
+  db.close();
+
+  return _result;
+}
