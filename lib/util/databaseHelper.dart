@@ -1,11 +1,8 @@
 import 'package:objectdb/objectdb.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
-saveFavourites(String name, String contentType, int tmdbid, String url) async{
+Future saveFavourites(String name, String contentType, int tmdbid, String url) async{
 
   //get the path of the database file
   final directory = await getApplicationDocumentsDirectory();
@@ -43,19 +40,17 @@ Future<bool> isFavourite(int tmdbid) async{
   db.open();
 
   var results = await db.find({
-    Op.lte: {"docType": "favourites", "tmdbID":tmdbid}
-  });
-
-  print("found the following entries... $results");
+        "docType": "favourites",
+        "tmdbID":tmdbid
+      });
 
   db.close();
-  
-  
+
   //return true if the show is a known favourite, else return false
-  return results.length > 0 ? true : false;
+  return results.length == 1 ? true : false;
 }
 
-removeFavourite(int tmdbid) async {
+Future removeFavourite(int tmdbid) async {
 
   //get the path of the database file
   final directory = await getApplicationDocumentsDirectory();
@@ -72,4 +67,42 @@ removeFavourite(int tmdbid) async {
   db.tidy();
 
   db.close();
+}
+
+Future<List<Map>> getFavMovies() async {
+
+  //get the path of the database file
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
+  var db = ObjectDB(path);
+
+  db.open();
+
+  List<Map> _result = await db.find({
+    "docType": "favourites",
+    "contentType": "movie"
+  });
+
+  db.close();
+
+  return _result;
+}
+
+Future<List<Map>> getFavTVShows() async {
+
+  //get the path of the database file
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
+  var db = ObjectDB(path);
+
+  db.open();
+
+  List<Map> _result = await db.find({
+    "docType": "favourites",
+    "contentType": "tv"
+  });
+
+  db.close();
+
+  return _result;
 }

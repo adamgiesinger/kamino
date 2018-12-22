@@ -43,7 +43,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   bool _longTitle = false;
   ContentModel _data;
   String _backdropImagePath;
-  bool _favState;
+  bool _favState = false;
 
   Widget _favIconGenerator(bool state){
 
@@ -72,6 +72,8 @@ class _ContentOverviewState extends State<ContentOverview> {
   void initState() {
 
     //check if the show is a favourite
+    print("startup id is ${widget.contentId}");
+
     databaseHelper.isFavourite(widget.contentId).then((data) {
 
       print("initial fav state is $data");
@@ -152,45 +154,37 @@ class _ContentOverviewState extends State<ContentOverview> {
   //Logic for the favourites button
   _favButtonLogic(BuildContext context){
 
-    print("Id is ${widget.contentId}");
-    print("fav state is currently $_favState");
-
     if (_favState == true) {
 
       //remove the show from the database
-      databaseHelper.removeFavourite(widget.contentId).then((){
+      databaseHelper.removeFavourite(widget.contentId);
 
-        //show notification snackbar
-        final snackBar = SnackBar(content: Text('Removed from favourites'));
-        Scaffold.of(context).showSnackBar(snackBar);
+      //show notification snackbar
+      final snackBar = SnackBar(content: Text('Removed from favourites'));
+      Scaffold.of(context).showSnackBar(snackBar);
 
-        //set fav to false to reflect change
-        setState(() {
-          _favState = false;
-        });
-
+      //set fav to false to reflect change
+      setState(() {
+        _favState = false;
       });
 
-    } else if (_favState = false){
+    } else if (_favState == false){
+
       //add the show from the database
       databaseHelper.saveFavourites(
           _data.title,
           widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId,
-          tmdb.image_cdn + _data.backdropPath).then((){
+          tmdb.image_cdn + _data.backdropPath);
 
-        print("made the save...");
+      //show notification snackbar
+      final snackBar = SnackBar(content: Text('Saved to favourites'));
+      Scaffold.of(context).showSnackBar(snackBar);
 
-        //show notification snackbar
-        final snackBar = SnackBar(content: Text('Saved to favourites'));
-        Scaffold.of(context).showSnackBar(snackBar);
-
-        //set fav to true to reflect change
-        setState(() {
-          _favState = true;
-        });
+      //set fav to true to reflect change
+      setState(() {
+        _favState = true;
       });
-
     }
   }
 
@@ -227,7 +221,6 @@ class _ContentOverviewState extends State<ContentOverview> {
                       IconButton(
                         icon: _favIconGenerator(_favState),
                         onPressed: (){
-                          print("button pressed");
                           _favButtonLogic(context);
                         },
                       ),
@@ -379,6 +372,8 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   Widget _generateBackdropImage(BuildContext context){
     double contextWidth = MediaQuery.of(context).size.width;
+
+    //print("image url is... ${_data.backdropPath}");
 
     _backdropImagePath = tmdb.image_cdn + _data.backdropPath;
 
