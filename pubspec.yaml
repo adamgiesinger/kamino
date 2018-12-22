@@ -35,6 +35,9 @@ dependencies:
   dbcrypt: ^1.0.0
   flutter_material_color_picker: ^0.0.4
   url_launcher: ^4.0.2
+  objectdb: ^1.0.5
+  cached_network_image: ^0.5.1
+  flutter_cache_manager: ^0.2.0+1
 
 # Compile-only dependencies
 dev_dependencies:
@@ -59,6 +62,7 @@ flutter:
     - assets/images/header_text_dark.png
     - assets/images/logo.png
     - assets/images/logo_foreground.png
+    - assets/apolloDB.db
 
 
   fonts:

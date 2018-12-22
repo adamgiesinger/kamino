@@ -14,6 +14,7 @@ import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
 import 'package:vector_math/vector_math_64.dart' as VectorMath;
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 /*  CONTENT OVERVIEW WIDGET  */
 ///
@@ -41,9 +42,31 @@ class _ContentOverviewState extends State<ContentOverview> {
   TextSpan _titleSpan = TextSpan();
   bool _longTitle = false;
   ContentModel _data;
+  String _backdropImagePath;
+  bool _favState;
+
+  Widget _unSavedIcon = Icon(
+    Icons.favorite_border,
+    color: Colors.white,
+  );
+
+  Widget _savedIcon = Icon(
+    Icons.favorite,
+    color: Colors.red,
+  );
+
 
   @override
   void initState() {
+
+    //check if the show is a favourite
+    databaseHelper.isFavourite(widget.contentId).then((data) {
+
+      setState(() {
+        _favState = data;
+      });
+    });
+
     // When the widget is initialized, download the overview data.
     loadDataAsync().then((data) {
       // When complete, update the state which will allow us to
@@ -113,10 +136,47 @@ class _ContentOverviewState extends State<ContentOverview> {
     throw new Exception("Unexpected content type.");
   }
 
+  //Logic for the favourites button
+  _favButtonLogic(){
+    if (_favState == true) {
+
+      //remove the show from the database
+      databaseHelper.removeFavourite(widget.contentId);
+
+      //show notification snackbar
+      final snackBar = SnackBar(content: Text('Removed from favourites'));
+      Scaffold.of(context).showSnackBar(snackBar);
+
+      //set fav to false to reflect change
+      setState(() {
+        _favState = false;
+      });
+
+    } else if (_favState = false){
+      //add the show from the database
+      databaseHelper.saveFavourites(
+          _data.title,
+          widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
+          widget.contentId,
+          tmdb.image_cdn + _data.backdropPath);
+
+      //show notification snackbar
+      final snackBar = SnackBar(content: Text('Saved to favourites'));
+      Scaffold.of(context).showSnackBar(snackBar);
+
+      //set fav to true to reflect change
+      setState(() {
+        _favState = true;
+      });
+
+    }
+  }
+
   /* THE FOLLOWING CODE IS JUST LAYOUT CODE. */
 
   @override
   Widget build(BuildContext context) {
+
     // This is shown whilst the data is loading.
     if (_data == null) {
       return Scaffold(
@@ -143,11 +203,8 @@ class _ContentOverviewState extends State<ContentOverview> {
                     backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
                       IconButton(
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: Theme.of(context).primaryTextTheme.title.color
-                        ),
-                        onPressed: null
+                        icon: _favState == true ? _savedIcon : _unSavedIcon,
+                        onPressed: _favButtonLogic,
                       ),
                     ],
                     expandedHeight: 200.0,
@@ -298,6 +355,8 @@ class _ContentOverviewState extends State<ContentOverview> {
   Widget _generateBackdropImage(BuildContext context){
     double contextWidth = MediaQuery.of(context).size.width;
 
+    _backdropImagePath = tmdb.image_cdn + _data.backdropPath;
+
     return Container(
       height: 220,
       child: Stack(
@@ -307,7 +366,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           Container(
               child: _data.backdropPath != null ?
               Image.network(
-                  tmdb.image_cdn + _data.backdropPath,
+                  _backdropImagePath,
                   fit: BoxFit.cover,
                   height: 220.0,
                   width: contextWidth
