@@ -74,15 +74,8 @@ fabric.properties
 .idea/httpRequests
 
 # Android studio 3.1+ serialized cache file
-.idea/caches/build_file_checksums.ser
-.idea/workspace.xml
-.idea/modules.xml
-.idea/misc.xml
-.idea/libraries/Flutter_Plugins.xml
-.idea/libraries/Dart_SDK.xml
-.idea/libraries/Dart_Packages.xml
-.idea/codeStyles/Project.xml
 .idea/
+.gradle
 
 # Vendor Configuration
 lib/vendor/dist/config/*
@@ -90,3 +83,7 @@ lib/database_backup.zip
 
 # Android
 android/key.properties
+
+# Microservice scripts.
+/android/app/src/main/res/raw/microserver.js
+/ios/Runner/Resources/microserver.js
