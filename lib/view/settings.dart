@@ -1,6 +1,7 @@
 import 'package:kamino/vendor/index.dart';
 
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -14,9 +15,13 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  
+
+  SharedPreferences _preferences;
+
+  bool _useClientSideResolver = false;
+
   List<String> _contributors;
-  
+
   PackageInfo _packageInfo = new PackageInfo(
       appName: 'Unknown',
       packageName: 'Unknown',
@@ -27,6 +32,7 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   void initState() {
     super.initState();
+    _readSharedPrefs();
     _fetchPackageInfo();
     _fetchContributors();
   }
@@ -35,6 +41,13 @@ class _SettingsViewState extends State<SettingsView> {
     final PackageInfo info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
+    });
+  }
+
+  void _readSharedPrefs() async {
+    _preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _useClientSideResolver = _preferences.getBool('useClientSideResolver') ?? false;
     });
   }
 
@@ -73,45 +86,73 @@ class _SettingsViewState extends State<SettingsView> {
 
                 // It's recommended that you give at maximum three examples per setting category.
 
-                children: <Widget>[
-
-                  Padding(padding: EdgeInsets.symmetric(vertical: 5)),
-
-                  ListTile(
-                    title: TitleText("Launchpad"),
-                    subtitle: Text("Modify your $appName launchpad."),
-                    leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
-                  ),
-
-                  ListTile(
-                    title: TitleText("Appearance"),
-                    subtitle: Text("Change theme, [...]"),
-                    leading: new Icon(Icons.palette)
-                  ),
-
-                  ListTile(
-                    title: TitleText("Other"),
-                    subtitle: Text("Change language, choose sources, [...]"),
-                    leading: new Icon(Icons.settings),
-                  ),
-
-                  Divider(),
-
-                  // App Version
-                  ListTile(
-                      title: TitleText("$appName (${vendorConfigs[0].getName()} Build)"),
-                      subtitle:
-                          Text("v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
-                      leading: new Image.asset("assets/images/logo.png", width: 36, height: 36)
-                  ),
-
-                  // It's okay to remove this, but we'd appreciate it if you
-                  // keep it. <3
-                  __buildContributorCard()
-                ]
+                children: __buildPreferences()
             )
           );
         }));
+  }
+
+  List<Widget> __buildPreferences() {
+    var vendorConfig = vendorConfigs[0];
+
+    var widgets = <Widget>[
+      Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+
+      ListTile(
+        title: TitleText("Launchpad"),
+        subtitle: Text("Modify your $appName launchpad."),
+        leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+      ),
+
+      ListTile(
+          title: TitleText("Appearance"),
+          subtitle: Text("Change theme, [...]"),
+          leading: new Icon(Icons.palette)
+      ),
+
+      ListTile(
+        title: TitleText("Other"),
+        subtitle: Text("Change language, choose sources, [...]"),
+        leading: new Icon(Icons.settings),
+      ),
+    ];
+
+    if (vendorConfig.supportsClientSideResolver) {
+      widgets.add(
+          SwitchListTile(
+            title: TitleText("Use client-side resolver"),
+            subtitle: Text(
+                "Resolve all links on your device, bypassing the remote servers."),
+            value: _useClientSideResolver,
+            onChanged: (bool status) {
+              _preferences.setBool('useClientSideResolver', status);
+              setState(() {
+                _useClientSideResolver = status;
+              });
+            },
+          )
+      );
+    }
+
+    widgets.addAll(
+        <Widget>[
+          Divider(),
+
+          // App Version
+          ListTile(
+              title: TitleText("$appName (${vendorConfig.getName()} Build)"),
+              subtitle:
+              Text(
+                  "v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
+              leading: new Image.asset(
+                  "assets/images/logo.png", width: 36, height: 36)
+          ),
+
+          // It's okay to remove this, but we'd appreciate it if you
+          // keep it. <3
+          __buildContributorCard()
+        ]);
+    return widgets;
   }
 
   Widget __buildContributorCard(){

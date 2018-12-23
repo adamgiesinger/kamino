@@ -51,8 +51,8 @@ abstract class VendorConfiguration {
   ///
   Future<bool> authenticate();
 
-  Future<void> playMovie(String title, BuildContext context);
-  Future<void> playTVShow(
+  Future<dynamic> playMovie(String title, BuildContext context);
+  Future<dynamic> playTVShow(
       String title,
       String releaseDate,
       int seasonNumber,
@@ -66,6 +66,11 @@ abstract class VendorConfiguration {
     }else{
       throw new Exception("Invalid TMDB API key for provider ${getName()}.");
     }
+  }
+
+  /// Whether this vendor configuration supports resolving on the client-side.
+  bool get supportsClientSideResolver {
+    return false;
   }
 
 }
