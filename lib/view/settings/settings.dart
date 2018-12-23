@@ -1,4 +1,4 @@
-import 'package:kamino/vendor/index.dart';
+import 'package:kamino/animation/transition.dart';
 
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,11 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/view/settings/page_appearance.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingsView extends StatefulWidget {
+
   @override
   _SettingsViewState createState() => _SettingsViewState();
+
+  static final buildTypes = [
+    "Pre-Release",
+    "Beta",
+    "Release Candidate",
+    "Stable"
+  ];
+
 }
 
 class _SettingsViewState extends State<SettingsView> {
@@ -83,31 +93,50 @@ class _SettingsViewState extends State<SettingsView> {
           return new Container(
             color: Theme.of(context).backgroundColor,
             child: new ListView(
-
-                // It's recommended that you give at maximum three examples per setting category.
-
-                children: __buildPreferences()
+                children: __buildPreferences(context)
             )
           );
         }));
   }
 
-  List<Widget> __buildPreferences() {
-    var vendorConfig = vendorConfigs[0];
+  List<Widget> __buildPreferences(context) {
+    KaminoAppState appState = context.ancestorStateOfType(
+        const TypeMatcher<KaminoAppState>());
+
+    var vendorConfig = appState.getVendorConfigs()[0];
 
     var widgets = <Widget>[
+
       Padding(padding: EdgeInsets.symmetric(vertical: 5)),
 
-      ListTile(
-        title: TitleText("Launchpad"),
-        subtitle: Text("Modify your $appName launchpad."),
-        leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+      Material(
+        color: Theme
+            .of(context)
+            .backgroundColor,
+        child: ListTile(
+          title: TitleText("Launchpad"),
+          subtitle: Text("Modify your $appName launchpad."),
+          leading: new Icon(
+              const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+          onTap: () => {},
+        ),
       ),
 
-      ListTile(
+      Material(
+        color: Theme
+            .of(context)
+            .backgroundColor,
+        child: ListTile(
           title: TitleText("Appearance"),
           subtitle: Text("Change theme, [...]"),
-          leading: new Icon(Icons.palette)
+          leading: new Icon(Icons.palette),
+          enabled: true,
+          onTap: () {
+            Navigator.push(context, SlideRightRoute(
+                builder: (context) => AppearanceSettingsPage()
+            ));
+          },
+        ),
       ),
 
       ListTile(
@@ -122,7 +151,7 @@ class _SettingsViewState extends State<SettingsView> {
           SwitchListTile(
             title: TitleText("Use client-side resolver"),
             subtitle: Text(
-                "Resolve all links on your device, bypassing the remote servers."),
+                "Resolve all links on your device, bypassing the remote server."),
             value: _useClientSideResolver,
             onChanged: (bool status) {
               _preferences.setBool('useClientSideResolver', status);
@@ -134,31 +163,31 @@ class _SettingsViewState extends State<SettingsView> {
       );
     }
 
-    widgets.addAll(
-        <Widget>[
-          Divider(),
+    widgets.addAll([
+      Divider(),
 
-          // App Version
-          ListTile(
-              title: TitleText("$appName (${vendorConfig.getName()} Build)"),
-              subtitle:
-              Text(
-                  "v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
-              leading: new Image.asset(
-                  "assets/images/logo.png", width: 36, height: 36)
-          ),
+      // App Version
+      ListTile(
+          title: TitleText(
+              "$appName (${vendorConfig.getName()} ${_getBuildType()} Build)"),
+          subtitle: Text(
+              "v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
+          leading: new Image.asset(
+              "assets/images/logo.png", width: 36, height: 36)
+      ),
 
-          // It's okay to remove this, but we'd appreciate it if you
-          // keep it. <3
-          __buildContributorCard()
-        ]);
+      // It's okay to remove this, but we'd appreciate it if you
+      // keep it. <3
+      __buildContributorCard()
+    ]);
+
     return widgets;
   }
 
   Widget __buildContributorCard(){
     return Card(
       elevation: 10.0,
-      color: const Color(0xFF2F3136),
+      color: Theme.of(context).cardColor,
       child: new Container(
           child: new Column(
             children: <Widget>[
@@ -236,6 +265,13 @@ class _SettingsViewState extends State<SettingsView> {
           )
       ),
     );
+  }
+
+  String _getBuildType(){
+    int buildType = int.tryParse(_packageInfo.buildNumber.split('').last);
+
+    if(buildType != null) return SettingsView.buildTypes[buildType];
+    return "Unknown";
   }
 
 }

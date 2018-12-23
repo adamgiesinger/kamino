@@ -12,7 +12,7 @@ class PopularMovies extends StatelessWidget{
 
     List<PopularMoviesModel> _data = new List();
 
-    String url = "${tmdb.root_url}/movie/popular${tmdb.default_arguments}&page=";
+    String url = "${tmdb.root_url}/movie/popular${tmdb.defaultArguments}&page=";
 
     final http.Client _client = http.Client();
 

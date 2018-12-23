@@ -32,7 +32,7 @@ class API {
   final http.Client _client = http.Client();
 
   static String _url =
-      "${tmdb.root_url}/search/multi${tmdb.default_arguments}" +
+      "${tmdb.root_url}/search/multi${tmdb.defaultArguments}" +
       "&include_adult=false&query=";
 
   Future<List<SearchResult>>  get(String query) async {

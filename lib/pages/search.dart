@@ -1,8 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/pages/_page.dart';
 import 'package:kamino/pages/search/bloc.dart';
 import 'package:kamino/pages/search/provider.dart';
 import 'package:kamino/partials/poster.dart';
@@ -10,7 +8,7 @@ import 'package:kamino/view/content/overview.dart';
 
 import 'search/model.dart';
 
-class SearchPage extends Page {
+class SearchPage extends StatefulWidget {
   @override
   SearchPageState createState() => new SearchPageState();
 }
@@ -87,7 +85,7 @@ class SearchPageState extends State<SearchPage> {
                   style: TextStyle(
                       fontSize: 26.0,
                       fontFamily: 'GlacialIndifference',
-                      color: Colors.white70),
+                      color: Theme.of(context).primaryTextTheme.body1.color),
                 ));
           }
         }
@@ -114,108 +112,112 @@ class SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return SearchResultProvider(
       resultBloc: SearchResultBloc(API()),
-      child: Container(
-        color: Theme.of(context).backgroundColor,
-        child: Column(
-          children: <Widget>[
-            new Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: new Stack(
-                alignment: Alignment(1.0, 0.0),
-                children: <Widget>[
-                  new Container(
-                    margin: const EdgeInsets.only(top: 10.0),
-                    child: new PhysicalModel(
-                        borderRadius: BorderRadius.circular(5.0),
-                        elevation: 5.0,
-                        color: const Color(0xFF2F3136),
-                        child: new Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 12.0, horizontal: 15.0),
-                            child: Container(
-                              margin: EdgeInsets.only(right: 30),
-                              child: new TextField(
-                                  controller: _searchControl,
-                                  autocorrect: true,
-                                  cursorColor: Theme.of(context).primaryColor,
-                                  style: TextStyle(
-                                      fontFamily: 'GlacialIndifference',
-                                      fontSize: 18.0,
-                                      color: Colors.white),
-                                  decoration: new InputDecoration.collapsed(
-                                      hintText: "Search TV shows and movies...",
-                                      hintStyle: TextStyle(color: Colors.grey)
-                                  ),
-                                  keyboardAppearance: Brightness.dark,
-                                  onEditingComplete: () {
-                                    resultBloc.query.add(_searchControl.text);
-                                    FocusScope.of(context).requestFocus(new FocusNode());
-                                  },
-                                  textInputAction: TextInputAction.search,
-                                  textCapitalization: TextCapitalization.words
+      child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: Container(
+          margin: EdgeInsets.only(top: 40),
+          child: Column(
+            children: <Widget>[
+              new Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: new Stack(
+                  alignment: Alignment(1.0, 0.0),
+                  children: <Widget>[
+                    new Container(
+                      margin: const EdgeInsets.only(top: 10.0),
+                      child: new PhysicalModel(
+                          borderRadius: BorderRadius.circular(25),
+                          elevation: 15.0,
+                          color: Theme.of(context).cardColor,
+                          child: new Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15.0, horizontal: 15.0),
+                              child: Container(
+                                  margin: EdgeInsets.only(left: 5, right: 45),
+                                  child: new TextField(
+                                    autofocus: true,
+                                    controller: _searchControl,
+                                    autocorrect: true,
+                                    cursorColor: Theme.of(context).primaryColor,
+                                    style: TextStyle(
+                                        fontFamily: 'GlacialIndifference',
+                                        fontSize: 18.0,
+                                        color: Theme.of(context).primaryTextTheme.body1.color),
+                                    decoration: new InputDecoration.collapsed(
+                                        hintText: "Search TV shows and movies...",
+                                        hintStyle: TextStyle(color: Colors.grey)
+                                    ),
+                                    keyboardAppearance: Brightness.dark,
+                                    onEditingComplete: () {
+                                      resultBloc.query.add(_searchControl.text);
+                                      FocusScope.of(context).requestFocus(new FocusNode());
+                                    },
+                                    textInputAction: TextInputAction.search,
+                                    textCapitalization: TextCapitalization.words
+                                  )
                               )
-                            )
-                        )
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10.0, top: 10.0),
-                    child: Material(
-                      color: const Color(0x00000000),
-                      child: InkWell(
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)
-                        ),
-                        splashColor: const Color(0x10FFFFFF),
-                        onTap: (){
-                          resultBloc.query.add(_searchControl.text);
-                          FocusScope.of(context).requestFocus(new FocusNode());
-                        },
-                        child: Container(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Icon(Icons.search,
-                                    size: 28.0, color: Colors.grey
-                                )
-                              ],
-                            )
-                        ),
+                          )
                       ),
                     ),
-                  )
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Container(
-                child: Center(
-                  child: StreamBuilder(
-                    stream: resultBloc.log,
-                    builder: (context, snapshot) => Container(
-                      margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(snapshot.data ?? '',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontFamily: 'GlacialIndifference',
-                            fontSize: 15.0
+                    Container(
+                      margin: const EdgeInsets.only(left: 10.0, top: 10.0),
+                      child: Material(
+                        color: const Color(0x00000000),
+                        child: InkWell(
+                          customBorder: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25)
                           ),
-                          textAlign: TextAlign.center
+                          splashColor: const Color(0x10FFFFFF),
+                          onTap: (){
+                            resultBloc.query.add(_searchControl.text);
+                            FocusScope.of(context).requestFocus(new FocusNode());
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Icon(Icons.search,
+                                      size: 28.0, color: Colors.grey
+                                  )
+                                ],
+                              )
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                  child: Center(
+                    child: StreamBuilder(
+                      stream: resultBloc.log,
+                      builder: (context, snapshot) => Container(
+                        margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(snapshot.data ?? '',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryTextTheme.body1.color,
+                                  fontFamily: 'GlacialIndifference',
+                                  fontSize: 15.0
+                              ),
+                              textAlign: TextAlign.center
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Flexible(child: _tvStream(context, resultBloc))
-          ],
+              Flexible(child: _tvStream(context, resultBloc))
+            ],
+          ),
         ),
       ),
     );

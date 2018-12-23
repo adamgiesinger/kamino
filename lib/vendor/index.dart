@@ -9,6 +9,7 @@ import 'package:kamino/vendor/dist/themes/OfficialVendorThemes.dart';
 import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
 
 class ApolloVendor {
+
   static List<VendorConfiguration> getVendorConfigs(){
     return [
       // The main vendor configuration is always list[0].
@@ -23,12 +24,18 @@ class ApolloVendor {
 
   static List<ThemeConfiguration> getThemeConfigs(){
     return [
-      // The main theme configuration is always list[0].
+      // The main theme configuration is always at index 0.
       // You should change this to your preferred theme configuration.
-      OfficialVendorTheme.dark
+      OfficialVendorTheme.dark,
 
       // The rest are secondary theme configurations.
       // They can be chosen by the user.
+      OfficialVendorTheme.light,
+      OfficialVendorTheme.black
     ];
+  }
+
+  static String getTMDBKey(){
+    return getVendorConfigs()[0].getTMDBKey();
   }
 }

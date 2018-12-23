@@ -13,6 +13,8 @@ import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
+import 'package:vector_math/vector_math_64.dart' as VectorMath;
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 /*  CONTENT OVERVIEW WIDGET  */
 ///
@@ -40,9 +42,46 @@ class _ContentOverviewState extends State<ContentOverview> {
   TextSpan _titleSpan = TextSpan();
   bool _longTitle = false;
   ContentModel _data;
+  String _backdropImagePath;
+  bool _favState = false;
+
+  Widget _favIconGenerator(bool state){
+
+    Widget _result;
+
+    if(state == true) {
+
+      _result = Icon(
+        Icons.favorite,
+        color: Colors.red,
+      );
+
+    } else {
+
+      _result = Icon(
+        Icons.favorite_border,
+        color: Colors.white,
+      );
+    }
+
+    return _result;
+  }
+
 
   @override
   void initState() {
+
+    //check if the show is a favourite
+    print("startup id is ${widget.contentId}");
+
+    databaseHelper.isFavourite(widget.contentId).then((data) {
+
+      print("initial fav state is $data");
+      setState(() {
+        _favState = data;
+      });
+    });
+
     // When the widget is initialized, download the overview data.
     loadDataAsync().then((data) {
       // When complete, update the state which will allow us to
@@ -53,8 +92,9 @@ class _ContentOverviewState extends State<ContentOverview> {
         _titleSpan = new TextSpan(
             text: _data.title,
             style: TextStyle(
-                fontFamily: 'GlacialIndifference',
-                fontSize: 19
+              fontFamily: 'GlacialIndifference',
+              fontSize: 19,
+              color: Theme.of(context).primaryTextTheme.title.color
             )
         );
 
@@ -79,13 +119,13 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Get the data from the server.
       http.Response response = await http.get(
-        "${tmdb.root_url}/movie/${widget.contentId}${tmdb.default_arguments}"
+        "${tmdb.root_url}/movie/${widget.contentId}${tmdb.defaultArguments}"
       );
       String json = response.body;
 
       // Get the recommendations data from the server.
       http.Response recommendedDataResponse = await http.get(
-        "${tmdb.root_url}/movie/${widget.contentId}/similar${tmdb.default_arguments}&page=1"
+        "${tmdb.root_url}/movie/${widget.contentId}/similar${tmdb.defaultArguments}&page=1"
       );
       String recommended = recommendedDataResponse.body;
 
@@ -99,7 +139,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Get the data from the server.
       http.Response response = await http.get(
-          "${tmdb.root_url}/tv/${widget.contentId}${tmdb.default_arguments}"
+          "${tmdb.root_url}/tv/${widget.contentId}${tmdb.defaultArguments}"
       );
       String json = response.body;
 
@@ -111,10 +151,48 @@ class _ContentOverviewState extends State<ContentOverview> {
     throw new Exception("Unexpected content type.");
   }
 
+  //Logic for the favourites button
+  _favButtonLogic(BuildContext context){
+
+    if (_favState == true) {
+
+      //remove the show from the database
+      databaseHelper.removeFavourite(widget.contentId);
+
+      //show notification snackbar
+      final snackBar = SnackBar(content: Text('Removed from favourites'));
+      Scaffold.of(context).showSnackBar(snackBar);
+
+      //set fav to false to reflect change
+      setState(() {
+        _favState = false;
+      });
+
+    } else if (_favState == false){
+
+      //add the show from the database
+      databaseHelper.saveFavourites(
+          _data.title,
+          widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
+          widget.contentId,
+          tmdb.image_cdn + _data.backdropPath);
+
+      //show notification snackbar
+      final snackBar = SnackBar(content: Text('Saved to favourites'));
+      Scaffold.of(context).showSnackBar(snackBar);
+
+      //set fav to true to reflect change
+      setState(() {
+        _favState = true;
+      });
+    }
+  }
+
   /* THE FOLLOWING CODE IS JUST LAYOUT CODE. */
 
   @override
   Widget build(BuildContext context) {
+
     // This is shown whilst the data is loading.
     if (_data == null) {
       return Scaffold(
@@ -138,8 +216,14 @@ class _ContentOverviewState extends State<ContentOverview> {
               headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverAppBar(
+                    backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
-                      IconButton(icon: Icon(Icons.favorite_border, color: Colors.white), onPressed: null),
+                      IconButton(
+                        icon: _favIconGenerator(_favState),
+                        onPressed: (){
+                          _favButtonLogic(context);
+                        },
+                      ),
                     ],
                     expandedHeight: 200.0,
                     floating: false,
@@ -148,10 +232,10 @@ class _ContentOverviewState extends State<ContentOverview> {
                       centerTitle: true,
                       title: LayoutBuilder(builder: (context, size){
                         var titleTextWidget = new RichText(
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            text: _titleSpan
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          text: _titleSpan,
                         );
 
                         if(_longTitle) return Container();
@@ -177,6 +261,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                       }
                     },
                     child: ListView(
+
                         children: <Widget>[
                           // This is the summary line, just below the title.
                           _generateOverviewWidget(context),
@@ -187,14 +272,14 @@ class _ContentOverviewState extends State<ContentOverview> {
                               child: Column(
                                 children: <Widget>[
                                   /*
-                                    * If you're building a row widget, it should have a horizontal
-                                    * padding of 24 (narrow) or 16 (wide).
-                                    *
-                                    * If your row is relevant to the last, use a vertical padding
-                                    * of 5, otherwise use a vertical padding of 5 - 10.
-                                    *
-                                    * Relevant means visually and by context.
-                                  */
+                                  * If you're building a row widget, it should have a horizontal
+                                  * padding of 24 (narrow) or 16 (wide).
+                                  *
+                                  * If your row is relevant to the last, use a vertical padding
+                                  * of 5, otherwise use a vertical padding of 5 - 10.
+                                  *
+                                  * Relevant means visually and by context.
+                                */
                                   _generateGenreChipsRow(context),
                                   _generateInformationCards(),
 
@@ -288,29 +373,36 @@ class _ContentOverviewState extends State<ContentOverview> {
   Widget _generateBackdropImage(BuildContext context){
     double contextWidth = MediaQuery.of(context).size.width;
 
-    return Stack(
-      fit: StackFit.expand,
-      alignment: AlignmentDirectional.bottomCenter,
-      children: <Widget>[
-        Container(
-            child: _data.backdropPath != null ?
-            Image.network(
-                tmdb.image_cdn + _data.backdropPath,
-                fit: BoxFit.cover,
-                height: 200.0,
-                width: contextWidth
-            ) :
-            Image.asset(
-                "assets/images/no_image_detail.jpg",
-                fit: BoxFit.cover,
-                height: 200.0,
-                width: contextWidth
-            )
-        ),
-        !_longTitle ?
+    //print("image url is... ${_data.backdropPath}");
+
+    _backdropImagePath = tmdb.image_cdn + _data.backdropPath;
+
+    return Container(
+      height: 220,
+      child: Stack(
+        fit: StackFit.expand,
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+          Container(
+              child: _data.backdropPath != null ?
+              Image.network(
+                  _backdropImagePath,
+                  fit: BoxFit.cover,
+                  height: 220.0,
+                  width: contextWidth
+              ) :
+              Image.asset(
+                  "assets/images/no_image_detail.jpg",
+                  fit: BoxFit.cover,
+                  height: 220.0,
+                  width: contextWidth
+              )
+          ),
+          !_longTitle ?
           BottomGradient(color: Theme.of(context).backgroundColor)
-            : BottomGradient(offset: 1, finalStop: 0, color: Theme.of(context).backgroundColor)
-      ],
+              : BottomGradient(offset: 1, finalStop: 0, color: Theme.of(context).backgroundColor)
+        ],
+      ),
     );
   }
 

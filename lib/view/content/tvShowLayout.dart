@@ -76,19 +76,22 @@ class TVShowLayout{
                 _openEpisodesView(context, _data, seasonIndex);
               },
               child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                ),
                 elevation: 2,
-                color: const Color(0xFF2F3136),
+                color: Theme.of(context).cardColor,
                 child: new Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListTile(
-                        leading: leadingWidget,
-                        title: TitleText(season["name"]),
-                        subtitle: Text(
-                            "${season["episode_count"]} episode${season["episode_count"] != 1 ? "s" : "" } \u2022 $airDate"
-                        ),
-                      )
-                    ]
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: leadingWidget,
+                      title: TitleText(season["name"]),
+                      subtitle: Text(
+                          "${season["episode_count"]} episode${season["episode_count"] != 1 ? "s" : "" } \u2022 $airDate"
+                      ),
+                    )
+                  ]
                 )
               )
           );

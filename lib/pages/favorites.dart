@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kamino/pages/_page.dart';
 import 'package:kamino/ui/uielements.dart';
 
-class FavoritesPage extends Page {
+class FavoritesPage extends StatefulWidget {
   @override
   FavoritesPageState createState() => new FavoritesPageState();
 }
@@ -13,12 +12,15 @@ class FavoritesPageState extends State<FavoritesPage> {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).backgroundColor,
-      padding: EdgeInsets.only(top: 5.0),
+      padding: EdgeInsets.all(10),
       child: new Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[new Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+          ),
           elevation: 5.0,
-          color: const Color(0xFF2F3136),
+          color: Theme.of(context).cardColor,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: new Column(

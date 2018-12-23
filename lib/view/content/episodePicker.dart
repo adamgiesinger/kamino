@@ -50,7 +50,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
   // Load the data from the source.
   Future<SeasonModel> loadDataAsync() async {
     String url = "${tmdb.root_url}/tv/${widget.contentId}/season/"
-        "${widget.seasonIndex}${tmdb.default_arguments}";
+        "${widget.seasonIndex}${tmdb.defaultArguments}";
 
     http.Response response  = await http.get(url);
 
@@ -66,7 +66,11 @@ class _EpisodePickerState extends State<EpisodePicker> {
     return new Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: TitleText(_season != null ? "${widget.showContentModel.title} - ${_season.name}" : "Loading..."),
+        backgroundColor: Theme.of(context).backgroundColor,
+        title: TitleText(
+          _season != null ? "${widget.showContentModel.title} - ${_season.name}" : "Loading...",
+          textColor: Theme.of(context).primaryTextTheme.title.color
+        ),
         centerTitle: true,
       ),
       body: _season == null ?
@@ -95,10 +99,12 @@ class _EpisodePickerState extends State<EpisodePicker> {
             }
 
             var card = new Card(
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).cardColor,
               clipBehavior: Clip.antiAlias,
               elevation: 5.0, // Boost shadow...
-
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+              ),
 
               child: new Column(
                 children: <Widget>[
@@ -167,7 +173,8 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                   int seasonNumber = episode["season_number"];
                                   int episodeNumber = episode["episode_number"];
 
-                                  vendorConfigs[0].playTVShow(
+                                  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                                  appState.getVendorConfigs()[0].playTVShow(
                                       widget.showContentModel.title,
                                       widget.showContentModel.releaseDate,
                                       seasonNumber,

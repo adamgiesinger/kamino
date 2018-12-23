@@ -13,7 +13,7 @@ class NowPlaying extends StatelessWidget{
 
     List<NowPlayingModel> _data = new List();
 
-    String url = "${tmdb.root_url}/movie/now_playing${tmdb.default_arguments}&page=";
+    String url = "${tmdb.root_url}/movie/now_playing${tmdb.defaultArguments}&page=";
 
     final http.Client _client = http.Client();
 

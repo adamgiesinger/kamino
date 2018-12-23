@@ -8,7 +8,7 @@ description: The ApolloTV app for iOS and Android.
 #  I => Minor (xx)
 #  R => Release (xx)
 #  T => Type (0 => Prerelease, 1 => Beta, 2 => Release Candidate, 3 => Stable)
-version: 1.0.2+100010
+version: 1.0.3+100030
 
 dependencies:
   # Core dependencies
@@ -36,6 +36,11 @@ dependencies:
   flutter_parallax: ^0.1.2
   logging: ^0.11.3+2
   dbcrypt: ^1.0.0
+  flutter_material_color_picker: ^0.0.4
+  url_launcher: ^4.0.2
+  objectdb: ^1.0.5
+  cached_network_image: ^0.5.1
+  flutter_cache_manager: ^0.2.0+1
 
 # Compile-only dependencies
 dev_dependencies:
@@ -56,6 +61,8 @@ flutter:
     - assets/contributors.txt
     - assets/images/no_image_detail.jpg
     - assets/images/header.png
+    - assets/images/header_text.png
+    - assets/images/header_text_dark.png
     - assets/images/logo.png
     - assets/images/logo_foreground.png
 

@@ -12,31 +12,34 @@ class MovieLayout{
   static Widget generate(BuildContext context, MovieContentModel _data){
     return Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
-        child: Column(
-          children: <Widget>[
-            /* Similar Movies */
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                    title: TitleText(
-                        'Similar Movies',
-                        fontSize: 22.0,
-                        textColor: Theme.of(context).primaryColor
-                    )
-                ),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 30.0),
+          child: Column(
+            children: <Widget>[
+              /* Similar Movies */
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                      title: TitleText(
+                          'Similar Movies',
+                          fontSize: 22.0,
+                          textColor: Theme.of(context).primaryColor
+                      )
+                  ),
 
-                SizedBox(
-                  height: 200.0,
-                  child: _generateSimilarMovieCards(_data)
-                )
-              ],
-            )
-            /* ./Similar Movies */
+                  SizedBox(
+                    height: 200.0,
+                    child: _generateSimilarMovieCards(_data)
+                  )
+                ],
+              )
+              /* ./Similar Movies */
 
 
-          ]
-      )
+            ]
+      ),
+        )
     );
   }
 
@@ -76,7 +79,8 @@ class MovieLayout{
                           [Container()]
                       );
 
-                      vendorConfigs[0].playMovie(
+                      KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                      appState.getVendorConfigs()[0].playMovie(
                           model.title,
                           context
                       );
@@ -131,8 +135,8 @@ class MovieLayout{
                 background: _data.recommendations[index]["poster_path"],
                 mediaType: 'movie',
                 releaseDate: _data.recommendations[index]["release_date"]
-              )
-            )
+              ),
+            ),
           ),
         );
     });

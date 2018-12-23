@@ -12,7 +12,7 @@ class OnAirTV extends StatelessWidget{
 
     List<OnAirModel> _data = new List();
 
-    String url = "${tmdb.root_url}/tv/on_the_air${tmdb.default_arguments}&page=";
+    String url = "${tmdb.root_url}/tv/on_the_air${tmdb.defaultArguments}&page=";
 
     final http.Client _client = http.Client();
 
