@@ -14,23 +14,30 @@ class FavoritesPage extends StatefulWidget {
 
 class FavoritesPageState extends State<FavoritesPage>
     with SingleTickerProviderStateMixin {
+
   TabController _tabController;
 
   List<Map> _favTV = [];
   List<Map> _favMovie = [];
+
+  _getFavs() {
+    // Get the favourite tv shows/ movies
+    databaseHelper.getAllFaves().then((data) {
+
+      setState(() {
+        _favTV = data["tv"].reversed.toList();
+        _favMovie = data["movie"].reversed.toList();
+      });
+
+    });
+  }
 
   @override
   void initState() {
     //initialise the tab controller
     _tabController = new TabController(vsync: this, length: 2, initialIndex: 0);
 
-    // Get the favourite tv shows
-    databaseHelper.getAllFaves().then((data) {
-      setState(() {
-        _favTV = data["tv"].reversed.toList();
-        _favMovie = data["movie"].reversed.toList();
-      });
-    });
+    _getFavs();
 
     super.initState();
   }
@@ -43,6 +50,11 @@ class FavoritesPageState extends State<FavoritesPage>
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
           actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: _getFavs
+            ),
+
             IconButton(
                 icon: Icon(Icons.sort),
                 onPressed: () {
@@ -147,20 +159,20 @@ class FavoritesPageState extends State<FavoritesPage>
                                     top: 0, bottom: 10, left: 10, right: 10),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Text(
                                         mediaType == "tv"
                                             ? _favTV[index]["year"] != null
-                                                ? _favTV[index]["year"]
-                                                    .toString()
-                                                    .substring(0, 4)
-                                                : "Unknown"
+                                            ? _favTV[index]["year"]
+                                            .toString()
+                                            .substring(0, 4)
+                                            : "Unknown"
                                             : _favMovie[index]["year"] != null
-                                                ? _favMovie[index]["year"]
-                                                    .toString()
-                                                    .substring(0, 4)
-                                                : "Unknown",
+                                            ? _favMovie[index]["year"]
+                                            .toString()
+                                            .substring(0, 4)
+                                            : "Unknown",
                                         style: TextStyle(
                                             fontSize: 12,
                                             color: Theme.of(context)

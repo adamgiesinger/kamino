@@ -44,6 +44,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   ContentModel _data;
   String _backdropImagePath;
   bool _favState = false;
+  List<int> _favIDs = [];
 
   Widget _favIconGenerator(bool state){
 
@@ -74,11 +75,11 @@ class _ContentOverviewState extends State<ContentOverview> {
     //check if the show is a favourite
     print("startup id is ${widget.contentId}");
 
-    databaseHelper.isFavourite(widget.contentId).then((data) {
+    databaseHelper.getAllFavIDs().then((data) {
 
-      print("initial fav state is $data");
       setState(() {
-        _favState = data;
+        _favIDs = data;
+        _favState = data.contains(widget.contentId);
       });
     });
 
@@ -109,6 +110,8 @@ class _ContentOverviewState extends State<ContentOverview> {
         _longTitle = titlePainter.didExceedMaxLines;
       });
     });
+
+    print("you favourited $_favIDs");
 
     super.initState();
   }
@@ -509,14 +512,15 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// This generates the remaining layout for the specific content type.
   /// It is a good idea to reference another class to keep this clean.
   ///
-  Widget _generateLayout(ContentOverviewContentType contentType){
+  Widget _generateLayout(ContentOverviewContentType contentType) {
+
     switch(contentType){
       case ContentOverviewContentType.TV_SHOW:
         // Generate TV show information
         return TVShowLayout.generate(context, _data);
       case ContentOverviewContentType.MOVIE:
         // Generate movie information
-        return MovieLayout.generate(context, _data);
+        return MovieLayout.generate(context, _data, _favIDs);
       default:
         return Container();
     }

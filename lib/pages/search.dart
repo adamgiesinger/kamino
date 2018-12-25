@@ -21,12 +21,6 @@ class SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-
-    //get all the favourite media from db
-    databaseHelper.getAllFavIDs().then((data){
-      _favIDs = data;
-    });
-
     super.initState();
   }
 
@@ -74,6 +68,12 @@ class SearchPageState extends State<SearchPage> {
 
         } else {
           if (snapshot.data.length > 0) {
+
+            //refresh the favs db
+            databaseHelper.getAllFavIDs().then((data){
+              _favIDs = data;
+            });
+
             return GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
