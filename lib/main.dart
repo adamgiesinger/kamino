@@ -4,6 +4,7 @@ import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:kamino/pages/favorites.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -198,6 +199,17 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
               leading: const Icon(Icons.gavel),
               title: Text('Legal'),
               onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
+            ),
+            ListTile(
+              title: Text("Favourites"),
+              leading: const Icon(Icons.favorite),
+              onTap:  () {
+                Navigator.of(context).pop();
+
+                Navigator.push(context, SlideRightRoute(
+                    builder: (context) => FavoritesPage()
+                ));
+              },
             ),
             ListTile(
               leading: const Icon(Icons.favorite),

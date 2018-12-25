@@ -175,7 +175,8 @@ class _ContentOverviewState extends State<ContentOverview> {
           _data.title,
           widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId,
-          tmdb.image_cdn + _data.backdropPath);
+          _data.backdropPath,
+          _data.releaseDate);
 
       //show notification snackbar
       final snackBar = SnackBar(content: Text('Saved to favourites'));
