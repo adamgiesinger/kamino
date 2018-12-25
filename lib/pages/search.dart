@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/pages/search/bloc.dart';
 import 'package:kamino/pages/search/provider.dart';
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/view/content/overview.dart';
 
@@ -15,6 +16,20 @@ class SearchPage extends StatefulWidget {
 
 
 class SearchPageState extends State<SearchPage> {
+
+  List<int> _favIDs = [];
+
+  @override
+  void initState() {
+
+    //get all the favourite media from db
+    databaseHelper.getAllFavIDs().then((data){
+      _favIDs = data;
+    });
+
+    super.initState();
+  }
+
   final resultBloc = SearchResultBloc(API());
   final TextEditingController _searchControl = TextEditingController();
 
@@ -73,7 +88,8 @@ class SearchPageState extends State<SearchPage> {
                     background: snapshot.data[index].posterPath,
                     name: snapshot.data[index].title,
                     releaseDate: snapshot.data[index].year,
-                    mediaType: snapshot.data[index].mediaType
+                    mediaType: snapshot.data[index].mediaType,
+                    isFav: _favIDs.contains(snapshot.data[index].id),
                   ),
                 );
               },
@@ -93,19 +109,11 @@ class SearchPageState extends State<SearchPage> {
     );
   }
 
-
-
   @override
   void dispose() {
     resultBloc.dispose();
     _searchControl.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
   }
 
   @override

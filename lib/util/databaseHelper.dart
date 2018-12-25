@@ -30,6 +30,30 @@ Future saveFavourites(String name, String contentType, int tmdbid, String url, S
   await db.close();
 }
 
+Future<List<int>> getAllFavIDs() async {
+
+  List<int> _results = [];
+
+  //get the path of the database file
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
+  var db = ObjectDB(path);
+
+  //open connection to the database
+  db.open();
+
+  List<Map> _data = await db.find({"docType": "favourites"});
+
+  for (int x=0; x < _data.length ; x++){
+
+    _results.add(_data[x]["tmdbID"]);
+  }
+
+  await db.close();
+
+  return _results;
+}
+
 Future<bool> isFavourite(int tmdbid) async{
 
   //get the path of the database file

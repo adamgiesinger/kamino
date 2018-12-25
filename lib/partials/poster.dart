@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 import 'package:kamino/api/tmdb.dart' as tmdb;
 
@@ -11,12 +12,14 @@ class Poster extends StatefulWidget {
   final String name;
   final String releaseDate;
   final String mediaType;
+  final bool isFav;
 
   Poster({
     @required this.background,
     @required this.name,
     @required this.releaseDate,
-    @required this.mediaType
+    @required this.mediaType,
+    @required this.isFav
   });
 
   @override
@@ -25,6 +28,15 @@ class Poster extends StatefulWidget {
 }
 
 class PosterState extends State<Poster> {
+
+  Color _favouriteIndicator() {
+
+    if (widget.isFav == true) {
+      return Colors.yellow;
+    }
+
+    return Theme.of(context).accentTextTheme.body1.color;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +101,7 @@ class PosterState extends State<Poster> {
                       child: TitleText(
                         widget.name,
                         fontSize: 16,
-                        textColor: Theme.of(context).accentTextTheme.body1.color,
+                        textColor: _favouriteIndicator(),
                       )
                   ),
 
@@ -107,14 +119,14 @@ class PosterState extends State<Poster> {
                               releaseYear,
                               style: TextStyle(
                                   fontSize: 12,
-                                color: Theme.of(context).accentTextTheme.body1.color
+                                color: _favouriteIndicator()
                               )
                           ),
 
                           Icon(
                               widget.mediaType == 'tv' ? Icons.tv : Icons.local_movies,
                               size: 16,
-                            color: Theme.of(context).accentTextTheme.body1.color,
+                            color: _favouriteIndicator(),
                           )
                         ],
                       )
