@@ -25,8 +25,6 @@ class FavoritesPageState extends State<FavoritesPage>
     _tabController = new TabController(vsync: this, length: 2, initialIndex: 0);
 
     // Get the favourite tv shows
-    Map _myFavs;
-
     databaseHelper.getAllFaves().then((data) {
       setState(() {
         _favTV = data["tv"].reversed.toList();
