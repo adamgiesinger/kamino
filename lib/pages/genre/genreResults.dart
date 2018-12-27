@@ -24,6 +24,9 @@ class GenreView extends StatefulWidget{
 
 class _GenreViewState extends State<GenreView>{
 
+  int _currentPages = 1;
+  ScrollController controller;
+
   List<String> _sortParams = [
     "popularity.asc", "popularity.desc", "vote_average.desc",
     "vote_average.asc", "first_air_date.desc", "first_air_date.asc"
@@ -37,6 +40,8 @@ class _GenreViewState extends State<GenreView>{
 
   @override
   void initState() {
+
+    controller = new ScrollController()..addListener(_scrollListener);
 
     String _contentType = widget.contentType;
     String _genreName = widget.genreName;
@@ -67,7 +72,8 @@ class _GenreViewState extends State<GenreView>{
     String url = "${tmdb.root_url}/discover/$_contentType"
         "${tmdb.defaultArguments}&"
         "sort_by=$_selectedParam&include_adult=false"
-        "&include_video=false&page=1&with_genres=$_genreID";
+        "&include_video=false&"
+        "page=${_currentPages.toString()}&with_genres=$_genreID";
 
     print("url is... $url");
 
@@ -115,18 +121,17 @@ class _GenreViewState extends State<GenreView>{
 
   void _applyNewParam(String choice) {
 
-    print("my choice is...$choice");
-
     if (choice != _selectedParam){
 
       _selectedParam = choice;
-      print("new choice is $_selectedParam");
 
       _getContent(widget.contentType, widget.genreID.toString()).then((data){
         setState(() {
           _results.clear();
           _results = data;
+          controller.position.minScrollExtent;
         });
+        _currentPages = 1;
       });
     }
   }
@@ -165,30 +170,33 @@ class _GenreViewState extends State<GenreView>{
           )
       ],
       ),
-      body: Padding(
-        padding: _results.length == 0 ?
-        const EdgeInsets.all(0.0) : const EdgeInsets.only(top:5.0),
-        child: _results.length == 0 ? _nothingFoundScreen() : GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.76
-            ),
+      body: Scrollbar(
+        child: Padding(
+          padding: _results.length == 0 ?
+          const EdgeInsets.all(0.0) : const EdgeInsets.only(top:5.0),
+          child: _results.length == 0 ? _nothingFoundScreen() : GridView.builder(
+            controller: controller,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 0.76
+              ),
 
-            itemCount: _results.length,
+              itemCount: _results.length,
 
-            itemBuilder: (BuildContext context, int index){
-              return InkWell(
-                onTap: () => _openContentScreen(context, index),
-                splashColor: Colors.white,
-                child: Poster(
-                  background: _results[index].poster_path,
-                  name: _results[index].name,
-                  releaseDate: _results[index].year,
-                  mediaType: _results[index].mediaType,
-                  isFav: _favIDs.contains(_results[index].id),
-                ),
-              );
-            }
+              itemBuilder: (BuildContext context, int index){
+                return InkWell(
+                  onTap: () => _openContentScreen(context, index),
+                  splashColor: Colors.white,
+                  child: Poster(
+                    background: _results[index].poster_path,
+                    name: _results[index].name,
+                    releaseDate: _results[index].year,
+                    mediaType: _results[index].mediaType,
+                    isFav: _favIDs.contains(_results[index].id),
+                  ),
+                );
+              }
+          ),
         ),
       ),
     );
@@ -212,6 +220,33 @@ class _GenreViewState extends State<GenreView>{
       ),
     );
   }
+
+  void _scrollListener() {
+    print(controller.position.extentAfter);
+    if (controller.position.extentAfter < 500) {
+
+      //check that you haven't already loaded the last page
+      if (_currentPages < total_pages){
+
+        //load the next page
+        _currentPages = _currentPages + 1;
+
+        _getContent(widget.contentType, widget.genreID).then((data){
+
+          setState(() {
+            _results = _results + data;
+          });
+
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(_scrollListener);
+    super.dispose();
+  }
 }
 
 class DiscoverModel {
@@ -220,7 +255,7 @@ class DiscoverModel {
   final int id, vote_count, page;
 
   DiscoverModel.fromJSON(Map json, int pageCount, String contentType)
-    : name = json["original_name"] == null ? json["original_title"] : json["original_name"],
+    : name = json["name"] == null ? json["title"] : json["name"],
         poster_path = json["poster_path"],
         backdrop_path = json["backdrop_path"],
         id = json["id"],
