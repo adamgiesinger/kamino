@@ -64,7 +64,7 @@ class _GenreViewState extends State<GenreView>{
     List<DiscoverModel> _data = [];
     Map _temp;
 
-    String url = "${tmdb.root_url}/discover/$_contentType?"
+    String url = "${tmdb.root_url}/discover/$_contentType"
         "${tmdb.defaultArguments}&"
         "sort_by=$_selectedParam&include_adult=false"
         "&include_video=false&page=1&with_genres=$_genreID";
@@ -115,11 +115,20 @@ class _GenreViewState extends State<GenreView>{
 
   void _applyNewParam(String choice) {
 
-    print("my choice is...");
+    print("my choice is...$choice");
 
-    setState(() {
+    if (choice != _selectedParam){
+
       _selectedParam = choice;
-    });
+      print("new choice is $_selectedParam");
+
+      _getContent(widget.contentType, widget.genreID.toString()).then((data){
+        setState(() {
+          _results.clear();
+          _results = data;
+        });
+      });
+    }
   }
 
   @override
@@ -132,8 +141,6 @@ class _GenreViewState extends State<GenreView>{
       "Popularity Asc", "Popularity Desc", "Vote Average Desc",
       "Vote Average Asc", "First Air Date Desc", "First Air Date Asc"
     ];
-
-    print("found... $_results");
 
     return Scaffold(
       appBar: new AppBar(
@@ -153,7 +160,7 @@ class _GenreViewState extends State<GenreView>{
                 );
               }).toList();
             },
-            initialValue: "popularity.desc",
+            initialValue: _selectedParam,
             onSelected: _applyNewParam,
           )
       ],
@@ -206,7 +213,7 @@ class _GenreViewState extends State<GenreView>{
 class DiscoverModel {
 
   final String name, poster_path, backdrop_path, year, mediaType;
-  final int id, vote_average, vote_count, page;
+  final int id, vote_count, page;
 
   DiscoverModel.fromJSON(Map json, int pageCount, String contentType)
     : name = json["original_name"] == null ? json["original_title"] : json["original_name"],
@@ -217,6 +224,5 @@ class DiscoverModel {
         page = pageCount,
         year = json["first_air_date"] == null ?
         json["release_date"] : json["first_air_date"],
-        vote_average = json["vote_average"],
         vote_count = json["vote_count"];
 }
