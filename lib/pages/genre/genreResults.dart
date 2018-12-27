@@ -129,7 +129,7 @@ class _GenreViewState extends State<GenreView>{
         setState(() {
           _results.clear();
           _results = data;
-          controller.position.minScrollExtent;
+          controller.jumpTo(controller.position.minScrollExtent);
         });
         _currentPages = 1;
       });
@@ -223,7 +223,8 @@ class _GenreViewState extends State<GenreView>{
 
   void _scrollListener() {
     print(controller.position.extentAfter);
-    if (controller.position.extentAfter < 500) {
+
+    if (controller.offset >= controller.position.maxScrollExtent) {
 
       //check that you haven't already loaded the last page
       if (_currentPages < total_pages){
