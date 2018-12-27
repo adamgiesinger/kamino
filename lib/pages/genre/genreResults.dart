@@ -165,27 +165,31 @@ class _GenreViewState extends State<GenreView>{
           )
       ],
       ),
-      body: _results.length == 0 ? _nothingFoundScreen() : GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.76
-          ),
+      body: Padding(
+        padding: _results.length == 0 ?
+        const EdgeInsets.all(0.0) : const EdgeInsets.only(top:5.0),
+        child: _results.length == 0 ? _nothingFoundScreen() : GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 0.76
+            ),
 
-          itemCount: _results.length,
+            itemCount: _results.length,
 
-          itemBuilder: (BuildContext context, int index){
-            return InkWell(
-              onTap: () => _openContentScreen(context, index),
-              splashColor: Colors.white,
-              child: Poster(
-                background: _results[index].poster_path,
-                name: _results[index].name,
-                releaseDate: _results[index].year,
-                mediaType: _results[index].mediaType,
-                isFav: _favIDs.contains(_results[index].id),
-              ),
-            );
-          }
+            itemBuilder: (BuildContext context, int index){
+              return InkWell(
+                onTap: () => _openContentScreen(context, index),
+                splashColor: Colors.white,
+                child: Poster(
+                  background: _results[index].poster_path,
+                  name: _results[index].name,
+                  releaseDate: _results[index].year,
+                  mediaType: _results[index].mediaType,
+                  isFav: _favIDs.contains(_results[index].id),
+                ),
+              );
+            }
+        ),
       ),
     );
   }
