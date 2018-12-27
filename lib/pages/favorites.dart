@@ -46,15 +46,10 @@ class FavoritesPageState extends State<FavoritesPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-          title: Text("Favourites"),
+          title: Text("Favorites"),
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: _getFavs
-            ),
-
             IconButton(
                 icon: Icon(Icons.sort),
                 onPressed: () {
@@ -63,7 +58,12 @@ class FavoritesPageState extends State<FavoritesPage>
                     _favTV = _favTV.reversed.toList();
                     _favMovie = _favMovie.reversed.toList();
                   });
-                })
+                }),
+
+            IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: _getFavs
+            )
           ],
           bottom: new TabBar(
             controller: _tabController,
@@ -149,10 +149,7 @@ class FavoritesPageState extends State<FavoritesPage>
                                       ? _favTV[index]["name"]
                                       : _favMovie[index]["name"],
                                   fontSize: 16,
-                                  textColor: Theme.of(context)
-                                      .accentTextTheme
-                                      .body1
-                                      .color,
+                                  textColor: Colors.yellow,
                                 )),
                             Padding(
                                 padding: EdgeInsets.only(
@@ -175,19 +172,13 @@ class FavoritesPageState extends State<FavoritesPage>
                                             : "Unknown",
                                         style: TextStyle(
                                             fontSize: 12,
-                                            color: Theme.of(context)
-                                                .accentTextTheme
-                                                .body1
-                                                .color)),
+                                            color: Colors.yellow)),
                                     Icon(
                                       mediaType == 'tv'
                                           ? Icons.tv
                                           : Icons.local_movies,
                                       size: 16,
-                                      color: Theme.of(context)
-                                          .accentTextTheme
-                                          .body1
-                                          .color,
+                                      color: Colors.yellow,
                                     )
                                   ],
                                 ))

@@ -28,6 +28,8 @@ class SearchPageState extends State<SearchPage> {
   final TextEditingController _searchControl = TextEditingController();
 
   _openContentScreen(BuildContext context, AsyncSnapshot snapshot, int index) {
+    //print("id is ${snapshot.data[index].showID}");
+
     if (snapshot.data[index].mediaType == "tv") {
       Navigator.push(
           context,

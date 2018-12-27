@@ -11,6 +11,7 @@ import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/pages/genre/genreResults.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
 import 'package:vector_math/vector_math_64.dart' as VectorMath;
@@ -45,6 +46,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   String _backdropImagePath;
   bool _favState = false;
   List<int> _favIDs = [];
+  String _contentType;
 
   Widget _favIconGenerator(bool state){
 
@@ -74,6 +76,9 @@ class _ContentOverviewState extends State<ContentOverview> {
 
     //check if the show is a favourite
     print("startup id is ${widget.contentId}");
+
+    widget.contentType == ContentOverviewContentType.MOVIE ?
+    _contentType = "movie" : _contentType = "tv";
 
     databaseHelper.getAllFavIDs().then((data) {
 
@@ -414,7 +419,34 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// GenreChipsRowWidget -
   /// This is the row of purple genre chips.
   /// TODO: When tapped, show a genre-filtered search.
-  ///
+  _loadMoreGenreMatches(String mediaType,
+      int id, String genreName) {
+
+    if (mediaType == "tv"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GenreView(
+                      contentType: "tv",
+                      genreID: id,
+                      genreName: genreName )
+          )
+      );
+    } else if (mediaType == "movie"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GenreView(
+                      contentType: "movie",
+                      genreID: id,
+                      genreName: genreName )
+          )
+      );
+    }
+  }
+
   Widget _generateGenreChipsRow(context){
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -427,16 +459,22 @@ class _ContentOverviewState extends State<ContentOverview> {
 
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              child: Padding(
-                padding: index != 0
-                    ? EdgeInsets.only(left: 6.0, right: 6.0)
-                    : EdgeInsets.only(left: 6.0, right: 6.0),
-                child: new Chip(
-                  label: Text(
-                    _data.genres[index]["name"],
-                    style: TextStyle(color: Colors.white, fontSize: 15.0),
+              child: InkWell(
+                onTap: (){
+                  _loadMoreGenreMatches(_contentType,
+                      _data.genres[index]["id"], _data.genres[index]["name"]);
+                },
+                child: Padding(
+                  padding: index != 0
+                      ? EdgeInsets.only(left: 6.0, right: 6.0)
+                      : EdgeInsets.only(left: 6.0, right: 6.0),
+                  child: new Chip(
+                    label: Text(
+                      _data.genres[index]["name"],
+                      style: TextStyle(color: Colors.white, fontSize: 15.0),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  backgroundColor: Theme.of(context).primaryColor,
                 ),
               ),
             );
