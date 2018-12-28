@@ -382,9 +382,11 @@ class _ContentOverviewState extends State<ContentOverview> {
   Widget _generateBackdropImage(BuildContext context){
     double contextWidth = MediaQuery.of(context).size.width;
 
-    //print("image url is... ${_data.backdropPath}");
-
-    _backdropImagePath = tmdb.image_cdn + _data.backdropPath;
+    //null trap to private slow urls crashing the screen
+    // (big issue with some old and foreign shows)
+    _data.backdropPath != null ?
+    _backdropImagePath = tmdb.image_cdn + _data.backdropPath :
+    _backdropImagePath = tmdb.image_cdn;
 
     return Container(
       height: 220,
@@ -394,8 +396,9 @@ class _ContentOverviewState extends State<ContentOverview> {
         children: <Widget>[
           Container(
               child: _data.backdropPath != null ?
-              Image.network(
-                  _backdropImagePath,
+              FadeInImage.assetNetwork(
+                  placeholder: "assets/images/no_image_detail.jpg",
+                  image :_backdropImagePath,
                   fit: BoxFit.cover,
                   height: 220.0,
                   width: contextWidth

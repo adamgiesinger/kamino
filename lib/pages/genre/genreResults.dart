@@ -27,11 +27,6 @@ class _GenreViewState extends State<GenreView>{
   int _currentPages = 1;
   ScrollController controller;
 
-  List<String> _sortParams = [
-    "popularity.asc", "popularity.desc", "vote_average.desc",
-    "vote_average.asc", "first_air_date.desc", "first_air_date.asc"
-  ];
-
   List<DiscoverModel> _results = [];
   List<int> _favIDs = [];
 
@@ -119,7 +114,7 @@ class _GenreViewState extends State<GenreView>{
     }
   }
 
-  void _applyNewParam(String choice) {
+  _applyNewParam(String choice) {
 
     if (choice != _selectedParam){
 
@@ -127,13 +122,18 @@ class _GenreViewState extends State<GenreView>{
 
       _getContent(widget.contentType, widget.genreID.toString()).then((data){
         setState(() {
+
+          //clear grid-view and replenish with new data
           _results.clear();
           _results = data;
+
+          //scroll to the top of the results
           controller.jumpTo(controller.position.minScrollExtent);
         });
         _currentPages = 1;
       });
     }
+    Navigator.of(context).pop;
   }
 
   @override
@@ -141,11 +141,6 @@ class _GenreViewState extends State<GenreView>{
 
     TextStyle _glacialFont = TextStyle(
         fontFamily: "GlacialIndifference");
-
-    List<String> _menuOptions = [
-      "Popularity Asc", "Popularity Desc", "Vote Average Desc",
-      "Vote Average Asc", "First Air Date Desc", "First Air Date Asc"
-    ];
 
     return Scaffold(
       appBar: new AppBar(
@@ -155,19 +150,19 @@ class _GenreViewState extends State<GenreView>{
         elevation: 5.0,
         actions: <Widget>[
         //Add sorting functionality
-          PopupMenuButton<String>(
-            icon: Icon(Icons.sort),
-            itemBuilder: (BuildContext context){
-              return _sortParams.map((String choice){
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(_menuOptions[_sortParams.indexOf(choice)]),
+          IconButton(
+              icon: Icon(Icons.sort), onPressed: (){
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_){
+                return GenreSortDialog(
+                  onValueChange: _applyNewParam,
+                  selectedParam: _selectedParam,
                 );
-              }).toList();
-            },
-            initialValue: _selectedParam,
-            onSelected: _applyNewParam,
-          )
+              }
+            );
+          }),
       ],
       ),
       body: Scrollbar(
@@ -248,6 +243,138 @@ class _GenreViewState extends State<GenreView>{
     controller.removeListener(_scrollListener);
     super.dispose();
   }
+}
+
+class GenreSortDialog extends StatefulWidget {
+  final String selectedParam;
+  final void Function(String) onValueChange;
+
+  GenreSortDialog(
+      {Key key, @required this.selectedParam, this.onValueChange}) :
+        super(key: key);
+
+  @override
+  _GenreSortDialogState createState() => new _GenreSortDialogState();
+}
+
+class _GenreSortDialogState extends State<GenreSortDialog> {
+
+  String _sortByValue;
+  String _orderValue;
+
+  @override
+  void initState() {
+    super.initState();
+    var temp = widget.selectedParam.split(".");
+    _sortByValue = temp[0];
+    _orderValue = "."+temp[1];
+  }
+
+
+  TextStyle _glacialStyle = TextStyle(
+    fontFamily: "GlacialIndifference",
+    //fontSize: 19.0,
+  );
+
+  TextStyle _glacialStyle1 = TextStyle(
+    fontFamily: "GlacialIndifference",
+    fontSize: 17.0,
+  );
+
+  Widget build(BuildContext context){
+    return new SimpleDialog(
+      title: Text("Sort by",
+        style: _glacialStyle,
+      ),
+      children: <Widget>[
+        //Title(title: "Sort by", color: Colors.white,),
+        Padding(
+          padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+          child: Divider( color: Colors.white,),
+        ),
+        RadioListTile(
+          value: "popularity",
+          title: Text("Popularity", style: _glacialStyle1,),
+          groupValue: _sortByValue,
+          onChanged: _onSortChange,
+        ),
+        RadioListTile(
+          value: "first_air_date",
+          title: Text("Air date", style: _glacialStyle1,),
+          groupValue: _sortByValue,
+          onChanged: _onSortChange,
+        ),
+        RadioListTile(
+          value: "vote_average",
+          title: Text("Vote Average", style: _glacialStyle1,),
+          groupValue: _sortByValue,
+          onChanged: _onSortChange,
+        ),
+
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 7.0, bottom: 7.0, left: 32.0),
+              child: Text("ORDER", style:_glacialStyle1),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0, right:11.0),
+              child: Divider(color: Colors.white,),
+            ),
+          ],
+        ),
+
+        RadioListTile(
+          value: ".asc",
+          title: Text("Ascending", style: _glacialStyle1,),
+          groupValue: _orderValue,
+          onChanged: _onOrderChange,
+        ),
+        RadioListTile(
+          value: ".desc",
+          title: Text("Descending", style: _glacialStyle1,),
+          groupValue: _orderValue,
+          onChanged: _onOrderChange,
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(left: 55.0),
+          child: Row(
+            children: <Widget>[
+              FlatButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                child: Text("Cancel",
+                  style: _glacialStyle1,
+                ),
+              ),
+              FlatButton(
+                onPressed: (){
+                  widget.onValueChange(_sortByValue+_orderValue);
+                  Navigator.pop(context);
+                },
+                child: Text("Sort", style: _glacialStyle1,),
+              ),
+            ],),
+        )
+      ],
+    );
+  }
+
+  void _onOrderChange(String value) {
+    setState(() {
+      _orderValue = value;
+    });
+  }
+
+  void _onSortChange(String value){
+    setState(() {
+      _sortByValue = value;
+    });
+  }
+
 }
 
 class DiscoverModel {
