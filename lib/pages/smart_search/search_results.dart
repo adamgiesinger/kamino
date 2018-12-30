@@ -102,7 +102,6 @@ class _SearchResultState extends State<SearchResult> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scrollbar(
       child: Padding(
         padding: const EdgeInsets.only(top: 5.0),
@@ -134,7 +133,7 @@ class _SearchResultState extends State<SearchResult> {
   }
 
   void _scrollListener(){
-    if (controller.offset >= controller.position.maxScrollExtent) {
+    if (controller.offset >= controller.position.extentAfter) {
 
       //check that you haven't already loaded the last page
       if (_currentPages < total_pages){
