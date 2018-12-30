@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kamino/pages/search.dart';
 import 'package:kamino/partials/apollowidgets/home_customise.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/pages/smart_search/smart_search.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,9 +27,12 @@ class HomePageState extends State<HomePage> {
             child: InkWell(
               borderRadius: BorderRadius.circular(100),
               onTap: (){
+                /*
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => SearchPage()
+                    builder: (context) => SmartSearch()
                 ));
+                */
+                showSearch(context: context, delegate: SmartSearch());
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

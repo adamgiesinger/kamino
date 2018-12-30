@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/partials/poster.dart';
+import 'package:kamino/view/content/overview.dart';
+import 'package:material_search/material_search.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:kamino/res/BottomGradient.dart';
+import 'package:kamino/api/tmdb.dart' as tmdb;
+
+
+class SmartSearch extends StatefulWidget {
+
+  @override
+  _SmartSearchState createState() => new _SmartSearchState();
+}
+
+class _SmartSearchState extends State<SmartSearch> {
+
+  Future<List<String>> _fetchSearchList(String criteria) async {
+
+    List<String> _data = [];
+
+    String url = "${tmdb.root_url}/search/"
+        "multi${tmdb.defaultArguments}&"
+        "query=$criteria&page=1&include_adult=false";
+
+    print(url);
+    http.Response res = await http.get(url);
+
+    Map results = jsonDecode(res.body);
+    //List<Map> _resultsList = [];
+
+    var _resultsList = results["results"];
+
+    print("resukts lsit is $_resultsList");
+
+    if (_resultsList != null)  {
+      _resultsList.forEach((var element){
+
+        if (element["media_type"] != "person"){
+
+          element["name"] == null ?
+          _data.add(element["title"]) : _data.add(element["name"]);
+        }
+      });
+    }
+    return _data;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Material(
+        elevation: 8.0,
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(100),
+        child: MaterialSearch<String>(
+          placeholder: "Search TV shows and movies...",
+          iconColor: Colors.white,
+          getResults: (String criteria) async {
+
+            List<String> _suggestions = new List<String>();
+
+            if (criteria != null){
+              _suggestions = await _fetchSearchList(criteria);
+            }
+
+            return _suggestions.map((name) => new MaterialSearchResult<String>(
+              value: name, //The value must be of type <String>
+              text: name, //String that will be show in the list
+              //icon: Icons.person,
+            )).toList();
+          },
+
+          onSelect: (var selected) {
+            print("The user selected: "+selected);
+          },
+
+          onSubmit: (var selected) {
+            print("The user selected: "+selected);
+          },
+
+        ),
+      ),
+    );
+  }
+}

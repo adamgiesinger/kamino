@@ -2,6 +2,10 @@ import 'package:objectdb/objectdb.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 
+//do not change value or remove until further notice
+// backup - "<ApolloQuery>"
+const querySplitter = "<ApolloQuery>";
+
 Future saveFavourites(String name, String contentType, int tmdbid, String url, String year) async{
 
   //get the path of the database file
@@ -92,6 +96,70 @@ Future removeFavourite(int tmdbid) async {
   db.tidy();
 
   db.close();
+}
+
+Future<List<String>> getSearchHistory() async {
+
+  //get the path of the database file
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
+  var db = ObjectDB(path);
+
+  db.open();
+
+  Map _data = {
+    "results": await db.find({ "docType": "searchHistory"}),
+  };
+
+  //db.tidy();
+
+  await db.close();
+
+  print("I found these search histories: $_data");
+
+  //[0]["queries"] == null ? [] : _data[0]["queries"].split(querySplitter)
+
+  if (_data["results"].length == 0){
+    return [];
+  }
+
+  return _data["results"].split(querySplitter);
+}
+
+Future saveSearchHistory(String newHistory) async {
+
+  if (newHistory.isEmpty != true){
+    //get the path of the database file
+    final directory = await getApplicationDocumentsDirectory();
+    final path =  directory.path  + "/apolloDB.db";
+    var db = ObjectDB(path);
+
+    db.open();
+
+    //get the current query values
+    List<Map> _currentHistory = await db.find({
+      "docType": "searchHistory"
+    });
+
+    // add the new value to the end
+    String _finalHistory;
+
+    if (_currentHistory[0]["queries"] == null){
+      _finalHistory = newHistory;
+    } else {
+      _finalHistory = _currentHistory[0]["queries"]+querySplitter+newHistory;
+    }
+
+    await db.update({
+      "docType": "searchHistory"
+    },{
+      "queries": _finalHistory
+    });
+
+    db.tidy();
+
+    await db.close();
+  }
 }
 
 Future<List<Map>> getFavMovies() async {

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/api/tmdb.dart';
-import 'package:kamino/res/BottomGradient.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:kamino/models/content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/models/content.dart';
+import 'package:kamino/res/BottomGradient.dart';
+import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/content/overview.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -51,6 +51,11 @@ class FavoritesPageState extends State<FavoritesPage>
           backgroundColor: Theme.of(context).backgroundColor,
           actions: <Widget>[
             IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: _getFavs
+            ),
+
+            IconButton(
                 icon: Icon(Icons.sort),
                 onPressed: () {
                   //sort the favourites into ascending or descending
@@ -58,11 +63,7 @@ class FavoritesPageState extends State<FavoritesPage>
                     _favTV = _favTV.reversed.toList();
                     _favMovie = _favMovie.reversed.toList();
                   });
-                }),
-
-            IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: _getFavs
+                },
             )
           ],
           bottom: new TabBar(
