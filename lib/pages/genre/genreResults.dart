@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/partials/poster.dart';
+import 'package:kamino/pages/smart_search/search_results.dart';
 import 'package:kamino/res/BottomGradient.dart';
 
 

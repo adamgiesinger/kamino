@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/models/content.dart';
+import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/content/overview.dart';
@@ -96,7 +97,6 @@ class _SearchResultState extends State<SearchResult> {
       });
     });
 
-
     super.initState();
   }
 
@@ -175,14 +175,19 @@ Widget _nothingFoundScreen(BuildContext context) {
 
 class SearchModel {
 
-  final String name, poster_path, backdrop_path, year, mediaType;
+  final String name, poster_path, backdrop_path, year, mediaType, overview;
   final int id, vote_count, page;
+  final List genre_ids;
+  final int vote_average;
 
   SearchModel.fromJSON(Map json, int pageCount)
       : name = json["name"] == null ? json["title"] : json["name"],
         poster_path = json["poster_path"],
         backdrop_path = json["backdrop_path"],
         id = json["id"],
+        vote_average = (json["vote_average"]).round(),
+        overview = json["overview"],
+        genre_ids = json["genre_ids"],
         mediaType = json["media_type"],
         page = pageCount,
         year = json["first_air_date"] == null ?
