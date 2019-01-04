@@ -166,13 +166,15 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
           backgroundColor: Theme.of(context).cardColor,
           elevation: 5.0,
 
-          actions: <Widget>[
+          /*
+            actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.search),
                 color: Colors.white,
                 onPressed: () => showSearch(context: context, delegate: SmartSearch()),
             ),
           ],
+          */
 
           // Center title
           centerTitle: true

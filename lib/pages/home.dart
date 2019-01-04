@@ -1,6 +1,7 @@
 import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/pages/smart_search/smart_search.dart';
 import 'package:kamino/partials/apollowidgets/home_customise.dart';
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
@@ -100,6 +101,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
+
               _buildLaunchPad()
             ],
           ),
@@ -194,70 +196,80 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     return _data;
   }
 
-  //removed the search card for now
-  /*
   Widget _searchButton() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      child: new Material(
-        elevation: 5,
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(100),
-        child: InkWell(
+      //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
+        child: new Material(
+          elevation: 5,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(100),
-          onTap: () {
-            showSearch(context: context, delegate: SmartSearch());
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              new Padding(
-                padding: EdgeInsets.only(top: 15, bottom: 15, left: 20),
-                child: new Text(
-                  'Search TV shows and movies...',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'GlacialIndifference',
-                      color: Colors.grey),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(100),
+            onTap: () {
+              showSearch(context: context, delegate: SmartSearch());
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                new Padding(
+                  padding: EdgeInsets.only(top: 15, bottom: 15, left: 20),
+                  child: new Text(
+                    'Search TV shows and movies...',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'GlacialIndifference',
+                        color: Colors.grey),
+                  ),
                 ),
-              ),
-              new Padding(
-                  padding: EdgeInsets.only(right: 20),
-                  child: new Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ))
-            ],
+                new Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: new Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ))
+              ],
+            ),
           ),
         ),
       ),
     );
   }
-  */
+
 
   Widget _buildLaunchPad() {
     return Expanded(
       child: new ListView.builder(
-          itemCount: _userOptions.length + 2,
+          itemCount: _userOptions.length + 3,
           itemBuilder: (BuildContext context, int index) {
 
-            if (index == 0) {
+            if (index == 0){
+              return Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: _searchButton(),
+              );
+
+            }else if (index == 1) {
               return Padding(
                 padding: _hideWelcomeCard == false ?
                 EdgeInsets.only(top: 0.0) : EdgeInsets.only(top: 5.0),
                 child: _launchPadIntroCard(),
               );
-            } else if (index == 1) {
+
+            } else if (index == 2) {
               return Padding(
                 padding: _hideDebugCard == false ?
                 EdgeInsets.only(top: 0.0) : EdgeInsets.only(top: 5.0),
                 child: _debugCard(),
               );
+
             } else {
               return Padding(
                 padding: const EdgeInsets.only(top: 5.0),
-                child: _launchPadCard(_userOptions[index - 2]),
+                child: _launchPadCard(_userOptions[index - 3]),
               );
+
             }
 
           }),
