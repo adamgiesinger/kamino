@@ -112,7 +112,7 @@ List<String> getGenreNames(List ids, String mediaType) {
 
   }
 
-  print("i resolved the following $mediaType genres : $_data");
+  //print("i resolved the following $mediaType genres : $_data");
 
   return _data;
 }

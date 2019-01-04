@@ -7,15 +7,16 @@ abstract class ApolloWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      //margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: new Card(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10)
+            borderRadius: BorderRadius.circular(5.0)
         ),
         elevation: 5.0,
         color: Theme.of(context).cardColor,
         child: new Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: construct(context)
         ),
       ),

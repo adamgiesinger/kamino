@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,14 @@ import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 
 class SmartSearch extends SearchDelegate<String>{
+
+  bool _expandedSearchPref = false;
+
+  SmartSearch() {
+    settingsPref.getBoolPref("expandedSearch").then((data){
+      _expandedSearchPref = data;
+    });
+  }
 
   Future<List<SearchModel>> _fetchSearchList(String criteria) async {
 
@@ -99,7 +108,7 @@ class SmartSearch extends SearchDelegate<String>{
               showResults(context);
             },
             child: Padding(
-              padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
+              padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
               child: InkWell(
                 onTap: (){
                   query = snapshot.data[index];
@@ -153,6 +162,7 @@ class SmartSearch extends SearchDelegate<String>{
               name: snapshot.data[index].name,
               overview: snapshot.data[index].overview,
               ratings: snapshot.data[index].vote_average,
+              elevation: 0.0,
               mediaType: snapshot.data[index].mediaType,
               genre: genre.getGenreNames(snapshot.data[index].genre_ids, snapshot.data[index].mediaType),
             ),
@@ -185,6 +195,44 @@ class SmartSearch extends SearchDelegate<String>{
     );
   }
 
+  Widget _simplifiedSuggestions(AsyncSnapshot snapshot) {
+
+    return ListView.builder(
+        itemCount: snapshot.data.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ContentOverview(
+                          contentId: snapshot.data[index].id,
+                          contentType: snapshot.data[index].mediaType == "tv"
+                              ? ContentOverviewContentType.TV_SHOW
+                              : ContentOverviewContentType.MOVIE)));
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
+              child: ListTile(
+                leading: snapshot.data[index].mediaType == "tv" ? Icon(Icons.live_tv): Icon(Icons.local_movies),
+                title: RichText(
+                  text: TextSpan(
+                    text:snapshot.data[index].name,
+                    style: TextStyle(
+                        fontFamily:("GlacialIndifference"),
+                        fontSize: 19.0,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.white
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+    );
+  }
+
   @override
   Widget buildSuggestions(BuildContext context){
 
@@ -202,7 +250,7 @@ class SmartSearch extends SearchDelegate<String>{
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {
-              return query.isEmpty ? _searchHistoryListView(snapshot) :
+              return _expandedSearchPref == false ? _simplifiedSuggestions(snapshot) :
               _suggestionsPosterCard(snapshot);
             }
             //return Text('Result: ${snapshot.data}');
@@ -211,6 +259,7 @@ class SmartSearch extends SearchDelegate<String>{
       }
     );
   }
+
 
 
 }

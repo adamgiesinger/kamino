@@ -451,7 +451,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   }
 
   Widget _generateGenreChipsRow(context){
-    return SizedBox(
+    return _data.genres == null ? Container() : SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 40.0,
       child: Container(

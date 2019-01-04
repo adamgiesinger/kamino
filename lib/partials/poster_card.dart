@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/ui/uielements.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class PosterCard extends StatefulWidget {
 
   final String background;
   final String name;
+  final double elevation;
   final List<String> genre;
   final String mediaType;
   final int ratings;
@@ -20,7 +22,8 @@ class PosterCard extends StatefulWidget {
     @required this.mediaType,
     @required this.ratings,
     @required this.overview,
-    @required this.isFav
+    @required this.isFav,
+    @required this.elevation
   });
 
   @override
@@ -42,23 +45,21 @@ class _PosterCardState extends State<PosterCard> {
   String _genre(){
     String genreOverview = "";
 
-    if (widget.genre.length > 3){
-
-      return widget.genre[0]+", "+widget.genre[1]+", "+widget.genre[2];
+    if (widget.genre.length == 1){
+      return widget.genre[0];
 
     } else {
 
       widget.genre.forEach((String element){
-
-        if (widget.genre.indexOf(element) == 1){
-          genreOverview = genreOverview + element;
-        } else {
-          genreOverview = genreOverview + element+", ";
+        if (widget.genre.indexOf(element) == 0){
+          genreOverview = element;
         }
-      });
+        genreOverview = genreOverview + ", "+element;
 
-      return genreOverview;
+      });
     }
+
+    return genreOverview;
   }
 
   @override
@@ -112,7 +113,10 @@ class _PosterCardState extends State<PosterCard> {
         child: Row(
           children: <Widget>[
             ClipRRect(
-              borderRadius: BorderRadius.circular(5.0),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5.0),
+                  bottomLeft: Radius.circular(5.0),
+              ),
               child: imageWidget,
             ),
 
@@ -123,6 +127,7 @@ class _PosterCardState extends State<PosterCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
 
+                  //Title of the poster
                   Container(
                     width: _containerWidth,
                     padding: EdgeInsets.only(top: 4.0),
@@ -139,13 +144,14 @@ class _PosterCardState extends State<PosterCard> {
                     ),
                   ),
 
+                  //The list of genres for the content being displayed
                   Container(
                     width: _containerWidth,
                     padding: EdgeInsets.only(top: 6.0),
-                    child: _genre() == null ? Text(
+                    child: _genre() != null ? Text(
                       _genre(),
                       style: TextStyle(
-                        fontFamily: "GlacialIndifference",
+                        //fontFamily: "GlacialIndifference",
                         color: _favouriteIndicator(),
                       ),
                       maxLines: 1,
@@ -165,21 +171,22 @@ class _PosterCardState extends State<PosterCard> {
                     ),
                   ),
 
-                  Container(
+                  //Over summary
+                  widget.overview != null ? Container(
                     width: _containerWidth,
                     padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
                     child: Text(
                       widget.overview,
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        fontFamily: "GlacialIndifference",
+                        //fontFamily: "GlacialIndifference",
                         fontSize: 15.0,
                         color: _favouriteIndicator(),
                       ),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
+                  ) : Container(),
 
                 ],
               ),

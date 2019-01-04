@@ -72,7 +72,7 @@ class NowPlaying extends StatelessWidget{
                               "assets/images/no_image_detail.jpg",
                               fit: BoxFit.fill,
                               width: 135.0,
-                              height: 170.0,
+                              height: 170.0 + 92.0,
                             ),
                           ),
                         ),
@@ -116,7 +116,7 @@ class NowPlaying extends StatelessWidget{
                           children: <Widget>[
 
                             Padding(
-                              padding: const EdgeInsets.only(left: 12.0, right: 160.0),
+                              padding: const EdgeInsets.only(left: 12.0, right: 151.0),
                               child: Text("Now Playing", style: TextStyle(
                                   fontFamily: 'GlacialIndifference', color: Colors.white,
                                   fontSize: 16.0, fontWeight: FontWeight.bold),
@@ -129,7 +129,7 @@ class NowPlaying extends StatelessWidget{
                       ),
 
                       SizedBox(
-                        height: 195.0,
+                        height: 86.0,
                         child: _nowPlayingListView(context, screenWidth, snapshot),
                       ),
 

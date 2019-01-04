@@ -108,7 +108,7 @@ class MovieLayout{
 
   static Widget _generateSimilarMovieCards(MovieContentModel _data, List<int> _favsArray){
 
-    return ListView.builder(
+    return _data.recommendations == null ? Container() : ListView.builder(
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
       itemCount: _data.recommendations.length,

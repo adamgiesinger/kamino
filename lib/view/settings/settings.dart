@@ -1,11 +1,15 @@
 import 'package:kamino/animation/transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
+import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/pages/launchpad/launchpad_configurator.dart';
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/settings/page_appearance.dart';
 import 'package:package_info/package_info.dart';
 
@@ -26,6 +30,9 @@ class SettingsView extends StatefulWidget {
 class _SettingsViewState extends State<SettingsView> {
   
   List<String> _contributors;
+  bool _expandedSearchValue = false;
+  bool _hideWelcomeCard = false;
+  bool _hideDebugCard = true;
   
   PackageInfo _packageInfo = new PackageInfo(
       appName: 'Unknown',
@@ -37,6 +44,28 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   void initState() {
     super.initState();
+
+    settingsPref.getBoolPref("expandedSearch").then((data){
+      setState(() {
+        //print("initial expanded search value is $data");
+        _expandedSearchValue = data;
+      });
+    });
+
+    settingsPref.getBoolPref("debugCard").then((data){
+      setState(() {
+
+        _hideDebugCard = data;
+      });
+    });
+
+    settingsPref.getBoolPref("welcomeCard").then((data){
+      setState(() {
+
+        _hideDebugCard = data;
+      });
+    });
+
     _fetchPackageInfo();
     _fetchContributors();
   }
@@ -96,7 +125,11 @@ class _SettingsViewState extends State<SettingsView> {
                       title: TitleText("Launchpad"),
                       subtitle: Text("Modify your $appName launchpad."),
                       leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
-                      onTap: () => {},
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => LaunchPadOptions()
+                        ));
+                      },
                     ),
                   ),
 
@@ -119,6 +152,100 @@ class _SettingsViewState extends State<SettingsView> {
                     title: TitleText("Other"),
                     subtitle: Text("Change language, choose sources, [...]"),
                     leading: new Icon(Icons.settings),
+                  ),
+
+                  Divider(),
+
+                  Material(
+                    color: Theme.of(context).backgroundColor,
+                    child: CheckboxListTile(
+                      activeColor: Theme.of(context).primaryColor,
+                        value: _expandedSearchValue,
+                        title: TitleText("Expanded Search"),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                              "Enabled a more detailed card instead of a "
+                                  "grid for the search results",
+                            style: TextStyle(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ),
+                      onChanged: (value){
+                        //print("value is... $value");
+
+                        if (value != _expandedSearchValue){
+                          settingsPref.saveBoolPref("expandedSearch", value).then((data){
+                            setState(() {
+                              _expandedSearchValue = data;
+                            });
+                          });
+                        }
+                      },
+                    ),
+                  ),
+
+                  Divider(),
+
+                  Material(
+                    color: Theme.of(context).backgroundColor,
+                    child: CheckboxListTile(
+                      activeColor: Theme.of(context).primaryColor,
+                      value: _hideWelcomeCard,
+                      title: TitleText("Hide Welcome Card"),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          "Hide the launchpad welcome card, if no longer needed",
+                          style: TextStyle(),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                      onChanged: (value){
+                        //print("value is... $value");
+
+                        if (value != _hideWelcomeCard){
+                          settingsPref.saveBoolPref("welcomeCard", value).then((data){
+                            setState(() {
+                              _hideWelcomeCard = data;
+                            });
+                          });
+                        }
+                      },
+                    ),
+                  ),
+
+                  Divider(),
+
+                  Material(
+                    color: Theme.of(context).backgroundColor,
+                    child: CheckboxListTile(
+                      activeColor: Theme.of(context).primaryColor,
+                      value: _hideDebugCard,
+                      title: TitleText("Hide Debug Card"),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          "Hide the debug video player card card, if no longer needed",
+                          style: TextStyle(),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                      onChanged: (value){
+                        //print("value is... $value");
+
+                        if (value != _hideDebugCard){
+                          settingsPref.saveBoolPref("debugCard", value).then((data){
+                            setState(() {
+                              _hideDebugCard = data;
+                            });
+                          });
+                        }
+                      },
+                    ),
                   ),
 
                   Divider(),

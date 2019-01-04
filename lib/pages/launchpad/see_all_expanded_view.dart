@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
+import 'package:kamino/pages/smart_search/search_results.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -13,17 +15,18 @@ import 'package:kamino/partials/poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/content/overview.dart';
 
-class SearchResult extends StatefulWidget{
-  final String query;
+class ExpandedCard extends StatefulWidget{
+  final String url;
+  final String title;
 
-  SearchResult({Key key, @required this.query}) : super(key: key);
+  ExpandedCard({Key key, @required this.url, @required this.title}) : super(key: key);
 
   @override
-  _SearchResultState createState() => new _SearchResultState();
+  _ExpandedCardState createState() => new _ExpandedCardState();
 
 }
 
-class _SearchResultState extends State<SearchResult> {
+class _ExpandedCardState extends State<ExpandedCard> {
 
   ScrollController controller;
   ScrollController controllerList;
@@ -37,16 +40,10 @@ class _SearchResultState extends State<SearchResult> {
   List<SearchModel> _results = [];
   List<int> _favIDs = [];
 
-  Future<List<SearchModel>> _getContent(String query, int pageNumber) async {
+  Future<List<SearchModel>> _getContent(String url, int pageNumber) async {
 
     List<SearchModel> _data = [];
     Map _temp;
-
-    String url = "${tmdb.root_url}/search/"
-        "multi${tmdb.defaultArguments}&"
-        "query=$query&page=$pageNumber&include_adult=false";
-
-    print("url is... $url");
 
     http.Response _res = await http.get(url);
     _temp = jsonDecode(_res.body);
@@ -104,7 +101,7 @@ class _SearchResultState extends State<SearchResult> {
       _favIDs = data;
     });
 
-    _getContent(widget.query, _currentPages).then((data){
+    _getContent(widget.url, _currentPages).then((data){
 
       setState(() {
         _results = data;
@@ -117,20 +114,43 @@ class _SearchResultState extends State<SearchResult> {
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
-      child: _expandedSearchPref == false ? _gridPage() : _listPage(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: TitleText(widget.title),
+          centerTitle: true,
+          backgroundColor: Theme.of(context).cardColor,
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+
+            await Future.delayed(Duration(seconds: 2));
+
+            //refresh the favourites data
+            databaseHelper.getAllFavIDs().then((data){
+
+              _favIDs.clear();
+              setState(() {
+                _favIDs = data;
+              });
+            });
+          },
+          child: _expandedSearchPref == false ? _gridPage() : _listPage(),
+        ),
+      ),
     );
   }
 
   Widget _listPage(){
-    return Padding(
-      padding: const EdgeInsets.only(top:5.0),
-      child: ListView.builder(
-        itemCount: _results.length,
-        controller: controllerList,
-        itemBuilder: (BuildContext context, int index){
-          return InkWell(
-            onTap: () => _openContentScreen(context, index),
-            splashColor: Colors.white,
+    return ListView.builder(
+      itemCount: _results.length,
+      controller: controllerList,
+      itemBuilder: (BuildContext context, int index){
+        return InkWell(
+          onTap: () => _openContentScreen(context, index),
+          splashColor: Colors.white,
+          child: Padding(
+            padding: index == 0 ?
+            EdgeInsets.only(top: 5.0) : EdgeInsets.only(top: 0.0),
             child: PosterCard(
               background: _results[index].poster_path,
               name: _results[index].name,
@@ -141,28 +161,29 @@ class _SearchResultState extends State<SearchResult> {
               isFav: _favIDs.contains(_results[index].id),
               elevation: 5.0,
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
   Widget _gridPage(){
-    return Padding(
-      padding: const EdgeInsets.only(top: 5.0),
-      child: GridView.builder(
-          controller: controller,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.76
-          ),
+    return GridView.builder(
+        controller: controller,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 0.76
+        ),
 
-          itemCount: _results.length,
+        itemCount: _results.length,
 
-          itemBuilder: (BuildContext context, int index){
-            return InkWell(
-              onTap: () => _openContentScreen(context, index),
-              splashColor: Colors.white,
+        itemBuilder: (BuildContext context, int index){
+          return InkWell(
+            onTap: () => _openContentScreen(context, index),
+            splashColor: Colors.white,
+            child: Padding(
+              padding: [0, 1, 2].contains(index) ?
+              EdgeInsets.only(top: 5.0) : EdgeInsets.only(top: 0.0),
               child: Poster(
                 background: _results[index].poster_path,
                 name: _results[index].name,
@@ -170,9 +191,9 @@ class _SearchResultState extends State<SearchResult> {
                 mediaType: _results[index].mediaType,
                 isFav: _favIDs.contains(_results[index].id),
               ),
-            );
-          }
-      ),
+            ),
+          );
+        }
     );
   }
 
@@ -185,7 +206,7 @@ class _SearchResultState extends State<SearchResult> {
         //load the next page
         _currentPages = _currentPages + 1;
 
-        _getContent(widget.query, _currentPages).then((data){
+        _getContent(widget.url, _currentPages).then((data){
 
           setState(() {
             _results = _results + data;
@@ -204,7 +225,7 @@ class _SearchResultState extends State<SearchResult> {
         //load the next page
         _currentPages = _currentPages + 1;
 
-        _getContent(widget.query, _currentPages).then((data){
+        _getContent(widget.url, _currentPages).then((data){
 
           setState(() {
             _results = _results + data;
@@ -224,45 +245,4 @@ class _SearchResultState extends State<SearchResult> {
   }
 
 
-}
-
-Widget _nothingFoundScreen(BuildContext context) {
-  const _paddingWeight = 18.0;
-
-  return Center(
-    child: Padding(
-      padding:
-      const EdgeInsets.only(left: _paddingWeight, right: _paddingWeight),
-      child: Text(
-        "Can't find anything...",
-        maxLines: 3,
-        style: TextStyle(
-            fontSize: 22.0,
-            fontFamily: 'GlacialIndifference',
-            color: Theme.of(context).primaryTextTheme.body1.color),
-      ),
-    ),
-  );
-}
-
-class SearchModel {
-
-  final String name, poster_path, backdrop_path, year, mediaType, overview;
-  final int id, vote_count, page;
-  final List genre_ids;
-  final int vote_average;
-
-  SearchModel.fromJSON(Map json, int pageCount)
-      : name = json["name"] == null ? json["title"] : json["name"],
-        poster_path = json["poster_path"],
-        backdrop_path = json["backdrop_path"],
-        id = json["id"],
-        vote_average = json["vote_average"] != null ? (json["vote_average"]).round() : 0,
-        overview = json["overview"],
-        genre_ids = json["genre_ids"],
-        mediaType = json["media_type"],
-        page = pageCount,
-        year = json["first_air_date"] == null ?
-        json["release_date"] : json["first_air_date"],
-        vote_count = json["vote_count"];
 }

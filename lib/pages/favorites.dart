@@ -44,9 +44,13 @@ class FavoritesPageState extends State<FavoritesPage>
 
   @override
   Widget build(BuildContext context) {
+
+    TextStyle _glacialFont = TextStyle(
+        fontFamily: "GlacialIndifference");
+
     return Scaffold(
       appBar: new AppBar(
-          title: Text("Favorites"),
+          title: Text("Favorites", style: _glacialFont,),
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
           actions: <Widget>[
