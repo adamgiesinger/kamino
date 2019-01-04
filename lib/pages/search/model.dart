@@ -19,8 +19,8 @@ class SearchResult {
 
   SearchResult.fromJson(Map json)
       : mediaType = json["media_type"], id = json["id"],
-        title = json["original_name"] != null ?
-        json["original_name"]: json["original_title"],
+        title = json["name"] != null ?
+        json["name"]: json["title"],
         pageCount = json["total_pages"],
         posterPath = json["poster_path"],
         backdropPath = json["backdrop_path"],

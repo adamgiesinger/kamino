@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/main.dart';
+import 'package:kamino/pages/launchpad/launchpad_configurator.dart';
 import 'package:kamino/partials/apollowidgets/_widget.dart';
 import 'package:kamino/ui/uielements.dart';
 
@@ -25,7 +26,11 @@ class HomeCustomiseWidget extends ApolloWidget {
                 "Customise...",
                 fontSize: 16,
               ),
-              onPressed: (){},
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => LaunchPadOptions()
+                ));
+              },
             )
           ],
         ),

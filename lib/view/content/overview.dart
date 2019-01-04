@@ -11,9 +11,11 @@ import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/pages/genre/genreResults.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
 import 'package:vector_math/vector_math_64.dart' as VectorMath;
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 /*  CONTENT OVERVIEW WIDGET  */
 ///
@@ -41,9 +43,51 @@ class _ContentOverviewState extends State<ContentOverview> {
   TextSpan _titleSpan = TextSpan();
   bool _longTitle = false;
   ContentModel _data;
+  String _backdropImagePath;
+  bool _favState = false;
+  List<int> _favIDs = [];
+  String _contentType;
+
+  Widget _favIconGenerator(bool state){
+
+    Widget _result;
+
+    if(state == true) {
+
+      _result = Icon(
+        Icons.favorite,
+        color: Colors.red,
+      );
+
+    } else {
+
+      _result = Icon(
+        Icons.favorite_border,
+        color: Colors.white,
+      );
+    }
+
+    return _result;
+  }
+
 
   @override
   void initState() {
+
+    //check if the show is a favourite
+    print("startup id is ${widget.contentId}");
+
+    widget.contentType == ContentOverviewContentType.MOVIE ?
+    _contentType = "movie" : _contentType = "tv";
+
+    databaseHelper.getAllFavIDs().then((data) {
+
+      setState(() {
+        _favIDs = data;
+        _favState = data.contains(widget.contentId);
+      });
+    });
+
     // When the widget is initialized, download the overview data.
     loadDataAsync().then((data) {
       // When complete, update the state which will allow us to
@@ -71,6 +115,8 @@ class _ContentOverviewState extends State<ContentOverview> {
         _longTitle = titlePainter.didExceedMaxLines;
       });
     });
+
+    print("you favourited $_favIDs");
 
     super.initState();
   }
@@ -113,10 +159,49 @@ class _ContentOverviewState extends State<ContentOverview> {
     throw new Exception("Unexpected content type.");
   }
 
+  //Logic for the favourites button
+  _favButtonLogic(BuildContext context){
+
+    if (_favState == true) {
+
+      //remove the show from the database
+      databaseHelper.removeFavourite(widget.contentId);
+
+      //show notification snackbar
+      final snackBar = SnackBar(content: Text('Removed from favourites'));
+      Scaffold.of(context).showSnackBar(snackBar);
+
+      //set fav to false to reflect change
+      setState(() {
+        _favState = false;
+      });
+
+    } else if (_favState == false){
+
+      //add the show from the database
+      databaseHelper.saveFavourites(
+          _data.title,
+          widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
+          widget.contentId,
+          _data.backdropPath,
+          _data.releaseDate);
+
+      //show notification snackbar
+      final snackBar = SnackBar(content: Text('Saved to favourites'));
+      Scaffold.of(context).showSnackBar(snackBar);
+
+      //set fav to true to reflect change
+      setState(() {
+        _favState = true;
+      });
+    }
+  }
+
   /* THE FOLLOWING CODE IS JUST LAYOUT CODE. */
 
   @override
   Widget build(BuildContext context) {
+
     // This is shown whilst the data is loading.
     if (_data == null) {
       return Scaffold(
@@ -143,11 +228,10 @@ class _ContentOverviewState extends State<ContentOverview> {
                     backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
                       IconButton(
-                        icon: Icon(
-                          Icons.favorite_border,
-                          color: Theme.of(context).primaryTextTheme.title.color
-                        ),
-                        onPressed: null
+                        icon: _favIconGenerator(_favState),
+                        onPressed: (){
+                          _favButtonLogic(context);
+                        },
                       ),
                     ],
                     expandedHeight: 200.0,
@@ -298,6 +382,12 @@ class _ContentOverviewState extends State<ContentOverview> {
   Widget _generateBackdropImage(BuildContext context){
     double contextWidth = MediaQuery.of(context).size.width;
 
+    //null trap to private slow urls crashing the screen
+    // (big issue with some old and foreign shows)
+    _data.backdropPath != null ?
+    _backdropImagePath = tmdb.image_cdn + _data.backdropPath :
+    _backdropImagePath = tmdb.image_cdn;
+
     return Container(
       height: 220,
       child: Stack(
@@ -306,8 +396,9 @@ class _ContentOverviewState extends State<ContentOverview> {
         children: <Widget>[
           Container(
               child: _data.backdropPath != null ?
-              Image.network(
-                  tmdb.image_cdn + _data.backdropPath,
+              FadeInImage.assetNetwork(
+                  placeholder: "assets/images/no_image_detail.jpg",
+                  image :_backdropImagePath,
                   fit: BoxFit.cover,
                   height: 220.0,
                   width: contextWidth
@@ -331,9 +422,36 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// GenreChipsRowWidget -
   /// This is the row of purple genre chips.
   /// TODO: When tapped, show a genre-filtered search.
-  ///
+  _loadMoreGenreMatches(String mediaType,
+      int id, String genreName) {
+
+    if (mediaType == "tv"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GenreView(
+                      contentType: "tv",
+                      genreID: id,
+                      genreName: genreName )
+          )
+      );
+    } else if (mediaType == "movie"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GenreView(
+                      contentType: "movie",
+                      genreID: id,
+                      genreName: genreName )
+          )
+      );
+    }
+  }
+
   Widget _generateGenreChipsRow(context){
-    return SizedBox(
+    return _data.genres == null ? Container() : SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 40.0,
       child: Container(
@@ -344,16 +462,22 @@ class _ContentOverviewState extends State<ContentOverview> {
 
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              child: Padding(
-                padding: index != 0
-                    ? EdgeInsets.only(left: 6.0, right: 6.0)
-                    : EdgeInsets.only(left: 6.0, right: 6.0),
-                child: new Chip(
-                  label: Text(
-                    _data.genres[index]["name"],
-                    style: TextStyle(color: Colors.white, fontSize: 15.0),
+              child: InkWell(
+                onTap: (){
+                  _loadMoreGenreMatches(_contentType,
+                      _data.genres[index]["id"], _data.genres[index]["name"]);
+                },
+                child: Padding(
+                  padding: index != 0
+                      ? EdgeInsets.only(left: 6.0, right: 6.0)
+                      : EdgeInsets.only(left: 6.0, right: 6.0),
+                  child: new Chip(
+                    label: Text(
+                      _data.genres[index]["name"],
+                      style: TextStyle(color: Colors.white, fontSize: 15.0),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  backgroundColor: Theme.of(context).primaryColor,
                 ),
               ),
             );
@@ -432,14 +556,15 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// This generates the remaining layout for the specific content type.
   /// It is a good idea to reference another class to keep this clean.
   ///
-  Widget _generateLayout(ContentOverviewContentType contentType){
+  Widget _generateLayout(ContentOverviewContentType contentType) {
+
     switch(contentType){
       case ContentOverviewContentType.TV_SHOW:
         // Generate TV show information
         return TVShowLayout.generate(context, _data);
       case ContentOverviewContentType.MOVIE:
         // Generate movie information
-        return MovieLayout.generate(context, _data);
+        return MovieLayout.generate(context, _data, _favIDs);
       default:
         return Container();
     }

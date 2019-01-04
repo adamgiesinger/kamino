@@ -5,38 +5,42 @@ import 'package:kamino/models/movie.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
+import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/content/overview.dart';
 
 class MovieLayout{
 
-  static Widget generate(BuildContext context, MovieContentModel _data){
+  static Widget generate(BuildContext context, MovieContentModel _data, List<int> _favsArray){
     return Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
-        child: Column(
-          children: <Widget>[
-            /* Similar Movies */
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                    title: TitleText(
-                        'Similar Movies',
-                        fontSize: 22.0,
-                        textColor: Colors.white
-                    )
-                ),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 30.0),
+          child: Column(
+            children: <Widget>[
+              /* Similar Movies */
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                      title: TitleText(
+                          'Similar Movies',
+                          fontSize: 22.0,
+                          textColor: Theme.of(context).primaryColor
+                      )
+                  ),
 
-                SizedBox(
-                  height: 200.0,
-                  child: _generateSimilarMovieCards(_data)
-                )
-              ],
-            )
-            /* ./Similar Movies */
+                  SizedBox(
+                    height: 200.0,
+                    child: _generateSimilarMovieCards(_data, _favsArray)
+                  )
+                ],
+              )
+              /* ./Similar Movies */
 
 
-          ]
-      )
+            ]
+      ),
+        )
     );
   }
 
@@ -102,8 +106,9 @@ class MovieLayout{
 
   /* PRIVATE SUBCLASS-SPECIFIC METHODS */
 
-  static Widget _generateSimilarMovieCards(MovieContentModel _data){
-    return ListView.builder(
+  static Widget _generateSimilarMovieCards(MovieContentModel _data, List<int> _favsArray){
+
+    return _data.recommendations == null ? Container() : ListView.builder(
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
       itemCount: _data.recommendations.length,
@@ -131,9 +136,10 @@ class MovieLayout{
                 name: _data.recommendations[index]["title"],
                 background: _data.recommendations[index]["poster_path"],
                 mediaType: 'movie',
-                releaseDate: _data.recommendations[index]["release_date"]
-              )
-            )
+                releaseDate: _data.recommendations[index]["release_date"],
+                isFav: _favsArray.contains(_data.recommendations[index]["id"]),
+              ),
+            ),
           ),
         );
     });

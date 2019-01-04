@@ -1,9 +1,12 @@
 // Import flutter libraries
+import 'package:kamino/pages/all_media/all_genres.dart';
+import 'package:kamino/pages/smart_search/smart_search.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:kamino/pages/favorites.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -163,6 +166,16 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
           backgroundColor: Theme.of(context).cardColor,
           elevation: 5.0,
 
+          /*
+            actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.search),
+                color: Colors.white,
+                onPressed: () => showSearch(context: context, delegate: SmartSearch()),
+            ),
+          ],
+          */
+
           // Center title
           centerTitle: true
         ),
@@ -171,6 +184,25 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
         // Body content
         body: HomePage()
     );
+  }
+
+  _openAllGenres(BuildContext context, String mediaType) {
+
+    if (mediaType == "tv") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AllGenres(contentType: mediaType)
+          )
+      );
+    } else if (mediaType == "movie"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AllGenres(contentType: mediaType)
+          )
+      );
+    }
   }
 
   Widget __buildAppDrawer(){
@@ -195,9 +227,31 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
             ),
             Divider(),
             ListTile(
+              leading: const Icon(Icons.live_tv),
+              title: Text('TV Shows'),
+              onTap: () => _openAllGenres(context, "tv"),
+            ),
+            ListTile(
+              leading: const Icon(Icons.local_movies),
+              title: Text('Movies'),
+              onTap: () => _openAllGenres(context, "movie"),
+            ),
+            Divider(),
+            ListTile(
               leading: const Icon(Icons.gavel),
               title: Text('Legal'),
-              onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
+              onTap: () => _openAllGenres,
+            ),
+            ListTile(
+              title: Text("Favourites"),
+              leading: const Icon(Icons.favorite),
+              onTap:  () {
+                Navigator.of(context).pop();
+
+                Navigator.push(context, SlideRightRoute(
+                    builder: (context) => FavoritesPage()
+                ));
+              },
             ),
             ListTile(
               leading: const Icon(Icons.favorite),
