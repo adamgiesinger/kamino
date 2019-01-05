@@ -240,10 +240,10 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
             ListTile(
               leading: const Icon(Icons.gavel),
               title: Text('Legal'),
-              onTap: () => _openAllGenres,
+              onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
             ),
             ListTile(
-              title: Text("Favourites"),
+              title: Text("Favorites"),
               leading: const Icon(Icons.favorite),
               onTap:  () {
                 Navigator.of(context).pop();

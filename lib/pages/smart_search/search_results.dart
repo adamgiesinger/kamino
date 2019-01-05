@@ -177,6 +177,9 @@ class _SearchResultState extends State<SearchResult> {
   }
 
   void _scrollListener(){
+
+    print("current pgae is $_currentPages");
+
     if (controller.offset >= controller.position.extentAfter) {
 
       //check that you haven't already loaded the last page
