@@ -66,7 +66,6 @@ class _LaunchPadOptionsState extends State<LaunchPadOptions> {
                     ),
                   ),
                 ],
-                elevation: 8.0,
               ),)),
           IconButton(icon: Icon(Icons.autorenew),
             onPressed: (){
