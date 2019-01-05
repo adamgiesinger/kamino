@@ -6,7 +6,7 @@ import 'package:kamino/pages/smart_search/search_results.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/genre_names.dart' as genreNames;
@@ -124,6 +124,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
           title: TitleText(widget.title),
           centerTitle: true,
           backgroundColor: Theme.of(context).cardColor,
+          actions: <Widget>[
+            searchIconButton(context),
+          ],
         ),
         body: RefreshIndicator(
           onRefresh: () async {

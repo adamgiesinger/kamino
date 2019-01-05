@@ -12,7 +12,7 @@ import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/partials/poster_card.dart';
-import 'package:kamino/pages/smart_search/search_results.dart';
+import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
 import 'package:kamino/pages/genre/genreResults.dart';
 
 
@@ -231,6 +231,8 @@ class _AllGenresState extends State<AllGenres>{
             items: _dropDownMenuGenreItems,
             onChanged: changedDropDownItem,
           ),
+
+          searchIconButton(context),
 
           //Add sorting functionality
           IconButton(

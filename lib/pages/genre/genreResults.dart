@@ -11,7 +11,7 @@ import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/partials/poster_card.dart';
-import 'package:kamino/pages/smart_search/search_results.dart';
+import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
 import 'package:kamino/res/BottomGradient.dart';
 
 
@@ -154,32 +154,49 @@ class _GenreViewState extends State<GenreView>{
     TextStyle _glacialFont = TextStyle(
         fontFamily: "GlacialIndifference");
 
-    return Scaffold(
-      appBar: new AppBar(
-        title: Text(widget.genreName, style: _glacialFont,),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).backgroundColor,
-        elevation: 5.0,
-        actions: <Widget>[
-        //Add sorting functionality
-          IconButton(
-              icon: Icon(Icons.sort), onPressed: (){
-            showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (_){
-                return GenreSortDialog(
-                  onValueChange: _applyNewParam,
-                  selectedParam: _selectedParam,
+    return Scrollbar(
+        child: Scaffold(
+          appBar: new AppBar(
+            title: Text(widget.genreName, style: _glacialFont,),
+            centerTitle: true,
+            backgroundColor: Theme.of(context).backgroundColor,
+            elevation: 5.0,
+            actions: <Widget>[
+
+              searchIconButton(context),
+
+              //Add sorting functionality
+              IconButton(
+                  icon: Icon(Icons.sort), onPressed: (){
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (_){
+                    return GenreSortDialog(
+                      onValueChange: _applyNewParam,
+                      selectedParam: _selectedParam,
+                    );
+                  }
                 );
-              }
-            );
-          }),
-      ],
-      ),
-      body: Scrollbar(
-        child: _expandedSearchPref == false ? _gridResults() : _listResult(),
-      ),
+              }),
+          ],
+          ),
+          body: RefreshIndicator(
+            onRefresh: () async {
+
+              await Future.delayed(Duration(seconds: 2));
+              databaseHelper.getAllFavIDs().then((data){
+
+                setState(() {
+                  _favIDs = data;
+                });
+              });
+            },
+            child: Scrollbar(
+              child: _expandedSearchPref == false ? _gridResults() : _listResult(),
+            ),
+          ),
+        ),
     );
   }
 

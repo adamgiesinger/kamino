@@ -14,7 +14,7 @@ import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/pages/genre/genreResults.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
-import 'package:vector_math/vector_math_64.dart' as VectorMath;
+import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 /*  CONTENT OVERVIEW WIDGET  */
@@ -227,6 +227,9 @@ class _ContentOverviewState extends State<ContentOverview> {
                   SliverAppBar(
                     backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
+
+                      searchIconButton(context),
+
                       IconButton(
                         icon: _favIconGenerator(_favState),
                         onPressed: (){
