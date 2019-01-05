@@ -5,7 +5,8 @@ import 'package:kamino/models/movie.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/ui_constants.dart';
+import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/view/content/overview.dart';
 
 class MovieLayout{
@@ -128,6 +129,12 @@ class MovieLayout{
                         ),
                     )
                 );
+            },
+            onLongPress: (){
+              saveFavPopUpDialog(
+                  context, _data.recommendations[index]["title"], _data.recommendations[index]["id"],
+                  tmdb.image_cdn + _data.recommendations[index]["posterPath"],
+                  _data.recommendations[index]["releaseDate"], "movie");
             },
             splashColor: Colors.white,
             child: SizedBox(

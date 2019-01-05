@@ -6,10 +6,10 @@ import 'package:kamino/pages/smart_search/search_results.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
+import 'package:kamino/util/ui_constants.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
-import 'package:kamino/util/genre_names.dart' as genreNames;
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
@@ -155,6 +155,12 @@ class _ExpandedCardState extends State<ExpandedCard> {
       itemBuilder: (BuildContext context, int index){
         return InkWell(
           onTap: () => _openContentScreen(context, index),
+          onLongPress: (){
+            saveFavPopUpDialog(
+                context, _results[index].name, _results[index].id,
+                image_cdn + _results[index].poster_path,
+                _results[index].year, _results[index].mediaType);
+          },
           splashColor: Colors.white,
           child: Padding(
             padding: index == 0 ?
@@ -188,6 +194,12 @@ class _ExpandedCardState extends State<ExpandedCard> {
         itemBuilder: (BuildContext context, int index){
           return InkWell(
             onTap: () => _openContentScreen(context, index),
+            onLongPress: (){
+              saveFavPopUpDialog(
+                  context, _results[index].name, _results[index].id,
+                  image_cdn + _results[index].poster_path,
+                  _results[index].year, _results[index].mediaType);
+            },
             splashColor: Colors.white,
             child: Padding(
               padding: [0, 1, 2].contains(index) ?

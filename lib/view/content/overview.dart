@@ -14,7 +14,8 @@ import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/pages/genre/genreResults.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
-import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
+
+import 'package:kamino/util/ui_constants.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 /*  CONTENT OVERVIEW WIDGET  */
@@ -178,7 +179,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
     } else if (_favState == false){
 
-      //add the show from the database
+      //add the show to the database
       databaseHelper.saveFavourites(
           _data.title,
           widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
@@ -425,8 +426,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// GenreChipsRowWidget -
   /// This is the row of purple genre chips.
   /// TODO: When tapped, show a genre-filtered search.
-  _loadMoreGenreMatches(String mediaType,
-      int id, String genreName) {
+  _loadMoreGenreMatches(String mediaType, int id, String genreName) {
 
     if (mediaType == "tv"){
       Navigator.push(

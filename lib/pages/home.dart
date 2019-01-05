@@ -9,18 +9,14 @@ import 'package:kamino/pages/launchpad/see_all_expanded_view.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/pages/smart_search/search_results.dart';
 import 'dart:async';
-import 'package:shimmer/shimmer.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/view/content/overview.dart';
-import 'package:kamino/pages/smart_search/search_results.dart';
-import 'package:kamino/partials/poster.dart';
+import 'package:kamino/util/ui_constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
-import 'package:kamino/pages/launchpad/launchpad.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:kamino/partials/_todo_ignore_apollowidgets/movies/now_playing.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -423,6 +419,12 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () => _openContentScreen(context, index, snapshot, title),
+                      onLongPress: (){
+                        saveFavPopUpDialog(
+                            context, snapshot.data[index].name, snapshot.data[index].id,
+                            tmdb.image_cdn + snapshot.data[index].poster_path,
+                            snapshot.data[index].year, _urlBuilder(title)[1]);
+                      },
                       child: Padding(
                         padding: index == 0 ? EdgeInsets.only(left: 10.0, bottom: 8.0, right: 4.0)
                             : EdgeInsets.only(bottom: 8.0, right: 4.0),

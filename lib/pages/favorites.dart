@@ -5,7 +5,7 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
+import 'package:kamino/util/ui_constants.dart';
 import 'package:kamino/view/content/overview.dart';
 
 class FavoritesPage extends StatefulWidget {

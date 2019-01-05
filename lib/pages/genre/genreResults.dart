@@ -11,8 +11,7 @@ import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/partials/poster_card.dart';
-import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
-import 'package:kamino/res/BottomGradient.dart';
+import 'package:kamino/util/ui_constants.dart';
 
 
 class GenreView extends StatefulWidget{
@@ -213,6 +212,12 @@ class _GenreViewState extends State<GenreView>{
         itemBuilder: (BuildContext context, int index){
           return InkWell(
             onTap: () => _openContentScreen(context, index),
+            onLongPress: (){
+              saveFavPopUpDialog(
+                  context, _results[index].name, _results[index].id,
+                  tmdb.image_cdn + _results[index].poster_path,
+                  _results[index].year, _results[index].mediaType);
+            },
             splashColor: Colors.white,
             child: Poster(
               background: _results[index].poster_path,
@@ -234,6 +239,12 @@ class _GenreViewState extends State<GenreView>{
       itemBuilder: (BuildContext context, int index){
         return InkWell(
           onTap: () => _openContentScreen(context, index),
+          onLongPress: (){
+            saveFavPopUpDialog(
+                context, _results[index].name, _results[index].id,
+                tmdb.image_cdn + _results[index].poster_path,
+                _results[index].year, _results[index].mediaType);
+          },
           splashColor: Colors.white,
           child: PosterCard(
             background: _results[index].poster_path,
