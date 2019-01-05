@@ -58,8 +58,8 @@ class _ExpandedCardState extends State<ExpandedCard> {
       }
     }
 
-    print("totoal pages is $total_pages");
-    print("new url is $url");
+    //print("totoal pages is $total_pages");
+    //print("new url is $url");
 
     return _data;
   }
@@ -205,7 +205,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
   void _scrollListener(){
 
-    print("reached the bottom $_currentPages");
+    //print("reached the bottom $_currentPages");
     //print("bottom url is $_processedUIrl");
 
     if (controller.offset >= controller.position.extentAfter) {
@@ -215,7 +215,8 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
         //load the next page
         _currentPages = _currentPages + 1;
-        print("loading page $_currentPages");
+
+        //print("loading page $_currentPages");
 
         _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
 
@@ -235,7 +236,8 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
         //load the next page
         _currentPages = _currentPages + 1;
-        print("loading page $_currentPages");
+
+        //print("loading page $_currentPages");
 
         _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
 
