@@ -22,7 +22,7 @@ class TVShowLayout{
                       title: TitleText(
                           'Seasons (${_data.seasons.length})',
                           fontSize: 22.0,
-                          textColor: Theme.of(context).primaryColor
+                          textColor: Colors.white
                       )
                   ),
 

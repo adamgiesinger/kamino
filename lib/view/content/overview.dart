@@ -499,6 +499,9 @@ class _ContentOverviewState extends State<ContentOverview> {
 
           /* Synopsis */
           Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+            ),
             elevation: 3,
             child: Padding(
               padding: EdgeInsets.only(bottom: 20),
@@ -508,7 +511,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                       title: TitleText(
                         'Synopsis',
                         fontSize: 22.0,
-                        textColor: Theme.of(context).primaryColor
+                        textColor: Colors.white
                       )
                   ),
                   Container(
