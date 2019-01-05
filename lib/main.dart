@@ -243,7 +243,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
               onTap: () => _openAllGenres,
             ),
             ListTile(
-              title: Text("Favourites"),
+              title: Text("Favorites"),
               leading: const Icon(Icons.favorite),
               onTap:  () {
                 Navigator.of(context).pop();

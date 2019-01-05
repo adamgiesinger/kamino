@@ -33,7 +33,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
   final _pageController = PageController(initialPage: 1);
 
-  int _currentPages = 1;
+  int _currentPages;
   int total_pages = 1;
   bool _expandedSearchPref = false;
 
@@ -57,6 +57,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
             _temp["results"][x], total_pages));
       }
     }
+
+    print("totoal pages is $total_pages");
+    print("new url is $url");
 
     return _data;
   }
@@ -87,6 +90,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
   @override
   void initState() {
+
+    _currentPages = 1;
+
     settingsPref.getBoolPref("expandedSearch").then((data){
       setState(() {
         _expandedSearchPref = data;
@@ -101,7 +107,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
       _favIDs = data;
     });
 
-    _getContent(widget.url, _currentPages).then((data){
+    _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
 
       setState(() {
         _results = data;
@@ -198,6 +204,10 @@ class _ExpandedCardState extends State<ExpandedCard> {
   }
 
   void _scrollListener(){
+
+    print("reached the bottom $_currentPages");
+    //print("bottom url is $_processedUIrl");
+
     if (controller.offset >= controller.position.extentAfter) {
 
       //check that you haven't already loaded the last page
@@ -205,8 +215,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
         //load the next page
         _currentPages = _currentPages + 1;
+        print("loading page $_currentPages");
 
-        _getContent(widget.url, _currentPages).then((data){
+        _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
 
           setState(() {
             _results = _results + data;
@@ -224,8 +235,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
         //load the next page
         _currentPages = _currentPages + 1;
+        print("loading page $_currentPages");
 
-        _getContent(widget.url, _currentPages).then((data){
+        _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
 
           setState(() {
             _results = _results + data;
