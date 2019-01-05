@@ -179,8 +179,6 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     List<SearchModel> _data = [];
     Map _temp;
 
-    print("url is... ${_urlBuilder(title)}");
-
     http.Response _res = await http.get(_urlBuilder(title)[0]);
     _temp = jsonDecode(_res.body);
 
@@ -311,7 +309,11 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ExpandedCard(url: _urlBuilder(title)[0], title: _urlBuilder(title)[3],)
+            builder: (context) => ExpandedCard(
+              url: _urlBuilder(title)[0],
+              title: _urlBuilder(title)[3],
+              mediaType: _urlBuilder(title)[1],
+            )
         )
     );
   }
@@ -354,7 +356,6 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _launchPadCard(String title) {
-    print("the title is: $title");
 
     return title == null
         ? Container()
