@@ -173,7 +173,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
           elevation: 5.0,
             actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.favorite_border),
+                icon: Icon(Icons.favorite),
                 tooltip: "Favorites",
                 onPressed: (){
                   Navigator.push(context, MaterialPageRoute(
