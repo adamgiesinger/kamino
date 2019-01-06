@@ -12,7 +12,7 @@ import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/partials/poster_card.dart';
-import 'package:kamino/util/ui_constants.dart';
+import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/pages/genre/genreResults.dart';
 
 
@@ -272,7 +272,7 @@ class _AllGenresState extends State<AllGenres>{
           return InkWell(
             onTap: () => _openContentScreen(context, index),
             onLongPress: (){
-              saveFavPopUpDialog(
+              addFavoritePrompt(
                   context, _results[index].name, _results[index].id,
                   tmdb.image_cdn + _results[index].poster_path,
                   _results[index].year, _results[index].mediaType);
@@ -300,7 +300,7 @@ class _AllGenresState extends State<AllGenres>{
         return InkWell(
           onTap: () => _openContentScreen(context, index),
           onLongPress: (){
-            saveFavPopUpDialog(
+            addFavoritePrompt(
                 context, _results[index].name, _results[index].id,
                 tmdb.image_cdn + _results[index].poster_path,
                 _results[index].year, _results[index].mediaType);

@@ -15,7 +15,7 @@ import 'package:kamino/pages/genre/genreResults.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
 
-import 'package:kamino/util/ui_constants.dart';
+import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 /*  CONTENT OVERVIEW WIDGET  */

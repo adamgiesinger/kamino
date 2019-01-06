@@ -7,11 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/partials/poster_card.dart';
-import 'package:kamino/util/ui_constants.dart';
+import 'package:kamino/ui/ui_constants.dart';
 
 
 class GenreView extends StatefulWidget{
@@ -213,7 +212,7 @@ class _GenreViewState extends State<GenreView>{
           return InkWell(
             onTap: () => _openContentScreen(context, index),
             onLongPress: (){
-              saveFavPopUpDialog(
+              addFavoritePrompt(
                   context, _results[index].name, _results[index].id,
                   tmdb.image_cdn + _results[index].poster_path,
                   _results[index].year, _results[index].mediaType);
@@ -240,7 +239,7 @@ class _GenreViewState extends State<GenreView>{
         return InkWell(
           onTap: () => _openContentScreen(context, index),
           onLongPress: (){
-            saveFavPopUpDialog(
+            addFavoritePrompt(
                 context, _results[index].name, _results[index].id,
                 tmdb.image_cdn + _results[index].poster_path,
                 _results[index].year, _results[index].mediaType);

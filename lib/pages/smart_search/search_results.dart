@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/models/content.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
-import 'package:kamino/util/ui_constants.dart';
+import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
@@ -131,7 +131,7 @@ class _SearchResultState extends State<SearchResult> {
           return InkWell(
             onTap: () => _openContentScreen(context, index),
             onLongPress: (){
-              saveFavPopUpDialog(
+              addFavoritePrompt(
                   context, _results[index].name, _results[index].id,
                   tmdb.image_cdn + _results[index].poster_path,
                   _results[index].year, _results[index].mediaType);
@@ -169,7 +169,7 @@ class _SearchResultState extends State<SearchResult> {
             return InkWell(
               onTap: () => _openContentScreen(context, index),
               onLongPress: (){
-                saveFavPopUpDialog(
+                addFavoritePrompt(
                     context, _results[index].name, _results[index].id,
                     tmdb.image_cdn + _results[index].poster_path,
                     _results[index].year, _results[index].mediaType);

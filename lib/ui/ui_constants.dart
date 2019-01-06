@@ -13,7 +13,7 @@ IconButton searchIconButton(BuildContext context) {
   );
 }
 
-void saveFavPopUpDialog(
+void addFavoritePrompt(
     BuildContext context, String title,
     int id, String url, String year, String mediaType){
 
