@@ -72,7 +72,7 @@ class _SearchResultState extends State<SearchResult> {
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
-                      contentType: ContentOverviewContentType.TV_SHOW )
+                      contentType: ContentType.TV_SHOW )
           )
       );
     } else {
@@ -82,7 +82,7 @@ class _SearchResultState extends State<SearchResult> {
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
-                      contentType: ContentOverviewContentType.MOVIE )
+                      contentType: ContentType.MOVIE )
           )
       );
     }

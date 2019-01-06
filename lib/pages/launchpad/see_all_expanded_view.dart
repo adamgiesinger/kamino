@@ -6,10 +6,8 @@ import 'package:kamino/pages/smart_search/search_results.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/models/content.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
-import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
@@ -72,7 +70,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
-                      contentType: ContentOverviewContentType.TV_SHOW )
+                      contentType: ContentType.TV_SHOW )
           )
       );
     } else {
@@ -82,7 +80,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
-                      contentType: ContentOverviewContentType.MOVIE )
+                      contentType: ContentType.MOVIE )
           )
       );
     }
@@ -99,15 +97,16 @@ class _ExpandedCardState extends State<ExpandedCard> {
       });
     });
 
-    controller = new ScrollController()..addListener(_scrollListener);
-    controllerList = new ScrollController()..addListener(_scrollListenerList);
+    // TODO: Fix scroll listeners
+    //controller = new ScrollController()..addListener(_scrollListener);
+    //controllerList = new ScrollController()..addListener(_scrollListenerList);
 
     databaseHelper.getAllFavIDs().then((data){
 
       _favIDs = data;
     });
 
-    _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
+    _getContent(widget.url + "page=$_currentPages", _currentPages).then((data){
 
       setState(() {
         _results = data;
@@ -252,9 +251,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    controller.removeListener(_scrollListener);
-    controllerList.removeListener(_scrollListenerList);
+    // TODO: Re-add removeListener calls once listeners are fixed.
+    // controller.removeListener(_scrollListener);
+    // controllerList.removeListener(_scrollListenerList);
     super.dispose();
   }
 

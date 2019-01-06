@@ -124,7 +124,7 @@ class MovieLayout{
                     MaterialPageRoute(
                         builder: (context) => ContentOverview(
                           contentId: _data.recommendations[index]["id"],
-                          contentType: ContentOverviewContentType.MOVIE
+                          contentType: ContentType.MOVIE
                         ),
                     )
                 );

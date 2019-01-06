@@ -37,7 +37,7 @@ class SearchPageState extends State<SearchPage> {
               builder: (context) =>
                   ContentOverview(
                       contentId: snapshot.data[index].showID,
-                      contentType: ContentOverviewContentType.TV_SHOW )
+                      contentType: ContentType.TV_SHOW )
           )
       );
     } else {
@@ -47,7 +47,7 @@ class SearchPageState extends State<SearchPage> {
               builder: (context) =>
                   ContentOverview(
                       contentId: snapshot.data[index].showID,
-                      contentType: ContentOverviewContentType.MOVIE )
+                      contentType: ContentType.MOVIE )
           )
       );
     }

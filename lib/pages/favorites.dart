@@ -112,8 +112,8 @@ class FavoritesPageState extends State<FavoritesPage>
                                   ? _favTV[index]["tmdbID"]
                                   : _favMovie[index]["tmdbID"],
                               contentType: _tabController.index == 0
-                                  ? ContentOverviewContentType.TV_SHOW
-                                  : ContentOverviewContentType.MOVIE)));
+                                  ? ContentType.TV_SHOW
+                                  : ContentType.MOVIE)));
                 },
                 splashColor: Colors.white,
                 child: Stack(

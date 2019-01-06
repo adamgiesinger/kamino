@@ -1,37 +1,32 @@
-import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kamino/pages/smart_search/smart_search.dart';
-import 'package:kamino/partials/apollowidgets/home_customise.dart';
+import 'package:kamino/pages/launchpad/launchpad_renderer.dart';
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/pages/launchpad/see_all_expanded_view.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/pages/smart_search/search_results.dart';
 import 'dart:async';
-import 'package:shimmer/shimmer.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/view/content/overview.dart';
-import 'package:kamino/pages/smart_search/search_results.dart';
-import 'package:kamino/partials/poster.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
-import 'package:kamino/pages/launchpad/launchpad.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:kamino/partials/_todo_ignore_apollowidgets/movies/now_playing.dart';
 
-class HomePage extends StatefulWidget {
+class LaunchpadController extends StatefulWidget {
   @override
-  HomePageState createState() => new HomePageState();
+  LaunchpadControllerState createState() => new LaunchpadControllerState();
 }
 
-class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+class LaunchpadControllerState extends State<LaunchpadController> with AutomaticKeepAliveClientMixin {
   bool _hideWelcomeCard = false;
   List<int> _favs = [];
   List<String> _userOptions = [];
   bool _hideDebugCard = false;
+
+  LaunchpadItemRenderer _renderer;
 
   @override
   void initState() {
@@ -53,6 +48,8 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
       }
     });
 
+    _renderer = new LaunchpadItemRenderer();
+
     databaseHelper.getAllFavIDs().then((data) {
       data.forEach((int element) => _favs.add(element));
     });
@@ -62,51 +59,19 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async{
-
-        await Future.delayed(Duration(seconds: 2));
-
-        databaseHelper.getAllFavIDs().then((data) {
-          _favs.clear();
-          data.forEach((int element) => _favs.add(element));
-        });
-
-        settingsPref.getBoolPref("welcomeCard").then((data) {
-          _hideWelcomeCard = data;
-        });
-
-        settingsPref.getBoolPref("debugCard").then((data){
-          _hideDebugCard = data;
-
-          print("the dub value is... $data");
-        });
-
-        settingsPref.getListPref("launchpadOptions").then((data) {
-          _userOptions.clear();
-          setState(() {
-            for (int x = 0; x < data.length; x++) {
-              _userOptions.add(data[x]);
-            }
-          });
-        });
+      onRefresh: () async {
+        _renderer.refresh();
+        await new Future.delayed(new Duration(seconds: 1));
+        return null;
       },
       color: Theme.of(context).primaryColor,
-      backgroundColor: Theme.of(context).cardColor,
-      child: Scrollbar(
-        child: Container(
-          color: Theme.of(context).backgroundColor,
-          child: Column(
-
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-
-            children: <Widget>[
-
-              _buildLaunchPad()
-            ],
-          ),
-        ),
-      ),
+      backgroundColor: Theme.of(context).backgroundColor,
+      child: Scrollbar(child: Container(
+        color: Theme.of(context).backgroundColor,
+          child: Column(children: <Widget>[
+            _renderer
+          ]),
+      )),
     );
   }
 
@@ -196,47 +161,6 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     return _data;
   }
 
-  Widget _searchButton() {
-    return Container(
-      //margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
-        child: new Material(
-          elevation: 5,
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(100),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(100),
-            onTap: () {
-              showSearch(context: context, delegate: SmartSearch());
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Padding(
-                  padding: EdgeInsets.only(top: 15, bottom: 15, left: 20),
-                  child: new Text(
-                    'Search TV shows and movies...',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'GlacialIndifference',
-                        color: Colors.grey),
-                  ),
-                ),
-                new Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: new Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ))
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
 
   Widget _buildLaunchPad() {
     return Expanded(
@@ -245,24 +169,10 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
           itemBuilder: (BuildContext context, int index) {
 
             if (index == 0){
-              return Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: _searchButton(),
-              );
 
             }else if (index == 1) {
-              return Padding(
-                padding: _hideWelcomeCard == false ?
-                EdgeInsets.only(top: 0.0) : EdgeInsets.only(top: 5.0),
-                child: _launchPadIntroCard(),
-              );
 
             } else if (index == 2) {
-              return Padding(
-                padding: _hideDebugCard == false ?
-                EdgeInsets.only(top: 0.0) : EdgeInsets.only(top: 5.0),
-                child: _debugCard(),
-              );
 
             } else {
               return Padding(
@@ -276,12 +186,6 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  Widget _launchPadIntroCard() {
-    return _hideWelcomeCard == false
-        ? HomeCustomiseWidget() : Container();
-  }
-
-
   _openContentScreen(BuildContext context, int index, AsyncSnapshot snapshot, String title) {
 
     if (_urlBuilder(title)[1] == "tv") {
@@ -291,7 +195,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               builder: (context) =>
                   ContentOverview(
                       contentId: snapshot.data[index].id,
-                      contentType: ContentOverviewContentType.TV_SHOW )
+                      contentType: ContentType.TV_SHOW )
           )
       );
     } else if (_urlBuilder(title)[1] == "movie"){
@@ -301,7 +205,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               builder: (context) =>
                   ContentOverview(
                       contentId: snapshot.data[index].id,
-                      contentType: ContentOverviewContentType.MOVIE )
+                      contentType: ContentType.MOVIE )
           )
       );
     }
@@ -314,43 +218,6 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             builder: (context) => ExpandedCard(url: _urlBuilder(title)[0], title: _urlBuilder(title)[3],)
         )
     );
-  }
-
-  Widget _debugCard() {
-    return _hideDebugCard == false ? Container(
-        //margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        child: new Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-            elevation: 3.0,
-            child: new Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.developer_mode),
-                  title: TitleText('Debug Card'),
-                  subtitle: const Text('Developer options.'),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10, bottom: 15),
-                  child: new RaisedButton(
-                    onPressed: () {
-                      print("Launching Player");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CPlayer(
-                                    url:
-                                        "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4",
-                                    title: "Big Buck Bunny",
-                                    mimeType: "video/mp4",
-                                  )));
-                    },
-                    child: Text("Debug Player"),
-                  ),
-                )
-              ],
-            ))) : Container();
   }
 
   Widget _launchPadCard(String title) {

@@ -23,7 +23,7 @@ import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 ///
 class ContentOverview extends StatefulWidget {
   final int contentId;
-  final ContentOverviewContentType contentType;
+  final ContentType contentType;
 
   ContentOverview(
       {Key key, @required this.contentId, @required this.contentType})
@@ -77,7 +77,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     //check if the show is a favourite
     print("startup id is ${widget.contentId}");
 
-    widget.contentType == ContentOverviewContentType.MOVIE ?
+    widget.contentType == ContentType.MOVIE ?
     _contentType = "movie" : _contentType = "tv";
 
     databaseHelper.getAllFavIDs().then((data) {
@@ -123,7 +123,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   // Load the data from the source.
   Future<ContentModel> loadDataAsync() async {
-    if(widget.contentType == ContentOverviewContentType.MOVIE){
+    if(widget.contentType == ContentType.MOVIE){
 
       // Get the data from the server.
       http.Response response = await http.get(
@@ -143,7 +143,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           recommendations: Convert.jsonDecode(recommended)["results"]
       );
 
-    }else if(widget.contentType == ContentOverviewContentType.TV_SHOW){
+    }else if(widget.contentType == ContentType.TV_SHOW){
 
       // Get the data from the server.
       http.Response response = await http.get(
@@ -181,7 +181,7 @@ class _ContentOverviewState extends State<ContentOverview> {
       //add the show from the database
       databaseHelper.saveFavourites(
           _data.title,
-          widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
+          widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId,
           _data.backdropPath,
           _data.releaseDate);
@@ -556,13 +556,13 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// This generates the remaining layout for the specific content type.
   /// It is a good idea to reference another class to keep this clean.
   ///
-  Widget _generateLayout(ContentOverviewContentType contentType) {
+  Widget _generateLayout(ContentType contentType) {
 
     switch(contentType){
-      case ContentOverviewContentType.TV_SHOW:
+      case ContentType.TV_SHOW:
         // Generate TV show information
         return TVShowLayout.generate(context, _data);
-      case ContentOverviewContentType.MOVIE:
+      case ContentType.MOVIE:
         // Generate movie information
         return MovieLayout.generate(context, _data, _favIDs);
       default:
@@ -576,11 +576,11 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// This is used to add a floating action button to the layout.
   /// Just return null if your layout doesn't need a floating action button.
   ///
-  Widget _getFloatingActionButton(ContentOverviewContentType contentType, BuildContext context, ContentModel model){
+  Widget _getFloatingActionButton(ContentType contentType, BuildContext context, ContentModel model){
     switch(contentType){
-      case ContentOverviewContentType.TV_SHOW:
+      case ContentType.TV_SHOW:
         return null;
-      case ContentOverviewContentType.MOVIE:
+      case ContentType.MOVIE:
         return MovieLayout.getFloatingActionButton(context, model);
     }
 

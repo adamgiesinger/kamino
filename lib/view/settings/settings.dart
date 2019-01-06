@@ -1,5 +1,5 @@
 import 'package:kamino/animation/transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kamino/view/settings/page_launchpad.dart';
 
 import 'dart:async';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/pages/launchpad/launchpad_configurator.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/settings/page_appearance.dart';
 import 'package:package_info/package_info.dart';
 
@@ -126,8 +124,8 @@ class _SettingsViewState extends State<SettingsView> {
                       subtitle: Text("Modify your $appName launchpad."),
                       leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => LaunchPadOptions()
+                        Navigator.push(context, SlideRightRoute(
+                            builder: (context) => LaunchpadSettingsPage()
                         ));
                       },
                     ),

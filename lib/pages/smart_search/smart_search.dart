@@ -152,8 +152,8 @@ class SmartSearch extends SearchDelegate<String>{
                       builder: (context) => ContentOverview(
                           contentId: snapshot.data[index].id,
                           contentType: snapshot.data[index].mediaType == "tv"
-                              ? ContentOverviewContentType.TV_SHOW
-                              : ContentOverviewContentType.MOVIE)));
+                              ? ContentType.TV_SHOW
+                              : ContentType.MOVIE)));
             },
 
             child: PosterCard(
@@ -208,8 +208,8 @@ class SmartSearch extends SearchDelegate<String>{
                       builder: (context) => ContentOverview(
                           contentId: snapshot.data[index].id,
                           contentType: snapshot.data[index].mediaType == "tv"
-                              ? ContentOverviewContentType.TV_SHOW
-                              : ContentOverviewContentType.MOVIE)));
+                              ? ContentType.TV_SHOW
+                              : ContentType.MOVIE)));
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),

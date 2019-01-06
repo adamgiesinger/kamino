@@ -7,10 +7,17 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 
 class AppearanceSettingsPage extends SettingsPage {
 
-  AppearanceSettingsPage() : super(title: "Appearance");
+  AppearanceSettingsPage() : super(
+    title: "Appearance",
+    pageState: AppearenceSettingsPageState()
+  );
 
+}
+
+
+class AppearenceSettingsPageState extends SettingsPageState {
   @override
-  Widget pageContent(BuildContext context) {
+  Widget buildPage(BuildContext context) {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
     return ListView(
@@ -73,40 +80,40 @@ class AppearanceSettingsPage extends SettingsPage {
             content: Container(
               width: MediaQuery.of(context).size.width * 0.75,
               child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: appState.getThemeConfigs().length,
-                itemBuilder: (listContext, index){
-                  var theme = appState.getThemeConfigs()[index];
+                  shrinkWrap: true,
+                  itemCount: appState.getThemeConfigs().length,
+                  itemBuilder: (listContext, index){
+                    var theme = appState.getThemeConfigs()[index];
 
-                  return ListTile(
-                    onTap: (){
-                      Navigator.of(context).pop();
-                      appState.setActiveTheme(theme.getId());
-                    },
-                    title: TitleText("${theme.getName()} v${theme.getVersion()}"),
-                    subtitle: Text("${theme.getAuthor()}")
-                  );
-                }
+                    return ListTile(
+                        onTap: (){
+                          Navigator.of(context).pop();
+                          appState.setActiveTheme(theme.getId());
+                        },
+                        title: TitleText("${theme.getName()} v${theme.getVersion()}"),
+                        subtitle: Text("${theme.getAuthor()}")
+                    );
+                  }
               ),
             ),
           );
         }
     );
   }
-  
+
   void _setPrimaryColor(BuildContext context, KaminoAppState appState){
     showDialog(
-      context: context,
-      builder: (BuildContext dialog){
-        return PrimaryColorChooser(
-          initialColor: Theme.of(context).primaryColor
-        );
-      }
+        context: context,
+        builder: (BuildContext dialog){
+          return PrimaryColorChooser(
+              initialColor: Theme.of(context).primaryColor
+          );
+        }
     );
   }
-
 }
 
+/***** COLOR CHOOSER CODE *****/
 class PrimaryColorChooser extends StatefulWidget {
 
   final Color initialColor;

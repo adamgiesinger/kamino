@@ -15,7 +15,7 @@ import 'package:kamino/vendor/index.dart';
 // Import custom libraries / utils
 import 'animation/transition.dart';
 // Import pages
-import 'pages/home.dart';
+import 'pages/launchpad.dart';
 // Import views
 import 'package:kamino/view/settings/settings.dart';
 
@@ -150,6 +150,12 @@ class Launchpad extends StatefulWidget {
 class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixin {
 
   @override
+  void initState() {
+    ApolloVendor.getLaunchpadConfiguration().initialize();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
@@ -166,15 +172,17 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
           backgroundColor: Theme.of(context).cardColor,
           elevation: 5.0,
 
-          /*
             actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.search),
-                color: Colors.white,
-                onPressed: () => showSearch(context: context, delegate: SmartSearch()),
+                icon: Icon(Icons.favorite_border),
+                tooltip: "Favorites",
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => FavoritesPage()
+                  ));
+                },
             ),
           ],
-          */
 
           // Center title
           centerTitle: true
@@ -182,7 +190,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
         drawer: __buildAppDrawer(),
 
         // Body content
-        body: HomePage()
+        body: LaunchpadController()
     );
   }
 
@@ -243,18 +251,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
               onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
             ),
             ListTile(
-              title: Text("Favorites"),
-              leading: const Icon(Icons.favorite),
-              onTap:  () {
-                Navigator.of(context).pop();
-
-                Navigator.push(context, SlideRightRoute(
-                    builder: (context) => FavoritesPage()
-                ));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.favorite),
+              leading: const Icon(Icons.accessibility),
               title: Text('Donate'),
               onTap: () => showDialog(
                 context: context,

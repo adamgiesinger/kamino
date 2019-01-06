@@ -85,7 +85,7 @@ fabric.properties
 .idea/
 
 # Vendor Configuration
-lib/vendor/dist/config/*
+lib/vendor/dist/config/OfficialVendorConfiguration.dart
 lib/database_backup.zip
 
 # Android
