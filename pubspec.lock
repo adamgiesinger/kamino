@@ -90,7 +90,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "5c5ea87dd9274042bc847075e5e2bc7c344a7dd6"
+      resolved-ref: "4d2f5c1574d028cd80237675c4fc7aa7dde81edd"
       url: "https://github.com/terrabythia/dart_chromecast"
     source: git
     version: "0.0.0"

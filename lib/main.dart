@@ -171,7 +171,6 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
           // MD2: make the color the same as the background.
           backgroundColor: Theme.of(context).cardColor,
           elevation: 5.0,
-
             actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.favorite_border),

@@ -6,18 +6,20 @@ import 'package:kamino/pages/smart_search/search_results.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kamino/util/ui_constants.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/content/overview.dart';
 
 class ExpandedCard extends StatefulWidget{
-  final String url;
+  final String url, mediaType;
   final String title;
 
-  ExpandedCard({Key key, @required this.url, @required this.title}) : super(key: key);
+  ExpandedCard({Key key, @required this.url, @required this.title, @required this.mediaType}) : super(key: key);
 
   @override
   _ExpandedCardState createState() => new _ExpandedCardState();
@@ -56,14 +58,12 @@ class _ExpandedCardState extends State<ExpandedCard> {
       }
     }
 
-    //print("totoal pages is $total_pages");
-    //print("new url is $url");
-
     return _data;
   }
 
   _openContentScreen(BuildContext context, int index) {
-    if (_results[index].mediaType == "tv") {
+
+    if (widget.mediaType == "tv") {
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -73,7 +73,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
                       contentType: ContentType.TV_SHOW )
           )
       );
-    } else {
+    } else if (widget.mediaType == "movie"){
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -84,6 +84,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
           )
       );
     }
+
   }
 
   @override
@@ -124,6 +125,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
           title: TitleText(widget.title),
           centerTitle: true,
           backgroundColor: Theme.of(context).cardColor,
+          actions: <Widget>[
+            searchIconButton(context),
+          ],
         ),
         body: RefreshIndicator(
           onRefresh: () async {
@@ -152,6 +156,12 @@ class _ExpandedCardState extends State<ExpandedCard> {
       itemBuilder: (BuildContext context, int index){
         return InkWell(
           onTap: () => _openContentScreen(context, index),
+          onLongPress: (){
+            saveFavPopUpDialog(
+                context, _results[index].name, _results[index].id,
+                image_cdn + _results[index].poster_path,
+                _results[index].year, _results[index].mediaType);
+          },
           splashColor: Colors.white,
           child: Padding(
             padding: index == 0 ?
@@ -185,6 +195,12 @@ class _ExpandedCardState extends State<ExpandedCard> {
         itemBuilder: (BuildContext context, int index){
           return InkWell(
             onTap: () => _openContentScreen(context, index),
+            onLongPress: (){
+              saveFavPopUpDialog(
+                  context, _results[index].name, _results[index].id,
+                  image_cdn + _results[index].poster_path,
+                  _results[index].year, _results[index].mediaType);
+            },
             splashColor: Colors.white,
             child: Padding(
               padding: [0, 1, 2].contains(index) ?
@@ -204,9 +220,6 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
   void _scrollListener(){
 
-    //print("reached the bottom $_currentPages");
-    //print("bottom url is $_processedUIrl");
-
     if (controller.offset >= controller.position.extentAfter) {
 
       //check that you haven't already loaded the last page
@@ -214,8 +227,6 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
         //load the next page
         _currentPages = _currentPages + 1;
-
-        //print("loading page $_currentPages");
 
         _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
 
@@ -228,6 +239,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
     }
   }
   void _scrollListenerList(){
+
     if (controllerList.offset >= controllerList.position.extentAfter) {
 
       //check that you haven't already loaded the last page
@@ -235,8 +247,6 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
         //load the next page
         _currentPages = _currentPages + 1;
-
-        //print("loading page $_currentPages");
 
         _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
 

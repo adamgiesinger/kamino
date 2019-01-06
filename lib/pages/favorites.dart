@@ -5,6 +5,7 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/ui_constants.dart';
 import 'package:kamino/view/content/overview.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -54,22 +55,19 @@ class FavoritesPageState extends State<FavoritesPage>
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: _getFavs
-            ),
+            searchIconButton(context),
 
             IconButton(
-                icon: Icon(Icons.sort),
-                onPressed: () {
-                  //sort the favourites into ascending or descending
-                  setState(() {
-                    _favTV = _favTV.reversed.toList();
-                    _favMovie = _favMovie.reversed.toList();
-                  });
-                },
-            )
-          ],
+              icon: Icon(Icons.sort),
+              onPressed: () {
+                //sort the favourites into ascending or descending
+                setState(() {
+                  _favTV = _favTV.reversed.toList();
+                  _favMovie = _favMovie.reversed.toList();
+                });
+              },
+              )
+            ],
           bottom: new TabBar(
             controller: _tabController,
             indicatorColor: Theme.of(context).primaryColor,
@@ -83,117 +81,126 @@ class FavoritesPageState extends State<FavoritesPage>
               ),
             ],
           )),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _favTV.length == 0 ? _nothingFoundScreen() : _buildTab("tv"),
-          _favMovie.length == 0 ? _nothingFoundScreen() : _buildTab("movie")
-        ],
-      ),
+        body: TabBarView(
+          controller: _tabController,
+            children: [
+              _favTV.length == 0 ? _nothingFoundScreen() : _buildTab("tv"),
+              _favMovie.length == 0 ? _nothingFoundScreen() : _buildTab("movie")
+            ],
+          ),
     );
   }
 
   Widget _buildTab(String mediaType) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5.0),
-      child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, childAspectRatio: 0.76),
-          itemCount: mediaType == "tv" ? _favTV.length : _favMovie.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ContentOverview(
-                              contentId: _tabController.index == 0
-                                  ? _favTV[index]["tmdbID"]
-                                  : _favMovie[index]["tmdbID"],
-                              contentType: _tabController.index == 0
-                                  ? ContentType.TV_SHOW
-                                  : ContentType.MOVIE)));
-                },
-                splashColor: Colors.white,
-                child: Stack(
-                  fit: StackFit.expand,
-                  alignment: Alignment.bottomCenter,
-                  children: <Widget>[
-                    Card(
-                        elevation: 5.0,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5.0),
-                          child: CachedNetworkImage(
-                            imageUrl: image_cdn +
-                                (mediaType == "tv"
-                                    ? _favTV[index]["imageUrl"]
-                                    : _favMovie[index]["imageUrl"]),
-                            height: 725.0,
-                            width: 500.0,
-                            fit: BoxFit.cover,
-                            placeholder: new CircularProgressIndicator(),
-                          ),
-                        )),
-                    Padding(
-                        padding: EdgeInsets.all(3.5),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: BottomGradient(finalStop: 0.025))),
-                    Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            new Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: 2, left: 10, right: 10),
-                                child: TitleText(
-                                  mediaType == "tv"
-                                      ? _favTV[index]["name"]
-                                      : _favMovie[index]["name"],
-                                  fontSize: 16,
-                                  textColor: Colors.yellow,
-                                )),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                    top: 0, bottom: 10, left: 10, right: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                        mediaType == "tv"
-                                            ? _favTV[index]["year"] != null
-                                            ? _favTV[index]["year"]
-                                            .toString()
-                                            .substring(0, 4)
-                                            : "Unknown"
-                                            : _favMovie[index]["year"] != null
-                                            ? _favMovie[index]["year"]
-                                            .toString()
-                                            .substring(0, 4)
-                                            : "Unknown",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.yellow)),
-                                    Icon(
-                                      mediaType == 'tv'
-                                          ? Icons.tv
-                                          : Icons.local_movies,
-                                      size: 16,
-                                      color: Colors.yellow,
-                                    )
-                                  ],
-                                ))
-                          ],
-                        ))
-                  ],
+    return RefreshIndicator(
+      onRefresh: () async {
+
+        await Future.delayed(Duration(seconds: 2));
+        _getFavs();
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 5.0),
+        child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, childAspectRatio: 0.76),
+            itemCount: mediaType == "tv" ? _favTV.length : _favMovie.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ContentOverview(
+                                contentId: _tabController.index == 0
+                                    ? _favTV[index]["tmdbID"]
+                                    : _favMovie[index]["tmdbID"],
+                                contentType: _tabController.index == 0
+                                    ? ContentType.TV_SHOW
+                                    : ContentType.MOVIE)));
+                  },
+                  splashColor: Colors.white,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    alignment: Alignment.bottomCenter,
+                    children: <Widget>[
+                      Card(
+                          elevation: 5.0,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5.0),
+                            child: CachedNetworkImage(
+                              imageUrl: image_cdn +
+                                  (mediaType == "tv"
+                                      ? _favTV[index]["imageUrl"]
+                                      : _favMovie[index]["imageUrl"]),
+                              height: 725.0,
+                              width: 500.0,
+                              fit: BoxFit.cover,
+                              placeholder: Center(
+                                  child: CircularProgressIndicator()
+                              ),
+                            ),
+                          )),
+                      Padding(
+                          padding: EdgeInsets.all(3.5),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: BottomGradient(finalStop: 0.025))),
+                      Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              new Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: 2, left: 10, right: 10),
+                                  child: TitleText(
+                                    mediaType == "tv"
+                                        ? _favTV[index]["name"]
+                                        : _favMovie[index]["name"],
+                                    fontSize: 16,
+                                    textColor: Colors.yellow,
+                                  )),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 0, bottom: 10, left: 10, right: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                          mediaType == "tv"
+                                              ? _favTV[index]["year"] != null
+                                              ? _favTV[index]["year"]
+                                              .toString()
+                                              .substring(0, 4)
+                                              : "Unknown"
+                                              : _favMovie[index]["year"] != null
+                                              ? _favMovie[index]["year"]
+                                              .toString()
+                                              .substring(0, 4)
+                                              : "Unknown",
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.yellow)),
+                                      Icon(
+                                        mediaType == 'tv'
+                                            ? Icons.tv
+                                            : Icons.local_movies,
+                                        size: 16,
+                                        color: Colors.yellow,
+                                      )
+                                    ],
+                                  ))
+                            ],
+                          ))
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+      ),
     );
   }
 

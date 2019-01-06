@@ -9,6 +9,7 @@ import 'package:kamino/pages/smart_search/search_results.dart';
 import 'dart:async';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/view/content/overview.dart';
+import 'package:kamino/util/ui_constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -144,8 +145,6 @@ class LaunchpadControllerState extends State<LaunchpadController> with Automatic
     List<SearchModel> _data = [];
     Map _temp;
 
-    print("url is... ${_urlBuilder(title)}");
-
     http.Response _res = await http.get(_urlBuilder(title)[0]);
     _temp = jsonDecode(_res.body);
 
@@ -215,13 +214,16 @@ class LaunchpadControllerState extends State<LaunchpadController> with Automatic
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ExpandedCard(url: _urlBuilder(title)[0], title: _urlBuilder(title)[3],)
+            builder: (context) => ExpandedCard(
+              url: _urlBuilder(title)[0],
+              title: _urlBuilder(title)[3],
+              mediaType: _urlBuilder(title)[1],
+            )
         )
     );
   }
 
   Widget _launchPadCard(String title) {
-    print("the title is: $title");
 
     return title == null
         ? Container()
@@ -289,6 +291,12 @@ class LaunchpadControllerState extends State<LaunchpadController> with Automatic
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () => _openContentScreen(context, index, snapshot, title),
+                      onLongPress: (){
+                        saveFavPopUpDialog(
+                            context, snapshot.data[index].name, snapshot.data[index].id,
+                            tmdb.image_cdn + snapshot.data[index].poster_path,
+                            snapshot.data[index].year, _urlBuilder(title)[1]);
+                      },
                       child: Padding(
                         padding: index == 0 ? EdgeInsets.only(left: 10.0, bottom: 8.0, right: 4.0)
                             : EdgeInsets.only(bottom: 8.0, right: 4.0),
