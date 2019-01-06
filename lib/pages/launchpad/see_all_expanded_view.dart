@@ -62,7 +62,6 @@ class _ExpandedCardState extends State<ExpandedCard> {
   }
 
   _openContentScreen(BuildContext context, int index) {
-
     if (widget.mediaType == "tv") {
       Navigator.push(
           context,

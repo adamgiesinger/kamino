@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
-import 'package:kamino/ui/uielements.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class PosterCard extends StatefulWidget {
@@ -69,7 +68,6 @@ class _PosterCardState extends State<PosterCard> {
 
     double _imageHeight = 170.0;
     double _imageWidth = 105.0;
-    double c_width = MediaQuery.of(context).size.width*0.8;
 
     if(widget.background != null) {
       /*
@@ -105,48 +103,54 @@ class _PosterCardState extends State<PosterCard> {
       );
     }
 
-    const _containerWidth = 221.0;
+    //const _containerWidth = 221.0;
 
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       height: 170.0,
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10)
+        ),
+        elevation: 5,
         child: Row(
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             ClipRRect(
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(5.0),
-                  bottomLeft: Radius.circular(5.0),
+                  topLeft: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
               ),
               child: imageWidget,
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 11.0, right: 9.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
+            Flexible(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
 
-                  //Title of the poster
-                  Container(
-                    width: _containerWidth,
-                    padding: EdgeInsets.only(top: 4.0),
-                    child: Text(
-                      widget.name,
-                      style: TextStyle(
-                        fontFamily: "GlacialIndifference",
-                        color: _favouriteIndicator(),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17.0,
+                      //Title of the poster
+                      Container(
+                        padding: EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          widget.name,
+                          style: TextStyle(
+                            fontFamily: "GlacialIndifference",
+                            color: _favouriteIndicator(),
+                            fontSize: 22.0,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
 
-                  //The list of genres for the content being displayed
-                  Container(
-                    width: _containerWidth,
+                      //The list of genres for the content being displayed
+                      /*Container(
                     padding: EdgeInsets.only(top: 6.0),
                     child: _genre() != null ? Text(
                       _genre(),
@@ -157,40 +161,39 @@ class _PosterCardState extends State<PosterCard> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ) : Container(),
-                  ),
+                  ),*/
 
-                  Container(
-                    width: _containerWidth,
-                    padding: EdgeInsets.only(top: 4.0),
-                    child: StarRating(
-                      rating: widget.ratings / 2, // Ratings are out of 10 from our source.
-                      color: Theme.of(context).primaryColor,
-                      borderColor: Theme.of(context).primaryColor,
-                      size: 19.0,
-                      starCount: 5,
-                    ),
-                  ),
-
-                  //Over summary
-                  widget.overview != null ? Container(
-                    width: _containerWidth,
-                    padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
-                    child: Text(
-                      widget.overview,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        //fontFamily: "GlacialIndifference",
-                        fontSize: 15.0,
-                        color: _favouriteIndicator(),
+                      Container(
+                        padding: EdgeInsets.only(bottom: 4.0),
+                        child: StarRating(
+                          rating: widget.ratings / 2, // Ratings are out of 10 from our source.
+                          color: Theme.of(context).primaryColor,
+                          borderColor: Theme.of(context).primaryColor,
+                          size: 19.0,
+                          starCount: 5,
+                        ),
                       ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ) : Container(),
 
-                ],
+                      //Over summary
+                      widget.overview != null ? Container(
+                        padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
+                        child: Text(
+                          widget.overview,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            //fontFamily: "GlacialIndifference",
+                            fontSize: 15.0,
+                            color: _favouriteIndicator(),
+                          ),
+                          maxLines: 5,
+                          overflow: TextOverflow.fade,
+                        ),
+                      ) : Container(),
+
+                    ],
+                  ),
+                ),
               ),
-            )
           ],
         ),
       ),

@@ -183,7 +183,8 @@ class ListTmdbLaunchpadItem extends StatefulWidget {
             Navigator.of(context).push(
               new MaterialPageRoute(builder: (context) => ExpandedCard(
                 title: parentWidget.title,
-                url: getBaseURL(contentType, endpoint)
+                url: getBaseURL(contentType, endpoint),
+                mediaType: contentType == ContentType.MOVIE ? "movie" : "tv",
               ))
             );
           }
