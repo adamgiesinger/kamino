@@ -90,7 +90,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "4d2f5c1574d028cd80237675c4fc7aa7dde81edd"
+      resolved-ref: "7a9e5ab973a8e387b81923f8a4483a23a49f2b61"
       url: "https://github.com/terrabythia/dart_chromecast"
     source: git
     version: "0.0.0"
@@ -205,7 +205,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.0"
+    version: "0.12.0+1"
   http_parser:
     dependency: transitive
     description:
@@ -289,14 +289,14 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.1.0"
   protobuf:
     dependency: transitive
     description:
       name: protobuf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.6"
+    version: "0.11.0"
   quiver:
     dependency: transitive
     description:
@@ -441,14 +441,14 @@ packages:
       name: w3c_event_source
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.1"
+    version: "1.2.2"
   xml:
     dependency: transitive
     description:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.3"
+    version: "3.2.5"
   yaml:
     dependency: transitive
     description:

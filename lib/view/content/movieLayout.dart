@@ -133,8 +133,8 @@ class MovieLayout{
             onLongPress: (){
               addFavoritePrompt(
                   context, _data.recommendations[index]["title"], _data.recommendations[index]["id"],
-                  tmdb.image_cdn + _data.recommendations[index]["posterPath"],
-                  _data.recommendations[index]["releaseDate"], "movie");
+                  tmdb.image_cdn + _data.recommendations[index]["poster_path"],
+                  _data.recommendations[index]["release_date"], "movie");
             },
             splashColor: Colors.white,
             child: SizedBox(

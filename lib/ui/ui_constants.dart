@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kamino/pages/smart_search/smart_search.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/api/tmdb.dart' as tmdb;
 
 
 IconButton searchIconButton(BuildContext context) {
@@ -15,49 +16,104 @@ IconButton searchIconButton(BuildContext context) {
 
 void addFavoritePrompt(
     BuildContext context, String title,
-    int id, String url, String year, String mediaType){
+    int id, String url, String year, String mediaType) async{
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      // return object of type Dialog
-      return AlertDialog(
-        title: new TitleText("Add to Favourites"),
-        content: new Text("Do you want to add $title to your favourites ?"),
-        actions: <Widget>[
+  //strip tmdb image cdn from input url
+  url = url.replaceAll(tmdb.image_cdn, "");
 
-          // buttons to close the dialog or proceed with the save
-          new FlatButton(
-            child: new Text("Cancel",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0
+  print("the title: $title \n id: $id \n url: $url \n year: $year \n mediaType: $mediaType");
+
+  List<int> _favIDs = await databaseHelper.getAllFavIDs();
+
+  if (!_favIDs.contains(id)){
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new TitleText("Add to Favourites"),
+          content: new Text("Do you want to add $title to your favourites ?"),
+          actions: <Widget>[
+
+            // buttons to close the dialog or proceed with the save
+            new FlatButton(
+              child: new Text("Cancel",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0
+                ),
               ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
 
-          new FlatButton(
-            child: new Text("Accept",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0
+            new FlatButton(
+              child: new Text("Add",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0
+                ),
               ),
+              onPressed: () {
+
+                //save the content to the database
+                databaseHelper.saveFavourites(
+                    title, mediaType, id, url, year);
+
+                Navigator.pop(context);
+              },
             ),
-            onPressed: () {
+          ],
+        );
+      },
+    );
 
-              //save the content to the database
-              databaseHelper.saveFavourites(
-                  title, mediaType, id, url, year);
+  } else {
 
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      );
-    },
-  );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new TitleText("Remove from favourites"),
+          content: new Text("Do you want to remove $title from your favourites ?"),
+          actions: <Widget>[
+
+            // buttons to close the dialog or proceed with the save
+            new FlatButton(
+              child: new Text("Cancel",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+
+            new FlatButton(
+              child: new Text("Remove",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0
+                ),
+              ),
+              onPressed: () {
+
+                //save the content to the database
+                databaseHelper.removeFavourite(id);
+
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
 }
