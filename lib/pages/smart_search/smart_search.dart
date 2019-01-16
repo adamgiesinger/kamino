@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class SmartSearch extends SearchDelegate<String> {
   }
 
   Future<List<SearchModel>> _fetchSearchList(String criteria) async {
+
+    Future.delayed( new Duration(milliseconds: 500));
+
     List<SearchModel> _data = [];
 
     String url = "${tmdb.root_url}/search/"
@@ -37,7 +41,6 @@ class SmartSearch extends SearchDelegate<String> {
     var _resultsList = results["results"];
 
     if (_resultsList != null) {
-      //print("resukts lsit is $_resultsList");
       _resultsList.forEach((var element) {
         if (element["media_type"] != "person") {
           String name =
@@ -91,6 +94,7 @@ class SmartSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
+    settingsPref.saveSearchHistory(query);
     return new SearchResult(query: query);
   }
 
@@ -106,13 +110,12 @@ class SmartSearch extends SearchDelegate<String> {
               padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
               child: InkWell(
                 onTap: () {
-                  query = snapshot.data[index];
+                  query = snapshot.data[index].toString();
+                  settingsPref.moveQueryToTop(snapshot.data[index]);
                   showResults(context);
                 },
                 child: ListTile(
-                  leading: query.isNotEmpty
-                      ? Icon(Icons.search)
-                      : Icon(Icons.history),
+                  leading: Icon(Icons.history),
                   title: RichText(
                     text: TextSpan(
                       text: snapshot.data[index],
@@ -166,8 +169,7 @@ class SmartSearch extends SearchDelegate<String> {
 
   Widget _buildSearchHistory() {
     return FutureBuilder<List<String>>(
-        future: databaseHelper
-            .getSearchHistory(), // a previously-obtained Future<String> or null
+        future: settingsPref.getSearchHistory(), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -227,7 +229,7 @@ class SmartSearch extends SearchDelegate<String> {
 
   String _suggestionName(AsyncSnapshot snapshot, int index){
 
-    if (snapshot.data[index].year != null){
+    if (snapshot.data[index].year != null && snapshot.data[index].year.length > 3){
 
       return snapshot.data[index].name +"  ("+snapshot.data[index].year.toString().substring(0,4)+")";
     }

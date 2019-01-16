@@ -61,7 +61,31 @@ class OtherSettingsPageState extends SettingsPageState {
               }
             },
           ),
-        )
+        ),
+
+        Material(
+          color: Theme.of(context).backgroundColor,
+          child: ListTile(
+            title: TitleText("Clear History"),
+            subtitle: Text("Does what the name says..."),
+            enabled: true,
+            onTap: (){
+              settingsPref.saveListPref("searchHistory", []);
+              Scaffold.of(context).showSnackBar(
+                  new SnackBar(content: Text("All Done!",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: "GlacialIndifference",
+                        fontSize: 17.0
+                    ),),
+                    backgroundColor: Colors.green,
+                    duration: new Duration(milliseconds: 600),
+                  )
+              );
+            },
+          ),
+        ),
+
       ],
     );
   }
