@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 
 import 'package:flutter/material.dart';
@@ -12,18 +13,18 @@ import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
-
-class SmartSearch extends SearchDelegate<String>{
-
+class SmartSearch extends SearchDelegate<String> {
   bool _expandedSearchPref = false;
 
   SmartSearch() {
-    settingsPref.getBoolPref("expandedSearch").then((data){
+    settingsPref.getBoolPref("expandedSearch").then((data) {
       _expandedSearchPref = data;
     });
   }
 
   Future<List<SearchModel>> _fetchSearchList(String criteria) async {
+
+    Future.delayed( new Duration(milliseconds: 500));
 
     List<SearchModel> _data = [];
 
@@ -39,13 +40,11 @@ class SmartSearch extends SearchDelegate<String>{
 
     var _resultsList = results["results"];
 
-    if (_resultsList != null)  {
-      //print("resukts lsit is $_resultsList");
-      _resultsList.forEach((var element){
-
-        if (element["media_type"] != "person"){
-
-          String name = element["name"] == null ? element["title"] : element["name"];
+    if (_resultsList != null) {
+      _resultsList.forEach((var element) {
+        if (element["media_type"] != "person") {
+          String name =
+              element["name"] == null ? element["title"] : element["name"];
           _data.add(new SearchModel.fromJSON(element, 1));
         }
       });
@@ -55,7 +54,6 @@ class SmartSearch extends SearchDelegate<String>{
 
   List<String> searchHistory = [];
 
-
   @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
@@ -64,8 +62,7 @@ class SmartSearch extends SearchDelegate<String>{
         title: TextStyle(
             fontFamily: "GlacialIndifference",
             fontSize: 19.0,
-            color: Theme.of(context).primaryTextTheme.body1.color
-        ),
+            color: Theme.of(context).primaryTextTheme.body1.color),
       ),
       textSelectionColor: Theme.of(context).textSelectionColor,
     );
@@ -77,7 +74,9 @@ class SmartSearch extends SearchDelegate<String>{
     return [
       IconButton(
         icon: Icon(Icons.clear),
-        onPressed: (){ query = "";},
+        onPressed: () {
+          query = "";
+        },
       ),
     ];
   }
@@ -87,64 +86,60 @@ class SmartSearch extends SearchDelegate<String>{
     // leading icon on the left of appbar
     return IconButton(
       icon: Icon(Icons.arrow_back),
-      onPressed: (){
+      onPressed: () {
         Navigator.of(context).pop();
-      },);
+      },
+    );
   }
 
   @override
   Widget buildResults(BuildContext context) {
-
+    settingsPref.saveSearchHistory(query);
     return new SearchResult(query: query);
   }
 
   Widget _searchHistoryListView(AsyncSnapshot snapshot) {
-
     return ListView.builder(
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
-            onTap: (){
+            onTap: () {
               showResults(context);
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
               child: InkWell(
-                onTap: (){
-                  query = snapshot.data[index];
+                onTap: () {
+                  query = snapshot.data[index].toString();
+                  settingsPref.moveQueryToTop(snapshot.data[index]);
                   showResults(context);
                 },
                 child: ListTile(
-                  leading: query.isNotEmpty ? Icon(Icons.search): Icon(Icons.history),
+                  leading: Icon(Icons.history),
                   title: RichText(
                     text: TextSpan(
-                      text:snapshot.data[index],
+                      text: snapshot.data[index],
                       style: TextStyle(
-                          fontFamily:("GlacialIndifference"),
+                          fontFamily: ("GlacialIndifference"),
                           fontSize: 19.0,
                           fontWeight: FontWeight.normal,
-                          color: Colors.white
-                      ),
+                          color: Colors.white),
                     ),
                   ),
                 ),
               ),
             ),
           );
-        }
-    );
+        });
   }
 
   Widget _suggestionsPosterCard(AsyncSnapshot snapshot) {
-
     return ListView.builder(
       itemCount: snapshot.data.length,
-      itemBuilder: (BuildContext context, int index){
-
+      itemBuilder: (BuildContext context, int index) {
         return Padding(
           padding: const EdgeInsets.only(top: 5.0, left: 3.0, right: 3.0),
           child: InkWell(
-
             onTap: () {
               Navigator.push(
                   context,
@@ -155,7 +150,6 @@ class SmartSearch extends SearchDelegate<String>{
                               ? ContentType.TV_SHOW
                               : ContentType.MOVIE)));
             },
-
             child: PosterCard(
               isFav: false,
               background: snapshot.data[index].poster_path,
@@ -164,7 +158,8 @@ class SmartSearch extends SearchDelegate<String>{
               ratings: snapshot.data[index].vote_average,
               elevation: 0.0,
               mediaType: snapshot.data[index].mediaType,
-              genre: genre.getGenreNames(snapshot.data[index].genre_ids, snapshot.data[index].mediaType),
+              genre: genre.getGenreNames(snapshot.data[index].genre_ids,
+                  snapshot.data[index].mediaType),
             ),
           ),
         );
@@ -172,9 +167,9 @@ class SmartSearch extends SearchDelegate<String>{
     );
   }
 
-  Widget _buildSearchHistory(){
+  Widget _buildSearchHistory() {
     return FutureBuilder<List<String>>(
-        future: databaseHelper.getSearchHistory(), // a previously-obtained Future<String> or null
+        future: settingsPref.getSearchHistory(), // a previously-obtained Future<String> or null
         builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -188,15 +183,13 @@ class SmartSearch extends SearchDelegate<String>{
               } else if (snapshot.hasData) {
                 return _searchHistoryListView(snapshot);
               }
-          //return Text('Result: ${snapshot.data}');
+            //return Text('Result: ${snapshot.data}');
           }
           return null; // unreachable
-        }
-    );
+        });
   }
 
   Widget _simplifiedSuggestions(AsyncSnapshot snapshot) {
-
     return ListView.builder(
         itemCount: snapshot.data.length,
         itemBuilder: (BuildContext context, int index) {
@@ -214,52 +207,65 @@ class SmartSearch extends SearchDelegate<String>{
             child: Padding(
               padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
               child: ListTile(
-                leading: snapshot.data[index].mediaType == "tv" ? Icon(Icons.live_tv): Icon(Icons.local_movies),
+                leading: snapshot.data[index].mediaType == "tv"
+                    ? Icon(Icons.live_tv)
+                    : Icon(Icons.local_movies),
                 title: RichText(
                   text: TextSpan(
-                    text:snapshot.data[index].name,
+                    text: _suggestionName(snapshot, index),
                     style: TextStyle(
-                        fontFamily:("GlacialIndifference"),
+                        fontFamily: ("GlacialIndifference"),
                         fontSize: 19.0,
                         fontWeight: FontWeight.normal,
-                        color: Colors.white
-                    ),
+                        color: Colors.white),
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
           );
-        }
-    );
+        });
+  }
+
+  String _suggestionName(AsyncSnapshot snapshot, int index){
+
+    if (snapshot.data[index].year != null && snapshot.data[index].year.length > 3){
+
+      return snapshot.data[index].name +"  ("+snapshot.data[index].year.toString().substring(0,4)+")";
+    }
+
+    return snapshot.data[index].name;
   }
 
   @override
-  Widget buildSuggestions(BuildContext context){
-
-    return query.isEmpty ? _buildSearchHistory():
-    FutureBuilder<List<SearchModel>>(
-      future: _fetchSearchList(query), // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot<List<SearchModel>> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Container();
-          case ConnectionState.active:
-          case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator(backgroundColor: Colors.white,));
-          case ConnectionState.done:
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              return _expandedSearchPref == false ? _simplifiedSuggestions(snapshot) :
-              _suggestionsPosterCard(snapshot);
-            }
-            //return Text('Result: ${snapshot.data}');
-        }
-        return null; // unreachable
-      }
-    );
+  Widget buildSuggestions(BuildContext context) {
+    return query.isEmpty
+        ? _buildSearchHistory()
+        : FutureBuilder<List<SearchModel>>(
+            future: _fetchSearchList(
+                query), // a previously-obtained Future<String> or null
+            builder: (BuildContext context,
+                AsyncSnapshot<List<SearchModel>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Container();
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return Center(
+                      child: CircularProgressIndicator(
+                    backgroundColor: Colors.white,
+                  ));
+                case ConnectionState.done:
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return _expandedSearchPref == false
+                        ? _simplifiedSuggestions(snapshot)
+                        : _suggestionsPosterCard(snapshot);
+                  }
+                //return Text('Result: ${snapshot.data}');
+              }
+              return null; // unreachable
+            });
   }
-
-
-
 }

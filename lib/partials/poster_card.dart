@@ -70,15 +70,6 @@ class _PosterCardState extends State<PosterCard> {
     double _imageWidth = 105.0;
 
     if(widget.background != null) {
-      /*
-      imageWidget = new FadeInImage.assetNetwork(
-        placeholder: "assets/images/no_image_detail.jpg",
-        image: "${tmdb.image_cdn}/${widget.background}",
-        fit: BoxFit.cover,
-        height: _imageHeight,
-        width: _imageWidth,
-      );
-      */
 
       imageWidget = CachedNetworkImage(
         imageUrl: tmdb.image_cdn + widget.background,
@@ -150,18 +141,18 @@ class _PosterCardState extends State<PosterCard> {
                       ),
 
                       //The list of genres for the content being displayed
-                      /*Container(
-                    padding: EdgeInsets.only(top: 6.0),
-                    child: _genre() != null ? Text(
-                      _genre(),
-                      style: TextStyle(
+                      /*
+                      Container(
+                        padding: EdgeInsets.only(top: 6.0),
+                        child: _genre() != null ? Text(_genre(),
+                          style: TextStyle(
                         //fontFamily: "GlacialIndifference",
-                        color: _favouriteIndicator(),
+                        color: _favouriteIndicator(),),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ) : Container(),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ) : Container(),
-                  ),*/
+                      */
 
                       Container(
                         padding: EdgeInsets.only(bottom: 4.0),
@@ -176,7 +167,7 @@ class _PosterCardState extends State<PosterCard> {
 
                       //Over summary
                       widget.overview != null ? Container(
-                        padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
+                        padding: EdgeInsets.only(top: 4.0, bottom: 5.5),
                         child: Text(
                           widget.overview,
                           textAlign: TextAlign.left,

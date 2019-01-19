@@ -57,6 +57,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
             _temp["results"][x], total_pages));
       }
     }
+    print("there are $total_pages pages in total");
 
     return _data;
   }
@@ -97,9 +98,9 @@ class _ExpandedCardState extends State<ExpandedCard> {
       });
     });
 
-    // TODO: Fix scroll listeners
-    //controller = new ScrollController()..addListener(_scrollListener);
-    //controllerList = new ScrollController()..addListener(_scrollListenerList);
+
+    controller = new ScrollController()..addListener(_scrollListener);
+    controllerList = new ScrollController()..addListener(_scrollListenerList);
 
     databaseHelper.getAllFavIDs().then((data){
 
@@ -159,7 +160,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
             addFavoritePrompt(
                 context, _results[index].name, _results[index].id,
                 image_cdn + _results[index].poster_path,
-                _results[index].year, _results[index].mediaType);
+                _results[index].year, widget.mediaType);
           },
           splashColor: Colors.white,
           child: Padding(
@@ -198,7 +199,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
               addFavoritePrompt(
                   context, _results[index].name, _results[index].id,
                   image_cdn + _results[index].poster_path,
-                  _results[index].year, _results[index].mediaType);
+                  _results[index].year, widget.mediaType);
             },
             splashColor: Colors.white,
             child: Padding(
@@ -227,7 +228,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
         //load the next page
         _currentPages = _currentPages + 1;
 
-        _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
+        _getContent("${widget.url}&page=$_currentPages", _currentPages).then((data){
 
           setState(() {
             _results = _results + data;
@@ -247,7 +248,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
         //load the next page
         _currentPages = _currentPages + 1;
 
-        _getContent(widget.url.replaceAll("page=1", "page=$_currentPages"), _currentPages).then((data){
+        _getContent("${widget.url}&page=$_currentPages", _currentPages).then((data){
 
           setState(() {
             _results = _results + data;
