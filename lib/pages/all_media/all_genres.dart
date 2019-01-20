@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:kamino/models/content.dart';
+import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/content/overview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/ui/ui_constants.dart';
+import 'package:kamino/pages/genre/genreResults.dart';
 
 
-class GenreView extends StatefulWidget{
-  final String contentType, genreName;
-  final int genreID;
+class AllGenres extends StatefulWidget{
+  final String contentType;
 
-  GenreView(
-      {Key key, @required this.contentType, @required this.genreID,
-        @required this.genreName}) : super(key: key);
+  AllGenres(
+      {Key key, @required this.contentType}) : super(key: key);
 
   @override
-  _GenreViewState createState() => new _GenreViewState();
+  _AllGenresState createState() => new _AllGenresState();
 }
 
-class _GenreViewState extends State<GenreView>{
+class _AllGenresState extends State<AllGenres>{
 
   int _currentPages = 1;
   ScrollController controller;
@@ -33,12 +34,60 @@ class _GenreViewState extends State<GenreView>{
   List<DiscoverModel> _results = [];
   List<int> _favIDs = [];
   bool _expandedSearchPref = false;
+  List<DropdownMenuItem<int>> _dropDownMenuGenreItems = [];
 
   String _selectedParam = "popularity.desc";
   int total_pages = 1;
+  int _genreID;
+
+  List<DropdownMenuItem<int>> _getDropDownMenuGenreItems() {
+
+    List<DropdownMenuItem<int>> items = [];
+
+    if (widget.contentType == "tv"){
+      for(int x = 0; x < genreNames.tv_genres["genres"].length; x++){
+        items.add(
+            new DropdownMenuItem(
+              child: TitleText(genreNames.tv_genres["genres"][x]["name"]),
+              value: genreNames.tv_genres["genres"][x]["id"],
+            ),
+        );
+      }
+    } else if (widget.contentType == "movie") {
+      for(int x = 0; x < genreNames.movie_genres["genres"].length; x++){
+        items.add(
+          new DropdownMenuItem(
+            child: TitleText(genreNames.movie_genres["genres"][x]["name"]),
+            value: genreNames.movie_genres["genres"][x]["id"],
+          ),
+        );
+      }
+    }
+
+    return items;
+  }
 
   @override
   void initState() {
+
+
+    setState(() {
+      _dropDownMenuGenreItems = _getDropDownMenuGenreItems();
+    });
+
+
+    if (widget.contentType == "tv"){
+
+      //defaults the first page to Action & Adventure for tv shows
+      _genreID = 10759;
+
+    } else if (widget.contentType == "movie") {
+
+      //defaults the first page to Action for movies
+      _genreID = 28;
+
+    }
+
 
     settingsPref.getBoolPref("expandedSearch").then((data){
       setState(() {
@@ -49,9 +98,6 @@ class _GenreViewState extends State<GenreView>{
     controller = new ScrollController()..addListener(_scrollListener);
 
     String _contentType = widget.contentType;
-    String _genreName = widget.genreName;
-    String _genreID = widget.genreID.toString();
-
     databaseHelper.getAllFavIDs().then((data){
 
       _favIDs = data;
@@ -98,6 +144,26 @@ class _GenreViewState extends State<GenreView>{
     return _data;
   }
 
+  void changedDropDownItem(int selectedGenre) {
+    print("you selected $selectedGenre");
+
+    //check the selected id to prevent needless api calls
+    if(_genreID != selectedGenre){
+
+      _genreID = selectedGenre;
+
+      _getContent(widget.contentType, selectedGenre).then((data){
+
+        setState(() {
+          controller.jumpTo(controller.position.minScrollExtent);
+          _results.clear();
+          _results = data;
+        });
+
+      });
+    }
+  }
+
   _openContentScreen(BuildContext context, int index) {
     //print("id is ${snapshot.data[index].showID}");
 
@@ -130,7 +196,7 @@ class _GenreViewState extends State<GenreView>{
 
       _selectedParam = choice;
 
-      _getContent(widget.contentType, widget.genreID.toString()).then((data){
+      _getContent(widget.contentType, _genreID.toString()).then((data){
         setState(() {
 
           //clear grid-view and replenish with new data
@@ -152,49 +218,43 @@ class _GenreViewState extends State<GenreView>{
     TextStyle _glacialFont = TextStyle(
         fontFamily: "GlacialIndifference");
 
-    return Scrollbar(
-        child: Scaffold(
-          appBar: new AppBar(
-            title: Text(widget.genreName, style: _glacialFont,),
-            centerTitle: true,
-            backgroundColor: Theme.of(context).backgroundColor,
-            elevation: 5.0,
-            actions: <Widget>[
+    return Scaffold(
+      appBar: new AppBar(
+        title: null,
+        centerTitle: true,
+        backgroundColor: Theme.of(context).backgroundColor,
+        elevation: 5.0,
+        actions: <Widget>[
 
-              searchIconButton(context),
-
-              //Add sorting functionality
-              IconButton(
-                  icon: Icon(Icons.sort), onPressed: (){
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (_){
-                    return GenreSortDialog(
-                      onValueChange: _applyNewParam,
-                      selectedParam: _selectedParam,
-                    );
-                  }
-                );
-              }),
-          ],
+          new DropdownButton<int>(
+            value: _genreID,
+            items: _dropDownMenuGenreItems,
+            onChanged: changedDropDownItem,
           ),
-          body: RefreshIndicator(
-            onRefresh: () async {
 
-              await Future.delayed(Duration(seconds: 2));
-              databaseHelper.getAllFavIDs().then((data){
+          searchIconButton(context),
 
-                setState(() {
-                  _favIDs = data;
-                });
-              });
-            },
-            child: Scrollbar(
-              child: _expandedSearchPref == false ? _gridResults() : _listResult(),
-            ),
-          ),
-        ),
+          //Add sorting functionality
+          IconButton(
+              icon: Icon(Icons.sort), onPressed: (){
+            showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (_){
+                  return GenreSortDialog(
+                    onValueChange: _applyNewParam,
+                    selectedParam: _selectedParam,
+                  );
+                }
+            );
+          }),
+
+
+        ],
+      ),
+      body: Scrollbar(
+        child: _expandedSearchPref == false ? _gridResults() : _listResult(),
+      ),
     );
   }
 
@@ -224,6 +284,7 @@ class _GenreViewState extends State<GenreView>{
               releaseDate: _results[index].year,
               mediaType: _results[index].mediaType,
               isFav: _favIDs.contains(_results[index].id),
+              hideIcon: true,
             ),
           );
         }
@@ -290,7 +351,7 @@ class _GenreViewState extends State<GenreView>{
         //load the next page
         _currentPages = _currentPages + 1;
 
-        _getContent(widget.contentType, widget.genreID).then((data){
+        _getContent(widget.contentType, _genreID).then((data){
 
           setState(() {
             _results = _results + data;
@@ -306,158 +367,4 @@ class _GenreViewState extends State<GenreView>{
     controller.removeListener(_scrollListener);
     super.dispose();
   }
-}
-
-class GenreSortDialog extends StatefulWidget {
-  final String selectedParam;
-  final void Function(String) onValueChange;
-
-  GenreSortDialog(
-      {Key key, @required this.selectedParam, this.onValueChange}) :
-        super(key: key);
-
-  @override
-  _GenreSortDialogState createState() => new _GenreSortDialogState();
-}
-
-class _GenreSortDialogState extends State<GenreSortDialog> {
-
-  String _sortByValue;
-  String _orderValue;
-
-  @override
-  void initState() {
-    super.initState();
-    var temp = widget.selectedParam.split(".");
-    _sortByValue = temp[0];
-    _orderValue = "."+temp[1];
-  }
-
-
-  TextStyle _glacialStyle = TextStyle(
-    fontFamily: "GlacialIndifference",
-    //fontSize: 19.0,
-  );
-
-  TextStyle _glacialStyle1 = TextStyle(
-    fontFamily: "GlacialIndifference",
-    fontSize: 17.0,
-  );
-
-  Widget build(BuildContext context){
-    return new SimpleDialog(
-      title: Text("Sort by",
-        style: _glacialStyle,
-      ),
-      children: <Widget>[
-        //Title(title: "Sort by", color: Colors.white,),
-        Padding(
-          padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-          child: Divider( color: Colors.white,),
-        ),
-        RadioListTile(
-          value: "popularity",
-          title: Text("Popularity", style: _glacialStyle1,),
-          groupValue: _sortByValue,
-          onChanged: _onSortChange,
-        ),
-        RadioListTile(
-          value: "first_air_date",
-          title: Text("Air date", style: _glacialStyle1,),
-          groupValue: _sortByValue,
-          onChanged: _onSortChange,
-        ),
-        RadioListTile(
-          value: "vote_average",
-          title: Text("Vote Average", style: _glacialStyle1,),
-          groupValue: _sortByValue,
-          onChanged: _onSortChange,
-        ),
-
-        Row(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: 7.0, bottom: 7.0, left: 32.0),
-              child: Text("ORDER", style:_glacialStyle1),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0, right:11.0),
-              child: Divider(color: Colors.white,),
-            ),
-          ],
-        ),
-
-        RadioListTile(
-          value: ".asc",
-          title: Text("Ascending", style: _glacialStyle1,),
-          groupValue: _orderValue,
-          onChanged: _onOrderChange,
-        ),
-        RadioListTile(
-          value: ".desc",
-          title: Text("Descending", style: _glacialStyle1,),
-          groupValue: _orderValue,
-          onChanged: _onOrderChange,
-        ),
-
-        Padding(
-          padding: const EdgeInsets.only(left: 55.0),
-          child: Row(
-            children: <Widget>[
-              FlatButton(
-                onPressed: (){
-                  Navigator.pop(context);
-                },
-                child: Text("Cancel",
-                  style: _glacialStyle1,
-                ),
-              ),
-              FlatButton(
-                onPressed: (){
-                  widget.onValueChange(_sortByValue+_orderValue);
-                  Navigator.pop(context);
-                },
-                child: Text("Sort", style: _glacialStyle1,),
-              ),
-            ],),
-        )
-      ],
-    );
-  }
-
-  void _onOrderChange(String value) {
-    setState(() {
-      _orderValue = value;
-    });
-  }
-
-  void _onSortChange(String value){
-    setState(() {
-      _sortByValue = value;
-    });
-  }
-
-}
-
-class DiscoverModel {
-
-  final String name, poster_path, backdrop_path, year, mediaType, overview;
-  final int id, vote_count, page;
-  final List genre_ids;
-  final int vote_average;
-
-  DiscoverModel.fromJSON(Map json, int pageCount, String contentType)
-      : name = json["name"] == null ? json["title"] : json["name"],
-        poster_path = json["poster_path"],
-        backdrop_path = json["backdrop_path"],
-        id = json["id"],
-        vote_average = json["vote_average"] != null ? (json["vote_average"]).round() : 0,
-        overview = json["overview"],
-        genre_ids = json["genre_ids"],
-        mediaType = contentType,
-        page = pageCount,
-        year = json["first_air_date"] == null ?
-        json["release_date"] : json["first_air_date"],
-        vote_count = json["vote_count"];
 }

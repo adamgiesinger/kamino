@@ -11,9 +11,11 @@ import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/pages/genre/genreResults.dart';
 import 'package:kamino/view/content/movieLayout.dart';
 import 'package:kamino/view/content/tvShowLayout.dart';
-import 'package:vector_math/vector_math_64.dart' as VectorMath;
+
+import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 /*  CONTENT OVERVIEW WIDGET  */
@@ -22,7 +24,7 @@ import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 ///
 class ContentOverview extends StatefulWidget {
   final int contentId;
-  final ContentOverviewContentType contentType;
+  final ContentType contentType;
 
   ContentOverview(
       {Key key, @required this.contentId, @required this.contentType})
@@ -44,6 +46,8 @@ class _ContentOverviewState extends State<ContentOverview> {
   ContentModel _data;
   String _backdropImagePath;
   bool _favState = false;
+  List<int> _favIDs = [];
+  String _contentType;
 
   Widget _favIconGenerator(bool state){
 
@@ -74,11 +78,14 @@ class _ContentOverviewState extends State<ContentOverview> {
     //check if the show is a favourite
     print("startup id is ${widget.contentId}");
 
-    databaseHelper.isFavourite(widget.contentId).then((data) {
+    widget.contentType == ContentType.MOVIE ?
+    _contentType = "movie" : _contentType = "tv";
 
-      print("initial fav state is $data");
+    databaseHelper.getAllFavIDs().then((data) {
+
       setState(() {
-        _favState = data;
+        _favIDs = data;
+        _favState = data.contains(widget.contentId);
       });
     });
 
@@ -110,12 +117,14 @@ class _ContentOverviewState extends State<ContentOverview> {
       });
     });
 
+    print("you favourited $_favIDs");
+
     super.initState();
   }
 
   // Load the data from the source.
   Future<ContentModel> loadDataAsync() async {
-    if(widget.contentType == ContentOverviewContentType.MOVIE){
+    if(widget.contentType == ContentType.MOVIE){
 
       // Get the data from the server.
       http.Response response = await http.get(
@@ -135,7 +144,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           recommendations: Convert.jsonDecode(recommended)["results"]
       );
 
-    }else if(widget.contentType == ContentOverviewContentType.TV_SHOW){
+    }else if(widget.contentType == ContentType.TV_SHOW){
 
       // Get the data from the server.
       http.Response response = await http.get(
@@ -170,12 +179,13 @@ class _ContentOverviewState extends State<ContentOverview> {
 
     } else if (_favState == false){
 
-      //add the show from the database
+      //add the show to the database
       databaseHelper.saveFavourites(
           _data.title,
-          widget.contentType == ContentOverviewContentType.TV_SHOW ? "tv" : "movie",
+          widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId,
-          tmdb.image_cdn + _data.backdropPath);
+          _data.backdropPath,
+          _data.releaseDate);
 
       //show notification snackbar
       final snackBar = SnackBar(content: Text('Saved to favourites'));
@@ -218,6 +228,9 @@ class _ContentOverviewState extends State<ContentOverview> {
                   SliverAppBar(
                     backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
+
+                      searchIconButton(context),
+
                       IconButton(
                         icon: _favIconGenerator(_favState),
                         onPressed: (){
@@ -373,9 +386,11 @@ class _ContentOverviewState extends State<ContentOverview> {
   Widget _generateBackdropImage(BuildContext context){
     double contextWidth = MediaQuery.of(context).size.width;
 
-    //print("image url is... ${_data.backdropPath}");
-
-    _backdropImagePath = tmdb.image_cdn + _data.backdropPath;
+    //null trap to private slow urls crashing the screen
+    // (big issue with some old and foreign shows)
+    _data.backdropPath != null ?
+    _backdropImagePath = tmdb.image_cdn + _data.backdropPath :
+    _backdropImagePath = tmdb.image_cdn;
 
     return Container(
       height: 220,
@@ -385,8 +400,9 @@ class _ContentOverviewState extends State<ContentOverview> {
         children: <Widget>[
           Container(
               child: _data.backdropPath != null ?
-              Image.network(
-                  _backdropImagePath,
+              FadeInImage.assetNetwork(
+                  placeholder: "assets/images/no_image_detail.jpg",
+                  image :_backdropImagePath,
                   fit: BoxFit.cover,
                   height: 220.0,
                   width: contextWidth
@@ -410,9 +426,35 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// GenreChipsRowWidget -
   /// This is the row of purple genre chips.
   /// TODO: When tapped, show a genre-filtered search.
-  ///
+  _loadMoreGenreMatches(String mediaType, int id, String genreName) {
+
+    if (mediaType == "tv"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GenreView(
+                      contentType: "tv",
+                      genreID: id,
+                      genreName: genreName )
+          )
+      );
+    } else if (mediaType == "movie"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  GenreView(
+                      contentType: "movie",
+                      genreID: id,
+                      genreName: genreName )
+          )
+      );
+    }
+  }
+
   Widget _generateGenreChipsRow(context){
-    return SizedBox(
+    return _data.genres == null ? Container() : SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 40.0,
       child: Container(
@@ -423,16 +465,22 @@ class _ContentOverviewState extends State<ContentOverview> {
 
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              child: Padding(
-                padding: index != 0
-                    ? EdgeInsets.only(left: 6.0, right: 6.0)
-                    : EdgeInsets.only(left: 6.0, right: 6.0),
-                child: new Chip(
-                  label: Text(
-                    _data.genres[index]["name"],
-                    style: TextStyle(color: Colors.white, fontSize: 15.0),
+              child: InkWell(
+                onTap: (){
+                  _loadMoreGenreMatches(_contentType,
+                      _data.genres[index]["id"], _data.genres[index]["name"]);
+                },
+                child: Padding(
+                  padding: index != 0
+                      ? EdgeInsets.only(left: 6.0, right: 6.0)
+                      : EdgeInsets.only(left: 6.0, right: 6.0),
+                  child: new Chip(
+                    label: Text(
+                      _data.genres[index]["name"],
+                      style: TextStyle(color: Colors.white, fontSize: 15.0),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  backgroundColor: Theme.of(context).primaryColor,
                 ),
               ),
             );
@@ -454,6 +502,9 @@ class _ContentOverviewState extends State<ContentOverview> {
 
           /* Synopsis */
           Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+            ),
             elevation: 3,
             child: Padding(
               padding: EdgeInsets.only(bottom: 20),
@@ -463,7 +514,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                       title: TitleText(
                         'Synopsis',
                         fontSize: 22.0,
-                        textColor: Theme.of(context).primaryColor
+                        textColor: Colors.white
                       )
                   ),
                   Container(
@@ -508,14 +559,15 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// This generates the remaining layout for the specific content type.
   /// It is a good idea to reference another class to keep this clean.
   ///
-  Widget _generateLayout(ContentOverviewContentType contentType){
+  Widget _generateLayout(ContentType contentType) {
+
     switch(contentType){
-      case ContentOverviewContentType.TV_SHOW:
+      case ContentType.TV_SHOW:
         // Generate TV show information
         return TVShowLayout.generate(context, _data);
-      case ContentOverviewContentType.MOVIE:
+      case ContentType.MOVIE:
         // Generate movie information
-        return MovieLayout.generate(context, _data);
+        return MovieLayout.generate(context, _data, _favIDs);
       default:
         return Container();
     }
@@ -527,11 +579,11 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// This is used to add a floating action button to the layout.
   /// Just return null if your layout doesn't need a floating action button.
   ///
-  Widget _getFloatingActionButton(ContentOverviewContentType contentType, BuildContext context, ContentModel model){
+  Widget _getFloatingActionButton(ContentType contentType, BuildContext context, ContentModel model){
     switch(contentType){
-      case ContentOverviewContentType.TV_SHOW:
+      case ContentType.TV_SHOW:
         return null;
-      case ContentOverviewContentType.MOVIE:
+      case ContentType.MOVIE:
         return MovieLayout.getFloatingActionButton(context, model);
     }
 

@@ -81,7 +81,9 @@ fabric.properties
 .gradle
 
 # Vendor Configuration
-lib/vendor/dist/config/*
+lib/vendor/.git
+lib/vendor/dist/config/OfficialVendorConfiguration.dart
+lib/vendor/dist/config/LocalOfficialVendorConfigurationDelegate.dart
 lib/database_backup.zip
 
 # Android

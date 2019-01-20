@@ -1,4 +1,5 @@
 import 'package:kamino/animation/transition.dart';
+import 'package:kamino/view/settings/page_launchpad.dart';
 
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/view/settings/page_appearance.dart';
+import 'package:kamino/view/settings/page_other.dart';
 import 'package:package_info/package_info.dart';
 
 class SettingsView extends StatefulWidget {
@@ -41,10 +43,11 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   void initState() {
-    super.initState();
     _readSharedPrefs();
     _fetchPackageInfo();
     _fetchContributors();
+
+    super.initState();
   }
 
   Future<Null> _fetchPackageInfo() async {
@@ -110,28 +113,27 @@ class _SettingsViewState extends State<SettingsView> {
       Padding(padding: EdgeInsets.symmetric(vertical: 5)),
 
       Material(
-        color: Theme
-            .of(context)
-            .backgroundColor,
+        color: Theme.of(context).backgroundColor,
         child: ListTile(
           title: TitleText("Launchpad"),
           subtitle: Text("Modify your $appName launchpad."),
-          leading: new Icon(
-              const IconData(0xe90B, fontFamily: 'apollotv-icons')),
-          onTap: () => {},
+          leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+          onTap: (){
+            Navigator.push(context, SlideRightRoute(
+                builder: (context) => LaunchpadSettingsPage()
+            ));
+          },
         ),
       ),
 
       Material(
-        color: Theme
-            .of(context)
-            .backgroundColor,
+        color: Theme.of(context).backgroundColor,
         child: ListTile(
           title: TitleText("Appearance"),
-          subtitle: Text("Change theme, [...]"),
+          subtitle: Text("Change theme, Choose color scheme"),
           leading: new Icon(Icons.palette),
           enabled: true,
-          onTap: () {
+          onTap: (){
             Navigator.push(context, SlideRightRoute(
                 builder: (context) => AppearanceSettingsPage()
             ));
@@ -139,10 +141,19 @@ class _SettingsViewState extends State<SettingsView> {
         ),
       ),
 
-      ListTile(
-        title: TitleText("Other"),
-        subtitle: Text("Change language, choose sources, [...]"),
-        leading: new Icon(Icons.settings),
+      Material(
+        color: Theme.of(context).backgroundColor,
+        child: ListTile(
+          title: TitleText("Other"),
+          subtitle: Text("Expanded search, Change language, Choose player, Clear search history etc..."),
+          leading: new Icon(Icons.settings),
+          enabled: true,
+          onTap: (){
+            Navigator.push(context, SlideRightRoute(
+                builder: (context) => OtherSettingsPage()
+            ));
+          },
+        ),
       ),
     ];
 

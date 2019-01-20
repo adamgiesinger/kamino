@@ -8,7 +8,7 @@ description: The ApolloTV app for iOS and Android.
 #  I => Minor (xx)
 #  R => Release (xx)
 #  T => Type (0 => Prerelease, 1 => Beta, 2 => Release Candidate, 3 => Stable)
-version: 1.0.3+100030
+version: 1.0.8+100080
 
 dependencies:
   # Core dependencies
@@ -41,6 +41,8 @@ dependencies:
   objectdb: ^1.0.5
   cached_network_image: ^0.5.1
   flutter_cache_manager: ^0.2.0+1
+  dragable_flutter_list: ^1.0.2
+  shimmer: ^0.0.6
 
 # Compile-only dependencies
 dev_dependencies:

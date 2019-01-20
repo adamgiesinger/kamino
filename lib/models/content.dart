@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 /*  CONTENT TYPE DEFINITIONS  */
-enum ContentOverviewContentType { MOVIE, TV_SHOW }
-String getOverviewContentTypeName(ContentOverviewContentType type){
+enum ContentType { MOVIE, TV_SHOW }
+String getOverviewContentTypeName(ContentType type){
   switch(type) {
-    case ContentOverviewContentType.MOVIE:
+    case ContentType.MOVIE:
       return "Movie";
-    case ContentOverviewContentType.TV_SHOW:
+    case ContentType.TV_SHOW:
       return "TV Show";
     default:
       return "Unknown";

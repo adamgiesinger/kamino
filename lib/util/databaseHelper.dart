@@ -2,7 +2,11 @@ import 'package:objectdb/objectdb.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 
-Future saveFavourites(String name, String contentType, int tmdbid, String url) async{
+//do not change value or remove until further notice
+// backup - "<ApolloQuery>"
+const querySplitter = "<ApolloQuery>";
+
+Future saveFavourites(String name, String contentType, int tmdbid, String url, String year) async{
 
   //get the path of the database file
   final directory = await getApplicationDocumentsDirectory();
@@ -18,6 +22,7 @@ Future saveFavourites(String name, String contentType, int tmdbid, String url) a
     "contentType": contentType,
     "tmdbID": tmdbid,
     "imageUrl": url,
+    "year": year
   };
 
   await db.insert(dataEntry);
@@ -27,6 +32,30 @@ Future saveFavourites(String name, String contentType, int tmdbid, String url) a
   db.tidy();
 
   await db.close();
+}
+
+Future<List<int>> getAllFavIDs() async {
+
+  List<int> _results = [];
+
+  //get the path of the database file
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
+  var db = ObjectDB(path);
+
+  //open connection to the database
+  db.open();
+
+  List<Map> _data = await db.find({"docType": "favourites"});
+
+  for (int x=0; x < _data.length ; x++){
+
+    _results.add(_data[x]["tmdbID"]);
+  }
+
+  await db.close();
+
+  return _results;
 }
 
 Future<bool> isFavourite(int tmdbid) async{
@@ -69,6 +98,70 @@ Future removeFavourite(int tmdbid) async {
   db.close();
 }
 
+Future<List<String>> getSearchHistory() async {
+
+  //get the path of the database file
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
+  var db = ObjectDB(path);
+
+  db.open();
+
+  Map _data = {
+    "results": await db.find({ "docType": "searchHistory"}),
+  };
+
+  //db.tidy();
+
+  await db.close();
+
+  print("I found these search histories: $_data");
+
+  //[0]["queries"] == null ? [] : _data[0]["queries"].split(querySplitter)
+
+  if (_data["results"].length == 0){
+    return [];
+  }
+
+  return _data["results"].split(querySplitter);
+}
+
+Future saveSearchHistory(String newHistory) async {
+
+  if (newHistory.isEmpty != true){
+    //get the path of the database file
+    final directory = await getApplicationDocumentsDirectory();
+    final path =  directory.path  + "/apolloDB.db";
+    var db = ObjectDB(path);
+
+    db.open();
+
+    //get the current query values
+    List<Map> _currentHistory = await db.find({
+      "docType": "searchHistory"
+    });
+
+    // add the new value to the end
+    String _finalHistory;
+
+    if (_currentHistory[0]["queries"] == null){
+      _finalHistory = newHistory;
+    } else {
+      _finalHistory = _currentHistory[0]["queries"]+querySplitter+newHistory;
+    }
+
+    await db.update({
+      "docType": "searchHistory"
+    },{
+      "queries": _finalHistory
+    });
+
+    db.tidy();
+
+    await db.close();
+  }
+}
+
 Future<List<Map>> getFavMovies() async {
 
   //get the path of the database file
@@ -78,14 +171,16 @@ Future<List<Map>> getFavMovies() async {
 
   db.open();
 
-  List<Map> _result = await db.find({
+  var _result = await db.find({
     "docType": "favourites",
     "contentType": "movie"
   });
 
+  print("get movies returned ${_result.length}");
+
   db.close();
 
-  return _result;
+  return _result.length == 0 ? [] : _result;
 }
 
 Future<List<Map>> getFavTVShows() async {
@@ -93,7 +188,7 @@ Future<List<Map>> getFavTVShows() async {
   //get the path of the database file
   final directory = await getApplicationDocumentsDirectory();
   final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
+  final db = ObjectDB(path);
 
   db.open();
 
@@ -102,12 +197,17 @@ Future<List<Map>> getFavTVShows() async {
     "contentType": "tv"
   });
 
-  db.close();
+  print("get tv returned ${_result.length} items");
+  print("get tv returned these $_result");
 
-  return _result;
+  db.tidy();
+
+  await db.close();
+
+  return _result.length == 0 ? [] : _result;
 }
 
-Future<List<Map>> getAllFaves() async {
+Future<Map> getAllFaves() async {
 
   //get the path of the database file
   final directory = await getApplicationDocumentsDirectory();
@@ -116,11 +216,14 @@ Future<List<Map>> getAllFaves() async {
 
   db.open();
 
-  List<Map> _result = await db.find({
-    "docType": "favourites"
-  });
+  Map _result = {
+    "tv": await db.find({"docType": "favourites", "contentType": "tv"}),
+    "movie": await db.find({"docType": "favourites", "contentType": "movie"}),
+  };
 
-  db.close();
+  await db.close();
+
+  print(_result);
 
   return _result;
 }

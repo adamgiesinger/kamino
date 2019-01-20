@@ -5,11 +5,13 @@ import 'package:kamino/models/movie.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
+import 'package:kamino/ui/ui_constants.dart';
+import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/view/content/overview.dart';
 
 class MovieLayout{
 
-  static Widget generate(BuildContext context, MovieContentModel _data){
+  static Widget generate(BuildContext context, MovieContentModel _data, List<int> _favsArray){
     return Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
         child: Padding(
@@ -30,7 +32,7 @@ class MovieLayout{
 
                   SizedBox(
                     height: 200.0,
-                    child: _generateSimilarMovieCards(_data)
+                    child: _generateSimilarMovieCards(_data, _favsArray)
                   )
                 ],
               )
@@ -105,8 +107,9 @@ class MovieLayout{
 
   /* PRIVATE SUBCLASS-SPECIFIC METHODS */
 
-  static Widget _generateSimilarMovieCards(MovieContentModel _data){
-    return ListView.builder(
+  static Widget _generateSimilarMovieCards(MovieContentModel _data, List<int> _favsArray){
+
+    return _data.recommendations == null ? Container() : ListView.builder(
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
       itemCount: _data.recommendations.length,
@@ -122,10 +125,16 @@ class MovieLayout{
                     MaterialPageRoute(
                         builder: (context) => ContentOverview(
                           contentId: _data.recommendations[index]["id"],
-                          contentType: ContentOverviewContentType.MOVIE
+                          contentType: ContentType.MOVIE
                         ),
                     )
                 );
+            },
+            onLongPress: (){
+              addFavoritePrompt(
+                  context, _data.recommendations[index]["title"], _data.recommendations[index]["id"],
+                  tmdb.image_cdn + _data.recommendations[index]["poster_path"],
+                  _data.recommendations[index]["release_date"], "movie");
             },
             splashColor: Colors.white,
             child: SizedBox(
@@ -134,7 +143,8 @@ class MovieLayout{
                 name: _data.recommendations[index]["title"],
                 background: _data.recommendations[index]["poster_path"],
                 mediaType: 'movie',
-                releaseDate: _data.recommendations[index]["release_date"]
+                releaseDate: _data.recommendations[index]["release_date"],
+                isFav: _favsArray.contains(_data.recommendations[index]["id"]),
               ),
             ),
           ),

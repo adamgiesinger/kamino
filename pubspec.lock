@@ -70,7 +70,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.1"
   cplayer:
     dependency: "direct main"
     description:
@@ -90,7 +90,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "5c5ea87dd9274042bc847075e5e2bc7c344a7dd6"
+      resolved-ref: "7a9e5ab973a8e387b81923f8a4483a23a49f2b61"
       url: "https://github.com/terrabythia/dart_chromecast"
     source: git
     version: "0.0.0"
@@ -124,6 +124,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  dragable_flutter_list:
+    dependency: "direct main"
+    description:
+      name: dragable_flutter_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   execution_queue:
     dependency: transitive
     description:
@@ -198,7 +205,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.0"
+    version: "0.12.0+1"
   http_parser:
     dependency: transitive
     description:
@@ -282,14 +289,14 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.1.0"
   protobuf:
     dependency: transitive
     description:
       name: protobuf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.5"
+    version: "0.11.0"
   quiver:
     dependency: transitive
     description:
@@ -318,6 +325,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.3"
+  shimmer:
+    dependency: "direct main"
+    description:
+      name: shimmer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -364,7 +378,7 @@ packages:
       name: synchronized
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.3"
+    version: "1.5.3+2"
   term_glyph:
     dependency: transitive
     description:
@@ -399,7 +413,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.2"
+    version: "4.0.3"
   uuid:
     dependency: transitive
     description:
@@ -427,14 +441,14 @@ packages:
       name: w3c_event_source
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.2"
   xml:
     dependency: transitive
     description:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.3"
+    version: "3.2.5"
   yaml:
     dependency: transitive
     description:

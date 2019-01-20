@@ -1,9 +1,12 @@
 // Import flutter libraries
+import 'package:kamino/pages/all_media/all_genres.dart';
+import 'package:kamino/pages/smart_search/smart_search.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:kamino/pages/favorites.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +15,7 @@ import 'package:kamino/vendor/index.dart';
 // Import custom libraries / utils
 import 'animation/transition.dart';
 // Import pages
-import 'pages/home.dart';
+import 'pages/launchpad.dart';
 // Import views
 import 'package:kamino/view/settings/settings.dart';
 
@@ -147,6 +150,12 @@ class Launchpad extends StatefulWidget {
 class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixin {
 
   @override
+  void initState() {
+    ApolloVendor.getLaunchpadConfiguration().initialize();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
@@ -162,6 +171,17 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
           // MD2: make the color the same as the background.
           backgroundColor: Theme.of(context).cardColor,
           elevation: 5.0,
+            actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.favorite),
+                tooltip: "Favorites",
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => FavoritesPage()
+                  ));
+                },
+            ),
+          ],
 
           // Center title
           centerTitle: true
@@ -169,8 +189,27 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
         drawer: __buildAppDrawer(),
 
         // Body content
-        body: HomePage()
+        body: LaunchpadController()
     );
+  }
+
+  _openAllGenres(BuildContext context, String mediaType) {
+
+    if (mediaType == "tv") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AllGenres(contentType: mediaType)
+          )
+      );
+    } else if (mediaType == "movie"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AllGenres(contentType: mediaType)
+          )
+      );
+    }
   }
 
   Widget __buildAppDrawer(){
@@ -195,12 +234,23 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
             ),
             Divider(),
             ListTile(
+              leading: const Icon(Icons.live_tv),
+              title: Text('TV Shows'),
+              onTap: () => _openAllGenres(context, "tv"),
+            ),
+            ListTile(
+              leading: const Icon(Icons.local_movies),
+              title: Text('Movies'),
+              onTap: () => _openAllGenres(context, "movie"),
+            ),
+            Divider(),
+            ListTile(
               leading: const Icon(Icons.gavel),
               title: Text('Legal'),
               onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
             ),
             ListTile(
-              leading: const Icon(Icons.favorite),
+              leading: const Icon(Icons.accessibility),
               title: Text('Donate'),
               onTap: () => showDialog(
                 context: context,

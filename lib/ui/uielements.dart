@@ -9,7 +9,7 @@ class TitleText extends Text {
     style: TextStyle(
       fontFamily: 'GlacialIndifference',
       fontSize: fontSize,
-      color: textColor
+      color: textColor,
     ),
     textAlign: textAlign,
     maxLines: (allowOverflow ? null : 1)

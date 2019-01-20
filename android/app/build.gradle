@@ -47,27 +47,27 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    /*signingConfigs {
+    signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
         }
-    }*/
+    }
 
     buildTypes {
         release {
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            //signingConfig signingConfigs.debug
 
             // Sign with release keys
-            //signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
 
-            //minifyEnabled true
-            //useProguard true
+            minifyEnabled true
+            useProguard false
 
-            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
