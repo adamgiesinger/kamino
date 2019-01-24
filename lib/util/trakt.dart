@@ -178,7 +178,7 @@ void renewToken(BuildContext context) async {
                     ),
                   )
                 ],
-                backgroundColor: Theme.of(context).cardColor,
+                //backgroundColor: Theme.of(context).cardColor,
               );
             });
       }
@@ -238,70 +238,63 @@ Future<Null> getCollection(List<String> traktCred) async {
   String status = await updateDatabase(payload);
 }
 
-Future<String> addFavToTrakt(List<String> traktCred) async {
+Future<List<int>> addFavToTrakt(List<String> traktCred) async {
 
   //get all favourites from the database
   Map _favs = await databaseHelper.getAllFaves();
-  Map _body = {"movies": [], "shows": []};
+
+  //media sent in batches to avoid timeout
+  List<String> mediaTypes = ["shows","movies"];
+  List<int> status_codes = [];
 
   print("database log: $_favs");
 
-  //parsing the data from the database
+  for (int t = 0; t < mediaTypes.length; t++){
 
+    String header = mediaTypes[t];
 
-  //tv shows
-  if (_favs["tv"].length > 0) {
-    for (int i = 0; i < _favs["tv"].length; i++) {
-      _body["shows"].add(
-        {
-          'collected_at': _favs["tv"][i]["saved_on"],
-          'title': _favs["tv"][i]["name"],
-          'year': _favs["tv"][i]["year"],
+    var body = {
+      header: []
+    };
+
+    String dbSelector = header == "shows" ? "tv" : "movie";
+
+    //parsing the data from the database
+    if (_favs[dbSelector].length > 0) {
+      for (int i = 0; i < _favs[dbSelector].length; i++) {
+
+        body[header].add({
+          'collected_at': _favs[dbSelector][i]["saved_on"],
+          'title': _favs[dbSelector][i]["name"],
+          'year': _favs[dbSelector][i]["year"],
           'ids': {
-            'tmdb': _favs["tv"][i]["tmdbID"]
+            'tmdb': _favs[dbSelector][i]["tmdbID"]
           }
-        },
+        });
+      }
+
+      print("sending this collection to trakt: ${jsonEncode(body)}");
+      print("sending ${body[header].length} $dbSelector");
+
+      String url = 'https://api.trakt.tv/sync/collection';
+
+      final res = await http.post(url,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
+            'Content-Type': 'application/json',
+            'trakt-api-version': '2',
+            'trakt-api-key': vendor.trakt_client_id
+          },
+          body: json.encode(body)
       );
+
+      print("trakt response code is: ${res.statusCode}");
+      print("send response from trakt: ${res.body}");
+      status_codes.add(res.statusCode);
     }
   }
 
-  //movies
-  if (_favs["movie"].length > 0) {
-    for (int i = 0; i < _favs["movie"].length; i++) {
-      _body["movies"].add(
-        {
-          'collected_at': _favs["movie"][i]["saved_on"],
-          'title': _favs["movie"][i]["name"],
-          'year': _favs["movie"][i]["year"],
-          'ids': {
-            'tmdb': _favs["movie"][i]["tmdbID"]
-          }
-        },
-      );
-    }
-  }
-
-  print("sending this collection to trakt: ${jsonEncode(_body)}");
-
-  print("sending ${_body["movies"].length} movies , ${_body["shows"].length} tv shows");
-
-
-  String url = 'https://api.trakt.tv/sync/collection';
-
-  final res = await http.post(url,
-      headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
-        HttpHeaders.contentTypeHeader: 'application/json',
-        'trakt-api-version': '2',
-        'trakt-api-key': vendor.trakt_client_id
-      },
-      body: jsonEncode(_body));
-
-  print("trakt response code is: ${res.statusCode}");
-  print("send response from trakt: ${res.body}");
-
-
-  return "Sent";
+  return status_codes;
 }
 
 Future<String> updateDatabase(Map payload) async {
@@ -456,4 +449,70 @@ Future<String> updateDatabase(Map payload) async {
   }
 
   return "Done";
+}
+
+//use this method when sending a single item to trakt
+Future<Null> sendNewMedia(String mediaType, String title, String year, int id) async {
+
+  String header = mediaType == "movie" ? "movies" : "shows";
+  List<String> traktCred = await settingsPref.getListPref("traktCredentials");
+
+  Map body = {
+    header: []
+  };
+
+  body[header].add({
+    'collected_at': DateTime.now().toUtc().toString(),
+    'title': title,
+    'year': year,
+    'ids': {
+      'tmdb': id
+    }
+  });
+
+  String url = 'https://api.trakt.tv/sync/collection';
+
+  final res = await http.post(url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
+        'Content-Type': 'application/json',
+        'trakt-api-version': '2',
+        'trakt-api-key': vendor.trakt_client_id
+      },
+      body: json.encode(body)
+  );
+
+  print("trakt response code is: ${res.statusCode}");
+  print("send response from trakt: ${res.body}");
+}
+
+Future<Null> removeMedia(String mediaType, int id) async {
+
+  String header = mediaType == "movie" ? "movies" : "shows";
+  List<String> traktCred = await settingsPref.getListPref("traktCredentials");
+
+  Map body = {
+    header: []
+  };
+
+  body[header].add({
+    'ids': {
+      'tmdb': id
+    }
+  });
+
+  String url = 'https://api.trakt.tv/sync/collection/remove';
+
+  final res = await http.post(url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
+        'Content-Type': 'application/json',
+        'trakt-api-version': '2',
+        'trakt-api-key': vendor.trakt_client_id
+      },
+      body: json.encode(body)
+  );
+
+  print("trakt response code is: ${res.statusCode}");
+  print("send response from trakt: ${res.body}");
 }

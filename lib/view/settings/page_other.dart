@@ -293,7 +293,7 @@ class OtherSettingsPageState extends SettingsPageState {
                 ),
               )
             ],
-            backgroundColor: Theme.of(context).cardColor,
+            //backgroundColor: Theme.of(context).cardColor,
           );
         }
     );
@@ -333,14 +333,14 @@ class OtherSettingsPageState extends SettingsPageState {
                 ],
               ),
             ),
-            backgroundColor: Theme.of(context).cardColor,
+            //backgroundColor: Theme.of(context).cardColor,
           );
         }
     );
 
-    //String pullStatus = await getCollection(_traktCred);
-    //Future.delayed(new Duration(seconds: 2));
-    String saveStatus = await addFavToTrakt(_traktCred);
+    String pullStatus = await getCollection(_traktCred);
+    Future.delayed(new Duration(seconds: 2));
+    List<int> saveStatus = await addFavToTrakt(_traktCred);
 
     Navigator.pop(context);
   }

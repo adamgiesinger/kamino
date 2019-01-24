@@ -160,7 +160,7 @@ class FavoritesPageState extends State<FavoritesPage>
                                         ? _favTV[index]["name"]
                                         : _favMovie[index]["name"],
                                     fontSize: 16,
-                                    textColor: Colors.yellow,
+                                    textColor: Colors.white,
                                   )),
                               Padding(
                                   padding: EdgeInsets.only(
@@ -183,13 +183,13 @@ class FavoritesPageState extends State<FavoritesPage>
                                               : "Unknown",
                                           style: TextStyle(
                                               fontSize: 12,
-                                              color: Colors.yellow)),
+                                              color: Colors.white)),
                                       Icon(
                                         mediaType == 'tv'
                                             ? Icons.tv
                                             : Icons.local_movies,
                                         size: 16,
-                                        color: Colors.yellow,
+                                        color: Colors.white,
                                       )
                                     ],
                                   ))
