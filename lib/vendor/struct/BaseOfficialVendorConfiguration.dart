@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:dbcrypt/dbcrypt.dart';
+import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/src/helpers.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:intl/intl.dart';
@@ -29,6 +33,8 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
   String _secretClientId;
 
   SharedPreferences _sharedPreferences;
+
+  bool _useBcrypt = false;
 
   BaseOfficialVendorConfiguration(
       {@required String server,
@@ -74,9 +80,22 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
       }
     }
 
-    var dbCrypt = new DBCrypt();
-    var pass = '$now|$_secretClientId';
-    var clientId = dbCrypt.hashpw(pass, dbCrypt.gensalt());
+    var clientId, pass;
+
+    // Depending on your server version, use Salsa20 or Bcrypt.
+    if (_useBcrypt) {
+      var dbCrypt = new DBCrypt();
+      pass = '$now|$_secretClientId';
+      clientId = dbCrypt.hashpw(pass, dbCrypt.gensalt());
+    } else {
+      final String iv = _generateIv();
+      final encrypter = new Encrypter(
+          new Salsa20(_secretClientId.substring(0, 32), iv));
+      pass = '$now|$_secretClientId';
+      final encryptedString = encrypter.encrypt(pass);
+      var ivHex = formatBytesAsHexString(Uint8List.fromList(iv.codeUnits));
+      clientId = '$ivHex|$encryptedString';
+    }
 
     try {
       var response = await http.post(generateUri('/api/v1/login'),
@@ -104,7 +123,7 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
       return _clientSideVendorDelegate.playMovie(title, context);
     } else if (await authenticate()) {
       return requestLinks(
-          'tv',
+          'movies',
           {
             'title': title,
           },
@@ -382,5 +401,18 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
     }
 
     return payloadMap;
+  }
+
+  ///
+  /// Generate a [length] character IV to use with the Salsa20 encoder.
+  String _generateIv({length = 8}) {
+    var rand = new Random();
+    var codeUnits = new List.generate(length, (index) {
+      // Alphabets (lower and upper case).
+      var start = rand.nextBool() ? 65 : 97;
+      return start + rand.nextInt(25);
+    });
+
+    return new String.fromCharCodes(codeUnits);
   }
 }

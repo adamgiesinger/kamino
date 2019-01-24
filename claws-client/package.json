@@ -14,7 +14,9 @@
   "author": "ApolloTVofficial",
   "license": "MIT",
   "main": "microserver.js",
-  "dependencies": {},
+  "dependencies": {
+    "dotenv-webpack": "^1.7.0"
+  },
   "devDependencies": {
     "copy": "^0.3.2",
     "on-build-webpack": "^0.1.0",

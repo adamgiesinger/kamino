@@ -89,6 +89,8 @@ lib/database_backup.zip
 # Android
 android/key.properties
 
-# Microservice scripts.
-/android/app/src/main/res/raw/microserver.js
-/ios/Runner/Resources/microserver.js
+# VSCode
+.vscode/*
+
+# Microservice generated script.
+/assets/microserver.js

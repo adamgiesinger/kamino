@@ -13,4 +13,10 @@ abstract class LocalVendorConfiguration {
       int episodeNumber, BuildContext context);
 
   void setVendorConfiguration(BaseOfficialVendorConfiguration configuration);
+
+  /// Called when the user dismisses the current search.
+  void onDismiss() {
+    // TODO: implement me.
+    // Unsubscribe from the ongoing events.
+  }
 }

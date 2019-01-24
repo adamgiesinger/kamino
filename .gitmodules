@@ -1,6 +1,3 @@
 [submodule "cplayer"]
 	path = cplayer
 	url = https://github.com/ApolloTVofficial/cplayer
-[submodule "liquidcore"]
-	path = liquidcore
-	url = https://github.com/j0j00/flutter_liquidcore.git

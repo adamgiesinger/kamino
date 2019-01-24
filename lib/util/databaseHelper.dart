@@ -22,7 +22,8 @@ Future saveFavourites(String name, String contentType, int tmdbid, String url, S
     "contentType": contentType,
     "tmdbID": tmdbid,
     "imageUrl": url,
-    "year": year
+    "year": year,
+    "saved_on": DateTime.now().toUtc().toString()
   };
 
   await db.insert(dataEntry);

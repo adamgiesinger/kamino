@@ -7,7 +7,7 @@
 
 const EventEmitter = require('events');
 // Load providers from the Claws repository (https://github.com/ApolloTVofficial/claws)
-const providers = require('../../Claws/src/scrapers/providers');
+const providers = require(`${process.env.CLAWS_DIR}/src/scrapers/providers`);
 
 /*let LiquidCore = global['LiquidCore'];
 if (typeof LiquidCore === 'undefined') {
@@ -68,7 +68,7 @@ function resolveLinks(mediaType, query = {}) {
       });
       break;
     default:
-      throw "Unknown media type.";
+      throw `Unknown media type: ${mediaType}.`;
   }
 
   Promise.all(promises).then(function onFulfilled(values) {

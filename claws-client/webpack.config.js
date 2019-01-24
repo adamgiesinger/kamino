@@ -1,6 +1,7 @@
 const path = require('path');
 
 const WebpackOnBuildPlugin = require('on-build-webpack');
+const Dotenv = require('dotenv-webpack');
 const copy = require('copy');
 const webpack = require('webpack');
 
@@ -19,6 +20,7 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       CLAWS_ENV: 'client',
     }),
+    new Dotenv(),
     new WebpackOnBuildPlugin(function (stats) {
       if (COPY_ASSETS) {
         // Copy assets into the app.
@@ -26,22 +28,14 @@ module.exports = {
           flatten: true,
         };
         let bundledJs = path.resolve(dist, javascriptName);
-        // Copy to android directory
-        let dir = path.resolve(__dirname, '../android/app/src/main/res/raw');
+        // Copy into the flutter assets.
+        let dir = path.resolve(__dirname, '../assets');
         copy(bundledJs, dir, options, function (err, files) {
           if (err) {
             throw err;
           }
-          console.log("Finished copying Android assets into", dir);
+          console.log("Finished copying assets into the flutter directory", dir);
         });
-        // Copy to iOS directory
-        let iosDir = path.resolve(__dirname, '../ios/Runner/Resources/');
-        copy(bundledJs, iosDir, options, function (err, files) {
-          if (err) {
-            throw err;
-          }
-          console.log("Finished copying iOS assets into", iosDir);
-        })
       }
     })
   ],

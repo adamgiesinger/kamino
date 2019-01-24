@@ -14,6 +14,13 @@ Implementation of the Claws server-side scraper as a local client using [LiquidC
     │   └── README.md <-- This file
     ```
 
+- Create an `.env` file with the following configuration:
+```
+# Path to your local claws directory.
+CLAWS_DIR=../../Claws
+COPY_ASSETS=1
+```
+
 - Install all the node dependencies using `npm install`.
 
 - `npm run server` - Create a development server on your development machine, which you can pass into the `MicroService` instance.
