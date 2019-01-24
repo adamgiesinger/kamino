@@ -6,7 +6,7 @@
 import 'package:kamino/vendor/dist/config/LaunchpadConfiguration.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
-import 'package:kamino/vendor/dist/themes/OfficialVendorThemes.dart';
+import 'package:kamino/vendor/themes/OfficialVendorThemes.dart';
 import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
 
 class ApolloVendor {
