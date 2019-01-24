@@ -339,7 +339,7 @@ class OtherSettingsPageState extends SettingsPageState {
     );
 
     String pullStatus = await getCollection(_traktCred);
-    Future.delayed(new Duration(seconds: 2));
+    Future.delayed(new Duration(seconds: 4));
     List<int> saveStatus = await addFavToTrakt(_traktCred);
 
     Navigator.pop(context);
