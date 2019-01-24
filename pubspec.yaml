@@ -40,6 +40,7 @@ dependencies:
   flutter_cache_manager: ^0.2.0+1
   dragable_flutter_list: ^1.0.2
   shimmer: ^0.0.6
+  encrypt: ^1.0.0+1
 
 # Compile-only dependencies
 dev_dependencies:
