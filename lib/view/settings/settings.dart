@@ -111,7 +111,7 @@ class _SettingsViewState extends State<SettingsView> {
                     color: Theme.of(context).backgroundColor,
                     child: ListTile(
                       title: TitleText("Appearance"),
-                      subtitle: Text("Change theme, Choose color scheme"),
+                      subtitle: Text("Change theme, Choose color scheme, ..."),
                       leading: new Icon(Icons.palette),
                       enabled: true,
                       onTap: (){
@@ -126,7 +126,7 @@ class _SettingsViewState extends State<SettingsView> {
                     color: Theme.of(context).backgroundColor,
                     child: ListTile(
                       title: TitleText("Other"),
-                      subtitle: Text("Expanded search, Change language, Choose player, Clear search history etc..."),
+                      subtitle: Text("Search preferences, Change language, Choose player, ..."),
                       leading: new Icon(Icons.settings),
                       enabled: true,
                       onTap: (){

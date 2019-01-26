@@ -88,8 +88,8 @@ class LaunchpadSettingsPageState extends SettingsPageState {
 
           setState((){
             LaunchpadItemManager.getManager().clearLaunchpadConfiguration();
-            _getLaunchPrefs();
           });
+          _getLaunchPrefs();
 
           //inform the user of the change
           getScaffoldKey().currentState.showSnackBar(

@@ -150,26 +150,6 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                     borderRadius: BorderRadius.circular(5.0)
                                 ),
                                 onPressed: (){
-                                  Interface.showAlert(
-                                      context,
-                                      new TitleText('Searching for Sources...'),
-                                      [
-                                        Center(
-                                          child: Text("BETA NOTE: If you find yourself waiting more than 30 seconds, there's a good chance we don't have the content you're looking for."),
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(top: 20),
-                                            child: Center(
-                                                child: new CircularProgressIndicator(
-                                                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                                                )
-                                            )
-                                        )
-                                      ],
-                                      false,
-                                      [Container()]
-                                  );
-
                                   int seasonNumber = episode["season_number"];
                                   int episodeNumber = episode["episode_number"];
 

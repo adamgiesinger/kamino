@@ -1,6 +1,15 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
+Future<void> savePref(String name, String value) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString(name, value);
+}
+
+Future<String> getStringPref(String name) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString(name);
+}
 
 Future<bool> saveBoolPref(String name, bool value) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
