@@ -11,6 +11,18 @@ Future<String> getStringPref(String name) async {
   return prefs.getString(name);
 }
 
+//IMPORTANT TRAKT CRED INFO
+/*
+   key - traktCredentials
+   0 - access token
+   1 - refresh token
+   2 - expiry date
+*/
+
+
+
+
+
 Future<bool> saveBoolPref(String name, bool value) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setBool(name, value);

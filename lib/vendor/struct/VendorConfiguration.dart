@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 abstract class VendorConfiguration {
 
   String tmdbKey;
+  TraktCredentials traktCredentials;
 
   final String name;
 
@@ -17,7 +18,8 @@ abstract class VendorConfiguration {
   VendorConfiguration({
     @required this.name,
 
-    this.tmdbKey
+    this.tmdbKey,
+    this.traktCredentials
   });
 
   ///
@@ -54,5 +56,25 @@ abstract class VendorConfiguration {
       throw new Exception("Invalid TMDB API key for provider ${getName()}.");
     }
   }
+
+  TraktCredentials getTraktCredentials(){
+    if(traktCredentials != null){
+      return traktCredentials;
+    }else{
+      throw new Exception("Invalid TMDB API key for provider ${getName()}.");
+    }
+  }
+
+}
+
+class TraktCredentials {
+
+  String id;
+  String secret;
+
+  TraktCredentials({
+    @required this.id,
+    @required this.secret
+  });
 
 }

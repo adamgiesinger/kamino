@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/pages/launchpad/launchpad_renderer.dart';
 import 'dart:async';
+import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 class LaunchpadController extends StatefulWidget {
@@ -14,6 +15,10 @@ class LaunchpadControllerState extends State<LaunchpadController> {
 
   @override
   void initState() {
+
+    //check if trakt token needs renewing
+    trakt.renewToken(context);
+
     _renderer = new LaunchpadItemRenderer();
     super.initState();
   }

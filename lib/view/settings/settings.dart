@@ -1,4 +1,5 @@
 import 'package:kamino/animation/transition.dart';
+import 'package:kamino/util/trakt.dart';
 import 'package:kamino/view/settings/page_launchpad.dart';
 
 import 'dart:async';

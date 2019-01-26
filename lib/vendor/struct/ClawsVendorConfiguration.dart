@@ -23,6 +23,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   // Keys
   final String clawsKey;
   final String tmdbKey;
+  final TraktCredentials traktCredentials;
 
   // Metadata
   final String name;
@@ -40,8 +41,10 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     @required this.name,
     @required this.server,
 
-    @required this.tmdbKey,
-    @required this.clawsKey
+    @required this.clawsKey,
+
+    this.tmdbKey,
+    this.traktCredentials
   }) : super(name: name, tmdbKey: tmdbKey);
 
   String _token;

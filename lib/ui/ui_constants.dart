@@ -3,6 +3,7 @@ import 'package:kamino/pages/smart_search/smart_search.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/util/trakt.dart' as trakt;
 
 
 IconButton searchIconButton(BuildContext context) {
@@ -59,10 +60,11 @@ void addFavoritePrompt(
               onPressed: () {
 
                 //save the content to the database
-                databaseHelper.saveFavourites(
-                    title, mediaType, id, url, year);
+                databaseHelper.saveFavourites(title, mediaType, id, url, year);
 
+                trakt.sendNewMedia(context, mediaType, title, year, id);
                 Navigator.pop(context);
+
               },
             ),
           ],
@@ -106,6 +108,7 @@ void addFavoritePrompt(
                 //save the content to the database
                 databaseHelper.removeFavourite(id);
 
+                trakt.removeMedia(context, mediaType, id);
                 Navigator.pop(context);
               },
             ),
