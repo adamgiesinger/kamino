@@ -72,5 +72,4 @@ abstract class VendorConfiguration {
   bool get supportsClientSideResolver {
     return false;
   }
-
 }

@@ -31,6 +31,8 @@ class SseShim extends EventEmitter {
   }
 }
 
+const sses = [];
+
 /**
  *
  * @param {string} mediaType
@@ -50,11 +52,7 @@ function resolveLinks(mediaType, query = {}) {
   const sse = new SseShim();
   sse.send({data: [`${new Date().getTime()}`], event: 'status'}, 'result');
 
-  LiquidCore.on('disconnected', () => {
-    sse.stopExecution = true;
-    // Exit the server. This will be called by the app.
-    process.exit(0);
-  });
+  sses.push(sse);
 
   switch (mediaType) {
     case 'movies':
@@ -76,10 +74,22 @@ function resolveLinks(mediaType, query = {}) {
   }, function onRejected(reason) {
     console.error(reason);
     sse.send({event: 'error', error: reason + ''}, 'done');
+  }).then(() => {
+    // Remove it from the list.
+    sses.splice( sses.indexOf(sse), 1 );
   });
 
   return sse;
 }
+
+// Listen for disconnections as soon as possible.
+LiquidCore.on('disconnected', () => {
+  for (let i=0; i<sses.length; i++) {
+    sses[i].stopExecution = true;
+  }
+  // Exit the server. This will be called by the app.
+  process.exit(0);
+});
 
 // Request links.
 LiquidCore.on('request_links', (data) => {

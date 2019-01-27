@@ -7,6 +7,7 @@ import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/view/content/baseLayout.dart';
 import 'package:kamino/view/content/overview.dart';
 
 class MovieLayout{
@@ -61,31 +62,10 @@ class MovieLayout{
                         borderRadius: BorderRadius.circular(10.0)
                     ),
                     onPressed: (){
-                      Interface.showAlert(
-                          context,
-                          new TitleText('Searching for Sources...'),
-                          [
-                            Center(
-                              child: Text("BETA NOTE: If you find yourself waiting more than 30 seconds, there's a good chance we're experiencing server issues."),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20),
-                                child: Center(
-                                    child: new CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-                                    )
-                                )
-                            )
-                          ],
-                          false,
-                          [Container()]
-                      );
-
-                      KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                      appState.getVendorConfigs()[0].playMovie(
-                          model.title,
-                          context
-                      );
+                      BaseLayout.findMedia(context, 'movies', {
+                        'title': model.title,
+                        'releaseDate': model.releaseDate,
+                      });
                     },
                     icon: Container(),
                     label: Text(

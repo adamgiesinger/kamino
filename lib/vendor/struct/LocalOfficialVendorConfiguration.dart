@@ -7,16 +7,14 @@ import 'package:kamino/vendor/struct/BaseOfficialVendorConfiguration.dart';
 /// This is a delegate as the addition of a client-side resolver can increase
 /// the output binary file-size considerably.
 abstract class LocalVendorConfiguration {
-  Future<Null> playMovie(String title, BuildContext context);
+  Future<LocalVendorSubscription> playMovie(String title, BuildContext context);
 
-  Future<Null> playTVShow(String name, String releaseDate, int seasonNumber,
+  Future<LocalVendorSubscription> playTVShow(String name, String releaseDate, int seasonNumber,
       int episodeNumber, BuildContext context);
 
   void setVendorConfiguration(BaseOfficialVendorConfiguration configuration);
+}
 
-  /// Called when the user dismisses the current search.
-  void onDismiss() {
-    // TODO: implement me.
-    // Unsubscribe from the ongoing events.
-  }
+abstract class LocalVendorSubscription {
+  Future<dynamic> disconnect();
 }

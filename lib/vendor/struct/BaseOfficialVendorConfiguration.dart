@@ -9,6 +9,8 @@ import 'package:encrypt/encrypt.dart';
 import 'package:encrypt/src/helpers.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:flutter_user_agent/flutter_user_agent.dart';
+
 import 'package:intl/intl.dart';
 import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +131,7 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
           },
           context);
     } else {
-      Navigator.pop(context);
+      Navigator.pop(context, true);
       showMessage('Could not authenticate connection to server.', context);
     }
   }
@@ -142,7 +144,7 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
           name, releaseDate, seasonNumber, episodeNumber, context);
     }
     if (await authenticate()) {
-      requestLinks(
+      return requestLinks(
           'tv',
           {
             'title': name,
@@ -152,7 +154,7 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
           },
           context);
     } else {
-      Navigator.pop(context);
+      Navigator.pop(context, true);
       showMessage('Could not authenticate connection to server.', context);
     }
   }
@@ -171,7 +173,13 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
     try {
       int scrapeEvents = 0;
       bool waitingForScrapes = false;
-      subscription = source.events.listen((MessageEvent message) {
+
+      var timer = Timer(Duration(seconds: 65), () {
+        // Attempt to disconnect from the server after 65 seconds.
+        disconnect(source, context, 'Could not resolve any links.');
+      });
+
+      subscription = source.events.listen((MessageEvent message) async {
         var data = jsonDecode(message.data);
         switch (data['event']) {
           case 'result':
@@ -190,19 +198,26 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
             }
             break;
           case 'scrape':
-            // TODO add the device's user-agent.
             if (source.readyState == EventSource.CLOSED) {
               // Already resolved, ignore it.
               return;
             }
             scrapeEvents++;
+
+            // Apply the device's user agent when requesting rather than sending
+            // "Dart/2.1 (dart:io)"
+            if (data['header'] == null) {
+              data['header'] = Map<String,String>();
+            }
+            data['header']['user-agent'] = await _getUserAgent();
+
             http.read(data['target'], headers: data['header']).then((content) {
               if (source.readyState == EventSource.CLOSED) {
                 // Already closed, ignore it.
-                return;
+                return null;
               }
 
-              http.post(generateUri(data['resolver']),
+              return http.post(generateUri(data['resolver']),
                   body: jsonEncode({
                     'html': base64Encode(utf8.encode(content)),
                   }),
@@ -237,6 +252,7 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
               scrapeEvents--;
               if (waitingForScrapes && scrapeEvents == 0) {
                 disconnect(source, context, 'Could not resolve any links');
+                timer.cancel();
               }
             });
             break;
@@ -247,6 +263,7 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
               waitingForScrapes = true;
             } else {
               disconnect(source, context, 'Could not resolve any links');
+              timer.cancel();
             }
             break;
         }
@@ -254,10 +271,6 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
         print('Could not connect to the eventstream: $error');
         disconnect(source, context, 'Could not resolve any links.');
       }, cancelOnError: true);
-      Timer(Duration(seconds: 60), () {
-        // Disconnect from the server after 60 seconds.
-        disconnect(source, context, 'Could not resolve any links.');
-      });
 
       return subscription;
     } catch (e) {
@@ -275,7 +288,7 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
 
     source.close();
     // Remove the current alert box.
-    Navigator.pop(context);
+    Navigator.pop(context, true);
     if (message != null) {
       showMessage(message, context);
     }
@@ -364,6 +377,10 @@ class BaseOfficialVendorConfiguration extends VendorConfiguration {
     }
 
     return _sharedPreferences;
+  }
+
+  Future<String> _getUserAgent() async {
+    return FlutterUserAgent.webViewUserAgent;
   }
 
   @override
