@@ -3,10 +3,10 @@ import 'package:meta/meta.dart';
 
 abstract class VendorConfiguration {
 
-  String tmdb_api_key;
+  String tmdbKey;
+  TraktCredentials traktCredentials;
 
   final String name;
-  final String server;
 
   ///
   /// A VendorConfiguration should be used to change the default settings in the
@@ -15,14 +15,11 @@ abstract class VendorConfiguration {
   /// [name] - The name of the vendor. If you are developing this independently,
   ///           use your GitHub name.
   ///
-  /// [server] - The server address of the vendor. Used to determine which source
-  ///           should be used.
-  ///
   VendorConfiguration({
     @required this.name,
-    @required this.server,
 
-    this.tmdb_api_key
+    this.tmdbKey,
+    this.traktCredentials
   });
 
   ///
@@ -31,14 +28,6 @@ abstract class VendorConfiguration {
   ///
   String getName(){
     return name;
-  }
-
-  ///
-  /// Returns the server address declared by the Vendor.
-  /// If the vendor does not use a server, this will be `localhost`
-  ///
-  String getServer(){
-    return server;
   }
 
   ///
@@ -61,8 +50,8 @@ abstract class VendorConfiguration {
     );
 
   String getTMDBKey(){
-    if(tmdb_api_key != null){
-      return tmdb_api_key;
+    if(tmdbKey != null){
+      return tmdbKey;
     }else{
       throw new Exception("Invalid TMDB API key for provider ${getName()}.");
     }
@@ -72,4 +61,25 @@ abstract class VendorConfiguration {
   bool get supportsClientSideResolver {
     return false;
   }
+
+  TraktCredentials getTraktCredentials(){
+    if(traktCredentials != null){
+      return traktCredentials;
+    }else{
+      throw new Exception("Invalid TMDB API key for provider ${getName()}.");
+    }
+  }
+
+}
+
+class TraktCredentials {
+
+  String id;
+  String secret;
+
+  TraktCredentials({
+    @required this.id,
+    @required this.secret
+  });
+
 }

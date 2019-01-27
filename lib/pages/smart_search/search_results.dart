@@ -44,7 +44,7 @@ class _SearchResultState extends State<SearchResult> {
 
     String url = "${tmdb.root_url}/search/"
         "multi${tmdb.defaultArguments}&"
-        "query=$query&page=$pageNumber&include_adult=false";
+        "query=${query.replaceAll(" ", "+")}&page=$pageNumber&include_adult=false";
 
     print("url is... $url");
 

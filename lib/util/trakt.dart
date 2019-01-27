@@ -4,17 +4,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:http/http.dart' as http;
+import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart'
-    as vendor;
 
 class TraktAuth extends StatefulWidget {
+
   @override
   _TraktAuthState createState() => new _TraktAuthState();
+
 }
 
 class _TraktAuthState extends State<TraktAuth> {
@@ -31,10 +31,6 @@ class _TraktAuthState extends State<TraktAuth> {
     // Add a listener to on url changed
     _onUrlChanged = flutterWebviewPlugin.onUrlChanged.listen((String url) {
       if (mounted) {
-        print("url is now: $url");
-
-        //String test_url = "https://trakt.tv/oauth/authorize/native?code=3032637e#";
-
         if (url.contains("native?code=")) {
           String authCode = url.split("code=")[1].replaceAll("#", "");
 
@@ -49,8 +45,10 @@ class _TraktAuthState extends State<TraktAuth> {
 
   @override
   Widget build(BuildContext context) {
+    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
     String _url = "https://trakt.tv/oauth/authorize?response_type=code&"
-        "client_id=${vendor.trakt_client_id}&"
+        "client_id=${appState.getVendorConfigs()[0].traktCredentials.id}&"
         "redirect_uri=urn:ietf:wg:oauth:2.0:oob";
 
     return WebviewScaffold(
@@ -78,6 +76,8 @@ class _TraktAuthState extends State<TraktAuth> {
 }
 
 void renewToken(BuildContext context) async {
+  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
   //get trakt credentials
   List<String> _traktCred = [];
 
@@ -101,8 +101,8 @@ void renewToken(BuildContext context) async {
 
       Map body = {
         'refresh_token': _traktCred[1],
-        'client_id': vendor.trakt_client_id,
-        'client_secret': vendor.trakt_secret,
+        'client_id': appState.getVendorConfigs()[0].traktCredentials.id,
+        'client_secret': appState.getVendorConfigs()[0].traktCredentials.secret,
         'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
         'grant_type': 'refresh_token'
       };
@@ -139,15 +139,15 @@ void renewToken(BuildContext context) async {
             barrierDismissible: true,
             builder: (_) {
               return AlertDialog(
-                title: TitleText("Trakt Authentication Failed"),
+                title: TitleText("Trakt Authentication Failure"),
                 content: Text(
-                  "Failed to renew Trakt token, please check your "
+                  "Failed to renew Trakt token. Please check your "
                       "internet connection and try again. If the problem"
-                      " presists sign out of trakt and login again",
+                      " presists, please sign out of Trakt and sign in again",
                   style: TextStyle(
                       fontSize: 18.0,
                       fontFamily: "GlacialIndifference",
-                      color: Colors.white),
+                      color: Theme.of(context).primaryColor),
                 ),
                 actions: <Widget>[
                   Center(
@@ -158,7 +158,7 @@ void renewToken(BuildContext context) async {
                         style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "GlacialIndifference",
-                            color: Colors.white),
+                            color: Theme.of(context).primaryColor),
                       ),
                     ),
                   ),
@@ -173,7 +173,7 @@ void renewToken(BuildContext context) async {
                         style: TextStyle(
                             fontSize: 18.0,
                             fontFamily: "GlacialIndifference",
-                            color: Colors.white),
+                            color: Theme.of(context).primaryColor),
                       ),
                     ),
                   )
@@ -186,7 +186,9 @@ void renewToken(BuildContext context) async {
   }
 }
 
-Future<Null> getCollection(List<String> traktCred) async {
+Future<Null> getCollection(List<String> traktCred, BuildContext context) async {
+  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
   List<String> _traktMediaTypes = ["movies", "shows"];
 
   Map payload = {
@@ -206,7 +208,7 @@ Future<Null> getCollection(List<String> traktCred) async {
         HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
         HttpHeaders.contentTypeHeader: 'application/json',
         'trakt-api-version': '2',
-        'trakt-api-key': vendor.trakt_client_id
+        'trakt-api-key': appState.getVendorConfigs()[0].traktCredentials.id
       },
     );
 
@@ -233,75 +235,61 @@ Future<Null> getCollection(List<String> traktCred) async {
     }
   }
 
-  print("i found these ids: ${payload.toString()}");
-
   String status = await updateDatabase(payload);
 }
 
-Future<String> addFavToTrakt(List<String> traktCred) async {
+Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) async {
+
+  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   //get all favourites from the database
   Map _favs = await databaseHelper.getAllFaves();
-  Map _body = {"movies": [], "shows": []};
 
-  print("database log: $_favs");
+  //media sent in batches to avoid timeout
+  List<String> mediaTypes = ["shows","movies"];
+  List<int> status_codes = [];
 
-  //parsing the data from the database
+  for (int t = 0; t < mediaTypes.length; t++){
 
+    String header = mediaTypes[t];
 
-  //tv shows
-  if (_favs["tv"].length > 0) {
-    for (int i = 0; i < _favs["tv"].length; i++) {
-      _body["shows"].add(
-        {
-          'collected_at': _favs["tv"][i]["saved_on"],
-          'title': _favs["tv"][i]["name"],
-          'year': _favs["tv"][i]["year"],
+    var body = {
+      header: []
+    };
+
+    String dbSelector = header == "shows" ? "tv" : "movie";
+
+    //parsing the data from the database
+    if (_favs[dbSelector].length > 0) {
+      for (int i = 0; i < _favs[dbSelector].length; i++) {
+
+        body[header].add({
+          'collected_at': _favs[dbSelector][i]["saved_on"],
+          'title': _favs[dbSelector][i]["name"],
+          'year': _favs[dbSelector][i]["year"],
           'ids': {
-            'tmdb': _favs["tv"][i]["tmdbID"]
+            'tmdb': _favs[dbSelector][i]["tmdbID"]
           }
-        },
+        });
+      }
+
+      String url = 'https://api.trakt.tv/sync/collection';
+
+      final res = await http.post(url,
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
+            'Content-Type': 'application/json',
+            'trakt-api-version': '2',
+            'trakt-api-key': appState.getVendorConfigs()[0].traktCredentials.id
+          },
+          body: json.encode(body)
       );
+
+      status_codes.add(res.statusCode);
     }
   }
 
-  //movies
-  if (_favs["movie"].length > 0) {
-    for (int i = 0; i < _favs["movie"].length; i++) {
-      _body["movies"].add(
-        {
-          'collected_at': _favs["movie"][i]["saved_on"],
-          'title': _favs["movie"][i]["name"],
-          'year': _favs["movie"][i]["year"],
-          'ids': {
-            'tmdb': _favs["movie"][i]["tmdbID"]
-          }
-        },
-      );
-    }
-  }
-
-  print("sending this collection to trakt: ${jsonEncode(_body)}");
-
-  print("sending ${_body["movies"].length} movies , ${_body["shows"].length} tv shows");
-
-
-  String url = 'https://api.trakt.tv/sync/collection';
-
-  final res = await http.post(url,
-      headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
-        HttpHeaders.contentTypeHeader: 'application/json',
-        'trakt-api-version': '2',
-        'trakt-api-key': vendor.trakt_client_id
-      },
-      body: jsonEncode(_body));
-
-  print("trakt response code is: ${res.statusCode}");
-  print("send response from trakt: ${res.body}");
-
-
-  return "Sent";
+  return status_codes;
 }
 
 Future<String> updateDatabase(Map payload) async {
@@ -346,8 +334,6 @@ Future<String> updateDatabase(Map payload) async {
   //processing movie ids
   for (int i = 0; i < payload["movies"]["tmdb"].length; i++) {
     if (!_favIDs.contains(payload["movies"]["tmdb"][i])) {
-
-      //print("input id: ${payload["movies"]["tmdb"][i]}");
 
       //300ms delay ensures we do not hit tmdb api limit
       await Future.delayed(new Duration(milliseconds: 300));
@@ -397,7 +383,6 @@ Future<String> updateDatabase(Map payload) async {
 
         if(!_favIDs.contains(_data["movie_results"][0]["id"])){
 
-          //print("input id: ${_data["movie_results"][0]["id"]}");
           _favIDs.add(_data["movie_results"][0]["id"]);
 
           //write the entry to the database
@@ -408,8 +393,6 @@ Future<String> updateDatabase(Map payload) async {
               _data["movie_results"][0]["poster_path"],
               _data["movie_results"][0]["release_date"]
           );
-
-
 
           //wait 300ms before starting the next http call
           await Future.delayed(new Duration(milliseconds: 300));
@@ -456,4 +439,68 @@ Future<String> updateDatabase(Map payload) async {
   }
 
   return "Done";
+}
+
+//use this method when sending a single item to trakt
+Future<Null> sendNewMedia(BuildContext context, String mediaType, String title, String year, int id) async {
+
+  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
+  String header = mediaType == "movie" ? "movies" : "shows";
+  List<String> traktCred = await settingsPref.getListPref("traktCredentials");
+
+  Map body = {
+    header: []
+  };
+
+  body[header].add({
+    'collected_at': DateTime.now().toUtc().toString(),
+    'title': title,
+    'year': year,
+    'ids': {
+      'tmdb': id
+    }
+  });
+
+  String url = 'https://api.trakt.tv/sync/collection';
+
+  final res = await http.post(url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
+        'Content-Type': 'application/json',
+        'trakt-api-version': '2',
+        'trakt-api-key': appState.getVendorConfigs()[0].traktCredentials.id
+      },
+      body: json.encode(body)
+  );
+}
+
+Future<Null> removeMedia(BuildContext context, String mediaType, int id) async {
+
+  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
+  String header = mediaType == "movie" ? "movies" : "shows";
+  List<String> traktCred = await settingsPref.getListPref("traktCredentials");
+
+  Map body = {
+    header: []
+  };
+
+  body[header].add({
+    'ids': {
+      'tmdb': id
+    }
+  });
+
+  String url = 'https://api.trakt.tv/sync/collection/remove';
+
+  final res = await http.post(url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
+        'Content-Type': 'application/json',
+        'trakt-api-version': '2',
+        'trakt-api-key': appState.getVendorConfigs()[0].traktCredentials.id
+      },
+      body: json.encode(body)
+  );
 }

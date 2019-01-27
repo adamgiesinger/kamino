@@ -1,7 +1,7 @@
 // Import flutter libraries
 import 'package:flutter_user_agent/flutter_user_agent.dart';
 import 'package:kamino/pages/all_media/all_genres.dart';
-import 'package:kamino/pages/smart_search/smart_search.dart';
+import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
@@ -67,13 +67,31 @@ class KaminoAppState extends State<KaminoApp> {
     _activeTheme = _themeConfigs[0].getId();
     _primaryColorOverride = null;
 
-    // Update SystemUI
-    SystemChrome.setSystemUIOverlayStyle(
-        getActiveThemeMeta().getOverlayStyle().copyWith(
-          statusBarColor: const Color(0x00000000),
-          systemNavigationBarColor: getActiveThemeData().cardColor
-        )
-    );
+    _loadActiveTheme();
+  }
+
+  Future<void> _loadActiveTheme() async {
+    var theme = await settingsPref.getStringPref('activeTheme');
+    var primaryColorOverride = await settingsPref.getStringPref('primaryColorOverride');
+
+    setState(() {
+      // If the restored theme setting pref is not null AND the theme exists,
+      if(theme != null && _themeConfigs.where((consumer) => consumer.id == theme).length > 0)
+        // then apply the theme if it is not already applied.
+        if(_activeTheme != null) _activeTheme = theme;
+
+      if(primaryColorOverride != null)
+        if(_primaryColorOverride.toString() != primaryColorOverride)
+          _primaryColorOverride = new Color(  int.parse(primaryColorOverride.split('(0x')[1].split(')')[0], radix: 16)  );
+
+      // Update SystemUI
+      SystemChrome.setSystemUIOverlayStyle(
+          getActiveThemeMeta().getOverlayStyle().copyWith(
+              statusBarColor: const Color(0x00000000),
+              systemNavigationBarColor: getActiveThemeData().cardColor
+          )
+      );
+    });
   }
 
   @override
@@ -126,6 +144,9 @@ class KaminoAppState extends State<KaminoApp> {
             systemNavigationBarColor: getActiveThemeData().cardColor,
           )
       );
+
+      // Update preferences
+      settingsPref.savePref('activeTheme', activeTheme);
     });
   }
 
@@ -137,6 +158,8 @@ class KaminoAppState extends State<KaminoApp> {
     setState(() {
       _primaryColorOverride = color;
       setActiveTheme(getActiveTheme());
+
+      settingsPref.savePref('primaryColorOverride', color.toString());
     });
   }
 
@@ -151,6 +174,10 @@ class Launchpad extends StatefulWidget {
 
 class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixin {
 
+  Future<bool> _onWillPop() async {
+    return false;
+  }
+
   @override
   void initState() {
     ApolloVendor.getLaunchpadConfiguration().initialize();
@@ -160,38 +187,40 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
   @override
   Widget build(BuildContext context) {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-
-    return new Scaffold(
-        // backgroundColor: backgroundColor,
-        appBar: AppBar(
-          title: Image.asset(
-            appState.getActiveThemeData().brightness == Brightness.dark ?
-              "assets/images/header_text.png" : "assets/images/header_text_dark.png",
-            width: 125
-          ),
-
-          // MD2: make the color the same as the background.
-          backgroundColor: Theme.of(context).cardColor,
-          elevation: 5.0,
-            actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.favorite),
-                tooltip: "Favorites",
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => FavoritesPage()
-                  ));
-                },
+    return new WillPopScope(
+      onWillPop: _onWillPop,
+      child: new Scaffold(
+          // backgroundColor: backgroundColor,
+          appBar: AppBar(
+            title: Image.asset(
+              appState.getActiveThemeData().brightness == Brightness.dark ?
+                "assets/images/header_text.png" : "assets/images/header_text_dark.png",
+              width: 125
             ),
-          ],
 
-          // Center title
-          centerTitle: true
-        ),
-        drawer: __buildAppDrawer(),
+            // MD2: make the color the same as the background.
+            backgroundColor: Theme.of(context).cardColor,
+            elevation: 5.0,
+              actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.favorite),
+                  tooltip: "Favorites",
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => FavoritesPage()
+                    ));
+                  },
+              ),
+            ],
 
-        // Body content
-        body: LaunchpadController()
+            // Center title
+            centerTitle: true
+          ),
+          drawer: __buildAppDrawer(),
+
+          // Body content
+          body: LaunchpadController()
+      )
     );
   }
 
@@ -232,7 +261,8 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
             ),
             ListTile(
               leading: const Icon(Icons.library_books),
-              title: Text("News")
+              title: Text("Blog"),
+              onTap: () => _launchURL("https://medium.com/apolloblog"),
             ),
             Divider(),
             ListTile(

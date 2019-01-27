@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:kamino/animation/transition.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart' as vendor;
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/trakt.dart';
@@ -48,6 +49,8 @@ class OtherSettingsPageState extends SettingsPageState {
 
   @override
   Widget buildPage(BuildContext context) {
+    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
     return ListView(
       children: <Widget>[
         Material(
@@ -104,7 +107,7 @@ class OtherSettingsPageState extends SettingsPageState {
         _traktCred.length != 3 ? Material(
           color: Theme.of(context).backgroundColor,
           child: ListTile(
-            title: TitleText("Login to Trakt"),
+            title: TitleText("Sign In to Trakt"),
             enabled: true,
             onTap: () async {
 
@@ -112,10 +115,7 @@ class OtherSettingsPageState extends SettingsPageState {
               Navigator.push(context, SlideRightRoute(
                   builder: (context) => new TraktAuth()
               )).then((var authCode){
-
-                print("authCode is: $authCode");
                 _authUser(context, authCode);
-
               });
 
             },
@@ -123,14 +123,14 @@ class OtherSettingsPageState extends SettingsPageState {
         ) : Material(
           color: Theme.of(context).backgroundColor,
           child: ListTile(
-            title: TitleText("Sign out of Trakt"),
+            title: TitleText("Sign Out of Trakt"),
             enabled: true,
             onTap: () async {
 
               Map body = {
                 'token': _traktCred[0],
-                'client_id': vendor.trakt_client_id,
-                'client_secret': vendor.trakt_secret
+                'client_id': appState.getVendorConfigs()[0].traktCredentials.id,
+                'client_secret': appState.getVendorConfigs()[0].traktCredentials.secret
               };
 
               String url = "https://api.trakt.tv/oauth/revoke";
@@ -182,12 +182,14 @@ class OtherSettingsPageState extends SettingsPageState {
   //Trakt authentication logic
   void _authUser(BuildContext context, String code) async{
 
+    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
     if (code == null){
       //Trakt auth has failed
 
       _dialogGenerator(
           "Authentication Unsuccessful",
-          "Unable to authenticate trakt account please try again",
+          "Kamino was unable to authenticate with Trakt.",
           context,
           true
       );
@@ -211,8 +213,8 @@ class OtherSettingsPageState extends SettingsPageState {
 
       Map _body = {
         "code": code,
-        "client_id": vendor.trakt_client_id,
-        "client_secret": vendor.trakt_secret,
+        "client_id": appState.getVendorConfigs()[0].traktCredentials.id,
+        "client_secret": appState.getVendorConfigs()[0].traktCredentials.secret,
         "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
         "grant_type": "authorization_code"
       };
@@ -310,21 +312,23 @@ class OtherSettingsPageState extends SettingsPageState {
         barrierDismissible: false,
         builder: (_){
           return AlertDialog(
-            title: TitleText("Syncing with Trakt"),
+            title: TitleText("Trakt Synchronization..."),
             content: Container(
-              height: 160.0,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text("Please wait while we synchronise your favorites with"
-                      " Trakt, dialog will close when sync is complete",
+                  Text("Please wait while we synchronise your favorites with Trakt. " +
+                      "This dialog will close automatically when synchronization is complete.",
                     style: _glacialFont,
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
                     child: Center(
                       child: CircularProgressIndicator(
-                        backgroundColor: Colors.deepPurpleAccent,
+                        valueColor: new AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor
+                        ),
                       ),
                     ),
                   ),
@@ -336,9 +340,9 @@ class OtherSettingsPageState extends SettingsPageState {
         }
     );
 
-    //String pullStatus = await getCollection(_traktCred);
-    //Future.delayed(new Duration(seconds: 2));
-    String saveStatus = await addFavToTrakt(_traktCred);
+    String pullStatus = await getCollection(_traktCred, context);
+    Future.delayed(new Duration(seconds: 4));
+    List<int> saveStatus = await addFavToTrakt(_traktCred, context);
 
     Navigator.pop(context);
   }
