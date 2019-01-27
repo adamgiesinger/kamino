@@ -1,8 +1,10 @@
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/util/trakt.dart';
+import 'package:kamino/view/settings/ota.dart';
 import 'package:kamino/view/settings/page_launchpad.dart';
 
 import 'dart:async';
+import 'package:kamino/view/settings/ota.dart' as ota;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -134,6 +136,21 @@ class _SettingsViewState extends State<SettingsView> {
                         Navigator.push(context, SlideRightRoute(
                             builder: (context) => OtherSettingsPage()
                         ));
+                      },
+                    ),
+                  ),
+
+                  Divider(),
+
+                  Material(
+                    color: Theme.of(context).backgroundColor,
+                    child: ListTile(
+                      title: TitleText("Check for updates"),
+                      subtitle: Text("Check with houston for changes..."),
+                      leading: new Icon(Icons.cloud_download),
+                      enabled: true,
+                      onTap: () async{
+                        updateApp(context, false);
                       },
                     ),
                   ),
