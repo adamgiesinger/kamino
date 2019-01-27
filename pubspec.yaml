@@ -42,7 +42,6 @@ dependencies:
   dragable_flutter_list: ^1.0.2
   shimmer: ^0.0.6
   encrypt: ^1.0.0+1
-  ota_update: ^0.1.2
 
 # Compile-only dependencies
 dev_dependencies:
