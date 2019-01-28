@@ -239,9 +239,8 @@ Future<String> bulkSaveFavorites(List<Map> documents) async {
   //open connection to the database
   db.open();
 
-  //await db.insert(dataEntry);
   await db.insertMany(documents);
-  print("wrote $documents to the database");
+  print("wrote ${documents.length} favourites to the database");
 
   // 'tidy up' the db file
   db.tidy();

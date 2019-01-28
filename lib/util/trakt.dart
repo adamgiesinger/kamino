@@ -295,7 +295,7 @@ Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) as
 Future<String> updateDatabase(Map payload) async {
 
   List<int> _favIDs = await databaseHelper.getAllFavIDs();
-  List<Map> tvDocsTMDB = [];
+  List<Map> collections = [];
 
   //check to see if the item is already in the database
   //if not get info from tmdb and write to the database
@@ -303,8 +303,9 @@ Future<String> updateDatabase(Map payload) async {
   //processing the tv shows
   for (int i = 0; i < payload["shows"]["tmdb"].length; i++) {
     if (!_favIDs.contains(payload["shows"]["tmdb"][i])) {
-      //150ms delay ensures we do not hit tmdb api limit
-      await Future.delayed(new Duration(milliseconds: 150));
+
+      //300ms delay ensures we do not hit tmdb api limit
+      await Future.delayed(new Duration(milliseconds: 300));
 
       //get the info from tmdb
       String url =
@@ -315,19 +316,9 @@ Future<String> updateDatabase(Map payload) async {
       if (res.statusCode == 200) {
         Map _data = jsonDecode(res.body);
 
-        /*
-        databaseHelper.saveFavourites(
-            _data["name"],
-            "tv",
-            _data["id"],
-            _data["poster_path"],
-            _data["first_air_date"]
-        );
-        */
-
         _favIDs.add(_data["id"]);
 
-        tvDocsTMDB.add({
+        collections.add({
           "name": _data["name"],
           "docType": "favourites",
           "contentType": "tv",
@@ -336,24 +327,16 @@ Future<String> updateDatabase(Map payload) async {
           "year": _data["first_air_date"],
           "saved_on": DateTime.now().toUtc().toString()
         });
-
-        //wait 150ms before starting the next http call
-        await Future.delayed(new Duration(milliseconds: 150));
       }
     }
   }
-
-  //write the entry to the database
-  String tvStatusTMDB = await databaseHelper.bulkSaveFavorites(tvDocsTMDB);
-
-  List<Map> _movieDocsTMDB = [];
 
   //processing movie ids
   for (int i = 0; i < payload["movies"]["tmdb"].length; i++) {
     if (!_favIDs.contains(payload["movies"]["tmdb"][i])) {
 
-      //150ms delay ensures we do not hit tmdb api limit
-      await Future.delayed(new Duration(milliseconds: 150));
+      //300ms delay ensures we do not hit tmdb api limit
+      await Future.delayed(new Duration(milliseconds: 300));
 
       //get the info from tmdb
       String url =
@@ -361,20 +344,11 @@ Future<String> updateDatabase(Map payload) async {
       var res = await http.get(url);
 
       if (res.statusCode == 200) {
-        Map _data = jsonDecode(res.body);
 
-        /*
-        databaseHelper.saveFavourites(
-            _data["title"],
-            "movie",
-            _data["id"],
-            _data["poster_path"],
-            _data["release_date"]
-        );
-        */
+        Map _data = jsonDecode(res.body);
         _favIDs.add(_data["id"]);
 
-        _movieDocsTMDB.add({
+        collections.add({
           "name":  _data["title"],
           "docType": "favourites",
           "contentType": "movie",
@@ -383,23 +357,17 @@ Future<String> updateDatabase(Map payload) async {
           "year": _data["release_date"],
           "saved_on": DateTime.now().toUtc().toString()
         });
-
-        //wait 150ms before starting the next http call
-        await Future.delayed(new Duration(milliseconds: 150));
       }
     }
   }
 
-  //write the entry to the database
-  String movieStatusTMDB = await databaseHelper.bulkSaveFavorites(_movieDocsTMDB);
-
   //handling imdb ids
   //movies
-  List<Map> movieDocs = [];
 
   for (int i = 0; i < payload["movies"]["imdb"].length; i++) {
-    //150ms delay ensures we do not hit tmdb api limit
-    await Future.delayed(new Duration(milliseconds: 150));
+
+    //300ms delay ensures we do not hit tmdb api limit
+    await Future.delayed(new Duration(milliseconds: 300));
 
     String url = "${tmdb.root_url}/find/${payload["movies"]["imdb"][i]}"
         "${tmdb.defaultArguments}&external_source=imdb_id";
@@ -416,17 +384,7 @@ Future<String> updateDatabase(Map payload) async {
 
           _favIDs.add(_data["movie_results"][0]["id"]);
 
-          /*
-          databaseHelper.saveFavourites(
-              _data["movie_results"][0]["title"],
-              "movie",
-              _data["movie_results"][0]["id"],
-              _data["movie_results"][0]["poster_path"],
-              _data["movie_results"][0]["release_date"]
-          );
-          */
-
-          movieDocs.add({
+          collections.add({
           "name":  _data["movie_results"][0]["title"],
           "docType": "favourites",
           "contentType": "movie",
@@ -435,21 +393,16 @@ Future<String> updateDatabase(Map payload) async {
           "year": _data["movie_results"][0]["release_date"],
           "saved_on": DateTime.now().toUtc().toString()
           });
-
-          //wait 150ms before starting the next http call
-          await Future.delayed(new Duration(milliseconds: 150));
         }
       }
     }
   }
 
-  String movieStatus = await databaseHelper.bulkSaveFavorites(movieDocs);
-  List<Map> tvDocs = [];
-
   //tv shows
   for (int i = 0; i < payload["shows"]["imdb"].length; i++) {
-    //150ms delay ensures we do not hit tmdb api limit
-    await Future.delayed(new Duration(milliseconds: 150));
+
+    //300ms delay ensures we do not hit tmdb api limit
+    await Future.delayed(new Duration(milliseconds: 300));
 
     String url = "${tmdb.root_url}/find/${payload["shows"]["imdb"][i]}"
         "${tmdb.defaultArguments}&external_source=imdb_id";
@@ -464,19 +417,9 @@ Future<String> updateDatabase(Map payload) async {
 
         if (!_favIDs.contains(_data["tv_results"][0]["id"])) {
 
-          /*
-          databaseHelper.saveFavourites(
-              _data["tv_results"][0]["name"],
-              "tv",
-              _data["tv_results"][0]["id"],
-              _data["tv_results"][0]["poster_path"],
-              _data["tv_results"][0]["first_air_date"]
-          );
-          */
-
           _favIDs.add(_data["tv_results"][0]["id"]);
 
-          tvDocs.add({
+          collections.add({
             "name":  _data["tv_results"][0]["name"],
             "docType": "favourites",
             "contentType": "tv",
@@ -485,15 +428,15 @@ Future<String> updateDatabase(Map payload) async {
             "year": _data["tv_results"][0]["first_air_date"],
             "saved_on": DateTime.now().toUtc().toString()
           });
-
-          //wait 150ms before starting the next http call
-          await Future.delayed(new Duration(milliseconds: 150));
         }
       }
     }
   }
 
-  String _tvStatus = await databaseHelper.bulkSaveFavorites(tvDocs);
+  if (collections.length > 0) {
+    String writeStatus = await databaseHelper.bulkSaveFavorites(collections);
+    await Future.delayed(new Duration(seconds: 2));
+  }
 
   return "Done";
 }
@@ -560,4 +503,75 @@ Future<Null> removeMedia(BuildContext context, String mediaType, int id) async {
       },
       body: json.encode(body)
   );
+}
+
+Future<String> getWatchHistories(BuildContext context) async {
+
+  List<String> traktMediaType = ["movies", "shows"];
+  List<Map> documents = [];
+
+  for(int i = 0; i < traktMediaType.length; i++){
+
+    //get the history from trakt
+    String header = traktMediaType[i];
+
+    String url = "https://api.trakt.tv/sync/watched/"+header;
+    http.Response res = await http.get(url);
+
+    if (res.statusCode == 200){
+
+      if (header == "movies") {
+
+        List _data = json.decode(res.body);
+
+
+        _data.forEach((item){
+          documents.add({
+            "name": item["movie"]["title"],
+            "docType": "watched",
+            "contentType": header == "movies" ? "movie" : "tv",
+            "tmdbID": item["movie"]["ids"]["tmdb"],
+            "last_watched_at": item["last_watched_at"],
+            "last_updated_at": item["last_updated_at"],
+            "year": item["movie"]["year"]
+          });
+        });
+
+        //delay buys enough time to tidy up database and close the connection
+        await Future.delayed(new Duration(milliseconds: 300));
+
+      }else if (header == "shows"){
+
+        List _data = json.decode(res.body);
+
+        _data.forEach((item){
+
+          documents.add({
+            "name": item["show"]["title"],
+            "docType": "watched",
+            "tmdbID": item["show"]["ids"]["tmdb"],
+            "contentType": header == "movies" ? "movie" : "tv",
+            "last_watched_at": item["last_watched_at"],
+            "last_updated_at": item["last_updated_at"],
+            "seasons": item["seasons"]
+          });
+        });
+
+        //delay buys enough time to tidy up database and close the connection
+        await Future.delayed(new Duration(milliseconds: 300));
+      }
+    }
+  }
+
+  if (documents.length > 0){
+    //write the watched history to the database
+    String status = await databaseHelper.bulkSaveFavorites(documents);
+  }
+
+
+  return "done";
+}
+
+Future<String> sendWatchHistories(BuildContext context) async{
+  
 }
