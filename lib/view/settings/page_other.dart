@@ -319,7 +319,7 @@ class OtherSettingsPageState extends SettingsPageState {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text("Please wait while we synchronise your favorites with Trakt. " +
+                  Text("Please wait while we synchronize your favorites with Trakt. " +
                       "This dialog will close automatically when synchronization is complete.",
                     style: _glacialFont,
                   ),
