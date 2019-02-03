@@ -33,8 +33,8 @@ void addFavoritePrompt(
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new TitleText("Add to Favourites"),
-          content: new Text("Do you want to add $title to your favourites ?"),
+          title: new TitleText("Add to Favorites"),
+          content: new Text("Do you want to add $title to your favorites ?"),
           actions: <Widget>[
 
             // buttons to close the dialog or proceed with the save
@@ -79,8 +79,8 @@ void addFavoritePrompt(
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new TitleText("Remove from favourites"),
-          content: new Text("Do you want to remove $title from your favourites ?"),
+          title: new TitleText("Remove from favorites"),
+          content: new Text("Do you want to remove $title from your favorites ?"),
           actions: <Widget>[
 
             // buttons to close the dialog or proceed with the save

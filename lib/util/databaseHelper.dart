@@ -228,3 +228,23 @@ Future<Map> getAllFaves() async {
 
   return _result;
 }
+
+Future<String> bulkSaveFavorites(List<Map> documents) async {
+
+  //get the path of the database file
+  final directory = await getApplicationDocumentsDirectory();
+  final path =  directory.path  + "/apolloDB.db";
+  var db = ObjectDB(path);
+
+  //open connection to the database
+  db.open();
+
+  await db.insertMany(documents);
+  print("wrote ${documents.length} favourites to the database");
+
+  // 'tidy up' the db file
+  db.tidy();
+  await db.close();
+
+  return "done";
+}

@@ -85,27 +85,27 @@ Future<Null> removeSearchItem(String value) async{
 
 Future<Null> saveSearchHistory(String value) async {
 
-  //artificially limited the number of search histories saved to 40
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<String> searches = [];
-  searches = prefs.getStringList("searchHistory") == null ?
-  [] : prefs.getStringList("searchHistory");
+  if (value.isNotEmpty) {
+    //artificially limited the number of search histories saved to 40
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> searches = [];
+    searches = prefs.getStringList("searchHistory") == null ?
+    [] : prefs.getStringList("searchHistory");
 
-  //append the new search query to the top
-  //saved the 40 most recent
-  if (searches.length + 1 > 40){
+    //append the new search query to the top
+    //saved the 40 most recent
+    if (searches.length + 1 > 40) {
+      List<String> temp = [];
+      temp.add(value);
 
-    List<String> temp = [];
-    temp.add(value);
+      for (int x = 0; temp.length < 41; x++) {
+        temp.add(searches[x]);
+      }
 
-    for(int x = 0; temp.length < 41; x++){
-      temp.add(searches[x]);
+      prefs.setStringList("searchHistory", temp);
+    } else {
+      prefs.setStringList("searchHistory", [value] + searches);
     }
-
-    prefs.setStringList("searchHistory", temp);
-
-  }else {
-    prefs.setStringList("searchHistory", [value]+searches);
   }
 
 }
