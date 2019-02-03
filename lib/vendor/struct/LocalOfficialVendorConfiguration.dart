@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:kamino/vendor/struct/BaseOfficialVendorConfiguration.dart';
+import 'package:kamino/vendor/struct/ClawsVendorConfiguration.dart';
+import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 
 /// Local client-side vendor configuration that can be passed into the
 /// BaseOfficialVendorConfiguration as a delegate.
@@ -7,14 +8,9 @@ import 'package:kamino/vendor/struct/BaseOfficialVendorConfiguration.dart';
 /// This is a delegate as the addition of a client-side resolver can increase
 /// the output binary file-size considerably.
 abstract class LocalVendorConfiguration {
-  Future<LocalVendorSubscription> playMovie(String title, BuildContext context);
+  ///
+  /// Play certain media types.
+  Future<VendorSubscription> playMedia(String mediaType, Map<String, String> query, BuildContext context);
 
-  Future<LocalVendorSubscription> playTVShow(String name, String releaseDate, int seasonNumber,
-      int episodeNumber, BuildContext context);
-
-  void setVendorConfiguration(BaseOfficialVendorConfiguration configuration);
-}
-
-abstract class LocalVendorSubscription {
-  Future<dynamic> disconnect();
+  void setVendorConfiguration(ClawsVendorConfiguration configuration);
 }

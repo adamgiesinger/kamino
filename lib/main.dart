@@ -1,5 +1,5 @@
 // Import flutter libraries
-import 'package:flutter_user_agent/flutter_user_agent.dart';
+import 'package:kamino/api/http_override.dart' show applyHttpOverrides;
 import 'package:kamino/pages/all_media/all_genres.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/ui/uielements.dart';
@@ -31,11 +31,13 @@ void main(){
     print("[${record.loggerName}: ${record.level.name}] [${record.time}]: ${record.message}");
   });
   log = new Logger(appName);
-  FlutterUserAgent.init();
+
+  applyHttpOverrides();
 
   runApp(
     KaminoApp()
   );
+
 }
 
 class KaminoApp extends StatefulWidget {

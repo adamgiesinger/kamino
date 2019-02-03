@@ -8,7 +8,7 @@
     "server:prod": "webpack-dev-server --config webpack.prod.config.js",
     "bundle": "webpack --config webpack.config.js",
     "bundle:prod": "webpack --config webpack.prod.config.js",
-    "clean": "rm -f ../android/app/src/main/res/raw/microserver.js ../ios/Runner/Resources/microserver.js",
+    "clean": "rm -f ../assets/microserver.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ApolloTVofficial",

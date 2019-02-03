@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
 abstract class VendorConfiguration {
@@ -70,6 +71,30 @@ abstract class VendorConfiguration {
     }
   }
 
+  /// Format a TV/Movie title.
+  ///
+  /// If a [seasonNumber] and [episodeNumber] is specified (not null), it formats
+  /// the title as "Title S01E01".
+  /// However if only a [releaseDate] is specified, it's formatted as "Title (yyyy)".
+  ///
+  /// The [releaseDate] should be an ISO 8601 string and is normally in
+  /// the format yyyy-mm-dd.
+  String formatTitle(String mediaType, String title,
+      [String releaseDate, seasonNumber, episodeNumber]) {
+    var buffer = new StringBuffer(title);
+    if (seasonNumber != null && episodeNumber != null) {
+      buffer.write(' S');
+      buffer.write(seasonNumber.toString().padLeft(2, '0'));
+      buffer.write('E');
+      buffer.write(episodeNumber.toString().padLeft(2, '0'));
+    } else if (releaseDate != null) {
+      buffer.write(' (');
+      buffer
+          .write(new DateFormat.y("en_US").format(DateTime.parse(releaseDate)));
+      buffer.write(' )');
+    }
+    return buffer.toString();
+  }
 }
 
 class TraktCredentials {
@@ -82,4 +107,12 @@ class TraktCredentials {
     @required this.secret
   });
 
+}
+
+/// Object representing the state of the current request.
+abstract class VendorSubscription {
+  // Disconnected.
+  bool disconnected = false;
+
+  dynamic disconnect();
 }

@@ -56,7 +56,7 @@ target 'Runner' do
   }
 
   # Declare the LiquidCore pod source here until it has been published to CocoaPods.
-  # pod 'LiquidCore', :git => 'https://github.com/LiquidPlayer/LiquidCore.git', :commit => 'ee0e82a9fb8a56a0bc8366041b7833514dcd2a8b'
+  pod 'LiquidCore', :git => 'https://github.com/LiquidPlayer/LiquidCore.git', :tag => '0.6.0-pre1'
 end
 
 post_install do |installer|
