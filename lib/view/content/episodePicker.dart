@@ -10,6 +10,7 @@ import 'package:kamino/main.dart';
 import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
+import 'package:kamino/view/content/baseLayout.dart';
 
 class EpisodePicker extends StatefulWidget {
   final int contentId;
@@ -150,17 +151,12 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                     borderRadius: BorderRadius.circular(5.0)
                                 ),
                                 onPressed: (){
-                                  int seasonNumber = episode["season_number"];
-                                  int episodeNumber = episode["episode_number"];
-
-                                  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                                  appState.getVendorConfigs()[0].playTVShow(
-                                      widget.showContentModel.title,
-                                      widget.showContentModel.releaseDate,
-                                      seasonNumber,
-                                      episodeNumber,
-                                      context
-                                  );
+                                  BaseLayout.findMedia(context, 'tv', {
+                                    'title': widget.showContentModel.title,
+                                    'releaseDate': widget.showContentModel.releaseDate,
+                                    'seasonNumber': episode["season_number"],
+                                    'episodeNumber': episode["episode_number"],
+                                  });
                                 },
                                 child: new Text(
                                   "Play Episode",

@@ -6,11 +6,9 @@ import 'package:kamino/main.dart';
 import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart' as vendor;
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/trakt.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/settings/page.dart';
 
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
-import 'package:path/path.dart';
 
 class OtherSettingsPage extends SettingsPage {
 

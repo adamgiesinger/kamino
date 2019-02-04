@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Interface {
-  static void showAlert(BuildContext context, Widget title, List<Widget> content, bool dismissible, List<Widget> actions){
-    showDialog<void>(
+  static Future<T> showAlert<T>(BuildContext context, Widget title, List<Widget> content, bool dismissible, List<Widget> actions){
+    return showDialog(
       context: context,
       barrierDismissible: dismissible,
       builder: (BuildContext responseContext) {

@@ -54,6 +54,9 @@ target 'Runner' do
     File.symlink(p[:path], symlink)
     pod p[:name], :path => File.join(symlink, 'ios')
   }
+
+  # Declare the LiquidCore pod source here until it has been published to CocoaPods.
+  pod 'LiquidCore', :git => 'https://github.com/LiquidPlayer/LiquidCore.git', :tag => '0.6.0-pre1'
 end
 
 post_install do |installer|

@@ -1,10 +1,9 @@
 import 'package:kamino/animation/transition.dart';
-import 'package:kamino/util/trakt.dart';
 import 'package:kamino/view/settings/ota.dart';
 import 'package:kamino/view/settings/page_launchpad.dart';
 
 import 'dart:async';
-import 'package:kamino/view/settings/ota.dart' as ota;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -29,9 +28,13 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  
+
+  SharedPreferences _preferences;
+
+  bool _useClientSideResolver = false;
+
   List<String> _contributors;
-  
+
   PackageInfo _packageInfo = new PackageInfo(
       appName: 'Unknown',
       packageName: 'Unknown',
@@ -41,6 +44,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   void initState() {
+    _readSharedPrefs();
     _fetchPackageInfo();
     _fetchContributors();
 
@@ -51,6 +55,13 @@ class _SettingsViewState extends State<SettingsView> {
     final PackageInfo info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
+    });
+  }
+
+  void _readSharedPrefs() async {
+    _preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _useClientSideResolver = _preferences.getBool('useClientSideResolver') ?? false;
     });
   }
 
@@ -73,9 +84,6 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-
-    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-
     return Scaffold(
         appBar: AppBar(
           title: TitleText("Settings"),
@@ -89,88 +97,118 @@ class _SettingsViewState extends State<SettingsView> {
           return new Container(
             color: Theme.of(context).backgroundColor,
             child: new ListView(
-
-                // It's recommended that you give at maximum three examples per setting category.
-
-                children: <Widget>[
-
-                  Padding(padding: EdgeInsets.symmetric(vertical: 5)),
-
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Launchpad"),
-                      subtitle: Text("Modify your $appName launchpad."),
-                      leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
-                      onTap: (){
-                        Navigator.push(context, SlideRightRoute(
-                            builder: (context) => LaunchpadSettingsPage()
-                        ));
-                      },
-                    ),
-                  ),
-
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Appearance"),
-                      subtitle: Text("Change theme, Choose color scheme, ..."),
-                      leading: new Icon(Icons.palette),
-                      enabled: true,
-                      onTap: (){
-                        Navigator.push(context, SlideRightRoute(
-                            builder: (context) => AppearanceSettingsPage()
-                        ));
-                      },
-                    ),
-                  ),
-
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Other"),
-                      subtitle: Text("Search preferences, Change language, Choose player, ..."),
-                      leading: new Icon(Icons.settings),
-                      enabled: true,
-                      onTap: (){
-                        Navigator.push(context, SlideRightRoute(
-                            builder: (context) => OtherSettingsPage()
-                        ));
-                      },
-                    ),
-                  ),
-
-                  Divider(),
-
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Check for updates"),
-                      subtitle: Text("Check with houston for changes..."),
-                      leading: new Icon(Icons.cloud_download),
-                      enabled: true,
-                      onTap: () async{
-                        updateApp(context, false);
-                      },
-                    ),
-                  ),
-
-                  Divider(),
-
-                  // App Version
-                  ListTile(
-                      title: TitleText("$appName (${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build)"),
-                      subtitle: Text("v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
-                      leading: new Image.asset("assets/images/logo.png", width: 36, height: 36)
-                  ),
-
-                  // It's okay to remove this, but we'd appreciate it if you
-                  // keep it. <3
-                  __buildContributorCard()
-                ]
+                children: __buildPreferences(context)
             )
           );
         }));
+  }
+
+  List<Widget> __buildPreferences(context) {
+    KaminoAppState appState = context.ancestorStateOfType(
+        const TypeMatcher<KaminoAppState>());
+
+    var vendorConfig = appState.getVendorConfigs()[0];
+
+    var widgets = <Widget>[
+
+      Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+
+      Material(
+        color: Theme.of(context).backgroundColor,
+        child: ListTile(
+          title: TitleText("Launchpad"),
+          subtitle: Text("Modify your $appName launchpad."),
+          leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+          onTap: (){
+            Navigator.push(context, SlideRightRoute(
+                builder: (context) => LaunchpadSettingsPage()
+            ));
+          },
+        ),
+      ),
+
+      Material(
+        color: Theme.of(context).backgroundColor,
+        child: ListTile(
+          title: TitleText("Appearance"),
+          subtitle: Text("Change theme, Choose color scheme, ..."),
+          leading: new Icon(Icons.palette),
+          enabled: true,
+          onTap: (){
+            Navigator.push(context, SlideRightRoute(
+                builder: (context) => AppearanceSettingsPage()
+            ));
+          },
+        ),
+      ),
+
+      Material(
+        color: Theme.of(context).backgroundColor,
+        child: ListTile(
+          title: TitleText("Other"),
+          subtitle: Text("Search preferences, Change language, Choose player, ..."),
+          leading: new Icon(Icons.settings),
+          enabled: true,
+          onTap: (){
+            Navigator.push(context, SlideRightRoute(
+                builder: (context) => OtherSettingsPage()
+            ));
+          },
+        ),
+      ),
+    ];
+
+    if (vendorConfig.supportsClientSideResolver) {
+      widgets.add(
+          SwitchListTile(
+            title: TitleText("Use client-side resolver"),
+            subtitle: Text(
+                "Resolve all links on your device, bypassing the remote server."),
+            value: _useClientSideResolver,
+            onChanged: (bool status) {
+              _preferences.setBool('useClientSideResolver', status);
+              setState(() {
+                _useClientSideResolver = status;
+              });
+            },
+          )
+      );
+    }
+
+    widgets.addAll([
+      Divider(),
+
+      Material(
+        color: Theme.of(context).backgroundColor,
+        child: ListTile(
+          title: TitleText("Check for updates"),
+          subtitle: Text("Check with houston for changes..."),
+          leading: new Icon(Icons.cloud_download),
+          enabled: true,
+          onTap: () async{
+            updateApp(context, false);
+          },
+        ),
+      ),
+
+      Divider(),
+
+      // App Version
+      ListTile(
+          title: TitleText(
+              "$appName (${vendorConfig.getName()} ${_getBuildType()} Build)"),
+          subtitle: Text(
+              "v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
+          leading: new Image.asset(
+              "assets/images/logo.png", width: 36, height: 36)
+      ),
+
+      // It's okay to remove this, but we'd appreciate it if you
+      // keep it. <3
+      __buildContributorCard()
+    ]);
+
+    return widgets;
   }
 
   Widget __buildContributorCard(){

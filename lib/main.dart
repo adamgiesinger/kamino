@@ -1,4 +1,5 @@
 // Import flutter libraries
+import 'package:kamino/api/http_override.dart' show applyHttpOverrides;
 import 'package:kamino/pages/all_media/all_genres.dart';
 import 'package:kamino/view/settings/ota.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
@@ -32,9 +33,12 @@ void main(){
   });
   log = new Logger(appName);
 
+  applyHttpOverrides();
+
   runApp(
     KaminoApp()
   );
+
 }
 
 class KaminoApp extends StatefulWidget {
