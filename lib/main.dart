@@ -174,7 +174,8 @@ class Launchpad extends StatefulWidget {
 class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixin {
 
   Future<bool> _onWillPop() async {
-    return false;
+    // Allow app close on back
+    return true;
   }
 
   @override
