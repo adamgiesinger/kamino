@@ -104,7 +104,9 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// To use this, override it and call super in your new method.
   ///
   Future<void> prepare(String title, BuildContext context) async {
-
+    if (webSocket != null) {
+      return webSocket.close();
+    }
   }
 
   ///
@@ -112,43 +114,51 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// auto-play or show a source selection dialog.
   ///
   Future<void> onComplete(BuildContext context, String title, List sourceList) async {
-    if(sourceList.length > 0) {
-
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>
-              CPlayer(
-                  title: title,
-                  url: sourceList[0]['file']['data'],
-                  mimeType: 'video/mp4'
-              ))
-      );
-
-    }else{
-
-      // No content found.
-      showDialog(context: context, builder: (BuildContext ctx){
-        return AlertDialog(
-          title: TitleText('No Sources Found'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text("We couldn't find any sources for $title."),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              textColor: Theme.of(context).primaryColor,
-              child: Text('Okay'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+    bool canNavigate;
+    try {
+      Navigator.of(context).mounted;
+      canNavigate = true;
+    } catch (err) {
+      canNavigate = false;
+    }
+    if (canNavigate) {
+      if(sourceList.length > 0) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>
+                CPlayer(
+                    title: title,
+                    url: sourceList[0]['file']['data'],
+                    mimeType: 'video/mp4'
+                ))
         );
-      });
 
+      }else{
+
+        // No content found.
+        showDialog(context: context, builder: (BuildContext ctx){
+          return AlertDialog(
+            title: TitleText('No Sources Found'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text("We couldn't find any sources for $title."),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                textColor: Theme.of(context).primaryColor,
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+
+      }
     }
   }
 
@@ -191,7 +201,6 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   ///
   _openWebSocket(String url, String data, BuildContext context, String title) async {
     // Open a WebSocket connection at the API endpoint.
-    transport.WebSocket webSocket;
     try {
       webSocket = await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform);
     } catch (ex) {

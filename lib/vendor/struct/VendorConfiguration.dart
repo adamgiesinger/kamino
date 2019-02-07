@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:w_transport/w_transport.dart' as transport;
 
 abstract class VendorConfiguration {
 
@@ -7,6 +8,8 @@ abstract class VendorConfiguration {
   TraktCredentials traktCredentials;
 
   final String name;
+
+  transport.WebSocket webSocket;
 
   ///
   /// A VendorConfiguration should be used to change the default settings in the
