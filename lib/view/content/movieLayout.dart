@@ -7,7 +7,6 @@ import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
-import 'package:kamino/view/content/baseLayout.dart';
 import 'package:kamino/view/content/overview.dart';
 
 class MovieLayout{
@@ -62,10 +61,11 @@ class MovieLayout{
                         borderRadius: BorderRadius.circular(10.0)
                     ),
                     onPressed: (){
-                      BaseLayout.findMedia(context, 'movies', {
-                        'title': model.title,
-                        'releaseDate': model.releaseDate,
-                      });
+                      KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                      appState.getVendorConfigs()[0].playMovie(
+                          model.title,
+                          context
+                      );
                     },
                     icon: Container(),
                     label: Text(

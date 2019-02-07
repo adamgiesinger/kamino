@@ -92,9 +92,8 @@ class _ContentOverviewState extends State<ContentOverview> {
 
     // When the widget is initialized, download the overview data.
     loadDataAsync().then((data) {
-      if (!mounted) {
-        return;
-      }
+      if(!this.mounted) return;
+
       // When complete, update the state which will allow us to
       // draw the UI.
       setState(() {

@@ -2,11 +2,9 @@
 *.class
 .gradle
 /local.properties
-/.idea
+/.idea/workspace.xml
+/.idea/libraries
 .DS_Store
 /build
 /captures
 GeneratedPluginRegistrant.java
-
-key.properties
-release.keystore
