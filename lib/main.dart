@@ -2,7 +2,6 @@
 import 'package:kamino/pages/all_media/all_genres.dart';
 import 'package:kamino/view/settings/ota.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
-import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
@@ -285,29 +284,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
             ListTile(
               leading: const Icon(Icons.accessibility),
               title: Text('Donate'),
-              onTap: () => showDialog(
-                context: context,
-                builder: (BuildContext _ctx){
-                  return AlertDialog(
-                    title: TitleText("Thanks for your interest!"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text("We're grateful for your support but we don't have donations set up at the moment."),
-                        Container(margin: EdgeInsets.only(top: 15)),
-                        Text("If you're really interested in donating, I recommend joining our Discord server; where you'll find app development discussion and we'll keep you updated on our news.")
-                      ],
-                    ),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: TitleText("Okay", fontSize: 15),
-                        onPressed: () => Navigator.of(context).pop(),
-                        textColor: Theme.of(context).primaryColor,
-                      )
-                    ],
-                  );
-                }
-              ),
+              onTap: () => _launchURL("https://apollotv.xyz/donate"),
             ),
             ListTile(
               enabled: true,

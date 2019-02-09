@@ -6,11 +6,10 @@ import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/util/trakt.dart' as trakt;
 
 
-IconButton searchIconButton(BuildContext context) {
-
+IconButton generateSearchIcon(BuildContext context) {
   return IconButton(
     icon: Icon(Icons.search),
-    color: Colors.white,
+    color: Theme.of(context).primaryTextTheme.body1.color,
     onPressed: () => showSearch(context: context, delegate: SmartSearch()),
   );
 }

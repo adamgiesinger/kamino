@@ -1,16 +1,20 @@
+import 'dart:io';
+import 'package:http/http.dart' as http;
+
+import 'dart:convert' as Convert;
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/main.dart';
-import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart' as vendor;
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/trakt.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/view/settings/page.dart';
 
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
-import 'package:path/path.dart';
+import 'package:package_info/package_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OtherSettingsPage extends SettingsPage {
 
@@ -21,18 +25,39 @@ class OtherSettingsPage extends SettingsPage {
 
 }
 
-
 class OtherSettingsPageState extends SettingsPageState {
 
+  bool _sourceSelection = false;
   bool _expandedSearchValue = false;
   List<String> _traktCred = [];
 
+  PackageInfo _packageInfo = new PackageInfo(
+      appName: 'Unknown',
+      packageName: 'Unknown',
+      version: 'Unknown',
+      buildNumber: 'Unknown'
+  );
+
+  Future<Null> _fetchPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
   @override
   void initState(){
+    _fetchPackageInfo();
+
     settingsPref.getBoolPref("expandedSearch").then((data){
       setState(() {
-        //print("initial expanded search value is $data");
         _expandedSearchValue = data;
+      });
+    });
+
+    settingsPref.getBoolPref("sourceSelection").then((data){
+      setState(() {
+        _sourceSelection = data;
       });
     });
 
@@ -55,6 +80,112 @@ class OtherSettingsPageState extends SettingsPageState {
 
     return ListView(
       children: <Widget>[
+        Platform.isAndroid ?
+          Material(
+            color: Theme.of(context).backgroundColor,
+            child: ListTile(
+              title: TitleText("Check for Updates"),
+              enabled: true,
+              onTap: () async {
+
+                var otaObject = Convert.jsonDecode((await http.get("https://houston.apollotv.xyz/ota")).body);
+
+                var _alreadyUpToDate = (){
+                  showDialog(context: context,
+                      builder: (BuildContext _ctx){
+                        return AlertDialog(
+                          title: TitleText("No updates available"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text("You already have the latest version.")
+                            ],
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: TitleText("Okay", fontSize: 15),
+                              onPressed: () => Navigator.of(context).pop(),
+                              textColor: Theme.of(context).primaryColor,
+                            )
+                          ],
+                        );
+                      });
+                };
+
+                if(otaObject["latest"] == null){
+                  _alreadyUpToDate();
+                  return;
+                }
+
+                otaObject = otaObject["latest"];
+
+                if(int.parse(otaObject["buildNumber"]) > int.parse(_packageInfo.buildNumber)){
+                  showDialog(context: context,
+                      builder: (BuildContext _ctx){
+                        return AlertDialog(
+                          title: TitleText("New Update"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              TitleText(otaObject["title"]),
+                              Container(padding: EdgeInsets.symmetric(vertical: 10)),
+                              Text(otaObject["changelog"])
+                            ],
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: TitleText("Cancel", fontSize: 15),
+                              onPressed: () => Navigator.of(context).pop(),
+                              textColor: Theme.of(context).primaryColor,
+                            ),
+                            FlatButton(
+                              child: TitleText("Install", fontSize: 15),
+                              onPressed: (){
+                                _launchURL("https://houston.apollotv.xyz/ota/${otaObject["_id"]}");
+                                Navigator.of(context).pop();
+                              },
+                              textColor: Theme.of(context).primaryColor,
+                            )
+                          ],
+                        );
+                      });
+                }else{
+                  _alreadyUpToDate();
+                }
+
+              },
+            ),
+          ) :
+            Container(),
+
+        Material(
+          color: Theme.of(context).backgroundColor,
+          child: CheckboxListTile(
+            isThreeLine: true,
+            activeColor: Theme.of(context).primaryColor,
+            value: _sourceSelection,
+            title: TitleText("Manually Select Sources"),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                "Shows a dialog with a list of discovered sources instead of automatically choosing one.",
+                style: TextStyle(),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            ),
+            onChanged: (value){
+              if (value != _sourceSelection){
+                settingsPref.saveBoolPref("sourceSelection", value).then((data){
+                  setState(() {
+                    _sourceSelection = data;
+                  });
+                });
+              }
+            },
+          ),
+        ),
+
         Material(
           color: Theme.of(context).backgroundColor,
           child: CheckboxListTile(
@@ -140,7 +271,6 @@ class OtherSettingsPageState extends SettingsPageState {
 
               if (res.statusCode == 200){
 
-                print("revoke returned: ${res.body}");
                 setState(() {
                   _traktCred = [];
                 });
@@ -175,7 +305,7 @@ class OtherSettingsPageState extends SettingsPageState {
               _trakSyncLogic(context);
             },
           ),
-        )
+        ),
 
       ],
     );
@@ -198,8 +328,6 @@ class OtherSettingsPageState extends SettingsPageState {
 
     } else {
       //continue with authentication process
-
-      print("received code: $code");
 
       /*
       _dialogGenerator(
@@ -226,8 +354,6 @@ class OtherSettingsPageState extends SettingsPageState {
       if (res.statusCode == 200){
 
         Map _data = json.decode(res.body);
-
-        print("api returned: $_data");
 
         //save the response to shared pref
         /*
@@ -347,6 +473,14 @@ class OtherSettingsPageState extends SettingsPageState {
     List<int> saveStatus = await addFavToTrakt(_traktCred, context);
 
     Navigator.pop(context);
+  }
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
 }

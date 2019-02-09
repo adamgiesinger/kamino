@@ -34,7 +34,7 @@ class MovieLayout{
                       title: TitleText(
                           'Similar Movies',
                           fontSize: 22.0,
-                          textColor: Theme.of(context).primaryColor
+                          textColor: Theme.of(context).primaryTextTheme.body1.color
                       )
                   ),
 
@@ -82,7 +82,8 @@ class MovieLayout{
                       style: TextStyle(
                         letterSpacing: 0.0,
                         fontFamily: 'GlacialIndifference',
-                        fontSize: 18.0
+                        fontSize: 18.0,
+                        color: Theme.of(context).accentTextTheme.body1.color
                       ),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,

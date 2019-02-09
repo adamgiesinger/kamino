@@ -1,10 +1,7 @@
 import 'package:kamino/animation/transition.dart';
-import 'package:kamino/util/trakt.dart';
-import 'package:kamino/view/settings/ota.dart';
 import 'package:kamino/view/settings/page_launchpad.dart';
 
 import 'dart:async';
-import 'package:kamino/view/settings/ota.dart' as ota;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -103,7 +100,7 @@ class _SettingsViewState extends State<SettingsView> {
                       subtitle: Text("Modify your $appName launchpad."),
                       leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
                       onTap: (){
-                        Navigator.push(context, SlideRightRoute(
+                        Navigator.push(context, FadeRoute(
                             builder: (context) => LaunchpadSettingsPage()
                         ));
                       },
@@ -118,7 +115,7 @@ class _SettingsViewState extends State<SettingsView> {
                       leading: new Icon(Icons.palette),
                       enabled: true,
                       onTap: (){
-                        Navigator.push(context, SlideRightRoute(
+                        Navigator.push(context, FadeRoute(
                             builder: (context) => AppearanceSettingsPage()
                         ));
                       },
@@ -133,7 +130,7 @@ class _SettingsViewState extends State<SettingsView> {
                       leading: new Icon(Icons.settings),
                       enabled: true,
                       onTap: (){
-                        Navigator.push(context, SlideRightRoute(
+                        Navigator.push(context, FadeRoute(
                             builder: (context) => OtherSettingsPage()
                         ));
                       },
@@ -145,6 +142,12 @@ class _SettingsViewState extends State<SettingsView> {
                   Material(
                     color: Theme.of(context).backgroundColor,
                     child: ListTile(
+                      title: TitleText("About $appName"),
+                      leading: new Image.asset("assets/images/logo.png", width: 36, height: 36),
+                      enabled: true,
+                      subtitle: Text("v${_packageInfo.version} (Build ${_packageInfo.buildNumber}) \u2022 ${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build"),
+                      onTap: () => (){}
+                    ),/*
                       title: TitleText("Check for updates"),
                       subtitle: Text("Check with houston for changes..."),
                       leading: new Icon(Icons.cloud_download),
@@ -152,7 +155,7 @@ class _SettingsViewState extends State<SettingsView> {
                       onTap: () async{
                         updateApp(context, false);
                       },
-                    ),
+                    ),*/
                   ),
 
                   Divider(),
@@ -174,84 +177,87 @@ class _SettingsViewState extends State<SettingsView> {
   }
 
   Widget __buildContributorCard(){
-    return Card(
-      elevation: 10.0,
-      color: Theme.of(context).cardColor,
-      child: new Container(
-          child: new Column(
-            children: <Widget>[
-              new Padding(
-                  padding: EdgeInsets.only(top: 20, bottom: 10),
-                  child: new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new Icon(Icons.accessibility),
-                        new TitleText(
-                          "  With thanks...",
-                          fontSize: 24,
-                        )
-                      ]
-                  )
-              ),
-
-              new Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: new Text(
-                      "$appName was made possible by all of these amazing people:",
-                      style: new TextStyle(
-                          fontFamily: 'GlacialIndifference',
-                          fontSize: 16
-                      )
-                  )
-              ),
-
-              new Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, bottom: 40, top: 10),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: (
-                      _contributors != null ?
-                      _contributors.map((entry) {
-                        if(entry.startsWith("##")){
-                          // TITLE entry.
-                          return new Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Padding(
-                                    padding: EdgeInsets.only(top: 20),
-                                    child: TitleText(
-                                        '${entry.replaceFirst("## ", "")}',
-                                        textAlign: TextAlign.center,
-                                        fontSize: 24
-                                    )
-                                )
-                              ]
-                          );
-                        }else{
-                          // User entry
-                          return new Row(
-                              children: <Widget>[
-                                Text(
-                                  entry,
-                                  textAlign: TextAlign.left,
-                                )
-                              ]
-                          );
-                        }
-                      }).toList()
-                          : <Widget>[
-                        new CircularProgressIndicator(
-                            valueColor: new AlwaysStoppedAnimation(
-                                Theme.of(context).primaryColor
-                            )
-                        )
-                      ]
-                  ),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      child: Card(
+        elevation: 10.0,
+        color: Theme.of(context).cardColor,
+        child: new Container(
+            child: new Column(
+              children: <Widget>[
+                new Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 10),
+                    child: new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Icon(Icons.accessibility),
+                          new TitleText(
+                            "  With thanks...",
+                            fontSize: 24,
+                          )
+                        ]
+                    )
                 ),
-              )
-            ],
-          )
+
+                new Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: new Text(
+                        "$appName was made possible by all of these amazing people:",
+                        style: new TextStyle(
+                            fontFamily: 'GlacialIndifference',
+                            fontSize: 16
+                        )
+                    )
+                ),
+
+                new Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 40, top: 10),
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: (
+                        _contributors != null ?
+                        _contributors.map((entry) {
+                          if(entry.startsWith("##")){
+                            // TITLE entry.
+                            return new Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  new Padding(
+                                      padding: EdgeInsets.only(top: 20),
+                                      child: TitleText(
+                                          '${entry.replaceFirst("## ", "")}',
+                                          textAlign: TextAlign.center,
+                                          fontSize: 24
+                                      )
+                                  )
+                                ]
+                            );
+                          }else{
+                            // User entry
+                            return new Row(
+                                children: <Widget>[
+                                  Text(
+                                    entry,
+                                    textAlign: TextAlign.left,
+                                  )
+                                ]
+                            );
+                          }
+                        }).toList()
+                            : <Widget>[
+                          new CircularProgressIndicator(
+                              valueColor: new AlwaysStoppedAnimation(
+                                  Theme.of(context).primaryColor
+                              )
+                          )
+                        ]
+                    ),
+                  ),
+                )
+              ],
+            )
+        ),
       ),
     );
   }

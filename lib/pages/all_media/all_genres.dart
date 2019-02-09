@@ -126,8 +126,6 @@ class _AllGenresState extends State<AllGenres>{
         "&include_video=false&"
         "page=${_currentPages.toString()}&with_genres=$_genreID";
 
-    print("url is... $url");
-
     http.Response _res = await http.get(url);
     _temp = jsonDecode(_res.body);
 
@@ -232,7 +230,7 @@ class _AllGenresState extends State<AllGenres>{
             onChanged: changedDropDownItem,
           ),
 
-          searchIconButton(context),
+          generateSearchIcon(context),
 
           //Add sorting functionality
           IconButton(

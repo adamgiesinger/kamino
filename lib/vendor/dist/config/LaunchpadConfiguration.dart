@@ -34,16 +34,16 @@ class LaunchpadConfiguration {
       )
     ));
 
-    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
+/*    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
       id: "xyz.apollotv.widgets.debug_card",
-      enabled: true,
+      enabled: false,
       child: LaunchpadItem(
-        title: "[DEVELOPERS] Debug Card",
+        title: "[Beta] Debug Card",
         icon: Icon(Icons.developer_mode),
         contents: DeveloperWidget(),
         wrapContent: false,
       )
-    ));
+    ));*/
 
     LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
         id: "xyz.apollotv.widgets.tmdb_now_playing",

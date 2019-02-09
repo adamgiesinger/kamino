@@ -55,7 +55,7 @@ class FavoritesPageState extends State<FavoritesPage>
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
           actions: <Widget>[
-            searchIconButton(context),
+            generateSearchIcon(context),
 
             IconButton(
               icon: Icon(Icons.sort),
@@ -139,6 +139,7 @@ class FavoritesPageState extends State<FavoritesPage>
                               placeholder: Center(
                                   child: CircularProgressIndicator()
                               ),
+                              errorWidget: new Icon(Icons.error),
                             ),
                           )),
                       Padding(
@@ -222,7 +223,7 @@ class FavoritesPageState extends State<FavoritesPage>
       ),
     );
   }
-
+  
   @override
   void dispose() {
     _tabController.dispose();
