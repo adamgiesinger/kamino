@@ -16,7 +16,8 @@ import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:kamino/view/sourceSelectionView.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:w3c_event_source/event_source.dart';
+import 'package:w_transport/vm.dart' show vmTransportPlatform;
+import 'package:w_transport/w_transport.dart' as transport;
 
 class ClawsVendorConfiguration extends VendorConfiguration {
 
@@ -61,7 +62,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   }
 
   @override
-  Future<bool> authenticate(BuildContext context) async {
+  Future<bool> authenticate({bool force = false}, BuildContext context) async {
     try {
       http.Response response = await http.get(server + 'api/v1/status');
       var status = Convert.jsonDecode(response.body);
@@ -69,13 +70,14 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       _showAuthenticationDialog(context, "The server is offline.");
       return false;
     }
+  
     final preferences = await SharedPreferences.getInstance();
 
-    if ( // Add a false condition here to force token refresh.
-    preferences.getString("token") != null &&
+    if (!force &&
+        preferences.getString("token") != null &&
         preferences.getDouble("token_set_time") != null &&
-        preferences.getDouble("token_set_time") + 1300 >=
-            (new DateTime.now().millisecondsSinceEpoch / 1000).floor()) {
+        preferences.getDouble("token_set_time") + 3600 >=
+          (new DateTime.now().millisecondsSinceEpoch / 1000).floor()) {
       // Return preferences token
       print("Re-using old token...");
       _token = preferences.getString("token");
@@ -112,6 +114,9 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// To use this, override it and call super in your new method.
   ///
   Future<void> prepare(String title, BuildContext context) async {
+    if (webSocket != null) {
+      return webSocket.close();
+    }
     showDialog(barrierDismissible: false, context: context, builder: (BuildContext ctx){
       return AlertDialog(
         title: TitleText('Searching for sources...'),
@@ -141,28 +146,53 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// auto-play or show a source selection dialog.
   ///
   Future<void> onComplete(BuildContext context, String title, List sourceList) async {
-    if(sourceList.length > 0) {
+    bool canNavigate;
+    try {
+      Navigator.of(context).mounted;
+      canNavigate = true;
+    } catch (err) {
+      canNavigate = false;
+    }
+    if (canNavigate) {
+      if(sourceList.length > 0) {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
 
-      SharedPreferences preferences = await SharedPreferences.getInstance();
+        if(preferences.getBool("sourceSelection")){
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => SourceSelectionView(
+                sourceList: sourceList,
+                title: title,
+              ))
+          );
+        } else {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) =>
+                  CPlayer(
+                      title: title,
+                      url: sourceList[0]['file']['data'],
+                      mimeType: 'video/mp4'
+                  ))
+          );
+        }
 
-      if(preferences.getBool("sourceSelection")){
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => SourceSelectionView(
-              sourceList: sourceList,
-              title: title,
-            ))
-        );
-      }else {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) =>
-                CPlayer(
-                    title: title,
-                    url: sourceList[0]['file']['data'],
-                    mimeType: 'video/mp4'
-                ))
-        );
+      }else{
+
+        // No content found.
+        showDialog(context: context, builder: (BuildContext ctx){
+          return AlertDialog(
+            title: TitleText('No Sources Found'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text("We couldn't find any sources for $title."),
+                ],
+              )
+            )
+          )
+        });
+        
       }
 
     }else{
@@ -180,18 +210,19 @@ class ClawsVendorConfiguration extends VendorConfiguration {
               ],
             ),
           ),
-          actions: <Widget>[
-            FlatButton(
-              textColor: Theme.of(context).primaryColor,
-              child: Text('Okay'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      });
+            actions: <Widget>[
+              FlatButton(
+                textColor: Theme.of(context).primaryColor,
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
 
+      }
     }
   }
 
@@ -225,9 +256,11 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     // Connect to Claws
     String clawsToken = _token;
-    String endpointURL = "${server}api/v1/search/movies?title=$title&token=$clawsToken";
+    String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws");
+    String endpointURL = "$webSocketServer?token=$clawsToken";
+    String message = '{"type": "movies", "title": "$title"}';
 
-    _openEventSource(endpointURL, context, title);
+    _openWebSocket(endpointURL, message, context, title);
   }
 
   @override
@@ -244,60 +277,118 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     // Connect to Claws
     String clawsToken = _token;
-    String endpointURL = "${server}api/v1/search/tv?title=$title&season=$seasonNumber&episode=$episodeNumber&token=$clawsToken";
-
-    _openEventSource(endpointURL, context, title, displayTitle: displayTitle);
+    String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws");
+    String endpointURL = "$webSocketServer?token=$clawsToken";
+    String data = '{"type": "tv", "title": "$title", "season": "$seasonNumber", "episode": "$episodeNumber"}';
+    
+    _openWebSocket(endpointURL, data, context, title, displayTitle: displayTitle);
   }
 
   ///
-  /// This opens an EventSource with Claws. Use this to get results from the
+  /// This opens a WebSocket connection with Claws. Use this to get results from the
   /// server.
   ///
-  _openEventSource(String url, BuildContext context, String title, {String displayTitle}){
+  _openWebSocket(String url, String data, BuildContext context, String title, {String displayTitle}) async {
     if(displayTitle == null) displayTitle = title;
-
-    // Open an event source at the API endpoint.
-    final sourceListener = new EventSource(Uri.parse(url));
+  
+    // Open a WebSocket connection at the API endpoint.
+    try {
+      webSocket = await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform);
+    } catch (ex) {
+      print(ex.toString());
+      // Just in case the app gets into a weird state. It did for me while developing. Hopefully this isn't necessary
+      final isAuthenticated = await authenticate(force: true);
+      if (isAuthenticated) {
+        try {
+          webSocket = await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform);
+        } on transport.WebSocketException {
+          // Probably should show a message to the user here...
+          print("Currently can't connect to WebSocket");
+          return;
+        }
+      }
+    }
 
     List<Future> futureList = [];
     List sourceList = [];
+    IntByRef scrapeResultsCounter = new IntByRef(0);
+    bool doneEventStatus = false;
 
     // Execute code when a new source is received.
-    StreamSubscription<MessageEvent> resultSubscription;
-    resultSubscription = sourceListener.events.listen((MessageEvent message) async {
-      var event = Convert.jsonDecode(message.data);
+    webSocket.listen((message) async {
+      var event = Convert.jsonDecode(message);
       var eventName = event["event"];
 
+      if(eventName == 'scrapeResults'){
+        scrapeResultsCounter.value--;
+        print('# of SCRAPE events to wait for: ' + scrapeResultsCounter.value.toString() + ". Is done scraping for results? " + doneEventStatus.toString());
+        if (event.containsKey('results')) {
+          List results = event['results'];
+          results.forEach((result) {
+            futureList.add(_onSourceFound(sourceList, result, context));
+          });
+        } else if (event.containsKey('error')) {
+          print(event["error"]);
+          return;
+        }
+
+        if (doneEventStatus && scrapeResultsCounter.value == 0) {
+          print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
+          print('Server done scraping, closing WebSocket');
+          webSocket.close();
+          await Future.wait(futureList);
+          print('All sources received');
+          sourceList.sort((left, right) {
+            return left['metadata']['ping'].compareTo(right['metadata']['ping']);
+          });
+
+          onComplete(context, displayTitle, sourceList);
+        }
+      }
+
       if(eventName == 'done'){
-        print('Server done scraping, closing Event Source');
-        resultSubscription.cancel();
+        doneEventStatus = true;
+        if (scrapeResultsCounter.value == 0) {
+          print('======DONE EVENT======');
+          print('Server done scraping, closing WebSocket');
+          webSocket.close();
+          await Future.wait(futureList);
+          print('All sources received');
+          sourceList.sort((left, right) {
+            return left['metadata']['ping'].compareTo(right['metadata']['ping']);
+          });
 
-        await Future.wait(futureList);
-        print('All sources received');
-        sourceList.sort((left, right) {
-          return left['metadata']['ping'].compareTo(right['metadata']['ping']);
-        });
+          onComplete(context, displayTitle, sourceList);
+        }
 
-        onComplete(context, displayTitle, sourceList);
+        return;
       }
 
       // The content can be accessed directly.
       if(eventName == 'result'){
-        futureList.add(_onSourceFound(sourceList, Convert.jsonDecode(message.data), context, resultSubscription, title: title));
+        futureList.add(_onSourceFound(sourceList, event, context));
+        return;
       }
 
       // Claws needs the request to be proxied.
       if(eventName == 'scrape'){
-        futureList.add(_onScrapeSource(event, sourceList, context, resultSubscription, title: title));
+        futureList.add(_onScrapeSource(event, webSocket, scrapeResultsCounter));
+        return;
       }
+    }, onError: (error) {
+      print("WebSocket error: " + error.toString());
+    }, onDone: () {
+      webSocket.close();
     });
+
+    webSocket.add(data);
   }
 
 
   ///***** SCRAPING EVENT HANDLERS *****///
-  _onSourceFound (List sourceList, data, BuildContext context, StreamSubscription<MessageEvent> resultSubscription, {String title, String cookie = ''}) async {
+  _onSourceFound (List sourceList, data, BuildContext context, {String cookie = ''}) async {
     var sourceFile = data["file"];
-    var sourceStreamURL = sourceFile["data"];
+    String sourceStreamURL = sourceFile["data"];
 
     if (data['metadata']['isDownload']) {
       print("Currently can't play download links");
@@ -316,6 +407,17 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       return;
     }
 
+    Map<String, String> headers = {
+      "Range": "bytes=0-125000",
+      "Cookie": cookie
+    };
+
+    if (data.containsKey('headers')) {
+      headers.addAll(Map.castFrom<String, dynamic, String, String>(data["headers"]));
+      print("Currently can't play links that need headers");
+      return;
+    }
+
     RegExp regExp = new RegExp(r"^(?:http(s)?://)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=]+$");
     if (!regExp.hasMatch(sourceStreamURL)) {
       print("URL malformed: $sourceStreamURL");
@@ -325,7 +427,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     try {
       Uri.parse(sourceStreamURL);
     }catch(ex){
-      print("Parsing failed: $sourceStreamURL");
+      print("Parsing URL failed: $sourceStreamURL");
       return;
     }
 
@@ -333,13 +435,13 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     http.Response htmlContent;
     var before = new DateTime.now().millisecondsSinceEpoch;
     try {
-      htmlContent = await http.get(sourceStreamURL, headers: {"Range": "bytes=0-125000", 'Cookie': cookie}).timeout(const Duration(seconds: 5));
+      htmlContent = await http.get(sourceStreamURL, headers: headers).timeout(const Duration(seconds: 5));
     }catch(ex){
       print("Error receiving stream data from source: " + ex.toString());
       return;
     }
     var ping = new DateTime.now().millisecondsSinceEpoch - before;
-    if (htmlContent.statusCode < 400 && htmlContent.headers["content-type"].startsWith("video")) {
+    if (htmlContent.statusCode < 400 && htmlContent.headers["content-type"].startsWith("video") || htmlContent.headers["content-type"].startsWith("application/octet-stream") || (sourceStreamURL.contains('clipwatching') && htmlContent.headers["content-type"].startsWith("text/plain"))) {
       data['metadata']['ping'] = ping;
     } else {
       print("Error: status: " + htmlContent.statusCode.toString() + " content-type: " + htmlContent.headers["content-type"] +  " receiving stream data from: $sourceStreamURL");
@@ -349,10 +451,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     sourceList.add(data);
   }
 
-  _onScrapeSource(event, List sourceList, BuildContext context, StreamSubscription<MessageEvent> resultSubscription, {String title}) async {
-    String clawsToken = _token;
-    String instanceWithoutTrailing = getServer().substring(0, getServer().length - 1);
-
+  _onScrapeSource(event, transport.WebSocket webSocket, IntByRef scrapeResultsCounter) async {
     if(event["headers"] == null){
       event["headers"] = new Map<String, String>();
     }
@@ -376,27 +475,21 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     }
 
     // POST the HTML content to Claws which will find the link.
-    http.Response response;
     try {
-      response = await http.post(
-          instanceWithoutTrailing + event["resolver"] +
-              "?token=$clawsToken",
-          headers: { "Content-Type": "application/json" },
-          body: Convert.jsonEncode({ "html": Convert.base64.encode(Convert.utf8.encode(htmlContent.body)) })
-      );
-
-      List sources = Convert.jsonDecode(response.body);
-
-      for (var i = 0; i < sources.length; i++) {
-        await _onSourceFound(sourceList, sources[i], context, resultSubscription, title: title, cookie: cookie);
-      }
-
+      String message = Convert.jsonEncode({ "type": "resolveHtml", "resolver": event["resolver"], "cookie": cookie, "html": Convert.base64.encode(Convert.utf8.encode(htmlContent.body)) });
+      webSocket.add(message);
+      scrapeResultsCounter.value++;
+      print('# of SCRAPE events to wait for ' + scrapeResultsCounter.value.toString());
     }catch(ex){
       print("Error receiving stream data from Claws: " + ex.toString());
-      return;
     }
   }
 
+}
+
+class IntByRef {
+  int value;
+  IntByRef(this.value);
 }
 
 ///******* libClaws *******///
