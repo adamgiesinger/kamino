@@ -147,7 +147,24 @@ class _SettingsViewState extends State<SettingsView> {
                       enabled: true,
                       subtitle: Text("v${_packageInfo.version} (Build ${_packageInfo.buildNumber}) \u2022 ${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build"),
                       onTap: () => (){}
-                    ),
+                    ),/*
+                      title: TitleText("Check for updates"),
+                      subtitle: Text("Check with houston for changes..."),
+                      leading: new Icon(Icons.cloud_download),
+                      enabled: true,
+                      onTap: () async{
+                        updateApp(context, false);
+                      },
+                    ),*/
+                  ),
+
+                  Divider(),
+
+                  // App Version
+                  ListTile(
+                      title: TitleText("$appName (${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build)"),
+                      subtitle: Text("v${_packageInfo.version}_build-${_packageInfo.buildNumber}"),
+                      leading: new Image.asset("assets/images/logo.png", width: 36, height: 36)
                   ),
 
                   // It's okay to remove this, but we'd appreciate it if you
