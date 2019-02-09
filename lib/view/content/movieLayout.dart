@@ -12,7 +12,15 @@ import 'package:kamino/view/content/overview.dart';
 class MovieLayout{
 
   static Widget generate(BuildContext context, MovieContentModel _data, List<int> _favsArray){
-    return Padding(
+    return new WillPopScope(
+      onWillPop: () {
+        KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+        if (appState.getVendorConfigs()[0].webSocket != null) {
+          appState.getVendorConfigs()[0].webSocket.close();
+        }
+        return new Future(() => true);
+      },
+      child: Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 30.0),
@@ -40,8 +48,9 @@ class MovieLayout{
 
 
             ]
-      ),
+          ),
         )
+      )
     );
   }
 
@@ -101,6 +110,10 @@ class MovieLayout{
               : const EdgeInsets.only(left: 5.0),
           child: InkWell(
             onTap: () {
+                KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                if (appState.getVendorConfigs()[0].webSocket != null) {
+                  appState.getVendorConfigs()[0].webSocket.close();
+                }
                 Navigator.push(
                     context,
                     MaterialPageRoute(
