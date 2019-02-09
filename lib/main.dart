@@ -1,6 +1,6 @@
 // Import flutter libraries
 import 'package:kamino/pages/all_media/all_genres.dart';
-import 'package:kamino/view/settings/ota.dart';
+import 'package:kamino/view/settings/utils/ota.dart' as OTA;
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
@@ -179,7 +179,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
   @override
   void initState() {
     ApolloVendor.getLaunchpadConfiguration().initialize();
-    updateApp(context, true);
+    OTA.updateApp(context, true);
     super.initState();
   }
 

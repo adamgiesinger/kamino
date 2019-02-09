@@ -8,6 +8,86 @@ import 'package:ota_update/ota_update.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/*
+
+Material(
+            color: Theme.of(context).backgroundColor,
+            child: ListTile(
+              title: TitleText("Check for Updates"),
+              enabled: true,
+              onTap: () async {
+
+                var otaObject = Convert.jsonDecode((await http.get("https://houston.apollotv.xyz/ota")).body);
+
+                var _alreadyUpToDate = (){
+                  showDialog(context: context,
+                      builder: (BuildContext _ctx){
+                        return AlertDialog(
+                          title: TitleText("No updates available"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text("You already have the latest version.")
+                            ],
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: TitleText("Okay", fontSize: 15),
+                              onPressed: () => Navigator.of(context).pop(),
+                              textColor: Theme.of(context).primaryColor,
+                            )
+                          ],
+                        );
+                      });
+                };
+
+                if(otaObject["latest"] == null){
+                  _alreadyUpToDate();
+                  return;
+                }
+
+                otaObject = otaObject["latest"];
+
+                if(int.parse(otaObject["buildNumber"]) > int.parse(_packageInfo.buildNumber)){
+                  showDialog(context: context,
+                      builder: (BuildContext _ctx){
+                        return AlertDialog(
+                          title: TitleText("New Update"),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              TitleText(otaObject["title"]),
+                              Container(padding: EdgeInsets.symmetric(vertical: 10)),
+                              Text(otaObject["changelog"])
+                            ],
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: TitleText("Cancel", fontSize: 15),
+                              onPressed: () => Navigator.of(context).pop(),
+                              textColor: Theme.of(context).primaryColor,
+                            ),
+                            FlatButton(
+                              child: TitleText("Install", fontSize: 15),
+                              onPressed: (){
+                                _launchURL("https://houston.apollotv.xyz/ota/${otaObject["_id"]}");
+                                Navigator.of(context).pop();
+                              },
+                              textColor: Theme.of(context).primaryColor,
+                            )
+                          ],
+                        );
+                      });
+                }else{
+                  _alreadyUpToDate();
+                }
+
+              },
+            ),
+          )
+
+ */
+
 Future<Map> checkUpdate(BuildContext context, bool dismissSnackbar) async {
   //get the build info
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
