@@ -300,6 +300,8 @@ Future<String> updateDatabase(Map payload) async {
   //check to see if the item is already in the database
   //if not get info from tmdb and write to the database
 
+  var callTime = DateTime.now();
+
   //processing the tv shows
   for (int i = 0; i < payload["shows"]["tmdb"].length; i++) {
     if (!_favIDs.contains(payload["shows"]["tmdb"][i])) {
@@ -433,9 +435,18 @@ Future<String> updateDatabase(Map payload) async {
     }
   }
 
+  print("api calls took: "+callTime.difference(DateTime.now()).inSeconds.toString());
+
   if (collections.length > 0) {
+    print("writing ${collections.length} items to the database");
+    var startTime = DateTime.now();
+    print(startTime);
+    print("items being written"+collections.toString());
     String writeStatus = await databaseHelper.bulkSaveFavorites(collections);
     await Future.delayed(new Duration(seconds: 2));
+
+    var difference = startTime.difference(DateTime.now()).inSeconds;
+    print("writing took: ${difference}");
   }
 
   return "Done";
@@ -572,6 +583,62 @@ Future<String> getWatchHistories(BuildContext context) async {
   return "done";
 }
 
-Future<String> sendWatchHistories(BuildContext context) async{
-  
+Future<int> addToWatchHistory(List<String> traktCred, BuildContext context,
+    String mediaType, String title, String year, int id, [int seasonNumber, int episodeNumber]) async{
+
+  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  //List<String> traktMediaType = ["movies", "shows"];
+  String url = "https://api.trakt.tv/sync/history";
+
+  Map body = mediaType != "tv" ? {
+    "movies": [
+      {
+        "watched_at": DateTime.now().toUtc().toString(),
+        "title": title,
+        "year": year,
+        "ids": {
+          "tmdb": id
+        }
+      }
+    ]
+  } : {
+    "shows": [
+      {
+        "watched_at": DateTime.now().toUtc().toString(),
+        "title": title,
+        "year": year,
+        "ids": {
+          "tmdb": id
+        },
+        "seasons": [
+          {
+            "number": seasonNumber,
+            "episodes": [
+              {
+                "watched_at": DateTime.now().toUtc().toString(),
+                "number": episodeNumber
+              }
+            ],
+          }
+        ]
+      }
+    ]
+  };
+
+  final res = await http.post(url,
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
+        'Content-Type': 'application/json',
+        'trakt-api-version': '2',
+        'trakt-api-key': appState.getVendorConfigs()[0].traktCredentials.id
+      },
+      body: json.encode(body)
+  );
+
+  print("received code: ${res.statusCode}");
+
+  print("message: ${res.body}");
+
+  return res.statusCode;
+
 }
