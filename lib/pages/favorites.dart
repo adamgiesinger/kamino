@@ -139,6 +139,7 @@ class FavoritesPageState extends State<FavoritesPage>
                               placeholder: Center(
                                   child: CircularProgressIndicator()
                               ),
+                              errorWidget: new Icon(Icons.error),
                             ),
                           )),
                       Padding(
@@ -222,7 +223,7 @@ class FavoritesPageState extends State<FavoritesPage>
       ),
     );
   }
-
+  
   @override
   void dispose() {
     _tabController.dispose();
