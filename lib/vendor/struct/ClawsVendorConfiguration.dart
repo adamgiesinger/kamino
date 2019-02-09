@@ -9,8 +9,11 @@ import 'package:http/http.dart' as http;
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
+import 'package:kamino/view/sourceSelectionView.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w3c_event_source/event_source.dart';
@@ -58,13 +61,20 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   }
 
   @override
-  Future<bool> authenticate() async {
+  Future<bool> authenticate(BuildContext context) async {
+    try {
+      http.Response response = await http.get(server + 'api/v1/status');
+      var status = Convert.jsonDecode(response.body);
+    }catch(ex){
+      _showAuthenticationDialog(context, "The server is offline.");
+      return false;
+    }
     final preferences = await SharedPreferences.getInstance();
 
     if ( // Add a false condition here to force token refresh.
     preferences.getString("token") != null &&
         preferences.getDouble("token_set_time") != null &&
-        preferences.getDouble("token_set_time") + 3600 >=
+        preferences.getDouble("token_set_time") + 1300 >=
             (new DateTime.now().millisecondsSinceEpoch / 1000).floor()) {
       // Return preferences token
       print("Re-using old token...");
@@ -89,8 +99,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
         return true;
       } else {
-        print("Unable to authenticate.");
-
+        _showAuthenticationDialog(context, tokenResponse["message"]);
         return false;
       }
     }
@@ -103,7 +112,28 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// To use this, override it and call super in your new method.
   ///
   Future<void> prepare(String title, BuildContext context) async {
-
+    showDialog(barrierDismissible: false, context: context, builder: (BuildContext ctx){
+      return AlertDialog(
+        title: TitleText('Searching for sources...'),
+        content: SingleChildScrollView(
+          child:
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Container(
+                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
+                    child: new CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor
+                      ),
+                    )
+                ),
+                Center(child: Text("Please wait..."))
+              ],
+            ),
+        ),
+      );
+    });
   }
 
   ///
@@ -113,17 +143,31 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   Future<void> onComplete(BuildContext context, String title, List sourceList) async {
     if(sourceList.length > 0) {
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>
-              CPlayer(
-                  title: title,
-                  url: sourceList[0]['file']['data'],
-                  mimeType: 'video/mp4'
-              ))
-      );
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+
+      if(preferences.getBool("sourceSelection")){
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SourceSelectionView(
+              sourceList: sourceList,
+              title: title,
+            ))
+        );
+      }else {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) =>
+                CPlayer(
+                    title: title,
+                    url: sourceList[0]['file']['data'],
+                    mimeType: 'video/mp4'
+                ))
+        );
+      }
 
     }else{
+
+      Navigator.of(context).pop();
 
       // No content found.
       showDialog(context: context, builder: (BuildContext ctx){
@@ -151,11 +195,33 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     }
   }
 
+  Future<void> _showAuthenticationDialog(BuildContext context, String reason) async {
+    Navigator.of(context).pop();
+    Interface.showAlert(
+        context,
+        TitleText("Unable to connect..."), // Title
+        <Widget>[
+          Text(reason)
+        ],
+        true,
+        [
+          new FlatButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+              child: Text("Close"),
+              textColor: Theme.of(context).primaryColor,
+          )
+        ]
+    );
+  }
+
   @override
   Future<void> playMovie(String title, BuildContext context) async {
     await prepare(title, context);
 
-    await authenticate();
+    var authenticationStatus = await authenticate(context);
+    if(!authenticationStatus) return;
 
     // Connect to Claws
     String clawsToken = _token;
@@ -169,22 +235,27 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     await prepare(title, context);
 
     // Format title
+    var displayTitle = "$title - ${seasonNumber}x$episodeNumber";
     var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate));
     title = "$title ($year)";
-    await authenticate();
+
+    var authenticationStatus = await authenticate(context);
+    if(!authenticationStatus) return;
 
     // Connect to Claws
     String clawsToken = _token;
     String endpointURL = "${server}api/v1/search/tv?title=$title&season=$seasonNumber&episode=$episodeNumber&token=$clawsToken";
 
-    _openEventSource(endpointURL, context, title);
+    _openEventSource(endpointURL, context, title, displayTitle: displayTitle);
   }
 
   ///
   /// This opens an EventSource with Claws. Use this to get results from the
   /// server.
   ///
-  _openEventSource(String url, BuildContext context, String title){
+  _openEventSource(String url, BuildContext context, String title, {String displayTitle}){
+    if(displayTitle == null) displayTitle = title;
+
     // Open an event source at the API endpoint.
     final sourceListener = new EventSource(Uri.parse(url));
 
@@ -207,7 +278,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
           return left['metadata']['ping'].compareTo(right['metadata']['ping']);
         });
 
-        onComplete(context, title, sourceList);
+        onComplete(context, displayTitle, sourceList);
       }
 
       // The content can be accessed directly.

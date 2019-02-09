@@ -126,7 +126,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
           centerTitle: true,
           backgroundColor: Theme.of(context).cardColor,
           actions: <Widget>[
-            searchIconButton(context),
+            generateSearchIcon(context),
           ],
         ),
         body: RefreshIndicator(

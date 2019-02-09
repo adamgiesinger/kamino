@@ -55,7 +55,7 @@ class FavoritesPageState extends State<FavoritesPage>
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
           actions: <Widget>[
-            searchIconButton(context),
+            generateSearchIcon(context),
 
             IconButton(
               icon: Icon(Icons.sort),

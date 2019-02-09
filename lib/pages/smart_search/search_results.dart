@@ -46,8 +46,6 @@ class _SearchResultState extends State<SearchResult> {
         "multi${tmdb.defaultArguments}&"
         "query=${query.replaceAll(" ", "+")}&page=$pageNumber&include_adult=false";
 
-    print("url is... $url");
-
     http.Response _res = await http.get(url);
     _temp = jsonDecode(_res.body);
 

@@ -80,8 +80,6 @@ class _GenreViewState extends State<GenreView>{
         "&include_video=false&"
         "page=${_currentPages.toString()}&with_genres=$_genreID";
 
-    print("url is... $url");
-
     http.Response _res = await http.get(url);
     _temp = jsonDecode(_res.body);
 
@@ -161,7 +159,7 @@ class _GenreViewState extends State<GenreView>{
             elevation: 5.0,
             actions: <Widget>[
 
-              searchIconButton(context),
+              generateSearchIcon(context),
 
               //Add sorting functionality
               IconButton(

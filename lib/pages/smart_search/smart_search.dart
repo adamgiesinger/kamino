@@ -32,7 +32,6 @@ class SmartSearch extends SearchDelegate<String> {
         "multi${tmdb.defaultArguments}&"
         "query=$criteria&page=1&include_adult=false";
 
-    print(url);
     http.Response res = await http.get(url);
 
     Map results = jsonDecode(res.body);
@@ -176,7 +175,11 @@ class SmartSearch extends SearchDelegate<String> {
               return Container();
             case ConnectionState.active:
             case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).primaryColor
+                ),
+              ));
             case ConnectionState.done:
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -217,7 +220,7 @@ class SmartSearch extends SearchDelegate<String> {
                         fontFamily: ("GlacialIndifference"),
                         fontSize: 19.0,
                         fontWeight: FontWeight.normal,
-                        color: Colors.white),
+                        color: Theme.of(context).primaryTextTheme.body1.color),
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -252,9 +255,11 @@ class SmartSearch extends SearchDelegate<String> {
                 case ConnectionState.active:
                 case ConnectionState.waiting:
                   return Center(
-                      child: CircularProgressIndicator(
-                    backgroundColor: Colors.white,
-                  ));
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).primaryColor
+                      ),
+                    ));
                 case ConnectionState.done:
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');

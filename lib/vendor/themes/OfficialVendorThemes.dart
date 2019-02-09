@@ -35,27 +35,28 @@ class _DarkVendorTheme extends ThemeConfiguration {
     var _cardColor = Color(0xFF2F3136);
 
     return ThemeData(
-      brightness: Brightness.dark,
-      primaryColor: primaryColor,
-      accentColor: _secondaryColor,
-      highlightColor: _highlightColor,
-      backgroundColor: _backgroundColor,
-      cursorColor: primaryColor,
-      textSelectionHandleColor: primaryColor,
-      buttonColor: primaryColor,
-      dialogTheme: DialogTheme(
+        brightness: Brightness.dark,
+        primaryColorBrightness: Brightness.dark,
+        primaryColor: primaryColor,
+        accentColor: _secondaryColor,
+        highlightColor: _highlightColor,
+        backgroundColor: _backgroundColor,
+        cursorColor: primaryColor,
+        textSelectionHandleColor: primaryColor,
+        buttonColor: primaryColor,
+        dialogTheme: DialogTheme(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5)
-          )
-      ),
-      dialogBackgroundColor: _backgroundColor,
-      buttonTheme: ButtonThemeData(
-          buttonColor: primaryColor
-      ),
-      cardColor: _cardColor,
-      bottomAppBarColor: _backgroundColor,
-      scaffoldBackgroundColor: _cardColor,
-      canvasColor: _backgroundColor
+          ),
+        ),
+        dialogBackgroundColor: _cardColor,
+        buttonTheme: ButtonThemeData(
+            buttonColor: primaryColor
+        ),
+        cardColor: _cardColor,
+        bottomAppBarColor: _backgroundColor,
+        scaffoldBackgroundColor: _cardColor,
+        canvasColor: _backgroundColor
     );
   }
 
@@ -87,6 +88,8 @@ class _LightVendorTheme extends ThemeConfiguration {
 
     return ThemeData(
       brightness: Brightness.light,
+      primaryColorBrightness: Brightness.light,
+      accentColorBrightness: Brightness.dark,
       primaryColor: primaryColor,
       accentColor: _secondaryColor,
       highlightColor: _highlightColor,
@@ -107,8 +110,6 @@ class _LightVendorTheme extends ThemeConfiguration {
       cardColor: _cardColor,
       bottomAppBarColor: _backgroundColor,
       scaffoldBackgroundColor: _cardColor,
-      primaryColorBrightness: Brightness.light,
-      accentColorBrightness: Brightness.dark,
       canvasColor: _backgroundColor
     );
   }
@@ -141,6 +142,7 @@ class _BlackVendorTheme extends ThemeConfiguration {
 
     return ThemeData(
       brightness: Brightness.dark,
+      primaryColorBrightness: Brightness.dark,
       primaryColor: primaryColor,
       accentColor: _secondaryColor,
       highlightColor: _highlightColor,

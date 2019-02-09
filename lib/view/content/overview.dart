@@ -50,7 +50,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   List<int> _favIDs = [];
   String _contentType;
 
-  Widget _favIconGenerator(bool state){
+  Widget _generateFavoriteIcon(bool state){
 
     Widget _result;
 
@@ -65,7 +65,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       _result = Icon(
         Icons.favorite_border,
-        color: Colors.white,
+        color: Theme.of(context).primaryTextTheme.body1.color,
       );
     }
 
@@ -77,7 +77,6 @@ class _ContentOverviewState extends State<ContentOverview> {
   void initState() {
 
     //check if the show is a favourite
-    print("startup id is ${widget.contentId}");
 
     widget.contentType == ContentType.MOVIE ?
     _contentType = "movie" : _contentType = "tv";
@@ -119,8 +118,6 @@ class _ContentOverviewState extends State<ContentOverview> {
         _longTitle = titlePainter.didExceedMaxLines;
       });
     });
-
-    print("you favourited $_favIDs");
 
     super.initState();
   }
@@ -245,10 +242,10 @@ class _ContentOverviewState extends State<ContentOverview> {
                     backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
 
-                      searchIconButton(context),
+                      generateSearchIcon(context),
 
                       IconButton(
-                        icon: _favIconGenerator(_favState),
+                        icon: _generateFavoriteIcon(_favState),
                         onPressed: (){
                           _favButtonLogic(context);
                         },
@@ -530,7 +527,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                       title: TitleText(
                         'Synopsis',
                         fontSize: 22.0,
-                        textColor: Colors.white
+                        textColor: Theme.of(context).primaryTextTheme.body1.color
                       )
                   ),
                   Container(

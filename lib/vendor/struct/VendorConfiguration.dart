@@ -38,7 +38,7 @@ abstract class VendorConfiguration {
   /// This method returns a [bool] to determine whether authentication was
   /// successful.
   ///
-  Future<bool> authenticate();
+  Future<bool> authenticate(BuildContext context);
 
   Future<void> playMovie(String title, BuildContext context);
   Future<void> playTVShow(
