@@ -9,8 +9,6 @@ abstract class VendorConfiguration {
 
   final String name;
 
-  transport.WebSocket webSocket;
-
   ///
   /// A VendorConfiguration should be used to change the default settings in the
   /// ApolloTV app. Simply create your own class and extend [VendorConfiguration].
@@ -41,7 +39,7 @@ abstract class VendorConfiguration {
   /// This method returns a [bool] to determine whether authentication was
   /// successful.
   ///
-  Future<bool> authenticate(BuildContext context);
+  Future<bool> authenticate(BuildContext context, {bool force = false});
 
   Future<void> playMovie(String title, BuildContext context);
   Future<void> playTVShow(
@@ -51,6 +49,8 @@ abstract class VendorConfiguration {
       int episodeNumber,
       BuildContext context
     );
+
+  Future<void> cancel();
 
   String getTMDBKey(){
     if(tmdbKey != null){

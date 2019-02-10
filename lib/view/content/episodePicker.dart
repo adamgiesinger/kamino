@@ -66,9 +66,8 @@ class _EpisodePickerState extends State<EpisodePicker> {
     return new WillPopScope(
       onWillPop: () {
         KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-        if (appState.getVendorConfigs()[0].webSocket != null) {
-          appState.getVendorConfigs()[0].webSocket.close();
-        }
+        appState.getVendorConfigs()[0].cancel();
+
         return new Future(() => true);
       },
       child: Scaffold(

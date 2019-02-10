@@ -15,9 +15,8 @@ class MovieLayout{
     return new WillPopScope(
       onWillPop: () {
         KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-        if (appState.getVendorConfigs()[0].webSocket != null) {
-          appState.getVendorConfigs()[0].webSocket.close();
-        }
+        appState.getVendorConfigs()[0].cancel();
+
         return new Future(() => true);
       },
       child: Padding(
@@ -111,9 +110,8 @@ class MovieLayout{
           child: InkWell(
             onTap: () {
                 KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                if (appState.getVendorConfigs()[0].webSocket != null) {
-                  appState.getVendorConfigs()[0].webSocket.close();
-                }
+                appState.getVendorConfigs()[0].cancel();
+
                 Navigator.push(
                     context,
                     MaterialPageRoute(

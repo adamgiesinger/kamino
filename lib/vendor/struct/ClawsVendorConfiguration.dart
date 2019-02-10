@@ -9,10 +9,10 @@ import 'package:http/http.dart' as http;
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
+import 'package:kamino/vendor/ui/SearchingSourcesDialog.dart';
 import 'package:kamino/view/sourceSelectionView.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +20,8 @@ import 'package:w_transport/vm.dart' show vmTransportPlatform;
 import 'package:w_transport/w_transport.dart' as transport;
 
 class ClawsVendorConfiguration extends VendorConfiguration {
+
+  ConnectionNegotiator _negotiator;
 
   // Settings
   static const bool ALLOW_SOURCE_SELECTION = true;
@@ -62,22 +64,22 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   }
 
   @override
-  Future<bool> authenticate({bool force = false}, BuildContext context) async {
+  Future<bool> authenticate(BuildContext context, {bool force = false}) async {
     try {
       http.Response response = await http.get(server + 'api/v1/status');
       var status = Convert.jsonDecode(response.body);
     }catch(ex){
-      _showAuthenticationDialog(context, "The server is offline.");
+      _showAuthenticationFailureDialog(context, "The server is offline.");
       return false;
     }
-  
+
     final preferences = await SharedPreferences.getInstance();
 
     if (!force &&
         preferences.getString("token") != null &&
         preferences.getDouble("token_set_time") != null &&
         preferences.getDouble("token_set_time") + 3600 >=
-          (new DateTime.now().millisecondsSinceEpoch / 1000).floor()) {
+            (new DateTime.now().millisecondsSinceEpoch / 1000).floor()) {
       // Return preferences token
       print("Re-using old token...");
       _token = preferences.getString("token");
@@ -101,7 +103,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
         return true;
       } else {
-        _showAuthenticationDialog(context, tokenResponse["message"]);
+        _showAuthenticationFailureDialog(context, tokenResponse["message"]);
         return false;
       }
     }
@@ -114,30 +116,11 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// To use this, override it and call super in your new method.
   ///
   Future<void> prepare(String title, BuildContext context) async {
-    if (webSocket != null) {
-      return webSocket.close();
-    }
+    if (_negotiator != null && !_negotiator.inClosedState) _negotiator.close();
+    _negotiator = new ConnectionNegotiator();
+
     showDialog(barrierDismissible: false, context: context, builder: (BuildContext ctx){
-      return AlertDialog(
-        title: TitleText('Searching for sources...'),
-        content: SingleChildScrollView(
-          child:
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
-                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
-                    child: new CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor
-                      ),
-                    )
-                ),
-                Center(child: Text("Please wait..."))
-              ],
-            ),
-        ),
-      );
+      return SearchingSourcesDialog();
     });
   }
 
@@ -146,87 +129,65 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// auto-play or show a source selection dialog.
   ///
   Future<void> onComplete(BuildContext context, String title, List sourceList) async {
-    bool canNavigate;
-    try {
-      Navigator.of(context).mounted;
-      canNavigate = true;
-    } catch (err) {
-      canNavigate = false;
-    }
-    if (canNavigate) {
-      if(sourceList.length > 0) {
-        SharedPreferences preferences = await SharedPreferences.getInstance();
+    Navigator.of(context).pop();
 
-        if(preferences.getBool("sourceSelection")){
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => SourceSelectionView(
-                sourceList: sourceList,
-                title: title,
-              ))
-          );
-        } else {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) =>
-                  CPlayer(
-                      title: title,
-                      url: sourceList[0]['file']['data'],
-                      mimeType: 'video/mp4'
-                  ))
-          );
-        }
+    if(sourceList.length > 0) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
 
-      }else{
-
-        // No content found.
-        showDialog(context: context, builder: (BuildContext ctx){
-          return AlertDialog(
-            title: TitleText('No Sources Found'),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text("We couldn't find any sources for $title."),
-                ],
-              )
-            )
-          )
-        });
-        
+      if(preferences.getBool("sourceSelection")){
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => SourceSelectionView(
+              sourceList: sourceList,
+              title: title,
+            ))
+        );
+      } else {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) =>
+                CPlayer(
+                    title: title,
+                    url: sourceList[0]['file']['data'],
+                    mimeType: 'video/mp4'
+                ))
+        );
       }
 
     }else{
-
-      Navigator.of(context).pop();
 
       // No content found.
       showDialog(context: context, builder: (BuildContext ctx){
         return AlertDialog(
           title: TitleText('No Sources Found'),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text("We couldn't find any sources for $title."),
-              ],
-            ),
+              child: ListBody(
+                children: <Widget>[
+                  Text("We couldn't find any sources for $title."),
+                ],
+              )
           ),
-            actions: <Widget>[
-              FlatButton(
-                textColor: Theme.of(context).primaryColor,
-                child: Text('Okay'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+          actions: <Widget>[
+            FlatButton(
+              textColor: Theme.of(context).primaryColor,
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
 
-      }
+      });
+
     }
   }
 
-  Future<void> _showAuthenticationDialog(BuildContext context, String reason) async {
+  Future<void> _showAuthenticationFailureDialog(BuildContext context, String reason) async {
+    if(reason == null){
+      reason = "Unable to determine reason...";
+    }
+
     Navigator.of(context).pop();
     Interface.showAlert(
         context,
@@ -237,11 +198,11 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         true,
         [
           new FlatButton(
-              onPressed: (){
-                Navigator.of(context).pop();
-              },
-              child: Text("Close"),
-              textColor: Theme.of(context).primaryColor,
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+            child: Text("Close"),
+            textColor: Theme.of(context).primaryColor,
           )
         ]
     );
@@ -256,7 +217,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     // Connect to Claws
     String clawsToken = _token;
-    String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws");
+    String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
     String message = '{"type": "movies", "title": "$title"}';
 
@@ -277,10 +238,10 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     // Connect to Claws
     String clawsToken = _token;
-    String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws");
+    String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
     String data = '{"type": "tv", "title": "$title", "season": "$seasonNumber", "episode": "$episodeNumber"}';
-    
+
     _openWebSocket(endpointURL, data, context, title, displayTitle: displayTitle);
   }
 
@@ -290,17 +251,17 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   ///
   _openWebSocket(String url, String data, BuildContext context, String title, {String displayTitle}) async {
     if(displayTitle == null) displayTitle = title;
-  
+
     // Open a WebSocket connection at the API endpoint.
     try {
-      webSocket = await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform);
+      _negotiator.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform));
     } catch (ex) {
       print(ex.toString());
       // Just in case the app gets into a weird state. It did for me while developing. Hopefully this isn't necessary
-      final isAuthenticated = await authenticate(force: true);
+      final isAuthenticated = await authenticate(context, force: true);
       if (isAuthenticated) {
         try {
-          webSocket = await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform);
+          _negotiator.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform));
         } on transport.WebSocketException {
           // Probably should show a message to the user here...
           print("Currently can't connect to WebSocket");
@@ -314,8 +275,10 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     IntByRef scrapeResultsCounter = new IntByRef(0);
     bool doneEventStatus = false;
 
+    if(_negotiator.wasCancelled) return;
+
     // Execute code when a new source is received.
-    webSocket.listen((message) async {
+    _negotiator.socket.listen((message) async {
       var event = Convert.jsonDecode(message);
       var eventName = event["event"];
 
@@ -335,7 +298,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         if (doneEventStatus && scrapeResultsCounter.value == 0) {
           print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
           print('Server done scraping, closing WebSocket');
-          webSocket.close();
+          _negotiator.close();
           await Future.wait(futureList);
           print('All sources received');
           sourceList.sort((left, right) {
@@ -351,7 +314,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         if (scrapeResultsCounter.value == 0) {
           print('======DONE EVENT======');
           print('Server done scraping, closing WebSocket');
-          webSocket.close();
+          _negotiator.close();
           await Future.wait(futureList);
           print('All sources received');
           sourceList.sort((left, right) {
@@ -372,16 +335,16 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
       // Claws needs the request to be proxied.
       if(eventName == 'scrape'){
-        futureList.add(_onScrapeSource(event, webSocket, scrapeResultsCounter));
+        futureList.add(_onScrapeSource(event, _negotiator.socket, scrapeResultsCounter));
         return;
       }
     }, onError: (error) {
       print("WebSocket error: " + error.toString());
     }, onDone: () {
-      webSocket.close();
+      _negotiator.close();
     });
 
-    webSocket.add(data);
+    _negotiator.socket.add(data);
   }
 
 
@@ -485,6 +448,11 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     }
   }
 
+  @override
+  Future<void> cancel() async {
+    if(_negotiator != null) _negotiator.cancel();
+  }
+
 }
 
 class IntByRef {
@@ -580,6 +548,55 @@ class LoadingWidgetState extends State<LoadingWidget> {
   @override
   Widget build(BuildContext context) {
     return Container();
+  }
+
+}
+
+class ConnectionNegotiator {
+
+  transport.WebSocket _webSocket;
+  int _connectionStatus;
+
+  ConnectionNegotiator(){
+    // -1 -> Unused connection
+    _connectionStatus = -1;
+  }
+
+  transport.WebSocket get socket => _webSocket;
+
+  int get status => _connectionStatus;
+
+  bool get inUnusedState => status == -1;
+  bool get inClosedState => status == 0 || status == 449;
+  bool get wasCancelled => status == 449;
+
+  ConnectionNegotiator open(transport.WebSocket socket) {
+    if(wasCancelled) return null;
+    if (!inUnusedState) throw new Exception(
+        "Tried to open cancelled or already open connection!");
+
+    _connectionStatus = 1;
+    _webSocket = socket;
+
+    return this;
+  }
+
+  void close(){
+    // Ignore if already in closed state.
+    if(inClosedState || inUnusedState) return;
+
+    // Connection closed.
+    _connectionStatus = 0;
+    if(_webSocket != null) _webSocket.close();
+  }
+
+  void cancel(){
+    // Ignore if already in closed state.
+    if(inClosedState) return;
+
+    // Connection cancelled.
+    _connectionStatus = 449;
+    if(_webSocket != null) _webSocket.close(4449, "Client terminated connection.");
   }
 
 }
