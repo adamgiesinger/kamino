@@ -105,6 +105,11 @@ class FavoritesPageState extends State<FavoritesPage>
                 crossAxisCount: 3, childAspectRatio: 0.76),
             itemCount: mediaType == "tv" ? _favTV.length : _favMovie.length,
             itemBuilder: (BuildContext context, int index) {
+              var _favItem =
+                  (mediaType == "tv"
+                      ? _favTV[index]
+                      : _favMovie[index]);
+
               return Container(
                 child: InkWell(
                   onTap: () {
@@ -129,10 +134,7 @@ class FavoritesPageState extends State<FavoritesPage>
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(5.0),
                             child: CachedNetworkImage(
-                              imageUrl: image_cdn +
-                                  (mediaType == "tv"
-                                      ? _favTV[index]["imageUrl"]
-                                      : _favMovie[index]["imageUrl"]),
+                              imageUrl: _favItem["imageUrl"] != null ? image_cdn + _favItem["imageUrl"] : "",
                               height: 725.0,
                               width: 500.0,
                               fit: BoxFit.cover,

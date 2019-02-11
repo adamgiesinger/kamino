@@ -172,6 +172,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                   child: new Text(
                                     "Play Episode",
                                     style: TextStyle(
+                                        color: Theme.of(context).accentTextTheme.body1.color,
                                         fontSize: 16,
                                         fontFamily: 'GlacialIndifference'
                                     ),

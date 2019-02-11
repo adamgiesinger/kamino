@@ -37,13 +37,30 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
           itemBuilder: (BuildContext ctx, int index){
             var source = widget.sourceList[index];
 
+            print(source);
+
+            String qualityInfo;
+            if(source["metadata"]["quality"] != null) qualityInfo = source["metadata"]["quality"];
+            if(source["metadata"]["extended"] != null){
+              var extendedMeta = source["metadata"]["extended"]["streams"][0];
+              var resolution = extendedMeta["coded_height"];
+
+              if(resolution < 360) qualityInfo = "[LQ]";
+              if(resolution >= 360) qualityInfo = "[SD]";
+              if(resolution > 720) qualityInfo = "[HD]";
+              if(resolution > 1080) qualityInfo = "[FHD]";
+              if(resolution > 2160) qualityInfo = "[4K]";
+
+              qualityInfo += " [" + extendedMeta["codec_name"].toUpperCase() + "]";
+            }
+
             return Material(
               color: Theme.of(context).backgroundColor,
               child: ListTile(
                 enabled: true,
                 isThreeLine: true,
 
-                title: TitleText("${source["metadata"]["provider"]} • ${source["metadata"]["ping"]}ms"),
+                title: TitleText((qualityInfo != null ? qualityInfo + " • " : "") + "${source["metadata"]["source"]} (${source["metadata"]["provider"]}) • ${source["metadata"]["ping"]}ms"),
                 subtitle: Text(
                     source["file"]["data"],
                   maxLines: 2,

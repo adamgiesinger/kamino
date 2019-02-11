@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:kamino/api/tmdb.dart' as tmdb;
@@ -11,6 +12,10 @@ import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 class TraktAuth extends StatefulWidget {
+
+  final BuildContext context;
+
+  TraktAuth({ this.context });
 
   @override
   _TraktAuthState createState() => new _TraktAuthState();
@@ -30,13 +35,10 @@ class _TraktAuthState extends State<TraktAuth> {
 
     // Add a listener to on url changed
     _onUrlChanged = flutterWebviewPlugin.onUrlChanged.listen((String url) {
-      if (mounted) {
-        if (url.contains("native?code=")) {
-          String authCode = url.split("code=")[1].replaceAll("#", "");
-
-          //return to settings
-          Navigator.pop(context, authCode);
-        }
+      if (mounted && url.contains("native?code=")) {
+        _onUrlChanged.cancel();
+        String authCode = url.split("code=")[1].replaceAll("#", "");
+        Navigator.of(this.context).pop(authCode);
       }
     });
 
@@ -68,9 +70,7 @@ class _TraktAuthState extends State<TraktAuth> {
 
   @override
   void dispose() {
-    _onUrlChanged.cancel();
     flutterWebviewPlugin.dispose();
-
     super.dispose();
   }
 }
@@ -641,4 +641,187 @@ Future<int> addToWatchHistory(List<String> traktCred, BuildContext context,
 
   return res.statusCode;
 
+}
+
+void _dialogGenerator(String title, String body, BuildContext context, bool dismiss){
+  showDialog(
+      context: context,
+      barrierDismissible: dismiss,
+      builder: (_){
+        return AlertDialog(
+          title: TitleText(title),
+          content: Text(body,
+            style: TextStyle(
+                color: Colors.white
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: TitleText("Okay", textColor: Colors.white)
+              ),
+            )
+          ],
+          //backgroundColor: Theme.of(context).cardColor,
+        );
+      }
+  );
+}
+
+//Trakt authentication logic
+Future<List<String>> authUser(BuildContext context, List<String> _traktCred, String code) async {
+  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
+  if (code == null){
+    //Trakt auth has failed
+
+    _dialogGenerator(
+        "Authentication Unsuccessful",
+        "$appName was unable to authenticate with Trakt.tv.",
+        context,
+        true
+    );
+    return [];
+
+  } else {
+    //continue with authentication process
+
+    /*
+      _dialogGenerator(
+          "Processing",
+          "Authenticating Trakt credentials, please wait...",
+          context,
+          false
+      );
+      */
+
+    //exchange the code for an access token
+    String url = "https://api.trakt.tv/oauth/token";
+
+    Map _body = {
+      "code": code,
+      "client_id": appState.getVendorConfigs()[0].traktCredentials.id,
+      "client_secret": appState.getVendorConfigs()[0].traktCredentials.secret,
+      "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
+      "grant_type": "authorization_code"
+    };
+
+    Response res = await post(url, body: _body);
+
+    if (res.statusCode == 200){
+
+      Map _data = json.decode(res.body);
+
+      //save the response to shared pref
+      /*
+
+        key - trakt Credentials
+        0 - access token
+        1 - refresh token
+        2 - expiry date
+        */
+
+      List<String> temp = [
+        _data["access_token"],
+        _data["refresh_token"],
+
+        //date in 3 months, used to determine if token needs to be refreshed
+        DateTime.now().add(new Duration(days: 84)).toString()
+      ];
+
+      settingsPref.saveListPref("traktCredentials", temp);
+
+      _dialogGenerator("Authentication Successful", "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)", context, true);
+      return temp;
+
+    } else {
+
+      //show error message
+      _dialogGenerator(
+          "Authentication Failed",
+          "Error ${res.statusCode}\nPlease report this error.",
+          context,
+          true
+      );
+      return [];
+
+    }
+  }
+}
+
+Future<bool> deauthUser(BuildContext context, _traktCred) async {
+  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
+  Map body = {
+    'token': _traktCred[0],
+    'client_id': appState.getVendorConfigs()[0].traktCredentials.id,
+    'client_secret': appState.getVendorConfigs()[0].traktCredentials.secret
+  };
+
+  String url = "https://api.trakt.tv/oauth/revoke";
+  Response res = await post(url, body: body);
+
+  if (res.statusCode == 200){
+    settingsPref.saveListPref("traktCredentials", []);
+
+    Scaffold.of(context).showSnackBar(
+        new SnackBar(content: Text("Trakt successfully disconnected!",
+          style: TextStyle(
+              color: Colors.white,
+              fontFamily: "GlacialIndifference",
+              fontSize: 17.0
+          ),),
+          backgroundColor: Colors.green,
+        )
+    );
+
+    return true;
+  }
+  return false;
+}
+
+void synchronize(BuildContext context, _traktCred) async {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_){
+        return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              title: TitleText("Trakt Synchronization..."),
+              content: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                        "Please wait while we synchronize your favorites with Trakt. " +
+                            "This dialog will close automatically when synchronization is complete.",
+                        style: TextStyle(color: Colors.white)
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              //backgroundColor: Theme.of(context).cardColor,
+            )
+        );
+      }
+  );
+
+  String pullStatus = await getCollection(_traktCred, context);
+  Future.delayed(new Duration(seconds: 4));
+  List<int> saveStatus = await addFavToTrakt(_traktCred, context);
+
+  Navigator.pop(context);
 }

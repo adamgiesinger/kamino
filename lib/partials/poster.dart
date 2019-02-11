@@ -42,7 +42,7 @@ class PosterState extends State<Poster> {
       return Colors.yellow;
     }
 
-    return Theme.of(context).accentTextTheme.body1.color;
+    return Colors.white;
   }
 
   @override
@@ -60,12 +60,7 @@ class PosterState extends State<Poster> {
     Widget imageWidget = Container();
     if(widget.background != null) {
       imageWidget = new CachedNetworkImage(
-        errorWidget: new Image(
-          image: AssetImage("assets/images/no_image_detail.jpg"),
-          fit: widget.imageFit,
-          height: widget.height,
-          width: widget.width,
-        ),
+        errorWidget: new Icon(Icons.error),
 
         imageUrl: "${tmdb.image_cdn}/${widget.background}",
         fit: widget.imageFit,

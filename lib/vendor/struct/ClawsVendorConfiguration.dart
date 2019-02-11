@@ -69,7 +69,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       http.Response response = await http.get(server + 'api/v1/status');
       var status = Convert.jsonDecode(response.body);
     }catch(ex){
-      _showAuthenticationFailureDialog(context, "The server is offline.");
+      _showAuthenticationFailureDialog(context, "Claws is currently offline for server upgrades.\nPlease check the #announcements channel in our Discord server for more information.");
       return false;
     }
 
@@ -129,7 +129,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// auto-play or show a source selection dialog.
   ///
   Future<void> onComplete(BuildContext context, String title, List sourceList) async {
-    Navigator.of(context).pop();
+    //Navigator.of(context).pop();
 
     if(sourceList.length > 0) {
       SharedPreferences preferences = await SharedPreferences.getInstance();

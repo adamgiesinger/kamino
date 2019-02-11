@@ -10,13 +10,15 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/../cplayer/android" />
-            <option value="$USER_HOME$/development/flutter/.pub-cache/git/flutter_mdns_plugin-b968d1ee55a40e7b9b62583e85497a151327edf3/android" />
-            <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/package_info-0.3.2/android" />
+            <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.3.0+2/android" />
+            <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/package_info-0.3.2+1/android" />
             <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-0.4.1/android" />
             <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/screen-0.0.4/android" />
             <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.4.3/android" />
+            <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/simple_permissions-0.1.9/android" />
             <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-0.12.2+1/android" />
             <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/uni_links-0.1.4/android" />
+            <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-4.2.0+3/android" />
             <option value="$USER_HOME$/development/flutter/.pub-cache/hosted/pub.dartlang.org/video_player-0.6.5/android" />
           </set>
         </option>

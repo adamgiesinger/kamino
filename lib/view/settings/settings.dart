@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:kamino/view/settings/page_extensions.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:kamino/main.dart';
@@ -116,12 +118,27 @@ class _SettingsViewState extends State<SettingsView> {
                     color: Theme.of(context).backgroundColor,
                     child: ListTile(
                       title: TitleText("Appearance"),
-                      subtitle: Text("Change theme, Choose color scheme, ..."),
+                      subtitle: Text("Choose the app theme."),
                       leading: new Icon(Icons.palette),
                       enabled: true,
                       onTap: (){
                         Navigator.push(context, FadeRoute(
                             builder: (context) => AppearanceSettingsPage()
+                        ));
+                      },
+                    ),
+                  ),
+
+                  Material(
+                    color: Theme.of(context).backgroundColor,
+                    child: ListTile(
+                      title: TitleText("Extensions"),
+                      subtitle: Text("Manage third party integrations."),
+                      leading: new Icon(Icons.extension),
+                      enabled: true,
+                      onTap: (){
+                        Navigator.push(context, FadeRoute(
+                            builder: (context) => ExtensionsSettingsPage()
                         ));
                       },
                     ),
@@ -156,7 +173,8 @@ class _SettingsViewState extends State<SettingsView> {
 
                         if(_tapCount == 10){
                           Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text('"Every pair of jeans are skinny jeans if you\'re thicc enough" - Gagnef 12,016HE')
+                            //content: Text('"Every pair of jeans are skinny jeans if you\'re thicc enough" - Gagnef 12,016HE')
+                            content: Text("🧦 Sorry Mia")
                           ));
 
                           _tapCount = 0;
@@ -165,18 +183,18 @@ class _SettingsViewState extends State<SettingsView> {
                     ),
                   ),
 
-                  Material(
+                  Platform.isAndroid ? Material(
                     color: Theme.of(context).backgroundColor,
                     child: ListTile(
                       title: TitleText("Check for Updates"),
                       subtitle: Text("Checks for updates and downloads any that are found..."),
-                      leading: new Icon(Icons.cloud_download),
+                      leading: new Icon(Icons.system_update_alt),
                       enabled: true,
                       onTap: () async {
                         OTA.updateApp(context, false);
                       },
                     ),
-                  ),
+                  ) : Container(),
 
                   // It's okay to remove this, but we'd appreciate it if you
                   // keep it. <3

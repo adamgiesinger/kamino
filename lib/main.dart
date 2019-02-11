@@ -179,8 +179,8 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
 
   @override
   void initState() {
-    ApolloVendor.getLaunchpadConfiguration().initialize();
     OTA.updateApp(context, true);
+    ApolloVendor.getLaunchpadConfiguration().initialize();
     super.initState();
   }
 

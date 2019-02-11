@@ -178,7 +178,7 @@ class ListTmdbLaunchpadItem extends StatefulWidget {
           highlightColor: Theme.of(context).accentTextTheme.body1.color.withOpacity(0.3),
           minWidth: 0,
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-          child: Text("See All"),
+          child: Text("See All", style: TextStyle(color: Theme.of(context).primaryTextTheme.body1.color)),
           onPressed: (){
             Navigator.of(context).push(
               new MaterialPageRoute(builder: (context) => ExpandedCard(
@@ -275,7 +275,7 @@ class ListTmdbLaunchpadItemState extends State<ListTmdbLaunchpadItem> {
                 child: new Poster(
                   name: item.name,
                   background: item.poster_path,
-                  mediaType: item.mediaType,
+                  mediaType: widget.contentType == ContentType.MOVIE ? "movie" : "tv",
                   releaseDate: item.year,
                   isFav: false
                 ),

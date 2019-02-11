@@ -490,7 +490,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                   child: new Chip(
                     label: Text(
                       _data.genres[index]["name"],
-                      style: TextStyle(color: Colors.white, fontSize: 15.0),
+                      style: TextStyle(color: Theme.of(context).accentTextTheme.body1.color, fontSize: 15.0),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
