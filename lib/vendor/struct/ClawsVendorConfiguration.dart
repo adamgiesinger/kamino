@@ -134,7 +134,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     if(sourceList.length > 0) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
-      if(preferences.getBool("sourceSelection")){
+      if(preferences.getBool("sourceSelection") != null && preferences.getBool("sourceSelection")){
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SourceSelectionView(
@@ -284,7 +284,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
       if(eventName == 'scrapeResults'){
         scrapeResultsCounter.value--;
-        print('# of SCRAPE events to wait for: ' + scrapeResultsCounter.value.toString() + ". Is done scraping for results? " + doneEventStatus.toString());
+        //print('# of SCRAPE events to wait for: ' + scrapeResultsCounter.value.toString() + ". Is done scraping for results? " + doneEventStatus.toString());
         if (event.containsKey('results')) {
           List results = event['results'];
           results.forEach((result) {
@@ -296,11 +296,11 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         }
 
         if (doneEventStatus && scrapeResultsCounter.value == 0) {
-          print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
+          //print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
           print('Server done scraping, closing WebSocket');
           _negotiator.close();
           await Future.wait(futureList);
-          print('All sources received');
+          //print('All sources received');
           sourceList.sort((left, right) {
             return left['metadata']['ping'].compareTo(right['metadata']['ping']);
           });
