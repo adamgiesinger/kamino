@@ -36,7 +36,7 @@ class Poster extends StatefulWidget {
 
 class PosterState extends State<Poster> {
 
-  Color _favouriteIndicator() {
+  Color _favoriteIndicator() {
 
     if (widget.isFav == true) {
       return Colors.yellow;
@@ -114,7 +114,7 @@ class PosterState extends State<Poster> {
                       child: TitleText(
                         widget.name,
                         fontSize: 16,
-                        textColor: _favouriteIndicator(),
+                        textColor: _favoriteIndicator(),
                       )
                   ),
 
@@ -132,14 +132,14 @@ class PosterState extends State<Poster> {
                               releaseYear,
                               style: TextStyle(
                                   fontSize: 12,
-                                color: _favouriteIndicator()
+                                color: _favoriteIndicator()
                               )
                           ),
 
                           widget.hideIcon == false ? Icon(
                               widget.mediaType == 'tv' ? Icons.tv : Icons.local_movies,
                               size: 16,
-                            color: _favouriteIndicator(),
+                            color: _favoriteIndicator(),
                           ) : Container()
                         ],
                       )

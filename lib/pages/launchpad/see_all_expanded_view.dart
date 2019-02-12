@@ -134,7 +134,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
             await Future.delayed(Duration(seconds: 2));
 
-            //refresh the favourites data
+            //refresh the favorites data
             databaseHelper.getAllFavIDs().then((data){
 
               _favIDs.clear();

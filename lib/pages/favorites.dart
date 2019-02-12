@@ -22,7 +22,7 @@ class FavoritesPageState extends State<FavoritesPage>
   List<Map> _favMovie = [];
 
   _getFavs() {
-    // Get the favourite tv shows/ movies
+    // Get the favorite tv shows/ movies
     databaseHelper.getAllFaves().then((data) {
 
       setState(() {
@@ -60,7 +60,7 @@ class FavoritesPageState extends State<FavoritesPage>
             IconButton(
               icon: Icon(Icons.sort),
               onPressed: () {
-                //sort the favourites into ascending or descending
+                //sort the favorites into ascending or descending
                 setState(() {
                   _favTV = _favTV.reversed.toList();
                   _favMovie = _favMovie.reversed.toList();

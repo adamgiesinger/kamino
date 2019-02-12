@@ -76,7 +76,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   @override
   void initState() {
 
-    //check if the show is a favourite
+    //check if the show is a favorite
 
     widget.contentType == ContentType.MOVIE ?
     _contentType = "movie" : _contentType = "tv";
@@ -160,13 +160,13 @@ class _ContentOverviewState extends State<ContentOverview> {
     throw new Exception("Unexpected content type.");
   }
 
-  //Logic for the favourites button
+  //Logic for the favorites button
   _favButtonLogic(BuildContext context){
 
     if (_favState == true) {
 
       //remove the show from the database
-      databaseHelper.removeFavourite(widget.contentId);
+      databaseHelper.removeFavorite(widget.contentId);
 
       trakt.removeMedia(
           context,
@@ -175,7 +175,7 @@ class _ContentOverviewState extends State<ContentOverview> {
       );
 
       //show notification snackbar
-      final snackBar = SnackBar(content: Text('Removed from favourites'));
+      final snackBar = SnackBar(content: Text('Removed from favorites'));
       Scaffold.of(context).showSnackBar(snackBar);
 
       //set fav to false to reflect change
@@ -186,7 +186,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     } else if (_favState == false){
 
       //add the show to the database
-      databaseHelper.saveFavourites(
+      databaseHelper.saveFavorites(
           _data.title,
           widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId,
@@ -201,7 +201,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           widget.contentId);
 
       //show notification snackbar
-      final snackBar = SnackBar(content: Text('Saved to favourites'));
+      final snackBar = SnackBar(content: Text('Saved to favorites'));
       Scaffold.of(context).showSnackBar(snackBar);
 
       //set fav to true to reflect change
