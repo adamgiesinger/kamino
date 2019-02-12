@@ -59,7 +59,7 @@ void addFavoritePrompt(
               onPressed: () {
 
                 //save the content to the database
-                databaseHelper.saveFavourites(title, mediaType, id, url, year);
+                databaseHelper.saveFavorites(title, mediaType, id, url, year);
 
                 trakt.sendNewMedia(context, mediaType, title, year, id);
                 Navigator.pop(context);
@@ -105,7 +105,7 @@ void addFavoritePrompt(
               onPressed: () {
 
                 //save the content to the database
-                databaseHelper.removeFavourite(id);
+                databaseHelper.removeFavorite(id);
 
                 trakt.removeMedia(context, mediaType, id);
                 Navigator.pop(context);

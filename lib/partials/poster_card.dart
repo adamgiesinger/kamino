@@ -32,7 +32,7 @@ class PosterCard extends StatefulWidget {
 
 class _PosterCardState extends State<PosterCard> {
 
-  Color _favouriteIndicator() {
+  Color _favoriteIndicator() {
 
     if (widget.isFav == true) {
       return Colors.yellow;
@@ -131,7 +131,7 @@ class _PosterCardState extends State<PosterCard> {
                           widget.name,
                           style: TextStyle(
                             fontFamily: "GlacialIndifference",
-                            color: _favouriteIndicator(),
+                            color: _favoriteIndicator(),
                             fontSize: 22.0,
                           ),
                           maxLines: 1,
@@ -147,7 +147,7 @@ class _PosterCardState extends State<PosterCard> {
                         child: _genre() != null ? Text(_genre(),
                           style: TextStyle(
                         //fontFamily: "GlacialIndifference",
-                        color: _favouriteIndicator(),),
+                        color: _favoriteIndicator(),),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ) : Container(),
@@ -174,7 +174,7 @@ class _PosterCardState extends State<PosterCard> {
                           style: TextStyle(
                             //fontFamily: "GlacialIndifference",
                             fontSize: 15.0,
-                            color: _favouriteIndicator(),
+                            color: _favoriteIndicator(),
                           ),
                           maxLines: 5,
                           overflow: TextOverflow.fade,

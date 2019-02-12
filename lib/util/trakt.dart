@@ -242,7 +242,7 @@ Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) as
 
   KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
-  //get all favourites from the database
+  //get all favorites from the database
   Map _favs = await databaseHelper.getAllFaves();
 
   //media sent in batches to avoid timeout
@@ -322,7 +322,7 @@ Future<String> updateDatabase(Map payload) async {
 
         collections.add({
           "name": _data["name"],
-          "docType": "favourites",
+          "docType": "favorites",
           "contentType": "tv",
           "tmdbID": _data["id"],
           "imageUrl": _data["poster_path"],
@@ -352,7 +352,7 @@ Future<String> updateDatabase(Map payload) async {
 
         collections.add({
           "name":  _data["title"],
-          "docType": "favourites",
+          "docType": "favorites",
           "contentType": "movie",
           "tmdbID": _data["id"],
           "imageUrl": _data["poster_path"],
@@ -388,7 +388,7 @@ Future<String> updateDatabase(Map payload) async {
 
           collections.add({
           "name":  _data["movie_results"][0]["title"],
-          "docType": "favourites",
+          "docType": "favorites",
           "contentType": "movie",
           "tmdbID": _data["movie_results"][0]["id"],
           "imageUrl": _data["movie_results"][0]["poster_path"],
@@ -423,7 +423,7 @@ Future<String> updateDatabase(Map payload) async {
 
           collections.add({
             "name":  _data["tv_results"][0]["name"],
-            "docType": "favourites",
+            "docType": "favorites",
             "contentType": "tv",
             "tmdbID": _data["tv_results"][0]["id"],
             "imageUrl": _data["tv_results"][0]["poster_path"],

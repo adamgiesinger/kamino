@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 // backup - "<ApolloQuery>"
 const querySplitter = "<ApolloQuery>";
 
-Future saveFavourites(String name, String contentType, int tmdbid, String url, String year) async{
+Future saveFavorites(String name, String contentType, int tmdbid, String url, String year) async{
 
   //get the path of the database file
   final directory = await getApplicationDocumentsDirectory();
@@ -18,7 +18,7 @@ Future saveFavourites(String name, String contentType, int tmdbid, String url, S
 
   Map dataEntry = {
     "name": name,
-    "docType": "favourites",
+    "docType": "favorites",
     "contentType": contentType,
     "tmdbID": tmdbid,
     "imageUrl": url,
@@ -47,7 +47,7 @@ Future<List<int>> getAllFavIDs() async {
   //open connection to the database
   db.open();
 
-  List<Map> _data = await db.find({"docType": "favourites"});
+  List<Map> _data = await db.find({"docType": "favorites"});
 
   for (int x=0; x < _data.length ; x++){
 
@@ -59,7 +59,7 @@ Future<List<int>> getAllFavIDs() async {
   return _results;
 }
 
-Future<bool> isFavourite(int tmdbid) async{
+Future<bool> isFavorite(int tmdbid) async{
 
   //get the path of the database file
   final directory = await getApplicationDocumentsDirectory();
@@ -70,17 +70,17 @@ Future<bool> isFavourite(int tmdbid) async{
   db.open();
 
   var results = await db.find({
-        "docType": "favourites",
+        "docType": "favorites",
         "tmdbID":tmdbid
       });
 
   db.close();
 
-  //return true if the show is a known favourite, else return false
+  //return true if the show is a known favorite, else return false
   return results.length == 1 ? true : false;
 }
 
-Future removeFavourite(int tmdbid) async {
+Future removeFavorite(int tmdbid) async {
 
   //get the path of the database file
   final directory = await getApplicationDocumentsDirectory();
@@ -91,7 +91,7 @@ Future removeFavourite(int tmdbid) async {
   db.open();
   
   //remove the item from the database
-  db.remove({"docType": "favourites", "tmdbID":tmdbid});
+  db.remove({"docType": "favorites", "tmdbID":tmdbid});
 
   // 'tidy up' the db file
   db.tidy();
@@ -173,7 +173,7 @@ Future<List<Map>> getFavMovies() async {
   db.open();
 
   var _result = await db.find({
-    "docType": "favourites",
+    "docType": "favorites",
     "contentType": "movie"
   });
 
@@ -194,7 +194,7 @@ Future<List<Map>> getFavTVShows() async {
   db.open();
 
   List<Map> _result = await db.find({
-    "docType": "favourites",
+    "docType": "favorites",
     "contentType": "tv"
   });
 
@@ -218,8 +218,8 @@ Future<Map> getAllFaves() async {
   db.open();
 
   Map _result = {
-    "tv": await db.find({"docType": "favourites", "contentType": "tv"}),
-    "movie": await db.find({"docType": "favourites", "contentType": "movie"}),
+    "tv": await db.find({"docType": "favorites", "contentType": "tv"}),
+    "movie": await db.find({"docType": "favorites", "contentType": "movie"}),
   };
 
   await db.close();
@@ -240,7 +240,7 @@ Future<String> bulkSaveFavorites(List<Map> documents) async {
   db.open();
 
   await db.insertMany(documents);
-  print("wrote ${documents.length} favourites to the database");
+  print("wrote ${documents.length} favorites to the database");
 
   // 'tidy up' the db file
   db.tidy();
