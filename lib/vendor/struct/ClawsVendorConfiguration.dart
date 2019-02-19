@@ -18,6 +18,7 @@ import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w_transport/vm.dart' show vmTransportPlatform;
 import 'package:w_transport/w_transport.dart' as transport;
+import 'package:ntp/ntp.dart';
 
 class ClawsVendorConfiguration extends VendorConfiguration {
 
@@ -75,18 +76,19 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     final preferences = await SharedPreferences.getInstance();
 
+    DateTime now = await NTP.now();
     if (!force &&
         preferences.getString("token") != null &&
         preferences.getDouble("token_set_time") != null &&
         preferences.getDouble("token_set_time") + 3600 >=
-            (new DateTime.now().millisecondsSinceEpoch / 1000).floor()) {
+            (now.millisecondsSinceEpoch / 1000).floor()) {
       // Return preferences token
       print("Re-using old token...");
       _token = preferences.getString("token");
       return true;
     } else {
       // Return new token
-      var clawsClientHash = _generateClawsHash(clawsKey);
+      var clawsClientHash = _generateClawsHash(clawsKey, now);
       http.Response response = await http.post(server + 'api/v1/login',
           body: Convert.jsonEncode({"clientID": clawsClientHash}),
           headers: {"Content-Type": "application/json"});
@@ -461,7 +463,7 @@ class IntByRef {
 }
 
 ///******* libClaws *******///
-String _generateClawsHash(String clawsClientKey) {
+String _generateClawsHash(String clawsClientKey, DateTime now) {
   final randGen = Random.secure();
 
   Uint8List ivBytes = Uint8List.fromList(new List.generate(8, (_) => randGen.nextInt(128)));
@@ -470,7 +472,7 @@ String _generateClawsHash(String clawsClientKey) {
 
   final key = clawsClientKey.substring(0, 32);
   final encrypter = new Encrypter(new Salsa20(key, iv));
-  num time = (new DateTime.now().millisecondsSinceEpoch / 1000).floor();
+  num time = (now.millisecondsSinceEpoch / 1000).floor();
   final plainText = "$time|$clawsClientKey";
   final encryptedText = encrypter.encrypt(plainText);
 
