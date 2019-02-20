@@ -4,6 +4,9 @@ class SourceModel {
   final bool isResultOfScrape;
   final SourceMetadata metadata;
 
+  bool operator ==(o) => o is SourceModel && o.file.data == file.data; // if URL is the same, we can say it's the same thing
+  int get hashCode => file.data.hashCode;
+
   SourceModel.fromJSON(Map json)
       : file = SourceFile.fromJSON(json["file"]),
         isResultOfScrape = json["isResultOfScrape"],

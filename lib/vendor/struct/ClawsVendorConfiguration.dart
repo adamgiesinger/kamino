@@ -141,7 +141,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SourceSelectionView(
-              sourceList: sourceList,
+              sourceList: sourceList.toSet().toList(), // to set, then back to list to eliminate duplicates
               title: title,
             ))
         );
