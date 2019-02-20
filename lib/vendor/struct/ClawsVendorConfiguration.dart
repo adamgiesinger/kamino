@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/models/SourceModel.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
@@ -130,7 +131,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// This is called when a source has been found. You can use this to either
   /// auto-play or show a source selection dialog.
   ///
-  Future<void> onComplete(BuildContext context, String title, List sourceList) async {
+  Future<void> onComplete(BuildContext context, String title, List<SourceModel> sourceList) async {
     //Navigator.of(context).pop();
 
     if(sourceList.length > 0) {
@@ -140,7 +141,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SourceSelectionView(
-              sourceList: sourceList,
+              sourceList: sourceList.toSet().toList(), // to set, then back to list to eliminate duplicates
               title: title,
             ))
         );
@@ -150,7 +151,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
             MaterialPageRoute(builder: (context) =>
                 CPlayer(
                     title: title,
-                    url: sourceList[0]['file']['data'],
+                    url: sourceList[0].file.data,
                     mimeType: 'video/mp4'
                 ))
         );
@@ -273,7 +274,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     }
 
     List<Future> futureList = [];
-    List sourceList = [];
+    List<SourceModel> sourceList = [];
     IntByRef scrapeResultsCounter = new IntByRef(0);
     bool doneEventStatus = false;
 
@@ -304,7 +305,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
           await Future.wait(futureList);
           //print('All sources received');
           sourceList.sort((left, right) {
-            return left['metadata']['ping'].compareTo(right['metadata']['ping']);
+            return left.metadata.ping.compareTo(right.metadata.ping);
           });
 
           onComplete(context, displayTitle, sourceList);
@@ -320,7 +321,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
           await Future.wait(futureList);
           print('All sources received');
           sourceList.sort((left, right) {
-            return left['metadata']['ping'].compareTo(right['metadata']['ping']);
+            return left.metadata.ping.compareTo(right.metadata.ping);
           });
 
           onComplete(context, displayTitle, sourceList);
@@ -413,7 +414,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       return;
     }
 
-    sourceList.add(data);
+    sourceList.add(SourceModel.fromJSON(data));
   }
 
   _onScrapeSource(event, transport.WebSocket webSocket, IntByRef scrapeResultsCounter) async {
