@@ -34,7 +34,7 @@ class SourceMetadata {
     : cookie = json["cookie"],
       isDownload = json["isDownload"],
       provider = json["provider"],
-      quality = json["quality"],
+      quality = "",
       source = json["source"],
       ping = json["ping"];
 }
