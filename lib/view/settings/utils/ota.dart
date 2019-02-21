@@ -82,7 +82,7 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
             content: Text(
               data["changelog"],
               style: TextStyle(
-                  color: Colors.white
+                  color: Theme.of(context).primaryTextTheme.body1.color
               ),
             ),
             actions: <Widget>[
@@ -91,13 +91,13 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: TitleText("Dismiss", textColor: Colors.white)
+                  child: TitleText("Dismiss", textColor: Theme.of(context).primaryTextTheme.body1.color)
                 ),
               ),
               Center(
                 child: FlatButton(
                   onPressed: () => runInstallProcedure(context, data),
-                  child: TitleText("Install", textColor: Colors.white)
+                  child: TitleText("Install", textColor: Theme.of(context).primaryTextTheme.body1.color)
                 ),
               )
             ],
@@ -172,7 +172,7 @@ runInstallProcedure (context, data) async {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TitleText("Dismiss", textColor: Colors.white)
+                    child: TitleText("Dismiss", textColor: Theme.of(context).primaryTextTheme.body1.color)
                 )
               ],
             );
