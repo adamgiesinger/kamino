@@ -27,7 +27,6 @@ dependencies:
   shared_preferences: ^0.4.3
   intl: ^0.15.7
   w_transport: ^3.2.8
-  sqflite: ^0.12.2
   path_provider: ^0.4.1
   flutter_rating: ^0.0.1
   flutter_parallax: ^0.1.2
@@ -44,6 +43,7 @@ dependencies:
   encrypt: ^1.0.0+1
   flutter_svg: ^0.10.3
   simple_permissions: ^0.1.9
+  html: 0.13.3+3
   ntp: ^1.0.2
 
 # Compile-only dependencies

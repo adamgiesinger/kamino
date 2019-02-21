@@ -117,7 +117,8 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                   children: <Widget>[
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
-                      child: TitleText('Coming Soon')
+                      child: TitleText('Coming Soon'),
+                      onPressed: null,
                     ),
                   ],
                 ),
