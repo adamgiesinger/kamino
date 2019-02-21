@@ -212,8 +212,12 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   }
 
   @override
-  Future<void> playMovie(String title, BuildContext context) async {
+  Future<void> playMovie(String title, String releaseDate, BuildContext context) async {
     await prepare(title, context);
+
+    // Format title
+    var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate));
+    title = "$title ($year)";
 
     var authenticationStatus = await authenticate(context);
     if(!authenticationStatus) return;
