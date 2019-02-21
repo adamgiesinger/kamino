@@ -2,11 +2,12 @@ import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/ui/uielements.dart';
+import "package:kamino/models/SourceModel.dart";
 
 class SourceSelectionView extends StatefulWidget {
 
   final String title;
-  final List sourceList;
+  final List<SourceModel> sourceList;
 
   @override
   State<StatefulWidget> createState() => SourceSelectionViewState();
@@ -39,8 +40,11 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
             print(source);
 
-            String qualityInfo;
-            if(source["metadata"]["quality"] != null) qualityInfo = source["metadata"]["quality"];
+            String qualityInfo = "-"; // until we sort out quality detection
+            if(source.metadata.quality != null)
+              qualityInfo = source.metadata.quality;
+
+            /*
             if(source["metadata"]["extended"] != null){
               var extendedMeta = source["metadata"]["extended"]["streams"][0];
               var resolution = extendedMeta["coded_height"];
@@ -53,6 +57,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
               qualityInfo += " [" + extendedMeta["codec_name"].toUpperCase() + "]";
             }
+              */
 
             return Material(
               color: Theme.of(context).backgroundColor,
@@ -60,9 +65,9 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                 enabled: true,
                 isThreeLine: true,
 
-                title: TitleText((qualityInfo != null ? qualityInfo + " • " : "") + "${source["metadata"]["source"]} (${source["metadata"]["provider"]}) • ${source["metadata"]["ping"]}ms"),
+                title: TitleText((qualityInfo != null ? qualityInfo + " • " : "") + "${source.metadata.source} (${source.metadata.provider}) • ${source.metadata.ping}ms"),
                 subtitle: Text(
-                    source["file"]["data"],
+                    source.file.data,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -74,13 +79,13 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                       MaterialPageRoute(builder: (context) =>
                           CPlayer(
                               title: widget.title,
-                              url: source["file"]["data"],
+                              url: source.file.data,
                               mimeType: 'video/mp4'
                           ))
                   );
                 },
                 onLongPress: (){
-                  Clipboard.setData(new ClipboardData(text: source["file"]["data"]));
+                  Clipboard.setData(new ClipboardData(text: source.file.data));
                   Scaffold.of(ctx).showSnackBar(new SnackBar(
                     content: new TitleText("URL Copied!"),
                     backgroundColor: Theme.of(context).primaryColor

@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/models/SourceModel.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
@@ -18,6 +19,7 @@ import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w_transport/vm.dart' show vmTransportPlatform;
 import 'package:w_transport/w_transport.dart' as transport;
+import 'package:ntp/ntp.dart';
 
 class ClawsVendorConfiguration extends VendorConfiguration {
 
@@ -75,18 +77,19 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     final preferences = await SharedPreferences.getInstance();
 
+    DateTime now = await NTP.now();
     if (!force &&
         preferences.getString("token") != null &&
         preferences.getDouble("token_set_time") != null &&
         preferences.getDouble("token_set_time") + 3600 >=
-            (new DateTime.now().millisecondsSinceEpoch / 1000).floor()) {
+            (now.millisecondsSinceEpoch / 1000).floor()) {
       // Return preferences token
       print("Re-using old token...");
       _token = preferences.getString("token");
       return true;
     } else {
       // Return new token
-      var clawsClientHash = _generateClawsHash(clawsKey);
+      var clawsClientHash = _generateClawsHash(clawsKey, now);
       http.Response response = await http.post(server + 'api/v1/login',
           body: Convert.jsonEncode({"clientID": clawsClientHash}),
           headers: {"Content-Type": "application/json"});
@@ -128,7 +131,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// This is called when a source has been found. You can use this to either
   /// auto-play or show a source selection dialog.
   ///
-  Future<void> onComplete(BuildContext context, String title, List sourceList) async {
+  Future<void> onComplete(BuildContext context, String title, List<SourceModel> sourceList) async {
     //Navigator.of(context).pop();
 
     if(sourceList.length > 0) {
@@ -138,7 +141,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SourceSelectionView(
-              sourceList: sourceList,
+              sourceList: sourceList.toSet().toList(), // to set, then back to list to eliminate duplicates
               title: title,
             ))
         );
@@ -148,7 +151,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
             MaterialPageRoute(builder: (context) =>
                 CPlayer(
                     title: title,
-                    url: sourceList[0]['file']['data'],
+                    url: sourceList[0].file.data,
                     mimeType: 'video/mp4'
                 ))
         );
@@ -271,7 +274,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     }
 
     List<Future> futureList = [];
-    List sourceList = [];
+    List<SourceModel> sourceList = [];
     IntByRef scrapeResultsCounter = new IntByRef(0);
     bool doneEventStatus = false;
 
@@ -302,7 +305,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
           await Future.wait(futureList);
           //print('All sources received');
           sourceList.sort((left, right) {
-            return left['metadata']['ping'].compareTo(right['metadata']['ping']);
+            return left.metadata.ping.compareTo(right.metadata.ping);
           });
 
           onComplete(context, displayTitle, sourceList);
@@ -318,7 +321,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
           await Future.wait(futureList);
           print('All sources received');
           sourceList.sort((left, right) {
-            return left['metadata']['ping'].compareTo(right['metadata']['ping']);
+            return left.metadata.ping.compareTo(right.metadata.ping);
           });
 
           onComplete(context, displayTitle, sourceList);
@@ -411,7 +414,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       return;
     }
 
-    sourceList.add(data);
+    sourceList.add(SourceModel.fromJSON(data));
   }
 
   _onScrapeSource(event, transport.WebSocket webSocket, IntByRef scrapeResultsCounter) async {
@@ -461,7 +464,7 @@ class IntByRef {
 }
 
 ///******* libClaws *******///
-String _generateClawsHash(String clawsClientKey) {
+String _generateClawsHash(String clawsClientKey, DateTime now) {
   final randGen = Random.secure();
 
   Uint8List ivBytes = Uint8List.fromList(new List.generate(8, (_) => randGen.nextInt(128)));
@@ -470,7 +473,7 @@ String _generateClawsHash(String clawsClientKey) {
 
   final key = clawsClientKey.substring(0, 32);
   final encrypter = new Encrypter(new Salsa20(key, iv));
-  num time = (new DateTime.now().millisecondsSinceEpoch / 1000).floor();
+  num time = (now.millisecondsSinceEpoch / 1000).floor();
   final plainText = "$time|$clawsClientKey";
   final encryptedText = encrypter.encrypt(plainText);
 
