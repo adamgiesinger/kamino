@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
@@ -122,17 +123,7 @@ void renewToken(BuildContext context) async {
 
         settingsPref.saveListPref("traktCredentials", newCredentials);
 
-        Scaffold.of(context).showSnackBar(new SnackBar(
-          content: Text(
-            "Trakt Token Refreshed",
-            style: TextStyle(
-                color: Colors.white,
-                fontFamily: "GlacialIndifference",
-                fontSize: 17.0),
-          ),
-          backgroundColor: Colors.green,
-          duration: new Duration(milliseconds: 600),
-        ));
+        Interface.showSnackbar('Successfully refreshed Trakt token.');
       } else {
         showDialog(
             context: context,
@@ -765,16 +756,7 @@ Future<bool> deauthUser(BuildContext context, _traktCred) async {
   if (res.statusCode == 200){
     settingsPref.saveListPref("traktCredentials", []);
 
-    Scaffold.of(context).showSnackBar(
-        new SnackBar(content: Text("Trakt successfully disconnected!",
-          style: TextStyle(
-              color: Colors.white,
-              fontFamily: "GlacialIndifference",
-              fontSize: 17.0
-          ),),
-          backgroundColor: Colors.green,
-        )
-    );
+    Interface.showSnackbar("Disconnected Trakt account.", context: context, backgroundColor: Colors.red);
 
     return true;
   }

@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
@@ -106,17 +107,7 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
         });
   } else {
     if (dismissSnackbar == false) {
-      Scaffold.of(context).showSnackBar(new SnackBar(
-        content: Text(
-          "You have the latest version",
-          style: TextStyle(
-              color: Colors.white,
-              fontFamily: "GlacialIndifference",
-              fontSize: 17.0),
-        ),
-        backgroundColor: Colors.green,
-        duration: new Duration(milliseconds: 600),
-      ));
+      Interface.showSnackbar('You have the latest version.', context: context);
     }
   }
 }
@@ -148,17 +139,7 @@ runInstallProcedure (context, data) async {
     if(e is FileSystemException) message = "Update failed. Storage permission denied.";
 
     if(Scaffold.of(context, nullOk: true) != null) {
-      Scaffold.of(context).showSnackBar(new SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(
-              color: Colors.white,
-              fontFamily: "GlacialIndifference",
-              fontSize: 17.0),
-        ),
-        backgroundColor: Colors.red,
-        duration: new Duration(milliseconds: 600),
-      ));
+      Interface.showSnackbar(message, context: context, backgroundColor: Colors.red);
       return;
     }else{
       showDialog(

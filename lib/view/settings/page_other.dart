@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/trakt.dart';
 import 'package:kamino/view/settings/page.dart';
 
@@ -11,9 +12,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class OtherSettingsPage extends SettingsPage {
 
-  OtherSettingsPage() : super(
+  OtherSettingsPage({bool isPartial = false}) : super(
       title: "Other",
-      pageState: OtherSettingsPageState()
+      pageState: OtherSettingsPageState(),
+      isPartial: isPartial
   );
 
 }
@@ -22,26 +24,9 @@ class OtherSettingsPageState extends SettingsPageState {
 
   bool _sourceSelection = false;
   bool _expandedSearchValue = false;
-  List<String> _traktCred = [];
-
-  PackageInfo _packageInfo = new PackageInfo(
-      appName: 'Unknown',
-      packageName: 'Unknown',
-      version: 'Unknown',
-      buildNumber: 'Unknown'
-  );
-
-  Future<Null> _fetchPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
-  }
 
   @override
   void initState(){
-    _fetchPackageInfo();
-
     settingsPref.getBoolPref("expandedSearch").then((data){
       setState(() {
         _expandedSearchValue = data;
@@ -60,9 +45,11 @@ class OtherSettingsPageState extends SettingsPageState {
   @override
   Widget buildPage(BuildContext context) {
     return ListView(
+      physics: widget.isPartial ? NeverScrollableScrollPhysics() : null,
+      shrinkWrap: widget.isPartial ? true : false,
       children: <Widget>[
         Material(
-          color: Theme.of(context).backgroundColor,
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: CheckboxListTile(
             isThreeLine: true,
             activeColor: Theme.of(context).primaryColor,
@@ -90,7 +77,7 @@ class OtherSettingsPageState extends SettingsPageState {
         ),
 
         Material(
-          color: Theme.of(context).backgroundColor,
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: CheckboxListTile(
             isThreeLine: true,
             activeColor: Theme.of(context).primaryColor,
@@ -118,24 +105,14 @@ class OtherSettingsPageState extends SettingsPageState {
         ),
 
         Material(
-          color: Theme.of(context).backgroundColor,
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             title: TitleText("Clear Search History"),
-            subtitle: Text("Removes search history suggestions based on past searches."),
+            subtitle: Text("Removes search suggestions based on past searches."),
             enabled: true,
             onTap: (){
               settingsPref.saveListPref("searchHistory", []);
-              Scaffold.of(context).showSnackBar(
-                  new SnackBar(content: Text("All Done!",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "GlacialIndifference",
-                        fontSize: 17.0
-                    ),),
-                    backgroundColor: Colors.green,
-                    duration: new Duration(milliseconds: 600),
-                  )
-              );
+              Interface.showSnackbar("Search history cleared.", context: context);
             },
           ),
         )
