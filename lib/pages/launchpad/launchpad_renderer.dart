@@ -58,13 +58,18 @@ class LaunchpadItemRendererState extends State<LaunchpadItemRenderer> {
     });
 
     return Expanded(
-      child: ListView.builder(
-        itemCount: builderList.length,
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (BuildContext context, int index){
-          return builderList[index];
-        }
+      child: NotificationListener(
+        onNotification: (OverscrollIndicatorNotification overscroll) {
+          overscroll.disallowGlow();
+        },
+        child: ListView.builder(
+            itemCount: builderList.length,
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (BuildContext context, int index){
+              return builderList[index];
+            }
+        )
       ),
     );
   }

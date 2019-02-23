@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/ui/uielements.dart';
 import "package:kamino/models/SourceModel.dart";
+import 'package:kamino/util/interface.dart';
 
 class SourceSelectionView extends StatefulWidget {
 
@@ -86,10 +87,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                 },
                 onLongPress: (){
                   Clipboard.setData(new ClipboardData(text: source.file.data));
-                  Scaffold.of(ctx).showSnackBar(new SnackBar(
-                    content: new TitleText("URL Copied!"),
-                    backgroundColor: Theme.of(context).primaryColor
-                  ));
+                  Interface.showSnackbar("URL copied!");
                 },
               ),
             );

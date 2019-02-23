@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_parallax/flutter_parallax.dart';
+import 'package:kamino/view/settings/page_advanced.dart';
 import 'package:kamino/view/settings/page_extensions.dart';
 import 'package:package_info/package_info.dart';
 
@@ -31,7 +33,6 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
 
-  int _tapCount;
   List<String> _contributors;
   
   PackageInfo _packageInfo = new PackageInfo(
@@ -44,9 +45,7 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   void initState() {
     _fetchPackageInfo();
-    _fetchContributors();
-
-    _tapCount = 0;
+    //_fetchContributors();
 
     super.initState();
   }
@@ -89,135 +88,212 @@ class _SettingsViewState extends State<SettingsView> {
           // Center title
           centerTitle: true,
         ),
-        body: new Builder(builder: (BuildContext context) {
-          return new Container(
-            color: Theme.of(context).backgroundColor,
-            child: new ListView(
 
-                // It's recommended that you give at maximum three examples per setting category.
+        // The Builder is used to access the parent Scaffold.
+        body: Builder(builder: (BuildContext context){
+          return Container(
+              color: Theme.of(context).backgroundColor,
+              child: new ListView(
 
-                children: <Widget>[
+                  children: <Widget>[
 
-                  Padding(padding: EdgeInsets.symmetric(vertical: 5)),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 250,
+                      child: Stack(
+                          fit: StackFit.expand,
+                          children: <Widget>[
+                            Parallax.inside(
+                                mainAxisExtent: 250.0,
+                                child: new Image.asset(
+                                  "assets/images/logo_background.png",
+                                  fit: BoxFit.cover,
+                                )
+                            ),
 
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Launchpad"),
-                      subtitle: Text("Modify your $appName launchpad."),
-                      leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
-                      onTap: (){
-                        Navigator.push(context, FadeRoute(
-                            builder: (context) => LaunchpadSettingsPage()
-                        ));
-                      },
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+
+                                    Container(
+                                        padding: EdgeInsets.only(bottom: 20),
+                                        child: Image.asset("assets/images/logo.png", width: 48, height: 48)
+                                    ),
+
+                                    TitleText("$appName v${_packageInfo.version}", fontSize: 24, textColor: Colors.white),
+
+                                    Container(
+                                      padding: EdgeInsets.symmetric(vertical: 5),
+                                      child: Text("${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build \u2022 ${_packageInfo.buildNumber}", style: TextStyle(
+                                          color: Colors.white
+                                      )),
+                                    ),
+
+                                    Platform.isAndroid ? Container(padding: EdgeInsets.only(top: 10), child: RaisedButton(
+                                      child: Text("Check for Updates"),
+                                      onPressed: () => OTA.updateApp(context, false)
+                                    )) : Container()
+
+                                  ]
+                              ),
+                            )
+                          ]
+                      ),
                     ),
-                  ),
 
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Appearance"),
-                      subtitle: Text("Choose the app theme."),
-                      leading: new Icon(Icons.palette),
-                      enabled: true,
-                      onTap: (){
-                        Navigator.push(context, FadeRoute(
-                            builder: (context) => AppearanceSettingsPage()
-                        ));
-                      },
-                    ),
-                  ),
+                    Container(padding: EdgeInsets.symmetric(vertical: 10)),
 
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Extensions"),
-                      subtitle: Text("Manage third party integrations."),
-                      leading: new Icon(Icons.extension),
-                      enabled: true,
-                      onTap: (){
-                        Navigator.push(context, FadeRoute(
-                            builder: (context) => ExtensionsSettingsPage()
-                        ));
-                      },
-                    ),
-                  ),
-
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Sources"),
-                      subtitle: Text("Manage content sources."),
-                      leading: new Icon(Icons.dns),
-                      enabled: true,
-                      onTap: (){
-                        Navigator.push(context, FadeRoute(
-                            builder: (context) => OtherSettingsPage()
-                        ));
-                      },
-                    ),
-                  ),
-
-                  Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Other"),
-                      subtitle: Text("Search preferences, Change language, Choose player, ..."),
-                      leading: new Icon(Icons.settings),
-                      enabled: true,
-                      onTap: (){
-                        Navigator.push(context, FadeRoute(
-                            builder: (context) => OtherSettingsPage()
-                        ));
-                      },
-                    ),
-                  ),
-
-                  Divider(),
-
-                  Material(
+                    /*Material(
                     color: Theme.of(context).backgroundColor,
                     child: ListTile(
                       title: TitleText("About $appName"),
                       leading: new Image.asset("assets/images/logo.png", width: 36, height: 36),
                       enabled: true,
-                      subtitle: Text("v${_packageInfo.version} (Build ${_packageInfo.buildNumber}) \u2022 ${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build"),
+                      subtitle: Text("v${_packageInfo.version} (Build  "),
                       onTap: (){
                         _tapCount++;
 
                         if(_tapCount == 10){
                           Scaffold.of(context).showSnackBar(SnackBar(
                             //content: Text('"Every pair of jeans are skinny jeans if you\'re thicc enough" - Gagnef 12,016HE')
-                            content: Text("\xE2\x9D\xA4 E.D.")
+                            content: Text("(\\xE2\\x9D\\xA4) E.D.")
                           ));
 
                           _tapCount = 0;
                         }
                       }
                     ),
-                  ),
+                  ),*/
 
-                  Platform.isAndroid ? Material(
-                    color: Theme.of(context).backgroundColor,
-                    child: ListTile(
-                      title: TitleText("Check for Updates"),
-                      subtitle: Text("Checks for updates and downloads any that are found..."),
-                      leading: new Icon(Icons.system_update_alt),
-                      enabled: true,
-                      onTap: () async {
-                        OTA.updateApp(context, false);
-                      },
+                    Container(
+                      margin: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("MAKE ${appName.toUpperCase()} YOURS", style: TextStyle(
+                            fontFamily: 'GlacialIndifference',
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                            color: Theme.of(context).primaryTextTheme.display3.color,
+                          ))
+                        ],
+                      )
                     ),
-                  ) : Container(),
 
-                  // It's okay to remove this, but we'd appreciate it if you
-                  // keep it. <3
-                  __buildContributorCard()
-                ]
-            )
+                    Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: ListTile(
+                        title: TitleText("Appearance"),
+                        subtitle: Text("Customise the theme and primary colors."),
+                        leading: new Icon(Icons.style),
+                        onTap: (){
+                          Navigator.push(context, FadeRoute(
+                              builder: (context) => AppearanceSettingsPage()
+                          ));
+                        },
+                      ),
+                    ),
+
+                    Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: ListTile(
+                        title: TitleText("Launchpad"),
+                        subtitle: Text("Customise your launchpad."),
+                        leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+                        onTap: (){
+                          Navigator.push(context, FadeRoute(
+                              builder: (context) => LaunchpadSettingsPage()
+                          ));
+                        },
+                      ),
+                    ),
+
+                    Container(
+                        margin: EdgeInsets.only(top: 35, bottom: 5, left: 15, right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("BOOST YOUR EXPERIENCE", style: TextStyle(
+                              fontFamily: 'GlacialIndifference',
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              color: Theme.of(context).primaryTextTheme.display3.color,
+                            ))
+                          ],
+                        )
+                    ),
+
+                    Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: ListTile(
+                        title: TitleText("Extensions"),
+                        subtitle: Text("Manage third party integrations."),
+                        leading: new Icon(Icons.extension),
+                        enabled: true,
+                        onTap: (){
+                          Navigator.push(context, FadeRoute(
+                              builder: (context) => ExtensionsSettingsPage()
+                          ));
+                        },
+                      ),
+                    ),
+
+                    Container(
+                        margin: EdgeInsets.only(top: 35, bottom: 5, left: 15, right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("MISCELLANEOUS", style: TextStyle(
+                              fontFamily: 'GlacialIndifference',
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1,
+                              color: Theme.of(context).primaryTextTheme.display3.color,
+                            ))
+                          ],
+                        )
+                    ),
+
+                    Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: ListTile(
+                        title: TitleText("Other"),
+                        subtitle: Text("General application settings."),
+                        leading: new Icon(Icons.settings),
+                        enabled: true,
+                        onTap: (){
+                          Navigator.push(context, FadeRoute(
+                              builder: (context) => OtherSettingsPage()
+                          ));
+                        },
+                      ),
+                    ),
+
+                    Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: ListTile(
+                        title: TitleText("Advanced"),
+                        subtitle: Text("Power user settings for rocket scientists."),
+                        leading: new Icon(Icons.developer_mode),
+                        enabled: true,
+                        onTap: (){
+                          Navigator.push(context, FadeRoute(
+                              builder: (context) => AdvancedSettingsPage()
+                          ));
+                        },
+                      ),
+                    )
+
+                    // It's okay to remove this, but we'd appreciate it if you
+                    // keep it. <3
+                    //__buildContributorCard()
+                  ]
+              )
           );
-        }));
+        })
+    );
   }
 
   Widget __buildContributorCard(){
