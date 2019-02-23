@@ -11,6 +11,7 @@ import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/pages/genre/genreResults.dart';
 import 'package:kamino/view/content/movieLayout.dart';
@@ -175,8 +176,7 @@ class _ContentOverviewState extends State<ContentOverview> {
       );
 
       //show notification snackbar
-      final snackBar = SnackBar(content: Text('Removed from favorites'));
-      Scaffold.of(context).showSnackBar(snackBar);
+      Interface.showSnackbar('Removed from favorites', context: context, backgroundColor: Colors.red);
 
       //set fav to false to reflect change
       setState(() {
@@ -201,8 +201,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           widget.contentId);
 
       //show notification snackbar
-      final snackBar = SnackBar(content: Text('Saved to favorites'));
-      Scaffold.of(context).showSnackBar(snackBar);
+      Interface.showSnackbar('Saved to favorites', context: context);
 
       //set fav to true to reflect change
       setState(() {

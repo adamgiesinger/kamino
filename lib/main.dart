@@ -190,6 +190,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           // backgroundColor: backgroundColor,
           appBar: AppBar(
             title: Image.asset(
@@ -219,7 +220,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
           drawer: __buildAppDrawer(),
 
           // Body content
-          body: LaunchpadController()
+          body: LaunchpadController(),
       )
     );
   }

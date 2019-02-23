@@ -7,9 +7,10 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 
 class AppearanceSettingsPage extends SettingsPage {
 
-  AppearanceSettingsPage() : super(
+  AppearanceSettingsPage({bool isPartial = false}) : super(
     title: "Appearance",
-    pageState: AppearenceSettingsPageState()
+    pageState: AppearenceSettingsPageState(),
+    isPartial: isPartial
   );
 
 }
@@ -21,27 +22,28 @@ class AppearenceSettingsPageState extends SettingsPageState {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
     return ListView(
+      physics: widget.isPartial ? NeverScrollableScrollPhysics() : null,
+      shrinkWrap: widget.isPartial ? true : false,
       children: <Widget>[
         Material(
-          color: Theme.of(context).backgroundColor,
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             title: TitleText("Change Theme..."),
             subtitle: Text(
                 "${appState.getActiveThemeMeta().getName()} v${appState.getActiveThemeMeta().getVersion()} (by ${appState.getActiveThemeMeta().getAuthor()})"
             ),
-            leading: Icon(Icons.palette),
             onTap: () => _showThemeChoice(context),
           ),
         ),
 
         Material(
-          color: Theme.of(context).backgroundColor,
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             title: TitleText("Set Primary Color..."),
             subtitle: Text(
                 PrimaryColorChooser.colorToHexString(Theme.of(context).primaryColor)
             ),
-            leading: CircleColor(
+            trailing: CircleColor(
               circleSize: 32,
               color: Theme.of(context).primaryColor,
             ),

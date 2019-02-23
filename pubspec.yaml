@@ -8,7 +8,7 @@ description: The ApolloTV app for iOS and Android.
 #  I => Minor (xx)
 #  R => Release (xx)
 #  T => Type (0 => Prerelease, 1 => Beta, 2 => Release Candidate, 3 => Stable)
-version: 1.3.4+103041
+version: 1.4.0+104001
 
 dependencies:
   # Core dependencies
@@ -45,6 +45,12 @@ dependencies:
   simple_permissions: ^0.1.9
   html: 0.13.3+3
   ntp: ^1.0.2
+  device_info: ^0.4.0+1
+  # bubble_bottom_bar: ^1.0.0
+  #bubble_bottom_bar:
+  #  git:
+  #    url: "https://github.com/NBTX/bubble_bottom_bar"
+  #    ref: "master"
 
 # Compile-only dependencies
 dev_dependencies:
@@ -68,6 +74,7 @@ flutter:
     - assets/images/header_text.png
     - assets/images/header_text_dark.png
     - assets/images/logo.png
+    - assets/images/logo_background.png
     - assets/images/logo_foreground.png
     - assets/icons/trakt.svg
     - assets/icons/realdebrid.svg
