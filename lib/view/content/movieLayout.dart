@@ -72,6 +72,7 @@ class MovieLayout{
                       KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
                       appState.getVendorConfigs()[0].playMovie(
                           model.title,
+                          model.releaseDate,
                           context
                       );
                     },

@@ -212,8 +212,11 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   }
 
   @override
-  Future<void> playMovie(String title, BuildContext context) async {
+  Future<void> playMovie(String title, String releaseDate, BuildContext context) async {
     await prepare(title, context);
+
+    // Get year from release date
+    var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
 
     var authenticationStatus = await authenticate(context);
     if(!authenticationStatus) return;
@@ -222,9 +225,9 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     String clawsToken = _token;
     String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
-    String message = '{"type": "movies", "title": "$title"}';
+    String data = '{"type": "movies", "title": "$title", "year": "$year"}';
 
-    _openWebSocket(endpointURL, message, context, title);
+    _openWebSocket(endpointURL, data, context, title);
   }
 
   @override
@@ -233,8 +236,8 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     // Format title
     var displayTitle = "$title - ${seasonNumber}x$episodeNumber";
-    var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate));
-    title = "$title ($year)";
+    // Get year from release date
+    var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
 
     var authenticationStatus = await authenticate(context);
     if(!authenticationStatus) return;
@@ -243,7 +246,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     String clawsToken = _token;
     String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
-    String data = '{"type": "tv", "title": "$title", "season": "$seasonNumber", "episode": "$episodeNumber"}';
+    String data = '{"type": "tv", "title": "$title", "year": "$year", "season": "$seasonNumber", "episode": "$episodeNumber"}';
 
     _openWebSocket(endpointURL, data, context, title, displayTitle: displayTitle);
   }

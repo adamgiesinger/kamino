@@ -41,7 +41,7 @@ abstract class VendorConfiguration {
   ///
   Future<bool> authenticate(BuildContext context, {bool force = false});
 
-  Future<void> playMovie(String title, BuildContext context);
+  Future<void> playMovie(String title, String releaseDate, BuildContext context);
   Future<void> playTVShow(
       String title,
       String releaseDate,
