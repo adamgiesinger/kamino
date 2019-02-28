@@ -26,10 +26,8 @@ public class MainActivity extends FlutterActivity {
             }else{
                 result.error("ERROR", "An error occurred whilst installing OTA updates.", null);
             }
-
             return;
         }
-
         result.notImplemented();
     });
 
