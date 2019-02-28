@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' as Convert;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:http/http.dart' as http;
 
@@ -412,19 +413,15 @@ class _ContentOverviewState extends State<ContentOverview> {
         children: <Widget>[
           Container(
               child: _data.backdropPath != null ?
-              FadeInImage.assetNetwork(
-                  placeholder: "assets/images/no_image_detail.jpg",
-                  image :_backdropImagePath,
+              CachedNetworkImage(
+              imageUrl: _backdropImagePath,
                   fit: BoxFit.cover,
+                  placeholder: Container(),
                   height: 220.0,
-                  width: contextWidth
+                  width: contextWidth,
+                  errorWidget: new Icon(Icons.error, size: 30.0)
               ) :
-              Image.asset(
-                  "assets/images/no_image_detail.jpg",
-                  fit: BoxFit.cover,
-                  height: 220.0,
-                  width: contextWidth
-              )
+              new Icon(Icons.error, size: 30.0)
           ),
           !_longTitle ?
           BottomGradient(color: Theme.of(context).backgroundColor)
@@ -437,9 +434,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   /// GenreChipsRowWidget -
   /// This is the row of purple genre chips.
-  /// TODO: When tapped, show a genre-filtered search.
   _loadMoreGenreMatches(String mediaType, int id, String genreName) {
-
     if (mediaType == "tv"){
       Navigator.push(
           context,
@@ -468,36 +463,47 @@ class _ContentOverviewState extends State<ContentOverview> {
   Widget _generateGenreChipsRow(context){
     return _data.genres == null ? Container() : SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: 40.0,
+      //height: 40.0,
       child: Container(
-        child: Center(child: ListView.builder(
-          itemCount: _data.genres.length,
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
+        child: Center(
+          // We want the chips to overflow.
+          // This can't seem to be done with a ListView.
+          child: Builder(builder: (BuildContext context){
+            var chips = <Widget>[];
 
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: InkWell(
-                onTap: (){
-                  _loadMoreGenreMatches(_contentType,
-                      _data.genres[index]["id"], _data.genres[index]["name"]);
-                },
-                child: Padding(
-                  padding: index != 0
-                      ? EdgeInsets.only(left: 6.0, right: 6.0)
-                      : EdgeInsets.only(left: 6.0, right: 6.0),
-                  child: new Chip(
-                    label: Text(
-                      _data.genres[index]["name"],
-                      style: TextStyle(color: Theme.of(context).accentTextTheme.body1.color, fontSize: 15.0),
+            for(int index = 0; index < _data.genres.length; index++){
+              chips.add(
+                  Container(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(100),
+                      onTap: (){
+                        _loadMoreGenreMatches(_contentType,
+                            _data.genres[index]["id"], _data.genres[index]["name"]);
+                      },
+                      child: Padding(
+                        padding: index != 0
+                            ? EdgeInsets.only(left: 6.0, right: 6.0)
+                            : EdgeInsets.only(left: 6.0, right: 6.0),
+                        child: new Chip(
+                          label: Text(
+                            _data.genres[index]["name"],
+                            style: TextStyle(color: Theme.of(context).accentTextTheme.body1.color, fontSize: 15.0),
+                          ),
+                          backgroundColor: Theme.of(context).primaryColor,
+                        ),
+                      ),
                     ),
-                    backgroundColor: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ),
+                  )
+              );
+            }
+
+            return Wrap(
+              alignment: WrapAlignment.center,
+              children: chips,
             );
-          },
-        ))
+          }),
+
+        )
       )
     );
   }
@@ -508,7 +514,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   Widget _generateInformationCards(){
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+      padding: EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
       child: Column(
         children: <Widget>[
 

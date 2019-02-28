@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kamino/ui/uielements.dart';
@@ -33,7 +32,7 @@ Future<Map> checkUpdate(BuildContext context, bool dismissSnackbar) async {
   String url = "https://houston.apollotv.xyz/ota/download";
 
   //get latest build info from, houston
-  Response res = await http.get("https://houston.apollotv.xyz/ota/");
+  http.Response res = await http.get("https://houston.apollotv.xyz/ota/");
 
   if (res.statusCode == 200) {
     var results = json.decode(res.body);
