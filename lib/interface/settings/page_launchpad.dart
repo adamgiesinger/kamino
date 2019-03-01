@@ -1,9 +1,9 @@
 
 import 'package:dragable_flutter_list/dragable_flutter_list.dart';
 import 'package:flutter/material.dart';
-import 'package:kamino/pages/launchpad/launchpad_item.dart';
+import 'package:kamino/interface/launchpad/launchpad_item.dart';
 import 'package:kamino/util/interface.dart';
-import 'package:kamino/view/settings/page.dart';
+import 'package:kamino/interface/settings/page.dart';
 
 class LaunchpadSettingsPage extends SettingsPage {
 

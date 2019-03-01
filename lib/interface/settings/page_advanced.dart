@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
-import 'package:kamino/view/settings/page.dart';
+import 'package:kamino/interface/settings/page.dart';
 import 'package:device_info/device_info.dart';
 
 

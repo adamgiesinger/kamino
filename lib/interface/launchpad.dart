@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kamino/pages/launchpad/launchpad_renderer.dart';
+import 'package:kamino/interface/launchpad/launchpad_renderer.dart';
 import 'dart:async';
 import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;

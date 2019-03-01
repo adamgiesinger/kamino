@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/view/content/overview.dart';
+import 'package:kamino/interface/content/overview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
-import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/ui/ui_constants.dart';
-import 'package:kamino/pages/genre/genreResults.dart';
+import 'package:kamino/interface/genre/genreResults.dart';
 
 
 class AllGenres extends StatefulWidget{

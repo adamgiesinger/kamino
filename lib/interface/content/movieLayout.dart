@@ -4,10 +4,9 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/util/interface.dart';
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/api/tmdb.dart' as tmdb;
-import 'package:kamino/view/content/overview.dart';
+import 'package:kamino/interface/content/overview.dart';
 
 class MovieLayout{
 

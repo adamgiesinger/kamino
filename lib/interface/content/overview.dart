@@ -14,9 +14,9 @@ import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
-import 'package:kamino/pages/genre/genreResults.dart';
-import 'package:kamino/view/content/movieLayout.dart';
-import 'package:kamino/view/content/tvShowLayout.dart';
+import 'package:kamino/interface/genre/genreResults.dart';
+import 'package:kamino/interface/content/movieLayout.dart';
+import 'package:kamino/interface/content/tvShowLayout.dart';
 
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;

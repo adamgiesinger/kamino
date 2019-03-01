@@ -4,9 +4,9 @@ import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/trakt.dart';
-import 'package:kamino/view/settings/page.dart';
+import 'package:kamino/interface/settings/page.dart';
 
-import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 

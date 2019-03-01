@@ -5,13 +5,12 @@ import 'package:kamino/api/tmdb.dart' as tmdb;
 
 import 'package:flutter/material.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/pages/launchpad/core_widgets/home_customise.dart';
-import 'package:kamino/pages/launchpad/core_widgets/developer.dart';
-import 'package:kamino/pages/launchpad/launchpad_item.dart';
-import 'package:kamino/pages/launchpad/see_all_expanded_view.dart';
-import 'package:kamino/pages/smart_search/search_results.dart';
+import 'package:kamino/interface/launchpad/core_widgets/home_customise.dart';
+import 'package:kamino/interface/launchpad/launchpad_item.dart';
+import 'package:kamino/interface/launchpad/see_all_expanded_view.dart';
+import 'package:kamino/interface/smart_search/search_results.dart';
 import 'package:kamino/partials/poster.dart';
-import 'package:kamino/view/content/overview.dart';
+import 'package:kamino/interface/content/overview.dart';
 
 class LaunchpadConfiguration {
 

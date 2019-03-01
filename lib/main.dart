@@ -1,12 +1,13 @@
 // Import flutter libraries
-import 'package:kamino/pages/all_media/all_genres.dart';
-import 'package:kamino/view/settings/utils/ota.dart' as OTA;
-import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/genre/all_genres.dart';
+import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
+import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/skyspace/skyspace.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:kamino/pages/favorites.dart';
+import 'package:kamino/interface/favorites.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,13 +16,19 @@ import 'package:kamino/vendor/index.dart';
 // Import custom libraries / utils
 import 'animation/transition.dart';
 // Import pages
-import 'pages/launchpad.dart';
+import 'interface/launchpad.dart';
 // Import views
-import 'package:kamino/view/settings/settings.dart';
+import 'package:kamino/interface/settings/settings.dart';
 
 const appName = "ApolloTV";
-
 Logger log;
+
+const platform = const MethodChannel('xyz.apollotv.kamino/init');
+
+class PlatformType {
+  static const GENERAL = 0;
+  static const TV = 1;
+}
 
 void main(){
   // Setup logger
@@ -31,9 +38,13 @@ void main(){
   });
   log = new Logger(appName);
 
-  runApp(
-    KaminoApp()
-  );
+  // Get device type
+  () async {
+    return (await platform.invokeMethod('getDeviceType')) as int;
+  }().then((platformType){
+    if(platformType == PlatformType.TV) return runApp(KaminoSkyspace());
+    runApp(KaminoApp());
+  });
 }
 
 class KaminoApp extends StatefulWidget {

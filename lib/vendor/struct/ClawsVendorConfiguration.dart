@@ -14,7 +14,7 @@ import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:kamino/vendor/ui/SearchingSourcesDialog.dart';
-import 'package:kamino/view/sourceSelectionView.dart';
+import 'package:kamino/view/source_selection.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w_transport/vm.dart' show vmTransportPlatform;

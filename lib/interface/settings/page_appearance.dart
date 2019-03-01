@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/view/settings/page.dart';
+import 'package:kamino/interface/settings/page.dart';
 
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kamino/pages/launchpad/launchpad_item.dart';
-import 'package:kamino/pages/smart_search/smart_search.dart';
+import 'package:kamino/interface/launchpad/launchpad_item.dart';
+import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/vendor/index.dart';
 
 class LaunchpadItemRenderer extends StatefulWidget {
