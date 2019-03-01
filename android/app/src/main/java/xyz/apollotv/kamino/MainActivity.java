@@ -1,6 +1,8 @@
 package xyz.apollotv.kamino;
 
+import android.app.UiModeManager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,7 +21,31 @@ public class MainActivity extends FlutterActivity {
     super.onCreate(savedInstanceState);
     GeneratedPluginRegistrant.registerWith(this);
 
+    new MethodChannel(getFlutterView(), "xyz.apollotv.kamino/init").setMethodCallHandler((methodCall, result) -> {
+
+        if(methodCall.method.equals("getDeviceType")){
+
+            UiModeManager uiModeManager = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+
+            if(uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION){
+                // Mode 1: TV
+                result.success(1);
+                return;
+            }
+
+            // Mode 0: GENERAL
+            result.success(0);
+
+            return;
+
+        }
+
+        result.notImplemented();
+
+    });
+
     new MethodChannel(getFlutterView(), "xyz.apollotv.kamino/ota").setMethodCallHandler((methodCall, result) -> {
+
         if(methodCall.method.equals("install")){
             if(installOTA(methodCall.argument("path"))){
                 result.success(true);
@@ -28,6 +54,7 @@ public class MainActivity extends FlutterActivity {
             }
             return;
         }
+
         result.notImplemented();
     });
 

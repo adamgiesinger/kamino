@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart' as tmdb;
-import 'package:kamino/pages/smart_search/search_results.dart';
-import 'package:kamino/view/content/overview.dart';
+import 'package:kamino/interface/smart_search/search_results.dart';
+import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 class SmartSearch extends SearchDelegate<String> {
   bool _expandedSearchPref = false;

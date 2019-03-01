@@ -82,7 +82,7 @@ class _PosterCardState extends State<PosterCard> {
         ),
         height: _imageHeight,
         width: _imageWidth,
-        errorWidget: new Icon(Icons.error, size: 20.0, color: Colors.red)
+        errorWidget: new Icon(Icons.error, size: 20.0)
       );
 
     }else{

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
-import 'package:kamino/view/settings/page.dart';
+import 'package:kamino/interface/settings/page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 
 class ExtensionsSettingsPage extends SettingsPage {
   ExtensionsSettingsPage() : super(

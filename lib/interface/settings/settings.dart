@@ -4,18 +4,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_parallax/flutter_parallax.dart';
-import 'package:kamino/view/settings/page_advanced.dart';
-import 'package:kamino/view/settings/page_extensions.dart';
+import 'package:kamino/interface/settings/page_advanced.dart';
+import 'package:kamino/interface/settings/page_extensions.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/animation/transition.dart';
-import 'package:kamino/view/settings/utils/ota.dart' as OTA;
+import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 
-import 'package:kamino/view/settings/page_launchpad.dart';
-import 'package:kamino/view/settings/page_appearance.dart';
-import 'package:kamino/view/settings/page_other.dart';
+import 'package:kamino/interface/settings/page_launchpad.dart';
+import 'package:kamino/interface/settings/page_appearance.dart';
+import 'package:kamino/interface/settings/page_other.dart';
 
 class SettingsView extends StatefulWidget {
 

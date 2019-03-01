@@ -9,7 +9,7 @@ import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:kamino/util/interface.dart';
-import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 
 class TraktAuth extends StatefulWidget {

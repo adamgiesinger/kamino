@@ -2,18 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
-import 'package:kamino/pages/smart_search/search_results.dart';
+import 'package:kamino/interface/smart_search/search_results.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/partials/poster_card.dart';
 import 'package:kamino/partials/poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:kamino/view/content/overview.dart';
+import 'package:kamino/interface/content/overview.dart';
 
 class ExpandedCard extends StatefulWidget{
   final String url, mediaType;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kamino/pages/smart_search/smart_search.dart';
+import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/api/tmdb.dart' as tmdb;

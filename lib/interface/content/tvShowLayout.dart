@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/view/content/episodePicker.dart';
+import 'package:kamino/interface/content/episodePicker.dart';
 
 import 'package:kamino/api/tmdb.dart' as tmdb;
 
