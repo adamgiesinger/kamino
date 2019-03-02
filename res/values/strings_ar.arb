@@ -33,7 +33,7 @@
   "trakt_renewal_failure_detailed": ".يرجي تاكيد معلوماتك .Trakt فشل تجديد رمز",
   "appname_was_unable_to_authenticate_with_trakttv": " .Trakt.tv لم يتمكن من التوثيق مع $appName",
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)",
-  "disconnected_trakt_account": "Disconnected Trakt account.",
+  "disconnected_trakt_account": ".Trakt تم قطع اتصال حساب",
   "trakt_synchronization": "Trakt Synchronization...",
   "trakt_favorites_sync_detailed": "Please wait while we synchronize your favorites with Trakt. This dialog will close automatically when synchronization is complete.",
 
