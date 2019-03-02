@@ -7,7 +7,7 @@
   "settings": "اعدادات",
 
 
-  "url_copied": "URL copied!",
+  "url_copied": "!تم نسخ الرابط",
   "okay": "حسنا",
   "show_more": "...اظهر اكثر",
   "show_less": "...اظهر اقل",
@@ -20,16 +20,16 @@
   "sync": "زامن",
   "connect": "اتصل",
   "disconnect": "اقطع الاتصال",
-  "default_": "Default",
-  "done": "Done",
+  "default_": "الافتراضي",
+  "done": "انتهي",
 
-  "coming_soon": "Coming Soon",
+  "coming_soon": "قريبا",
 
-  "authentication_successful": "Authentication Successful",
-  "authentication_unsuccessful": "Authentication Unsuccessful",
+  "authentication_successful": "التوثيق نجح",
+  "authentication_unsuccessful": "التوثيق لم ينجح",
 
-  "trakt_authenticator": "Trakt Authenticator",
-  "successfully_refreshed_trakt_token": "Successfully refreshed Trakt token.",
+  "trakt_authenticator": "موثق تراكت",
+  "successfully_refreshed_trakt_token": ".تم تحديث رمز تراكت بنجاح",
   "trakt_renewal_failure_detailed": "Failed to renew Trakt token. Please check your details.",
   "appname_was_unable_to_authenticate_with_trakttv": "$appName was unable to authenticate with Trakt.tv.",
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)",
