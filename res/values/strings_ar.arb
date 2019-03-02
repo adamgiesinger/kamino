@@ -71,14 +71,14 @@
 
   "check_for_updates": "ابحث عن تحديثات",
 
-  "make_appname_yours": "خاصة بك $appName اجعل",
+  "make_appname_yours": "خاص بك $appName اجعل",
   "appearance": "المظهر",
   "customise_the_theme_and_primary_colors": ".عدل المظهر و الالوان الاساسية",
   "launchpad": "منصة الإطلاق",
   "customise_your_launchpad": "عدل منصة انطلاقك.",
   "boost_your_experience": "حسن تجربتك",
   "extensions": "اضافات",
-  "manage_third_party_integrations": ".ادر اضافات من طرف ثالث",
+  "manage_third_party_integrations": ".ةادر اضافات من اطرف ثالث",
   "miscellaneous": "متنوع",
   "other_": "اخر",
   "general_application_settings": ".إعدادات التطبيق العامة",
