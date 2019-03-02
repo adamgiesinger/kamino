@@ -362,7 +362,7 @@ class _ContentOverviewState extends State<ContentOverview> {
             Text(
                 _data.releaseDate != "" && _data.releaseDate != null ?
                   "${S.of(context).released}: ${DateTime.parse(_data.releaseDate).year.toString()}" :
-                  S.of(context).unknown_x("Year"),
+                  S.of(context).unknown_x(S.of(context).year),
                 style: TextStyle(
                     fontFamily: 'GlacialIndifference',
                     fontSize: 16.0
