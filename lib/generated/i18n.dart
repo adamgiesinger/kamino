@@ -133,7 +133,7 @@ class $pt extends S {
   @override
   String get manually_override_the_default_content_server => "Substituir manualmente o servidor de conteúdo padrão.";
   @override
-  String get year => "ano";
+  String get year => "rok";
   @override
   String get advanced => "Avançado";
   @override
