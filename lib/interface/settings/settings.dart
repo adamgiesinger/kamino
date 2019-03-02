@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_parallax/flutter_parallax.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_advanced.dart';
 import 'package:kamino/interface/settings/page_extensions.dart';
 import 'package:package_info/package_info.dart';
@@ -22,6 +23,7 @@ class SettingsView extends StatefulWidget {
   @override
   _SettingsViewState createState() => _SettingsViewState();
 
+  // DO NOT TRANSLATE!
   static final buildTypes = [
     "Pre-Release",
     "Beta",
@@ -81,7 +83,7 @@ class _SettingsViewState extends State<SettingsView> {
 
     return Scaffold(
         appBar: AppBar(
-          title: TitleText("Settings"),
+          title: TitleText(S.of(context).settings),
 
           backgroundColor: Theme.of(context).backgroundColor,
 
@@ -133,7 +135,7 @@ class _SettingsViewState extends State<SettingsView> {
                                     ),
 
                                     Platform.isAndroid ? Container(padding: EdgeInsets.only(top: 10), child: RaisedButton(
-                                      child: Text("Check for Updates"),
+                                      child: Text(S.of(context).check_for_updates),
                                       onPressed: () => OTA.updateApp(context, false)
                                     )) : Container()
 
@@ -173,7 +175,7 @@ class _SettingsViewState extends State<SettingsView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text("MAKE ${appName.toUpperCase()} YOURS", style: TextStyle(
+                          Text(S.of(context).make_appname_yours(appName.toUpperCase()), style: TextStyle(
                             fontFamily: 'GlacialIndifference',
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1,
@@ -186,12 +188,12 @@ class _SettingsViewState extends State<SettingsView> {
                     Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
-                        title: TitleText("Appearance"),
-                        subtitle: Text("Customise the theme and primary colors."),
+                        title: TitleText(S.of(context).appearance),
+                        subtitle: Text(S.of(context).customise_the_theme_and_primary_colors),
                         leading: new Icon(Icons.style),
                         onTap: (){
                           Navigator.push(context, FadeRoute(
-                              builder: (context) => AppearanceSettingsPage()
+                              builder: (context) => AppearanceSettingsPage(context)
                           ));
                         },
                       ),
@@ -200,12 +202,12 @@ class _SettingsViewState extends State<SettingsView> {
                     Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
-                        title: TitleText("Launchpad"),
-                        subtitle: Text("Customise your launchpad."),
+                        title: TitleText(S.of(context).launchpad),
+                        subtitle: Text(S.of(context).customise_your_launchpad),
                         leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
                         onTap: (){
                           Navigator.push(context, FadeRoute(
-                              builder: (context) => LaunchpadSettingsPage()
+                              builder: (context) => LaunchpadSettingsPage(context)
                           ));
                         },
                       ),
@@ -216,7 +218,7 @@ class _SettingsViewState extends State<SettingsView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text("BOOST YOUR EXPERIENCE", style: TextStyle(
+                            Text(S.of(context).boost_your_experience, style: TextStyle(
                               fontFamily: 'GlacialIndifference',
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
@@ -229,13 +231,13 @@ class _SettingsViewState extends State<SettingsView> {
                     Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
-                        title: TitleText("Extensions"),
-                        subtitle: Text("Manage third party integrations."),
+                        title: TitleText(S.of(context).extensions),
+                        subtitle: Text(S.of(context).manage_third_party_integrations),
                         leading: new Icon(Icons.extension),
                         enabled: true,
                         onTap: (){
                           Navigator.push(context, FadeRoute(
-                              builder: (context) => ExtensionsSettingsPage()
+                              builder: (context) => ExtensionsSettingsPage(context)
                           ));
                         },
                       ),
@@ -246,7 +248,7 @@ class _SettingsViewState extends State<SettingsView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text("MISCELLANEOUS", style: TextStyle(
+                            Text(S.of(context).miscellaneous, style: TextStyle(
                               fontFamily: 'GlacialIndifference',
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
@@ -259,13 +261,13 @@ class _SettingsViewState extends State<SettingsView> {
                     Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
-                        title: TitleText("Other"),
-                        subtitle: Text("General application settings."),
+                        title: TitleText(S.of(context).other_),
+                        subtitle: Text(S.of(context).general_application_settings),
                         leading: new Icon(Icons.settings),
                         enabled: true,
                         onTap: (){
                           Navigator.push(context, FadeRoute(
-                              builder: (context) => OtherSettingsPage()
+                              builder: (context) => OtherSettingsPage(context)
                           ));
                         },
                       ),
@@ -274,13 +276,13 @@ class _SettingsViewState extends State<SettingsView> {
                     Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
-                        title: TitleText("Advanced"),
-                        subtitle: Text("Power user settings for rocket scientists."),
+                        title: TitleText(S.of(context).advanced),
+                        subtitle: Text(S.of(context).power_user_settings_for_rocket_scientists),
                         leading: new Icon(Icons.developer_mode),
                         enabled: true,
                         onTap: (){
                           Navigator.push(context, FadeRoute(
-                              builder: (context) => AdvancedSettingsPage()
+                              builder: (context) => AdvancedSettingsPage(context)
                           ));
                         },
                       ),
@@ -312,7 +314,7 @@ class _SettingsViewState extends State<SettingsView> {
                         children: <Widget>[
                           new Icon(Icons.accessibility),
                           new TitleText(
-                            "  With thanks...",
+                            "  " + S.of(context).with_thanks,
                             fontSize: 24,
                           )
                         ]
@@ -322,7 +324,7 @@ class _SettingsViewState extends State<SettingsView> {
                 new Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: new Text(
-                        "$appName was made possible by all of these amazing people:",
+                        S.of(context).appname_was_made_possible_by_all_of_these_amazing_people(appName),
                         style: new TextStyle(
                             fontFamily: 'GlacialIndifference',
                             fontSize: 16
@@ -386,7 +388,7 @@ class _SettingsViewState extends State<SettingsView> {
     int buildType = int.tryParse(_packageInfo.buildNumber.split('').last);
 
     if(buildType != null) return SettingsView.buildTypes[buildType];
-    return "Unknown";
+    return S.of(context).unknown;
   }
 
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/launchpad/launchpad_item.dart';
 import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/vendor/index.dart';
@@ -102,7 +103,7 @@ class LaunchpadItemRendererState extends State<LaunchpadItemRenderer> {
                 new Padding(
                   padding: EdgeInsets.only(top: 15, bottom: 15, left: 20),
                   child: new Text(
-                    'Search TV shows and movies...',
+                    S.of(context).search_tv_shows_and_movies,
                     style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'GlacialIndifference',

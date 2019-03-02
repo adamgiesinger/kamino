@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'dart:async';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/interface/content/overview.dart';
@@ -266,7 +267,7 @@ class _GenreViewState extends State<GenreView>{
         padding:
         const EdgeInsets.only(left: _paddingWeight, right: _paddingWeight),
         child: Text(
-          "Can't find anything...",
+          S.of(context).no_results_found,
           maxLines: 3,
           style: TextStyle(
               fontSize: 22.0,
@@ -355,19 +356,19 @@ class _GenreSortDialogState extends State<GenreSortDialog> {
         ),
         RadioListTile(
           value: "popularity",
-          title: Text("Popularity", style: _glacialStyle1,),
+          title: Text(S.of(context).popularity, style: _glacialStyle1,),
           groupValue: _sortByValue,
           onChanged: _onSortChange,
         ),
         RadioListTile(
           value: "first_air_date",
-          title: Text("Air date", style: _glacialStyle1,),
+          title: Text(S.of(context).air_date, style: _glacialStyle1,),
           groupValue: _sortByValue,
           onChanged: _onSortChange,
         ),
         RadioListTile(
           value: "vote_average",
-          title: Text("Vote Average", style: _glacialStyle1,),
+          title: Text(S.of(context).vote_average, style: _glacialStyle1,),
           groupValue: _sortByValue,
           onChanged: _onSortChange,
         ),
@@ -377,7 +378,7 @@ class _GenreSortDialogState extends State<GenreSortDialog> {
             Padding(
               padding: const EdgeInsets.only(
                   top: 7.0, bottom: 7.0, left: 32.0),
-              child: Text("ORDER", style:_glacialStyle1),
+              child: Text(S.of(context).order, style:_glacialStyle1),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0, right:11.0),
@@ -388,13 +389,13 @@ class _GenreSortDialogState extends State<GenreSortDialog> {
 
         RadioListTile(
           value: ".asc",
-          title: Text("Ascending", style: _glacialStyle1,),
+          title: Text(S.of(context).ascending, style: _glacialStyle1,),
           groupValue: _orderValue,
           onChanged: _onOrderChange,
         ),
         RadioListTile(
           value: ".desc",
-          title: Text("Descending", style: _glacialStyle1,),
+          title: Text(S.of(context).descending, style: _glacialStyle1,),
           groupValue: _orderValue,
           onChanged: _onOrderChange,
         ),
@@ -407,7 +408,7 @@ class _GenreSortDialogState extends State<GenreSortDialog> {
                 onPressed: (){
                   Navigator.pop(context);
                 },
-                child: Text("Cancel",
+                child: Text(S.of(context).cancel,
                   style: _glacialStyle1,
                 ),
               ),
@@ -416,7 +417,7 @@ class _GenreSortDialogState extends State<GenreSortDialog> {
                   widget.onValueChange(_sortByValue+_orderValue);
                   Navigator.pop(context);
                 },
-                child: Text("Sort", style: _glacialStyle1,),
+                child: Text(S.of(context).sort, style: _glacialStyle1,),
               ),
             ],),
         )

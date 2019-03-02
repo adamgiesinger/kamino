@@ -6,10 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:flutter_parallax/flutter_parallax.dart';
 
 import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/util/interface.dart';
 
 class EpisodePicker extends StatefulWidget {
   final int contentId;
@@ -75,7 +75,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).backgroundColor,
           title: TitleText(
-            _season != null ? "${widget.showContentModel.title} - ${_season.name}" : "Loading...",
+            _season != null ? "${widget.showContentModel.title} - ${_season.name}" : S.of(context).loading,
             textColor: Theme.of(context).primaryTextTheme.title.color
           ),
           centerTitle: true,
@@ -97,7 +97,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
             itemCount: _season.episodes.length,
             itemBuilder: (BuildContext listContext, int index){
               var episode = _season.episodes[index];
-              var airDate = "Unknown";
+              var airDate = S.of(context).unknown;
 
               if(episode["air_date"] != null) {
                 airDate = new DateFormat.yMMMMd("en_US").format(
@@ -137,8 +137,8 @@ class _EpisodePickerState extends State<EpisodePicker> {
                         padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
                         child: ConcealableText(
                           episode["overview"],
-                          revealLabel: "Show more...",
-                          concealLabel: "Show less...",
+                          revealLabel: S.of(context).show_more,
+                          concealLabel: S.of(context).show_less,
 
                           maxLines: 4
                         )
@@ -170,7 +170,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                     );
                                   },
                                   child: new Text(
-                                    "Play Episode",
+                                    S.of(context).play_episode,
                                     style: TextStyle(
                                         color: Theme.of(context).accentTextTheme.body1.color,
                                         fontSize: 16,

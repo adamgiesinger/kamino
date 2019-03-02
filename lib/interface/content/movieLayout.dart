@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
@@ -30,7 +31,7 @@ class MovieLayout{
                 children: <Widget>[
                   ListTile(
                       title: TitleText(
-                          'Similar Movies',
+                          S.of(context).similar_movies,
                           fontSize: 22.0,
                           textColor: Theme.of(context).primaryTextTheme.body1.color
                       )
@@ -77,7 +78,7 @@ class MovieLayout{
                     },
                     icon: Container(),
                     label: Text(
-                      "Play Movie",
+                      S.of(context).play_movie,
                       style: TextStyle(
                         letterSpacing: 0.0,
                         fontFamily: 'GlacialIndifference',
