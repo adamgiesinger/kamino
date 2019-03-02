@@ -35,7 +35,7 @@
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": ".ApolloTV مع مفضلات Trakt يمكنك الان ال ضغط علي 'مزامنة' لمزامنة مفضلات\n\n(.محدود لانه لا يزال قيد التطوير Trakt دمج)",
   "disconnected_trakt_account": ".Trakt تم قطع اتصال حساب",
   "trakt_synchronization": "...Trakt مزامنة",
-  "trakt_favorites_sync_detailed": "Please wait while we synchronize your favorites with Trakt. This dialog will close automatically when synchronization is complete.",
+  "trakt_favorites_sync_detailed": ".سيتم إغلاق مربع الحوار تلقائيًا عند اكتمال المزامنة .Trakt يرجى الانتظار بينما نقوم بمزامنة مفضلاتك مع.",
 
   "general_error": "($error) .حدث خطأ\n.يرجى الإبلاغ عن هذا الخطأ",
 
