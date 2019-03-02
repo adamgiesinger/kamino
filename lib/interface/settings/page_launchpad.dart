@@ -1,4 +1,3 @@
-
 import 'package:dragable_flutter_list/dragable_flutter_list.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';

@@ -123,7 +123,6 @@ void renewToken(BuildContext context) async {
         ];
 
         settingsPref.saveListPref("traktCredentials", newCredentials);
-
         Interface.showSnackbar(S.of(context).successfully_refreshed_trakt_token);
       } else {
         showDialog(
