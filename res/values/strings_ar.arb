@@ -43,10 +43,10 @@
   "play_movie": "شغل الفيلم",
   "similar_movies": "أفلام مماثلة",
 
-  "removed_from_favorites": "Removed from favorites",
-  "added_to_favorites": "تمت إزالته من المفضلات",
+  "removed_from_favorites": "تمت إزالته من المفضلات",
+  "added_to_favorites": "تمت إضافته الي المفضلات",
 
-  "n_ratings": "$n تقييمات",
+  "n_ratings": "تقييمات $n",
 
   "synopsis": "ملخص",
   "this_x_has_no_synopsis_available": ".ليس له ملخص $x هذا",
