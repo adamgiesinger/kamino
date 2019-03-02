@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:kamino/api/tmdb.dart' as tmdb;
 import 'package:http/http.dart' as http;
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
@@ -61,7 +62,7 @@ class _TraktAuthState extends State<TraktAuth> {
       clearCache: true,
       clearCookies: true,
       appBar: AppBar(
-        title: TitleText("Trakt Authenticator"),
+        title: TitleText(S.of(context).trakt_authenticator),
         centerTitle: true,
         elevation: 8.0,
         backgroundColor: Theme.of(context).cardColor,
@@ -123,18 +124,16 @@ void renewToken(BuildContext context) async {
 
         settingsPref.saveListPref("traktCredentials", newCredentials);
 
-        Interface.showSnackbar('Successfully refreshed Trakt token.');
+        Interface.showSnackbar(S.of(context).successfully_refreshed_trakt_token);
       } else {
         showDialog(
             context: context,
             barrierDismissible: true,
             builder: (_) {
               return AlertDialog(
-                title: TitleText("Trakt Authentication Failure"),
+                title: TitleText(S.of(context).authentication_unsuccessful),
                 content: Text(
-                  "Failed to renew Trakt token. Please check your "
-                      "internet connection and try again. If the problem"
-                      " presists, please sign out of Trakt and sign in again",
+                  S.of(context).trakt_renewal_failure_detailed,
                   style: TextStyle(
                       fontSize: 18.0,
                       fontFamily: "GlacialIndifference",
@@ -650,7 +649,7 @@ void _dialogGenerator(String title, String body, BuildContext context, bool dism
             Center(
               child: FlatButton(
                   onPressed: () => Navigator.pop(context),
-                  child: TitleText("Okay", textColor: Colors.white)
+                  child: TitleText(S.of(context).okay, textColor: Colors.white)
               ),
             )
           ],
@@ -668,8 +667,8 @@ Future<List<String>> authUser(BuildContext context, List<String> _traktCred, Str
     //Trakt auth has failed
 
     _dialogGenerator(
-        "Authentication Unsuccessful",
-        "$appName was unable to authenticate with Trakt.tv.",
+        S.of(context).authentication_unsuccessful,
+        S.of(context).appname_was_unable_to_authenticate_with_trakttv(appName),
         context,
         true
     );
@@ -723,15 +722,15 @@ Future<List<String>> authUser(BuildContext context, List<String> _traktCred, Str
 
       settingsPref.saveListPref("traktCredentials", temp);
 
-      _dialogGenerator("Authentication Successful", "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)", context, true);
+      _dialogGenerator(S.of(context).authentication_successful, S.of(context).you_can_now_tap_sync_to_synchronise_your_trakt_favorites, context, true);
       return temp;
 
     } else {
 
       //show error message
       _dialogGenerator(
-          "Authentication Failed",
-          "Error ${res.statusCode}\nPlease report this error.",
+          S.of(context).authentication_unsuccessful,
+          S.of(context).general_error(res.statusCode.toString()),
           context,
           true
       );
@@ -756,7 +755,7 @@ Future<bool> deauthUser(BuildContext context, _traktCred) async {
   if (res.statusCode == 200){
     settingsPref.saveListPref("traktCredentials", []);
 
-    Interface.showSnackbar("Disconnected Trakt account.", context: context, backgroundColor: Colors.red);
+    Interface.showSnackbar(S.of(context).disconnected_trakt_account, context: context, backgroundColor: Colors.red);
 
     return true;
   }
@@ -771,14 +770,13 @@ void synchronize(BuildContext context, _traktCred) async {
         return WillPopScope(
             onWillPop: () async => false,
             child: AlertDialog(
-              title: TitleText("Trakt Synchronization..."),
+              title: TitleText(S.of(context).trakt_synchronization),
               content: Container(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                        "Please wait while we synchronize your favorites with Trakt. " +
-                            "This dialog will close automatically when synchronization is complete.",
+                        S.of(context).trakt_favorites_sync_detailed,
                         style: TextStyle(color: Colors.white)
                     ),
 

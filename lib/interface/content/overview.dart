@@ -5,6 +5,7 @@ import 'package:flutter_rating/flutter_rating.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/tvshow.dart';
@@ -177,7 +178,7 @@ class _ContentOverviewState extends State<ContentOverview> {
       );
 
       //show notification snackbar
-      Interface.showSnackbar('Removed from favorites', context: context, backgroundColor: Colors.red);
+      Interface.showSnackbar(S.of(context).removed_from_favorites, context: context, backgroundColor: Colors.red);
 
       //set fav to false to reflect change
       setState(() {
@@ -202,7 +203,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           widget.contentId);
 
       //show notification snackbar
-      Interface.showSnackbar('Saved to favorites', context: context);
+      Interface.showSnackbar(S.of(context).added_to_favorites, context: context);
 
       //set fav to true to reflect change
       setState(() {
@@ -360,8 +361,8 @@ class _ContentOverviewState extends State<ContentOverview> {
 
             Text(
                 _data.releaseDate != "" && _data.releaseDate != null ?
-                  "Released: " + DateTime.parse(_data.releaseDate).year.toString() :
-                  "Unknown Year",
+                  "${S.of(context).released}: ${DateTime.parse(_data.releaseDate).year.toString()}" :
+                  S.of(context).unknown_x("Year"),
                 style: TextStyle(
                     fontFamily: 'GlacialIndifference',
                     fontSize: 16.0
@@ -378,7 +379,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                   starCount: 5,
                 ),
                 Text(
-                  "  \u2022  ${_data.voteCount} ratings",
+                  "  \u2022  ${S.of(context).n_ratings(_data.voteCount.toString())}",
                   style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.bold
@@ -530,7 +531,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                 children: <Widget>[
                   ListTile(
                       title: TitleText(
-                        'Synopsis',
+                        S.of(context).synopsis,
                         fontSize: 22.0,
                         textColor: Theme.of(context).primaryTextTheme.body1.color
                       )
@@ -550,10 +551,10 @@ class _ContentOverviewState extends State<ContentOverview> {
                                     _data.overview != "" ?
                                     _data.overview :
                                     // e.g: 'This TV Show has no synopsis available.'
-                                    "This " + getOverviewContentTypeName(widget.contentType) + " has no synopsis available.",
+                                    S.of(context).this_x_has_no_synopsis_available(getOverviewContentTypeName(widget.contentType)),
                                     maxLines: 6,
-                                    revealLabel: "Show More...",
-                                    concealLabel: "Show Less...",
+                                    revealLabel: S.of(context).show_more,
+                                    concealLabel: S.of(context).show_less,
                                   )
                                 ],
                               )

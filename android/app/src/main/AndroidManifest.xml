@@ -2,6 +2,12 @@
     package="xyz.apollotv.kamino"
     android:installLocation="auto">
 
+    <uses-feature android:name="android.software.leanback"
+        android:required="false" />
+
+    <uses-feature android:name="android.hardware.touchscreen"
+        android:required="false" />
+
     <!-- The INTERNET permission is required for development. Specifically,
          flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
@@ -21,7 +27,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="ApolloTV"
         android:icon="@mipmap/ic_launcher"
-        android:allowBackup="true">
+        android:allowBackup="true"
+        android:banner="@drawable/banner">
 
         <provider
             android:name="xyz.apollotv.kamino.OTAFileProvider"
@@ -68,6 +75,11 @@
                 <data
                     android:scheme="apollotv"
                     android:host="kamino" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
 

@@ -1,4 +1,5 @@
 // Import flutter libraries
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/genre/all_genres.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
@@ -106,12 +107,15 @@ class KaminoAppState extends State<KaminoApp> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        title: appName,
-        home: Launchpad(),
-        theme: getActiveThemeData(),
+      localizationsDelegates: [S.delegate],
+      supportedLocales: S.delegate.supportedLocales,
 
-        // Hide annoying debug banner
-        debugShowCheckedModeBanner: false
+      title: appName,
+      home: Launchpad(),
+      theme: getActiveThemeData(),
+
+      // Hide annoying debug banner
+      debugShowCheckedModeBanner: false
     );
   }
 
@@ -273,35 +277,35 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
             ),
             ListTile(
               leading: const Icon(Icons.library_books),
-              title: Text("Blog"),
+              title: Text(S.of(context).blog),
               onTap: () => _launchURL("https://medium.com/apolloblog"),
             ),
             Divider(),
             ListTile(
               leading: const Icon(Icons.live_tv),
-              title: Text('TV Shows'),
+              title: Text(S.of(context).tv_shows),
               onTap: () => _openAllGenres(context, "tv"),
             ),
             ListTile(
               leading: const Icon(Icons.local_movies),
-              title: Text('Movies'),
+              title: Text(S.of(context).movies),
               onTap: () => _openAllGenres(context, "movie"),
             ),
             Divider(),
             ListTile(
               leading: const Icon(Icons.gavel),
-              title: Text('Legal'),
+              title: Text(S.of(context).legal),
               onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
             ),
             ListTile(
               leading: const Icon(Icons.accessibility),
-              title: Text('Donate'),
+              title: Text(S.of(context).donate),
               onTap: () => _launchURL("https://apollotv.xyz/donate"),
             ),
             ListTile(
               enabled: true,
               leading: const Icon(Icons.settings),
-              title: Text('Settings'),
+              title: Text(S.of(context).settings),
               onTap: () {
                 Navigator.of(context).pop();
 

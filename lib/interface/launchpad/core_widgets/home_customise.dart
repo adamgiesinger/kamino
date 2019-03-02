@@ -37,7 +37,7 @@ class HomeCustomiseWidget extends StatelessWidget {
                     ),
                     onPressed: (){
                       Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => LaunchpadSettingsPage()
+                          builder: (context) => LaunchpadSettingsPage(context)
                       ));
                     },
                   )

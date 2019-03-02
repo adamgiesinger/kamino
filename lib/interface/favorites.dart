@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/uielements.dart';
@@ -51,7 +52,7 @@ class FavoritesPageState extends State<FavoritesPage>
 
     return Scaffold(
       appBar: new AppBar(
-          title: Text("Favorites", style: _glacialFont,),
+          title: Text(S.of(context).favorites, style: _glacialFont,),
           centerTitle: true,
           backgroundColor: Theme.of(context).backgroundColor,
           actions: <Widget>[
@@ -178,12 +179,12 @@ class FavoritesPageState extends State<FavoritesPage>
                                               ? _favTV[index]["year"]
                                               .toString()
                                               .substring(0, 4)
-                                              : "Unknown"
+                                              : S.of(context).unknown
                                               : _favMovie[index]["year"] != null
                                               ? _favMovie[index]["year"]
                                               .toString()
                                               .substring(0, 4)
-                                              : "Unknown",
+                                              : S.of(context).unknown,
                                           style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.white)),
@@ -215,7 +216,7 @@ class FavoritesPageState extends State<FavoritesPage>
         padding:
             const EdgeInsets.only(left: _paddingWeight, right: _paddingWeight),
         child: Text(
-          "Nothing here yet...",
+          S.of(context).no_results_found,
           maxLines: 3,
           style: TextStyle(
               fontSize: 22.0,

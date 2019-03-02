@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:kamino/main.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
-import 'package:kamino/util/trakt.dart';
 import 'package:kamino/interface/settings/page.dart';
 
 import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
-import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OtherSettingsPage extends SettingsPage {
 
-  OtherSettingsPage({bool isPartial = false}) : super(
-      title: "Other",
+  OtherSettingsPage(BuildContext context, {bool isPartial = false}) : super(
+      title: S.of(context).other_,
       pageState: OtherSettingsPageState(),
       isPartial: isPartial
   );
@@ -54,11 +51,11 @@ class OtherSettingsPageState extends SettingsPageState {
             isThreeLine: true,
             activeColor: Theme.of(context).primaryColor,
             value: _sourceSelection,
-            title: TitleText("Manually Select Sources"),
+            title: TitleText(S.of(context).manually_select_sources),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                "Shows a dialog with a list of discovered sources instead of automatically choosing one.",
+                S.of(context).manually_select_sources_description,
                 style: TextStyle(),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
@@ -82,11 +79,11 @@ class OtherSettingsPageState extends SettingsPageState {
             isThreeLine: true,
             activeColor: Theme.of(context).primaryColor,
             value: _expandedSearchValue,
-            title: TitleText("Detailed Content Information"),
+            title: TitleText(S.of(context).detailed_content_information),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                "Replaces the grid of posters with a list of more detailed cards on search and overview pages.",
+                S.of(context).detailed_content_information_description,
                 style: TextStyle(),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
@@ -107,12 +104,12 @@ class OtherSettingsPageState extends SettingsPageState {
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
-            title: TitleText("Clear Search History"),
-            subtitle: Text("Removes search suggestions based on past searches."),
+            title: TitleText(S.of(context).clear_search_history),
+            subtitle: Text(S.of(context).clear_search_history_description),
             enabled: true,
             onTap: (){
               settingsPref.saveListPref("searchHistory", []);
-              Interface.showSnackbar("Search history cleared.", context: context);
+              Interface.showSnackbar(S.of(context).search_history_cleared, context: context);
             },
           ),
         )

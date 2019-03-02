@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/interface/settings/page.dart';
@@ -12,8 +13,8 @@ import 'package:device_info/device_info.dart';
 
 class AdvancedSettingsPage extends SettingsPage {
 
-  AdvancedSettingsPage({bool isPartial = false}) : super(
-      title: "Advanced",
+  AdvancedSettingsPage(BuildContext context, {bool isPartial = false}) : super(
+      title: S.of(context).advanced,
       pageState: AdvancedSettingsPageState(),
       isPartial: isPartial
   );
@@ -31,8 +32,8 @@ class AdvancedSettingsPageState extends SettingsPageState {
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
-            title: TitleText("Change Default Server"),
-            subtitle: Text("Manually override the default content server."),
+            title: TitleText(S.of(context).change_default_server),
+            subtitle: Text(S.of(context).manually_override_the_default_content_server),
             enabled: true,
             onTap: (){
 
@@ -45,8 +46,8 @@ class AdvancedSettingsPageState extends SettingsPageState {
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
-            title: TitleText("Run Connectivity Test"),
-            subtitle: Text("Checks whether sources can be reached."),
+            title: TitleText(S.of(context).run_connectivity_test),
+            subtitle: Text(S.of(context).checks_whether_sources_can_be_reached),
             enabled: true,
             onTap: () => {},
           ),
@@ -55,8 +56,8 @@ class AdvancedSettingsPageState extends SettingsPageState {
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
-            title: TitleText("Get Device Information"),
-            subtitle: Text("Gathers useful information for debugging."),
+            title: TitleText(S.of(context).get_device_information),
+            subtitle: Text(S.of(context).gathers_useful_information_for_debugging),
             enabled: true,
             onTap: () async {
               var deviceInfoPlugin = DeviceInfoPlugin();
@@ -78,7 +79,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
                 String key = jsonDecode(response.body)["key"];
 
                 await Clipboard.setData(new ClipboardData(text: "https://hastebin.com/$key.apollodebug"));
-                Interface.showSnackbar('Link copied to clipboard.', context: context);
+                Interface.showSnackbar(S.of(context).link_copied_to_clipboard, context: context);
 
                 return;
               }

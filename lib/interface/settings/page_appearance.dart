@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/interface/settings/page.dart';
@@ -7,8 +8,8 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 
 class AppearanceSettingsPage extends SettingsPage {
 
-  AppearanceSettingsPage({bool isPartial = false}) : super(
-    title: "Appearance",
+  AppearanceSettingsPage(BuildContext context, {bool isPartial = false}) : super(
+    title: S.of(context).appearance,
     pageState: AppearenceSettingsPageState(),
     isPartial: isPartial
   );
@@ -28,9 +29,9 @@ class AppearenceSettingsPageState extends SettingsPageState {
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
-            title: TitleText("Change Theme..."),
+            title: TitleText(S.of(context).change_theme),
             subtitle: Text(
-                "${appState.getActiveThemeMeta().getName()} v${appState.getActiveThemeMeta().getVersion()} (by ${appState.getActiveThemeMeta().getAuthor()})"
+                "${appState.getActiveThemeMeta().getName()} v${appState.getActiveThemeMeta().getVersion()} (${S.of(context).by_x(appState.getActiveThemeMeta().getAuthor())})"
             ),
             onTap: () => _showThemeChoice(context),
           ),
@@ -39,7 +40,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
-            title: TitleText("Set Primary Color..."),
+            title: TitleText(S.of(context).set_primary_color),
             subtitle: Text(
                 PrimaryColorChooser.colorToHexString(Theme.of(context).primaryColor)
             ),
@@ -71,7 +72,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
                     Icon(Icons.palette),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: TitleText("Change Theme"),
+                      child: TitleText(S.of(context).change_theme),
                     )
                   ],
                 )
@@ -158,7 +159,7 @@ class _PrimaryColorChooserState extends State<PrimaryColorChooser> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
-                child: TitleText("Set Primary Color"),
+                child: TitleText(S.of(context).set_primary_color),
               )
             ],
           )
@@ -201,7 +202,7 @@ class _PrimaryColorChooserState extends State<PrimaryColorChooser> {
                           Navigator.of(context).pop();
                         },
                         child: Text(
-                          "Default",
+                          S.of(context).default_,
                           style: TextStyle(
                               color: appState
                                   .getActiveThemeData(ignoreOverride: true)
@@ -216,7 +217,7 @@ class _PrimaryColorChooserState extends State<PrimaryColorChooser> {
                         appState.setPrimaryColorOverride(_activeColor);
                         Navigator.of(context).pop();
                       },
-                      child: Text("Done")
+                      child: Text(S.of(context).done)
                     )
                   ],
                 )

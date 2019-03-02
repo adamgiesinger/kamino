@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'dart:async';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/ui/uielements.dart';
@@ -327,7 +328,7 @@ class _AllGenresState extends State<AllGenres>{
         padding:
         const EdgeInsets.only(left: _paddingWeight, right: _paddingWeight),
         child: Text(
-          "Can't find anything...",
+          S.of(context).no_results_found,
           maxLines: 3,
           style: TextStyle(
               fontSize: 22.0,

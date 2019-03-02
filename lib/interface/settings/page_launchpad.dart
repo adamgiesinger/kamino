@@ -1,14 +1,15 @@
 
 import 'package:dragable_flutter_list/dragable_flutter_list.dart';
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/launchpad/launchpad_item.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/interface/settings/page.dart';
 
 class LaunchpadSettingsPage extends SettingsPage {
 
-  LaunchpadSettingsPage() : super(
-    title: "Launchpad",
+  LaunchpadSettingsPage(BuildContext context) : super(
+    title: S.of(context).launchpad,
     pageState: LaunchpadSettingsPageState(),
   );
 
@@ -93,7 +94,7 @@ class LaunchpadSettingsPageState extends SettingsPageState {
           _getLaunchPrefs();
 
           //inform the user of the change
-          Interface.showSnackbar("The default configuration has been restored.",
+          Interface.showSnackbar(S.of(context).the_default_configuration_has_been_restored,
             state: getScaffoldKey().currentState
           );
           /*getScaffoldKey().currentState.showSnackBar(
@@ -107,7 +108,7 @@ class LaunchpadSettingsPageState extends SettingsPageState {
           );*/
 
         },
-        tooltip: "Restore Defaults",
+        tooltip: S.of(context).restore_defaults,
       )
     ];
   }

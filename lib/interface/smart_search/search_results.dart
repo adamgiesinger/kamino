@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 
 import 'package:flutter/material.dart';
@@ -188,7 +189,7 @@ class _SearchResultState extends State<SearchResult> {
 
   void _scrollListener(){
 
-    print("current pgae is $_currentPages");
+    print("current page is $_currentPages");
 
     if (controller.offset >= controller.position.extentAfter) {
 
@@ -247,7 +248,7 @@ Widget _nothingFoundScreen(BuildContext context) {
       padding:
       const EdgeInsets.only(left: _paddingWeight, right: _paddingWeight),
       child: Text(
-        "Can't find anything...",
+        S.of(context).no_results_found,
         maxLines: 3,
         style: TextStyle(
             fontSize: 22.0,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:package_info/package_info.dart';
@@ -117,14 +118,14 @@ runInstallProcedure (context, data) async {
 
     bool permissionStatus = await SimplePermissions.checkPermission(Permission.WriteExternalStorage);
     if(!permissionStatus) permissionStatus = (await SimplePermissions.requestPermission(Permission.WriteExternalStorage)) == PermissionStatus.authorized;
-    if(!permissionStatus) throw new FileSystemException("Permission denied.");
+    if(!permissionStatus) throw new FileSystemException(S.of(context).permission_denied);
 
     final downloadDir = new Directory((await getExternalStorageDirectory()).path + "/.apollo");
     if(!await downloadDir.exists()) await downloadDir.create();
     final downloadFile = new File("${downloadDir.path}/update.apk");
     if(await downloadFile.exists()) await downloadFile.delete();
 
-    showLoadingDialog(context, "Updating...", Text("Downloading update file..."));
+    showLoadingDialog(context, S.of(context).updating, Text(S.of(context).downloading_update_file));
     http.Client client = new http.Client();
     var req = await client.get(data["url"]);
     var bytes = req.bodyBytes;
@@ -133,9 +134,9 @@ runInstallProcedure (context, data) async {
     Navigator.of(context).pop();
     OTAHelper.installOTA(downloadFile.path);
   }catch(e){
-    String message = "Update failed. Please try again later.";
+    String message = S.of(context).update_failed_please_try_again_later;
 
-    if(e is FileSystemException) message = "Update failed. Storage permission denied.";
+    if(e is FileSystemException) message = S.of(context).update_failed_storage_permission_denied;
 
     if(Scaffold.of(context, nullOk: true) != null) {
       Interface.showSnackbar(message, context: context, backgroundColor: Colors.red);
@@ -145,14 +146,14 @@ runInstallProcedure (context, data) async {
           context: context,
           builder: (_){
             return AlertDialog(
-              title: TitleText("Error updating app..."),
+              title: TitleText(S.of(context).error_updating_app),
               content: Text(message),
               actions: <Widget>[
                 FlatButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: TitleText("Dismiss", textColor: Theme.of(context).primaryTextTheme.body1.color)
+                    child: TitleText(S.of(context).dismiss, textColor: Theme.of(context).primaryTextTheme.body1.color)
                 )
               ],
             );

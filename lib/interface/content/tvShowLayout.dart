@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/interface/content/episodePicker.dart';
@@ -20,7 +21,7 @@ class TVShowLayout{
                 children: <Widget>[
                   ListTile(
                       title: TitleText(
-                          'Seasons (${_data.seasons.length})',
+                          S.of(context).seasons_n(_data.seasons.length.toString()),
                           fontSize: 22.0,
                           textColor: Theme.of(context).primaryTextTheme.body1.color
                       )
@@ -44,7 +45,7 @@ class TVShowLayout{
           var seasonIndex = _data.seasons.indexOf(season);
 
           // Format 'air date'.
-          var airDate = "Ongoing";
+          var airDate = S.of(context).ongoing;
 
           if(season["air_date"] != null){
             airDate = new DateFormat.yMMMMd("en_US").format(
@@ -88,7 +89,10 @@ class TVShowLayout{
                       leading: leadingWidget,
                       title: TitleText(season["name"]),
                       subtitle: Text(
-                          "${season["episode_count"]} episode${season["episode_count"] != 1 ? "s" : "" } \u2022 $airDate"
+                          (season["episode_count"] != 1 ?
+                            S.of(context).n_episodes(season["episode_count"]) :
+                            S.of(context).one_episode)
+                          + " \u2022 $airDate"
                       ),
                     )
                   ]

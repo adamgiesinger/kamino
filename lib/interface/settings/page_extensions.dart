@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/animation/transition.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/uielements.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/interface/settings/page.dart';
@@ -8,8 +9,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 
 class ExtensionsSettingsPage extends SettingsPage {
-  ExtensionsSettingsPage() : super(
-      title: "Extensions",
+  ExtensionsSettingsPage(BuildContext context) : super(
+      title: S.of(context).extensions,
       pageState: ExtensionsSettingsPageState()
   );
 }
@@ -51,14 +52,14 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                 isThreeLine: true,
                 leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
                 title: Text('Trakt.tv'),
-                subtitle: Text("Automatically track what you're watching, synchronise playlists across devices and more..."),
+                subtitle: Text(S.of(context).trakt_description),
               ),
               ButtonTheme.bar( // make buttons use the appropriate styles for cards
                 child: ButtonBar(
                   children: <Widget>[
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
-                      child: TitleText('Sync'),
+                      child: TitleText(S.of(context).sync),
                       onPressed: (traktConnected) ? (){
                         trakt.synchronize(context, _traktCred);
                       } : null,
@@ -67,7 +68,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       // Trakt account is not linked: show connect option
                       FlatButton(
                         textColor: Theme.of(context).primaryTextTheme.body1.color,
-                        child: TitleText('Connect'),
+                        child: TitleText(S.of(context).connect),
                         onPressed: () {
                           Navigator.push(context, SlideRightRoute(
                               builder: (_ctx) => trakt.TraktAuth(context: _ctx)
@@ -83,7 +84,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                     // Trakt account is linked: show disconnect option
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
-                      child: TitleText('Disconnect'),
+                      child: TitleText(S.of(context).disconnect),
                       onPressed: () async {
                         // TODO: Show disconnecting dialog
                         if(await trakt.deauthUser(context, _traktCred)){
@@ -110,14 +111,14 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                 isThreeLine: true,
                 leading: SvgPicture.asset("assets/icons/realdebrid.svg", height: 36, width: 36, color: const Color(0xFF78BB6F)),
                 title: Text('Real-Debrid'),
-                subtitle: Text("Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet."),
+                subtitle: Text(S.of(context).rd_description),
               ),
               ButtonTheme.bar( // make buttons use the appropriate styles for cards
                 child: ButtonBar(
                   children: <Widget>[
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
-                      child: TitleText('Coming Soon'),
+                      child: TitleText(S.of(context).coming_soon),
                       onPressed: null,
                     ),
                   ],
