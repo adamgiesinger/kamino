@@ -102,7 +102,7 @@
   "error_updating_app": "...خطأ في تحديث التطبيق",
   "trakt_description": " ...تتبع ما تشاهده تلقائيًا و زامن قائمة تشغيلك عبر الأجهزة والمزيد",
   "rd_description": ".هو موقع تنزيل غير محدود يسمح لك بتنزيل الملفات الموجودة على الإنترنت بسرعة Real-Debrid",
-  "change_theme": "Change Theme...",
+  "change_theme": "...غير المظهر الاجمالي",
   "by_x": "by $x",
   "set_primary_color": "...حدد اللون الاساسي",
   "change_default_server": "غير الخادم الافتراضي",
