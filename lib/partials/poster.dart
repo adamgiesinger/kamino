@@ -66,7 +66,9 @@ class PosterState extends State<Poster> {
         fit: widget.imageFit,
         placeholder: Center(
             child: CircularProgressIndicator(
-              backgroundColor: Theme.of(context).primaryColor,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor
+              ),
             ),
         ),
         height: widget.height,

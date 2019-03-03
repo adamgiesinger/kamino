@@ -1,12 +1,14 @@
 // Import flutter libraries
-import 'package:kamino/pages/all_media/all_genres.dart';
-import 'package:kamino/view/settings/utils/ota.dart' as OTA;
-import 'package:kamino/view/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/interface/genre/all_genres.dart';
+import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
+import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/skyspace/skyspace.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:kamino/pages/favorites.dart';
+import 'package:kamino/interface/favorites.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,13 +17,19 @@ import 'package:kamino/vendor/index.dart';
 // Import custom libraries / utils
 import 'animation/transition.dart';
 // Import pages
-import 'pages/launchpad.dart';
+import 'interface/launchpad.dart';
 // Import views
-import 'package:kamino/view/settings/settings.dart';
+import 'package:kamino/interface/settings/settings.dart';
 
 const appName = "ApolloTV";
-
 Logger log;
+
+const platform = const MethodChannel('xyz.apollotv.kamino/init');
+
+class PlatformType {
+  static const GENERAL = 0;
+  static const TV = 1;
+}
 
 void main(){
   // Setup logger
@@ -31,9 +39,13 @@ void main(){
   });
   log = new Logger(appName);
 
-  runApp(
-    KaminoApp()
-  );
+  // Get device type
+  () async {
+    return (await platform.invokeMethod('getDeviceType')) as int;
+  }().then((platformType){
+    if(platformType == PlatformType.TV) return runApp(KaminoSkyspace());
+    runApp(KaminoApp());
+  });
 }
 
 class KaminoApp extends StatefulWidget {
@@ -95,12 +107,15 @@ class KaminoAppState extends State<KaminoApp> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        title: appName,
-        home: Launchpad(),
-        theme: getActiveThemeData(),
+      localizationsDelegates: [S.delegate],
+      supportedLocales: S.delegate.supportedLocales,
 
-        // Hide annoying debug banner
-        debugShowCheckedModeBanner: false
+      title: appName,
+      home: Launchpad(),
+      theme: getActiveThemeData(),
+
+      // Hide annoying debug banner
+      debugShowCheckedModeBanner: false
     );
   }
 
@@ -190,6 +205,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           // backgroundColor: backgroundColor,
           appBar: AppBar(
             title: Image.asset(
@@ -219,7 +235,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
           drawer: __buildAppDrawer(),
 
           // Body content
-          body: LaunchpadController()
+          body: LaunchpadController(),
       )
     );
   }
@@ -261,35 +277,35 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
             ),
             ListTile(
               leading: const Icon(Icons.library_books),
-              title: Text("Blog"),
+              title: Text(S.of(context).blog),
               onTap: () => _launchURL("https://medium.com/apolloblog"),
             ),
             Divider(),
             ListTile(
               leading: const Icon(Icons.live_tv),
-              title: Text('TV Shows'),
+              title: Text(S.of(context).tv_shows),
               onTap: () => _openAllGenres(context, "tv"),
             ),
             ListTile(
               leading: const Icon(Icons.local_movies),
-              title: Text('Movies'),
+              title: Text(S.of(context).movies),
               onTap: () => _openAllGenres(context, "movie"),
             ),
             Divider(),
             ListTile(
               leading: const Icon(Icons.gavel),
-              title: Text('Legal'),
+              title: Text(S.of(context).legal),
               onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
             ),
             ListTile(
               leading: const Icon(Icons.accessibility),
-              title: Text('Donate'),
+              title: Text(S.of(context).donate),
               onTap: () => _launchURL("https://apollotv.xyz/donate"),
             ),
             ListTile(
               enabled: true,
               leading: const Icon(Icons.settings),
-              title: Text('Settings'),
+              title: Text(S.of(context).settings),
               onTap: () {
                 Navigator.of(context).pop();
 
