@@ -15,8 +15,8 @@
   "unknown": "غير معروف",
   "unknown_x": "$x غير معروف",
   "no_results_found": "لا توجد نتائج",
-  "cancel": "الغي",
-  "dismiss": "اصرف",
+  "cancel": "الغاء",
+  "dismiss": "اغلاق",
   "sync": "زامن",
   "connect": "اتصل",
   "disconnect": "اقطع الاتصال",
@@ -25,8 +25,8 @@
 
   "coming_soon": "قريباً",
 
-  "authentication_successful": "التوثيق نجح",
-  "authentication_unsuccessful": "التوثيق لم ينجح",
+  "authentication_successful": "نجح التوثيق",
+  "authentication_unsuccessful": "لم ينجح التوثيق",
 
   "trakt_authenticator": "Trakt موثق",
   "successfully_refreshed_trakt_token": ".بنجاح Trakt تم تحديث رمز",
@@ -55,7 +55,7 @@
   "one_episode": "حلقة واحدة",
   "n_episodes": "حلقات $n",
 
-  "released": "اصدر",
+  "released": "تم الاصدار",
   "ongoing": "مستمر",
 
   "popularity": "الشعبية",
@@ -75,10 +75,10 @@
   "appearance": "المظهر",
   "customise_the_theme_and_primary_colors": ".عدل المظهر و الالوان الاساسية",
   "launchpad": "منصة الإطلاق",
-  "customise_your_launchpad": "عدل منصة انطلاقك.",
+  "customise_your_launchpad": "عدل منصة اطلاقك.",
   "boost_your_experience": "حسن تجربتك",
   "extensions": "اضافات",
-  "manage_third_party_integrations": ".ةادر اضافات من اطرف ثالث",
+  "manage_third_party_integrations": ".ادارة اضافات طرف ثالث",
   "miscellaneous": "متنوع",
   "other_": "اخر",
   "general_application_settings": ".إعدادات التطبيق العامة",
@@ -90,9 +90,9 @@
   "manually_select_sources_description": ".يعرض قائمة بالمصادر التي تم اكتشافها بدلاً من اختيار واحد تلقائياً",
   "detailed_content_information": "معلومات مفصلة عن المحتوى",
   "detailed_content_information_description": "يستبدل شبكة الملصقات بقائمة بطاقات أكثر تفصيلاً على صفحات البحث والنظرة العامة.",
-  "clear_search_history": "امسح البحوث السابقة",
+  "clear_search_history": "امسح سجل البحث",
   "clear_search_history_description": ".يزيل اقتراحات البحث التي تستند علي عمليات البحث السابقة",
-  "search_history_cleared": ".مسح سجل البحث",
+  "search_history_cleared": ".سجل البحث قد مسح ",
 
   "permission_denied": ".طلب الاذن مرفوض",
   "downloading_update_file": "...جاري تحميل التحديث",
