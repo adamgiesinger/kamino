@@ -12,3 +12,4 @@ POLISH | pl | `v1.4.0` | @deeeh👻#1004
 PORTUGUESE | pt | `v1.4.0` | @Dark Reaper#7063
 ROMANIAN | ro | `v1.4.0` | @Sasesu#3024
 SPANISH | es | `v1.4.0` | @Lonely#2769
+ITALIAN | it | `v1.4.0` | [@alessiovierti](https://github.com/alessiovierti)
