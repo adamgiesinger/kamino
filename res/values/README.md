@@ -12,3 +12,4 @@ POLISH | pl | `v1.4.0` | @deeeh👻#1004
 PORTUGUESE | pt | `v1.4.0` | @Dark Reaper#7063
 ROMANIAN | ro | `v1.4.0` | @Sasesu#3024
 SPANISH | es | `v1.4.0` | @Lonely#2769
+SWEDISH | sv | `v1.4.0` | @Gagnef03 V2#7335
