@@ -92,7 +92,7 @@
   "detailed_content_information_description": "يستبدل شبكة الملصقات بقائمة بطاقات أكثر تفصيلاً على صفحات البحث والنظرة العامة.",
   "clear_search_history": "امسح سجل البحث",
   "clear_search_history_description": ".يزيل اقتراحات البحث التي تستند علي عمليات البحث السابقة",
-  "search_history_cleared": ".سجل البحث قد مسح ",
+  "search_history_cleared": ".سجل البحث قد مسح",
 
   "permission_denied": ".طلب الاذن مرفوض",
   "downloading_update_file": "...جاري تحميل التحديث",
