@@ -120,8 +120,12 @@ class S implements WidgetsLocalizations {
   String unknown_x(String x) => "Unknown $x";
 }
 
-class $pt extends S {
-  const $pt();
+class $en extends S {
+  const $en();
+}
+
+class $pl extends S {
+  const $pl();
 
   @override
   TextDirection get textDirection => TextDirection.ltr;
@@ -326,17 +330,13 @@ class $pt extends S {
   String make_appname_yours(String appName) => "Faz $appName teu";
 }
 
-class $en extends S {
-  const $en();
-}
-
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
   const GeneratedLocalizationsDelegate();
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale("pt", ""),
       Locale("en", ""),
+      Locale("pl", ""),
     ];
   }
 
@@ -361,10 +361,10 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
     final String lang = getLang(locale);
     if (lang != null) {
       switch (lang) {
-        case "pt":
-          return SynchronousFuture<S>(const $pt());
         case "en":
           return SynchronousFuture<S>(const $en());
+        case "pl":
+          return SynchronousFuture<S>(const $pl());
         default:
           // NO-OP.
       }
