@@ -387,12 +387,6 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       return;
     }
 
-    RegExp regExp = new RegExp(r"^(?:http(s)?://)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=]+$");
-    if (!regExp.hasMatch(sourceStreamURL)) {
-      print("URL malformed: $sourceStreamURL");
-      return;
-    }
-
     try {
       Uri.parse(sourceStreamURL);
     }catch(ex){
