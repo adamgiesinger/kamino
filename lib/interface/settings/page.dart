@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 
 class SettingsPage extends StatefulWidget {
 

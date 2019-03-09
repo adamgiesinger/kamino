@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_parallax/flutter_parallax.dart';
 
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/tvshow.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 
 class EpisodePicker extends StatefulWidget {
   final int contentId;
@@ -49,8 +49,8 @@ class _EpisodePickerState extends State<EpisodePicker> {
 
   // Load the data from the source.
   Future<SeasonModel> loadDataAsync() async {
-    String url = "${tmdb.root_url}/tv/${widget.contentId}/season/"
-        "${widget.seasonIndex}${tmdb.defaultArguments}";
+    String url = "${TMDB.ROOT_URL}/tv/${widget.contentId}/season/"
+        "${widget.seasonIndex}${TMDB.defaultArguments}";
 
     http.Response response  = await http.get(url);
 
@@ -227,15 +227,13 @@ class _EpisodePickerState extends State<EpisodePicker> {
     return LayoutBuilder(builder: (BuildContext context, BoxConstraints size){
       return Center(
         child: new Parallax.inside(
-            mainAxisExtent: 200.0,
-            child: new Image.network(
-              "${tmdb.image_cdn}${episode["still_path"]}",
-              height: 300,
-              width: size.maxWidth,
-              fit: BoxFit.cover,
-            )
-          // height: 220.0,
-          // fit: BoxFit.cover,
+          mainAxisExtent: 200.0,
+          child: new Image.network(
+            "${TMDB.IMAGE_CDN_LOWRES}${episode["still_path"]}",
+            height: 300,
+            width: size.maxWidth,
+            fit: BoxFit.cover,
+          )
         ),
       );
     });

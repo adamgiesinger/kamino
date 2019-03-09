@@ -1,11 +1,13 @@
 {
+  "$_language_name": "English",
+  "$_language_name_english": "English",
+
   "blog": "Blog",
   "tv_shows": "TV Shows",
   "movies": "Movies",
   "legal": "Legal",
   "donate": "Donate",
   "settings": "Settings",
-
 
   "url_copied": "URL copied!",
   "okay": "Okay",
@@ -114,5 +116,8 @@
   "gathers_useful_information_for_debugging": "Gathers useful information for debugging.",
   "link_copied_to_clipboard": "Link copied to clipboard.",
   "the_default_configuration_has_been_restored": "The default configuration has been restored.",
-  "restore_defaults": "Restore Defaults"
+  "restore_defaults": "Restore Defaults",
+
+  "select_language": "Select Language",
+  "language_settings": "Language Settings"
 }

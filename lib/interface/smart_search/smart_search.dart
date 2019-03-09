@@ -4,11 +4,11 @@ import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/smart_search/search_results.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
-import 'package:kamino/partials/poster_card.dart';
+import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/models/content.dart';
 
 class SmartSearch extends SearchDelegate<String> {
@@ -26,8 +26,8 @@ class SmartSearch extends SearchDelegate<String> {
 
     List<SearchModel> _data = [];
 
-    String url = "${tmdb.root_url}/search/"
-        "multi${tmdb.defaultArguments}&"
+    String url = "${TMDB.ROOT_URL}/search/"
+        "multi${TMDB.defaultArguments}&"
         "query=$criteria&page=1&include_adult=false";
 
     http.Response res = await http.get(url);
@@ -147,7 +147,7 @@ class SmartSearch extends SearchDelegate<String> {
                               ? ContentType.TV_SHOW
                               : ContentType.MOVIE)));
             },
-            child: PosterCard(
+            child: ResultCard(
               isFav: false,
               background: snapshot.data[index].poster_path,
               name: snapshot.data[index].name,

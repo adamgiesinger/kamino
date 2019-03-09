@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 
 class Interface {
 
@@ -31,6 +31,15 @@ class Interface {
     if(state != null) { state.showSnackBar(snackbar); return; }
 
     print("Unable to show snackbar (text='$text')! No context or state was provided.");
+  }
+
+}
+
+class EmptyScrollBehaviour extends ScrollBehavior {
+
+  @override
+  Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
   }
 
 }

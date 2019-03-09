@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/tvshow.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/interface/content/episodePicker.dart';
 
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class TVShowLayout{
 
@@ -56,13 +57,14 @@ class TVShowLayout{
           // Determine season image
           var image = null;
           if(season["poster_path"] != null){
-            image = "${tmdb.image_cdn}" + season["poster_path"];
+            image = "${TMDB.IMAGE_CDN_POSTER}" + season["poster_path"];
           }
 
           // Create leading widget
           Widget leadingWidget = new Icon(Icons.live_tv);
           if(image != null){
-            leadingWidget = new Image(
+            leadingWidget = new FadeInImage(
+              placeholder: MemoryImage(kTransparentImage),
               image: (
                   NetworkImage(image)
               ),
@@ -90,7 +92,7 @@ class TVShowLayout{
                       title: TitleText(season["name"]),
                       subtitle: Text(
                           (season["episode_count"] != 1 ?
-                            S.of(context).n_episodes(season["episode_count"]) :
+                            S.of(context).n_episodes(season["episode_count"].toString()) :
                             S.of(context).one_episode)
                           + " \u2022 $airDate"
                       ),

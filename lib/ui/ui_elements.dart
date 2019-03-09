@@ -97,3 +97,43 @@ class ConcealableTextState extends State<ConcealableText> {
   }
 
 }
+
+class VerticalIconButton extends StatelessWidget {
+
+  Widget icon;
+  Widget title;
+  EdgeInsetsGeometry padding;
+  BorderRadiusGeometry borderRadius;
+  GestureTapCallback onTap;
+
+
+  VerticalIconButton({
+    @required this.icon,
+    @required this.title,
+    @required this.onTap,
+    this.padding = const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+    this.borderRadius
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      borderRadius: borderRadius,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        borderRadius: borderRadius,
+        onTap: onTap,
+        child: Container(
+          padding: padding,
+          child: Column(
+            children: <Widget>[
+              icon,
+              Container(child: title, margin: EdgeInsets.only(top: 10))
+            ]
+          )
+        )
+      )
+    );
+  }
+
+}

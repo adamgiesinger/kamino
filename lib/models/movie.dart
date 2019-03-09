@@ -5,9 +5,8 @@ class MovieContentModel extends ContentModel {
 
   //final List reviews;
   final List recommendations;
-
   final String imdbId;
-  final int runtime;
+  final double runtime;
 
   MovieContentModel({
     // Content model inherited parameters
@@ -53,7 +52,7 @@ class MovieContentModel extends ContentModel {
       releaseDate: json["release_date"],
       homepage: json["homepage"],
       genres: json["genres"],
-      rating: json["vote_average"] != null ? json["vote_average"] : -1.0,
+      rating: json["vote_average"] != null ? json["vote_average"].toDouble() : -1.0,
       backdropPath: json["backdrop_path"],
       posterPath: json["poster_path"],
       voteCount: json.containsKey("vote_count") ? json["vote_count"] : 0,

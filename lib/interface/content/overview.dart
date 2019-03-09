@@ -10,9 +10,9 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/tvshow.dart';
 
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/res/BottomGradient.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/interface/genre/genreResults.dart';
@@ -131,13 +131,13 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Get the data from the server.
       http.Response response = await http.get(
-        "${tmdb.root_url}/movie/${widget.contentId}${tmdb.defaultArguments}"
+        "${TMDB.ROOT_URL}/movie/${widget.contentId}${TMDB.defaultArguments}"
       );
       String json = response.body;
 
       // Get the recommendations data from the server.
       http.Response recommendedDataResponse = await http.get(
-        "${tmdb.root_url}/movie/${widget.contentId}/similar${tmdb.defaultArguments}&page=1"
+        "${TMDB.ROOT_URL}/movie/${widget.contentId}/similar${TMDB.defaultArguments}&page=1"
       );
       String recommended = recommendedDataResponse.body;
 
@@ -151,7 +151,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Get the data from the server.
       http.Response response = await http.get(
-          "${tmdb.root_url}/tv/${widget.contentId}${tmdb.defaultArguments}"
+          "${TMDB.ROOT_URL}/tv/${widget.contentId}${TMDB.defaultArguments}"
       );
       String json = response.body;
 
@@ -275,7 +275,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                         );
                       }),
                       background: _generateBackdropImage(context),
-                      collapseMode: CollapseMode.parallax,
+                      collapseMode: CollapseMode.pin,
                     ),
                   ),
                 ];
@@ -403,8 +403,8 @@ class _ContentOverviewState extends State<ContentOverview> {
     //null trap to private slow urls crashing the screen
     // (big issue with some old and foreign shows)
     _data.backdropPath != null ?
-    _backdropImagePath = tmdb.image_cdn + _data.backdropPath :
-    _backdropImagePath = tmdb.image_cdn;
+    _backdropImagePath = TMDB.IMAGE_CDN + _data.backdropPath :
+    _backdropImagePath = TMDB.IMAGE_CDN;
 
     return Container(
       height: 220,
@@ -415,12 +415,12 @@ class _ContentOverviewState extends State<ContentOverview> {
           Container(
               child: _data.backdropPath != null ?
               CachedNetworkImage(
-              imageUrl: _backdropImagePath,
-                  fit: BoxFit.cover,
-                  placeholder: Container(),
-                  height: 220.0,
-                  width: contextWidth,
-                  errorWidget: new Icon(Icons.error, size: 30.0)
+                imageUrl: _backdropImagePath,
+                fit: BoxFit.cover,
+                placeholder: Container(),
+                height: 220.0,
+                width: contextWidth,
+                errorWidget: new Icon(Icons.error, size: 30.0)
               ) :
               new Icon(Icons.error, size: 30.0)
           ),

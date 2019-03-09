@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kamino/res/BottomGradient.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 
-class Poster extends StatefulWidget {
+class ContentPoster extends StatefulWidget {
 
   final String background;
   final String name;
@@ -17,7 +17,7 @@ class Poster extends StatefulWidget {
   final BoxFit imageFit;
   final bool hideIcon;
 
-  Poster({
+  ContentPoster({
     @required this.background,
     @required this.name,
     @required this.releaseDate,
@@ -30,11 +30,11 @@ class Poster extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => PosterState();
+  State<StatefulWidget> createState() => ContentPosterState();
 
 }
 
-class PosterState extends State<Poster> {
+class ContentPosterState extends State<ContentPoster> {
 
   Color _favoriteIndicator() {
 
@@ -62,7 +62,7 @@ class PosterState extends State<Poster> {
       imageWidget = new CachedNetworkImage(
         errorWidget: new Icon(Icons.error),
 
-        imageUrl: "${tmdb.image_cdn}/${widget.background}",
+        imageUrl: "${TMDB.IMAGE_CDN_POSTER}/${widget.background}",
         fit: widget.imageFit,
         placeholder: Center(
             child: CircularProgressIndicator(

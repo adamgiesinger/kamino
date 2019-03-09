@@ -1,14 +1,18 @@
 // Import flutter libraries
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/genre/all_genres.dart';
+import 'package:kamino/interface/launchpad2/Launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/skyspace/skyspace.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:kamino/interface/favorites.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +21,7 @@ import 'package:kamino/vendor/index.dart';
 // Import custom libraries / utils
 import 'animation/transition.dart';
 // Import pages
-import 'interface/launchpad.dart';
+import 'package:kamino/interface/launchpad/launchpad.dart';
 // Import views
 import 'package:kamino/interface/settings/settings.dart';
 
@@ -57,6 +61,8 @@ class KaminoApp extends StatefulWidget {
 
 class KaminoAppState extends State<KaminoApp> {
 
+  Locale _currentLocale;
+
   List<VendorConfiguration> _vendorConfigs;
   List<ThemeConfiguration> _themeConfigs;
   String _activeTheme;
@@ -78,6 +84,22 @@ class KaminoAppState extends State<KaminoApp> {
     _primaryColorOverride = null;
 
     _loadActiveTheme();
+    _loadLocale();
+  }
+
+  Future<void> setLocale(Locale locale) async {
+    settingsPref.saveListPref('localeSettings', [locale.languageCode, locale.countryCode]);
+    await _loadLocale();
+  }
+
+  Future<void> _loadLocale() async {
+    if(!(await settingsPref.hasPref("localeSettings"))) return;
+
+    var localePref = await settingsPref.getListPref('localeSettings');
+
+    setState(() {
+      _currentLocale = Locale(localePref[0], localePref[1]);
+    });
   }
 
   Future<void> _loadActiveTheme() async {
@@ -107,11 +129,16 @@ class KaminoAppState extends State<KaminoApp> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      localizationsDelegates: [S.delegate],
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
       supportedLocales: S.delegate.supportedLocales,
+      locale: _currentLocale != null ? _currentLocale : Locale('en'),
 
       title: appName,
-      home: Launchpad(),
+      home: KaminoAppHome(),
       theme: getActiveThemeData(),
 
       // Hide annoying debug banner
@@ -178,14 +205,16 @@ class KaminoAppState extends State<KaminoApp> {
 
 }
 
-class Launchpad extends StatefulWidget {
+class KaminoAppHome extends StatefulWidget {
 
   @override
-  LaunchpadState createState() => LaunchpadState();
+  KaminoAppHomeState createState() => KaminoAppHomeState();
 
 }
 
-class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixin {
+class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderStateMixin {
+
+  int _currentPage = 0;
 
   Future<bool> _onWillPop() async {
     // Allow app close on back
@@ -194,6 +223,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
 
   @override
   void initState() {
+    _currentPage = 0;
     OTA.updateApp(context, true);
     ApolloVendor.getLaunchpadConfiguration().initialize();
     super.initState();
@@ -202,6 +232,7 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
   @override
   Widget build(BuildContext context) {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
@@ -214,108 +245,76 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
               width: 125
             ),
 
-            // MD2: make the color the same as the background.
+            //backgroundColor: Theme.of(context).backgroundColor,
+            //elevation: 0,
+
             backgroundColor: Theme.of(context).cardColor,
             elevation: 5.0,
-              actions: <Widget>[
+
+            actions: <Widget>[
               IconButton(
-                  icon: Icon(Icons.favorite),
-                  tooltip: "Favorites",
+                  icon: Icon(Icons.search),
+                  tooltip: "Search",
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => FavoritesPage()
-                    ));
+                    showSearch(context: context, delegate: SmartSearch());
                   },
               ),
+
+              PopupMenuButton<String>(
+                tooltip: "Options",
+                icon: Icon(Icons.more_vert),
+                onSelected: (String index){
+                  switch(index){
+                    case 'discord': return _launchURL("https://discord.gg/euyQRWs");
+                    case 'blog': return _launchURL("https://medium.com/apolloblog");
+                    case 'privacy': return _launchURL("https://apollotv.xyz/legal/privacy");
+                    case 'donate': return _launchURL("https://apollotv.xyz/donate");
+                    case 'settings': return Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => SettingsView()
+                    ));
+
+                    default: Interface.showSnackbar("Invalid menu option. Option '$index' was not defined.");
+                  }
+                },
+                itemBuilder: (BuildContext context){
+                  return [
+                    PopupMenuItem<String>(
+                      value: 'discord',
+                      child: Container(child: Text("Discord"), padding: EdgeInsets.only(right: 50)),
+                    ),
+
+                    PopupMenuItem<String>(
+                      value: 'blog',
+                      child: Container(child: Text("Blog"), padding: EdgeInsets.only(right: 50))
+                    ),
+
+                    PopupMenuItem<String>(
+                      value: 'privacy',
+                      child: Container(child: Text("Privacy"), padding: EdgeInsets.only(right: 50))
+                    ),
+
+                    PopupMenuItem<String>(
+                      value: 'donate',
+                      child: Container(child: Text("Donate"), padding: EdgeInsets.only(right: 50))
+                    ),
+
+                    PopupMenuItem<String>(
+                      value: 'settings',
+                      child: Container(child: Text("Settings"), padding: EdgeInsets.only(right: 50))
+                    )
+                  ];
+                }
+              )
             ],
 
             // Center title
-            centerTitle: true
+            centerTitle: false
           ),
-          drawer: __buildAppDrawer(),
+          //drawer: __buildAppDrawer(),
 
           // Body content
-          body: LaunchpadController(),
+          body: Launchpad2(),
       )
-    );
-  }
-
-  _openAllGenres(BuildContext context, String mediaType) {
-
-    if (mediaType == "tv") {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AllGenres(contentType: mediaType)
-          )
-      );
-    } else if (mediaType == "movie"){
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AllGenres(contentType: mediaType)
-          )
-      );
-    }
-  }
-
-  Widget __buildAppDrawer(){
-    return Drawer(
-      child: ListView(
-
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-                child: null,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/header.png'),
-                        fit: BoxFit.fitHeight,
-                        alignment: Alignment.bottomCenter),
-                    color: const Color(0xFF000000)
-                )
-            ),
-            ListTile(
-              leading: const Icon(Icons.library_books),
-              title: Text(S.of(context).blog),
-              onTap: () => _launchURL("https://medium.com/apolloblog"),
-            ),
-            Divider(),
-            ListTile(
-              leading: const Icon(Icons.live_tv),
-              title: Text(S.of(context).tv_shows),
-              onTap: () => _openAllGenres(context, "tv"),
-            ),
-            ListTile(
-              leading: const Icon(Icons.local_movies),
-              title: Text(S.of(context).movies),
-              onTap: () => _openAllGenres(context, "movie"),
-            ),
-            Divider(),
-            ListTile(
-              leading: const Icon(Icons.gavel),
-              title: Text(S.of(context).legal),
-              onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
-            ),
-            ListTile(
-              leading: const Icon(Icons.accessibility),
-              title: Text(S.of(context).donate),
-              onTap: () => _launchURL("https://apollotv.xyz/donate"),
-            ),
-            ListTile(
-              enabled: true,
-              leading: const Icon(Icons.settings),
-              title: Text(S.of(context).settings),
-              onTap: () {
-                Navigator.of(context).pop();
-
-                Navigator.push(context, SlideRightRoute(
-                    builder: (context) => SettingsView()
-                ));
-              }
-            )
-          ],
-        )
     );
   }
 

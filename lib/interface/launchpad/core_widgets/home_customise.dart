@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/main.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/interface/settings/page_launchpad.dart';
 
 class HomeCustomiseWidget extends StatelessWidget {

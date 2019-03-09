@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/interface/smart_search/smart_search.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
 
 
@@ -19,7 +19,7 @@ void addFavoritePrompt(
     int id, String url, String year, String mediaType) async{
 
   //strip tmdb image cdn from input url
-  url = url.replaceAll(tmdb.image_cdn, "");
+  url = url.replaceAll(TMDB.IMAGE_CDN, "");
 
   print("the title: $title \n id: $id \n url: $url \n year: $year \n mediaType: $mediaType");
 

@@ -26,7 +26,7 @@ class TVShowContentModel extends ContentModel {
     int voteCount,
     double voteAverage,
 
-    // Movie parameters
+    // TV Show parameters
     this.createdBy,
     this.episodeRuntime,
     this.seasons,

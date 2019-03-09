@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:io';
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
@@ -300,7 +300,7 @@ Future<String> updateDatabase(Map payload) async {
 
       //get the info from tmdb
       String url =
-          "${tmdb.root_url}/tv/${payload["shows"]["tmdb"][i]}${tmdb.defaultArguments}";
+          "${TMDB.ROOT_URL}/tv/${payload["shows"]["tmdb"][i]}${TMDB.defaultArguments}";
 
       var res = await http.get(url);
 
@@ -331,7 +331,7 @@ Future<String> updateDatabase(Map payload) async {
 
       //get the info from tmdb
       String url =
-          "${tmdb.root_url}/movie/${payload["movies"]["tmdb"][i]}${tmdb.defaultArguments}";
+          "${TMDB.ROOT_URL}/movie/${payload["movies"]["tmdb"][i]}${TMDB.defaultArguments}";
       var res = await http.get(url);
 
       if (res.statusCode == 200) {
@@ -360,8 +360,8 @@ Future<String> updateDatabase(Map payload) async {
     //300ms delay ensures we do not hit tmdb api limit
     await Future.delayed(new Duration(milliseconds: 300));
 
-    String url = "${tmdb.root_url}/find/${payload["movies"]["imdb"][i]}"
-        "${tmdb.defaultArguments}&external_source=imdb_id";
+    String url = "${TMDB.ROOT_URL}/find/${payload["movies"]["imdb"][i]}"
+        "${TMDB.defaultArguments}&external_source=imdb_id";
 
     var res = await http.get(url);
 
@@ -395,8 +395,8 @@ Future<String> updateDatabase(Map payload) async {
     //300ms delay ensures we do not hit tmdb api limit
     await Future.delayed(new Duration(milliseconds: 300));
 
-    String url = "${tmdb.root_url}/find/${payload["shows"]["imdb"][i]}"
-        "${tmdb.defaultArguments}&external_source=imdb_id";
+    String url = "${TMDB.ROOT_URL}/find/${payload["shows"]["imdb"][i]}"
+        "${TMDB.defaultArguments}&external_source=imdb_id";
 
     var res = await http.get(url);
 

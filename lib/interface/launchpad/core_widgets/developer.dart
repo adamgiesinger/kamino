@@ -1,6 +1,6 @@
 import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 
 class DeveloperWidget extends StatelessWidget {
 

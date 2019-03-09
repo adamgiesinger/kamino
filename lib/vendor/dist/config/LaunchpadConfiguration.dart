@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 
 import 'package:flutter/material.dart';
 import 'package:kamino/models/content.dart';
@@ -9,7 +9,7 @@ import 'package:kamino/interface/launchpad/core_widgets/home_customise.dart';
 import 'package:kamino/interface/launchpad/launchpad_item.dart';
 import 'package:kamino/interface/launchpad/see_all_expanded_view.dart';
 import 'package:kamino/interface/smart_search/search_results.dart';
-import 'package:kamino/partials/poster.dart';
+import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/interface/content/overview.dart';
 
 class LaunchpadConfiguration {
@@ -31,31 +31,6 @@ class LaunchpadConfiguration {
         contents: HomeCustomiseWidget(),
         wrapContent: false,
       )
-    ));
-
-/*    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
-      id: "xyz.apollotv.widgets.debug_card",
-      enabled: false,
-      child: LaunchpadItem(
-        title: "[Beta] Debug Card",
-        icon: Icon(Icons.developer_mode),
-        contents: DeveloperWidget(),
-        wrapContent: false,
-      )
-    ));*/
-
-    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
-        id: "xyz.apollotv.widgets.tmdb_now_playing",
-        enabled: true,
-        child: LaunchpadItem(
-          title: "In Cinemas",
-          icon: Icon(Icons.local_play),
-          contents: ListTmdbLaunchpadItem(
-            endpoint: "now_playing",
-            contentType: ContentType.MOVIE,
-          ),
-          action: ListTmdbLaunchpadItem.buildExpandedCardAction(ContentType.MOVIE, "now_playing"),
-        )
     ));
 
     LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
@@ -82,46 +57,6 @@ class LaunchpadConfiguration {
             contentType: ContentType.MOVIE,
           ),
           action: ListTmdbLaunchpadItem.buildExpandedCardAction(ContentType.MOVIE, "top_rated")
-        )
-    ));
-
-    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
-        id: "xyz.apollotv.widgets.tmdb_upcoming_movies",
-        child: LaunchpadItem(
-          title: "Upcoming Movies",
-          icon: Icon(Icons.alarm),
-          contents: ListTmdbLaunchpadItem(
-            endpoint: "upcoming",
-            contentType: ContentType.MOVIE,
-          ),
-          action: ListTmdbLaunchpadItem.buildExpandedCardAction(ContentType.MOVIE, "upcoming"),
-        )
-    ));
-
-    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
-        id: "xyz.apollotv.widgets.tmdb_airing_today",
-        child: LaunchpadItem(
-          title: "Airing Today",
-          icon: Icon(Icons.calendar_today),
-          contents: ListTmdbLaunchpadItem(
-            endpoint: "airing_today",
-            contentType: ContentType.TV_SHOW,
-          ),
-          action: ListTmdbLaunchpadItem.buildExpandedCardAction(ContentType.TV_SHOW, "airing_today"),
-        )
-    ));
-
-    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
-        id: "xyz.apollotv.widgets.tmdb_on_the_air",
-        enabled: true,
-        child: LaunchpadItem(
-          title: "On The Air",
-          icon: Icon(Icons.live_tv),
-          contents: ListTmdbLaunchpadItem(
-            endpoint: "on_the_air",
-            contentType: ContentType.TV_SHOW,
-          ),
-          action: ListTmdbLaunchpadItem.buildExpandedCardAction(ContentType.TV_SHOW, "on_the_air"),
         )
     ));
 
@@ -194,7 +129,7 @@ class ListTmdbLaunchpadItem extends StatefulWidget {
 
   static String getBaseURL(ContentType contentType, String endpoint){
     var mediaType = contentType == ContentType.MOVIE ? "movie" : "tv";
-    return "${tmdb.root_url}/$mediaType/$endpoint${tmdb.defaultArguments}";
+    return "${TMDB.ROOT_URL}/$mediaType/$endpoint${TMDB.defaultArguments}";
   }
 
 }
@@ -271,7 +206,7 @@ class ListTmdbLaunchpadItemState extends State<ListTmdbLaunchpadItem> {
               onLongPress: (){},
               child: Container(
                 width: 120,
-                child: new Poster(
+                child: new ContentPoster(
                   name: item.name,
                   background: item.poster_path,
                   mediaType: widget.contentType == ContentType.MOVIE ? "movie" : "tv",

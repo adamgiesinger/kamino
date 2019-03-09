@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class PosterCard extends StatefulWidget {
+class ResultCard extends StatefulWidget {
 
   final String background;
   final String name;
@@ -14,7 +14,7 @@ class PosterCard extends StatefulWidget {
   final String overview;
   final bool isFav;
 
-  PosterCard({
+  ResultCard({
     @required this.background,
     @required this.name,
     @required this.genre,
@@ -26,11 +26,11 @@ class PosterCard extends StatefulWidget {
   });
 
   @override
-  _PosterCardState createState() => _PosterCardState();
+  _ResultCardState createState() => _ResultCardState();
 
 }
 
-class _PosterCardState extends State<PosterCard> {
+class _ResultCardState extends State<ResultCard> {
 
   Color _favoriteIndicator() {
 
@@ -72,7 +72,7 @@ class _PosterCardState extends State<PosterCard> {
     if(widget.background != null) {
 
       imageWidget = CachedNetworkImage(
-        imageUrl: tmdb.image_cdn + widget.background,
+        imageUrl: TMDB.IMAGE_CDN_POSTER + widget.background,
         fit: BoxFit.cover,
         placeholder: new Image(
           image: AssetImage("assets/images/no_image_detail.jpg"),

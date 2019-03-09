@@ -10,7 +10,7 @@ import 'package:kamino/interface/settings/page_extensions.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:kamino/main.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 

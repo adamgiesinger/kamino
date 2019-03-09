@@ -3,10 +3,10 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
-import 'package:kamino/partials/poster.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/partials/content_poster.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/ui/ui_constants.dart';
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/content/overview.dart';
 
 class MovieLayout{
@@ -126,13 +126,13 @@ class MovieLayout{
             onLongPress: (){
               addFavoritePrompt(
                   context, _data.recommendations[index]["title"], _data.recommendations[index]["id"],
-                  tmdb.image_cdn + _data.recommendations[index]["poster_path"],
+                  TMDB.IMAGE_CDN + _data.recommendations[index]["poster_path"],
                   _data.recommendations[index]["release_date"], "movie");
             },
             splashColor: Colors.white,
             child: SizedBox(
               width: 152,
-              child:  Poster(
+              child:  ContentPoster(
                 name: _data.recommendations[index]["title"],
                 background: _data.recommendations[index]["poster_path"],
                 mediaType: 'movie',

@@ -2,7 +2,7 @@ import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import "package:kamino/models/SourceModel.dart";
 import 'package:kamino/util/interface.dart';
 

@@ -4,7 +4,7 @@ import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/res/BottomGradient.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/interface/content/overview.dart';
@@ -135,7 +135,7 @@ class FavoritesPageState extends State<FavoritesPage>
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(5.0),
                             child: CachedNetworkImage(
-                              imageUrl: _favItem["imageUrl"] != null ? image_cdn + _favItem["imageUrl"] : "",
+                              imageUrl: _favItem["imageUrl"] != null ? TMDB.IMAGE_CDN + _favItem["imageUrl"] : "",
                               height: 725.0,
                               width: 500.0,
                               fit: BoxFit.cover,

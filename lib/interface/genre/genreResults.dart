@@ -5,12 +5,12 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:kamino/api/tmdb.dart' as tmdb;
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/util/genre_names.dart' as genre;
-import 'package:kamino/partials/poster.dart';
-import 'package:kamino/partials/poster_card.dart';
+import 'package:kamino/partials/content_poster.dart';
+import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/ui/ui_constants.dart';
 
 
@@ -75,8 +75,8 @@ class _GenreViewState extends State<GenreView>{
     List<DiscoverModel> _data = [];
     Map _temp;
 
-    String url = "${tmdb.root_url}/discover/$_contentType"
-        "${tmdb.defaultArguments}&"
+    String url = "${TMDB.ROOT_URL}/discover/$_contentType"
+        "${TMDB.defaultArguments}&"
         "sort_by=$_selectedParam&include_adult=false"
         "&include_video=false&"
         "page=${_currentPages.toString()}&with_genres=$_genreID";
@@ -213,11 +213,11 @@ class _GenreViewState extends State<GenreView>{
             onLongPress: (){
               addFavoritePrompt(
                   context, _results[index].name, _results[index].id,
-                  tmdb.image_cdn + _results[index].poster_path,
+                  TMDB.IMAGE_CDN + _results[index].poster_path,
                   _results[index].year, _results[index].mediaType);
             },
             splashColor: Colors.white,
-            child: Poster(
+            child: ContentPoster(
               background: _results[index].poster_path,
               name: _results[index].name,
               releaseDate: _results[index].year,
@@ -240,11 +240,11 @@ class _GenreViewState extends State<GenreView>{
           onLongPress: (){
             addFavoritePrompt(
                 context, _results[index].name, _results[index].id,
-                tmdb.image_cdn + _results[index].poster_path,
+                TMDB.IMAGE_CDN + _results[index].poster_path,
                 _results[index].year, _results[index].mediaType);
           },
           splashColor: Colors.white,
-          child: PosterCard(
+          child: ResultCard(
             background: _results[index].poster_path,
             name: _results[index].name,
             genre: genre.getGenreNames(_results[index].genre_ids,_results[index].mediaType),

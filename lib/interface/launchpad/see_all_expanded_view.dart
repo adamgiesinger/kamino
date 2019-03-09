@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/interface/smart_search/search_results.dart';
 
@@ -9,9 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
-import 'package:kamino/api/tmdb.dart';
-import 'package:kamino/partials/poster_card.dart';
-import 'package:kamino/partials/poster.dart';
+import 'package:kamino/partials/result_card.dart';
+import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/interface/content/overview.dart';
 
@@ -159,14 +159,14 @@ class _ExpandedCardState extends State<ExpandedCard> {
           onLongPress: (){
             addFavoritePrompt(
                 context, _results[index].name, _results[index].id,
-                image_cdn + _results[index].poster_path,
+                TMDB.IMAGE_CDN + _results[index].poster_path,
                 _results[index].year, widget.mediaType);
           },
           splashColor: Colors.white,
           child: Padding(
             padding: index == 0 ?
             EdgeInsets.only(top: 5.0) : EdgeInsets.only(top: 0.0),
-            child: PosterCard(
+            child: ResultCard(
               background: _results[index].poster_path,
               name: _results[index].name,
               genre: genre.getGenreNames(_results[index].genre_ids,_results[index].mediaType),
@@ -198,14 +198,14 @@ class _ExpandedCardState extends State<ExpandedCard> {
             onLongPress: (){
               addFavoritePrompt(
                   context, _results[index].name, _results[index].id,
-                  image_cdn + _results[index].poster_path,
+                  TMDB.IMAGE_CDN + _results[index].poster_path,
                   _results[index].year, widget.mediaType);
             },
             splashColor: Colors.white,
             child: Padding(
               padding: [0, 1, 2].contains(index) ?
               EdgeInsets.only(top: 5.0) : EdgeInsets.only(top: 0.0),
-              child: Poster(
+              child: ContentPoster(
                 background: _results[index].poster_path,
                 name: _results[index].name,
                 releaseDate: _results[index].year,

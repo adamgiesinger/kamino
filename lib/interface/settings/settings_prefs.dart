@@ -11,6 +11,11 @@ Future<String> getStringPref(String name) async {
   return prefs.getString(name);
 }
 
+Future<bool> hasPref(String name) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.get(name) != null;
+}
+
 //IMPORTANT TRAKT CRED INFO
 /*
    key - traktCredentials
