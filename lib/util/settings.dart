@@ -10,6 +10,18 @@ class SettingsManager {
     return _Settings._settingDefinitions.containsKey(key);
   }
 
+  static void deleteKey(String key) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove(key);
+  }
+
+  static Future<void> dumpFromStorage() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.getKeys().forEach((String key){
+      print("$key -> " + sharedPreferences.get(key).toString());
+    });
+  }
+
 }
 
 class _Settings {
@@ -26,12 +38,22 @@ class _Settings {
     "activeTheme": $(type: String),
     "primaryColorOverride": $(type: String),
 
-    "manuallySelectSourcesEnabled": $(type: bool),
-    "detailedContentInfoEnabled": $(type: bool),
-    "locale": $(type: String, defaultValue: "en"),
+    "manuallySelectSourcesEnabled": $(type: bool, defaultValue: false),
+    "detailedContentInfoEnabled": $(type: bool, defaultValue: false),
+    "locale": $(type: List, defaultValue: <String>["en", ""]),
 
     "serverURLOverride": $(type: String),
-    "searchHistory": $(type: List)
+    "searchHistory": $(type: List, defaultValue: <String>[]),
+
+    ///
+    ///   ----------------------------------
+    ///   Trakt Credentials Array Structure:
+    ///   ----------------------------------
+    ///   0 - access token
+    ///   1 - refresh token
+    ///   2 - expiry date
+    ///
+    "traktCredentials": $(type: List, defaultValue: <String>[])
   };
 
   noSuchMethod(Invocation invocation) {
@@ -42,7 +64,12 @@ class _Settings {
       return Future<dynamic>(() async {
         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
         var result = await sharedPreferences.get(key);
-        if(result != null || _settingDefinitions[key].defaultValue == null) return result;
+
+        if(result != null || _settingDefinitions[key].defaultValue == null) {
+          if(result.runtimeType.toString() == "List<dynamic>") return result.cast<String>();
+          return result;
+        }
+
         return _settingDefinitions[key].defaultValue;
       });
     }

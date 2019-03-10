@@ -3,14 +3,14 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/main.dart';
+import 'package:kamino/util/settings.dart';
 
 class Trakt {
 
   static Future<Map<String, String>> _getAuthHeaders(BuildContext context) async {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-    var traktCredentials = await settingsPref.getListPref("traktCredentials");
+    var traktCredentials = await Settings.traktCredentials;
 
     return {
       HttpHeaders.authorizationHeader: 'Bearer ${traktCredentials[0]}',

@@ -10,8 +10,8 @@ import 'package:kamino/main.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:kamino/util/interface.dart';
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/settings.dart';
 
 class TraktAuth extends StatefulWidget {
 
@@ -83,7 +83,7 @@ void renewToken(BuildContext context) async {
   //get trakt credentials
   List<String> _traktCred = [];
 
-  settingsPref.getListPref("traktCredentials").then((data) {
+  ((Settings.traktCredentials) as Future).then((data){
     _traktCred = data;
   });
 
@@ -122,7 +122,7 @@ void renewToken(BuildContext context) async {
           DateTime.now().add(new Duration(days: 84)).toString()
         ];
 
-        settingsPref.saveListPref("traktCredentials", newCredentials);
+        await (Settings.traktCredentials = newCredentials);
         Interface.showSnackbar(S.of(context).successfully_refreshed_trakt_token);
       } else {
         showDialog(
@@ -447,7 +447,7 @@ Future<Null> sendNewMedia(BuildContext context, String mediaType, String title, 
   KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   String header = mediaType == "movie" ? "movies" : "shows";
-  List<String> traktCred = await settingsPref.getListPref("traktCredentials");
+  List<String> traktCred = await Settings.traktCredentials;
 
   Map body = {
     header: []
@@ -480,7 +480,7 @@ Future<Null> removeMedia(BuildContext context, String mediaType, int id) async {
   KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   String header = mediaType == "movie" ? "movies" : "shows";
-  List<String> traktCred = await settingsPref.getListPref("traktCredentials");
+  List<String> traktCred = await Settings.traktCredentials;
 
   Map body = {
     header: []
@@ -719,8 +719,7 @@ Future<List<String>> authUser(BuildContext context, List<String> _traktCred, Str
         DateTime.now().add(new Duration(days: 84)).toString()
       ];
 
-      settingsPref.saveListPref("traktCredentials", temp);
-
+      await (Settings.traktCredentials = temp);
       _dialogGenerator(S.of(context).authentication_successful, S.of(context).you_can_now_tap_sync_to_synchronise_your_trakt_favorites, context, true);
       return temp;
 
@@ -752,12 +751,11 @@ Future<bool> deauthUser(BuildContext context, _traktCred) async {
   Response res = await post(url, body: body);
 
   if (res.statusCode == 200){
-    settingsPref.saveListPref("traktCredentials", []);
-
+    await (Settings.traktCredentials = []);
     Interface.showSnackbar(S.of(context).disconnected_trakt_account, context: context, backgroundColor: Colors.red);
-
     return true;
   }
+
   return false;
 }
 

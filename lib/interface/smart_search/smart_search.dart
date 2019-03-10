@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
@@ -10,14 +10,16 @@ import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/models/content.dart';
+import 'package:kamino/util/settings.dart';
 
 class SmartSearch extends SearchDelegate<String> {
+
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
   bool _expandedSearchPref = false;
 
   SmartSearch() {
-    settingsPref.getBoolPref("expandedSearch").then((data) {
-      _expandedSearchPref = data;
-    });
+    (Settings.detailedContentInfoEnabled as Future).then((data) => _expandedSearchPref = data);
   }
 
   Future<List<SearchModel>> _fetchSearchList(String criteria) async {
@@ -91,7 +93,10 @@ class SmartSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    settingsPref.saveSearchHistory(query);
+    if(query == null || query.isEmpty) return Container();
+
+    _saveToSearchHistory(query);
+    _promoteQuerySearchHistory(query);
     return new SearchResult(query: query);
   }
 
@@ -108,7 +113,6 @@ class SmartSearch extends SearchDelegate<String> {
               child: InkWell(
                 onTap: () {
                   query = snapshot.data[index].toString();
-                  settingsPref.moveQueryToTop(snapshot.data[index]);
                   showResults(context);
                 },
                 child: ListTile(
@@ -165,29 +169,30 @@ class SmartSearch extends SearchDelegate<String> {
   }
 
   Widget _buildSearchHistory() {
-    return FutureBuilder<List<String>>(
-        future: settingsPref.getSearchHistory(), // a previously-obtained Future<String> or null
-        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              return Container();
-            case ConnectionState.active:
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor
-                ),
-              ));
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else if (snapshot.hasData) {
-                return _searchHistoryListView(snapshot);
-              }
-            //return Text('Result: ${snapshot.data}');
-          }
-          return null; // unreachable
-        });
+    return FutureBuilder(
+      future: _memoizer.runOnce(() async => await Settings.searchHistory), // a previously-obtained Future<String> or null
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.active:
+          case ConnectionState.waiting:
+            return Container();
+            /*return Center(child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor
+              ),
+            ));*/
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              return _searchHistoryListView(snapshot);
+            }
+          //return Text('Result: ${snapshot.data}');
+        }
+        return null; // unreachable
+      }
+    );
   }
 
   Widget _simplifiedSuggestions(AsyncSnapshot snapshot) {
@@ -243,8 +248,7 @@ class SmartSearch extends SearchDelegate<String> {
     return query.isEmpty
         ? _buildSearchHistory()
         : FutureBuilder<List<SearchModel>>(
-            future: _fetchSearchList(
-                query), // a previously-obtained Future<String> or null
+            future: _fetchSearchList(query), // a previously-obtained Future<String> or null
             builder: (BuildContext context,
                 AsyncSnapshot<List<SearchModel>> snapshot) {
               switch (snapshot.connectionState) {
@@ -271,4 +275,48 @@ class SmartSearch extends SearchDelegate<String> {
               return null; // unreachable
             });
   }
+
+  Future<void> _removeSearchItem(String value) async{
+    List<String> _searchHistory = ((await (Settings.searchHistory)) as List);
+    _searchHistory.remove(value);
+    await (Settings.searchHistory = _searchHistory);
+  }
+
+  Future<void> _saveToSearchHistory(String value) async {
+    if (value != null && value.isNotEmpty) {
+
+      // Load the stored search history.
+      List<String> _storedSearchHistory = await (Settings.searchHistory);
+
+      // Cancel if the stored search history already contains this element.
+      if(_storedSearchHistory.contains(value)) return;
+
+      // Prepend the new search history entry to the old search history.
+      List<String> _searchHistory = [value] + _storedSearchHistory;
+
+      // Cap the search history length at 40 by removing any trailing history items.
+      while(_searchHistory.length > 40) _searchHistory.remove(_searchHistory.last);
+
+      // Save the new search history list.
+      await (Settings.searchHistory = _searchHistory);
+    }
+  }
+
+  ///
+  /// Ensures the most recent search query remains at the top
+  /// of the search history.
+  ///
+  Future<void> _promoteQuerySearchHistory(String value) async {
+    List<String> searches = await (Settings.searchHistory);
+
+    // Ensure duplicates are removed.
+    searches = searches.toSet().toList();
+
+    // Remove current query from searches and re-add query at top of searches list.
+    searches.remove(value);
+    searches = [value] + searches;
+
+    await (Settings.searchHistory = searches);
+  }
+
 }

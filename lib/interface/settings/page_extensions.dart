@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/ui_elements.dart';
+import 'package:kamino/util/settings.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/interface/settings/page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 
 class ExtensionsSettingsPage extends SettingsPage {
   ExtensionsSettingsPage(BuildContext context) : super(
@@ -21,15 +20,9 @@ class ExtensionsSettingsPageState extends SettingsPageState {
 
   @override
   void initState(){
-    settingsPref.getListPref("traktCredentials").then((data){
-      setState(() {
-        if (data == null || data == []){
-          _traktCred = [];
-        } else {
-          _traktCred = data;
-        }
-      });
-    });
+    ((Settings.traktCredentials) as Future).then((data) => setState((){
+      _traktCred = data;
+    }));
 
     super.initState();
   }

@@ -6,12 +6,12 @@ import 'package:kamino/interface/content/overview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/ui/ui_constants.dart';
+import 'package:kamino/util/settings.dart';
 
 
 class GenreView extends StatefulWidget{
@@ -41,11 +41,7 @@ class _GenreViewState extends State<GenreView>{
   @override
   void initState() {
 
-    settingsPref.getBoolPref("expandedSearch").then((data){
-      setState(() {
-        _expandedSearchPref = data;
-      });
-    });
+    (Settings.detailedContentInfoEnabled as Future).then((data) => setState(() => _expandedSearchPref = data));
 
     controller = new ScrollController()..addListener(_scrollListener);
 

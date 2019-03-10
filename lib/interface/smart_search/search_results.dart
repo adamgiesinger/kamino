@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/interface/content/overview.dart';
+import 'package:kamino/util/settings.dart';
 
 class SearchResult extends StatefulWidget{
   final String query;
@@ -89,11 +89,7 @@ class _SearchResultState extends State<SearchResult> {
 
   @override
   void initState() {
-    settingsPref.getBoolPref("expandedSearch").then((data){
-      setState(() {
-        _expandedSearchPref = data;
-      });
-    });
+    (Settings.detailedContentInfoEnabled as Future).then((data) => setState(() => _expandedSearchPref = data));
 
     controller = new ScrollController()..addListener(_scrollListener);
     controllerList = new ScrollController()..addListener(_scrollListenerList);
@@ -115,6 +111,14 @@ class _SearchResultState extends State<SearchResult> {
 
   @override
   Widget build(BuildContext context) {
+    if(_results.length < 1) return Container(
+      child: Center(
+        child: Text("No results found!", style: TextStyle(
+          fontSize: 20
+        )),
+      ),
+    );
+
     return Scrollbar(
       child: _expandedSearchPref == false ? _gridPage() : _listPage(),
     );

@@ -5,7 +5,7 @@ import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/interface/settings/page.dart';
 
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/util/settings.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -21,20 +21,20 @@ class OtherSettingsPage extends SettingsPage {
 
 class OtherSettingsPageState extends SettingsPageState {
 
-  bool _sourceSelection = false;
-  bool _expandedSearchValue = false;
+  bool _manuallySelectSourcesEnabled = false;
+  bool _detailedContentInfoEnabled = false;
 
   @override
   void initState(){
-    settingsPref.getBoolPref("expandedSearch").then((data){
+    (Settings.detailedContentInfoEnabled as Future).then((data){
       setState(() {
-        _expandedSearchValue = data;
+        _detailedContentInfoEnabled = data;
       });
     });
 
-    settingsPref.getBoolPref("sourceSelection").then((data){
+    (Settings.manuallySelectSourcesEnabled as Future).then((data){
       setState(() {
-        _sourceSelection = data;
+        _manuallySelectSourcesEnabled = data;
       });
     });
 
@@ -52,7 +52,7 @@ class OtherSettingsPageState extends SettingsPageState {
           child: CheckboxListTile(
             isThreeLine: true,
             activeColor: Theme.of(context).primaryColor,
-            value: _sourceSelection,
+            value: _manuallySelectSourcesEnabled,
             title: TitleText(S.of(context).manually_select_sources),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -63,13 +63,10 @@ class OtherSettingsPageState extends SettingsPageState {
                 maxLines: 2,
               ),
             ),
-            onChanged: (value){
-              if (value != _sourceSelection){
-                settingsPref.saveBoolPref("sourceSelection", value).then((data){
-                  setState(() {
-                    _sourceSelection = data;
-                  });
-                });
+            onChanged: (value) async {
+              if (value != _manuallySelectSourcesEnabled){
+                await (Settings.manuallySelectSourcesEnabled = value); // ignore: await_only_futures
+                (Settings.manuallySelectSourcesEnabled as Future).then((data) => setState(() => _manuallySelectSourcesEnabled = data));
               }
             },
           ),
@@ -80,7 +77,7 @@ class OtherSettingsPageState extends SettingsPageState {
           child: CheckboxListTile(
             isThreeLine: true,
             activeColor: Theme.of(context).primaryColor,
-            value: _expandedSearchValue,
+            value: _detailedContentInfoEnabled,
             title: TitleText(S.of(context).detailed_content_information),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -91,13 +88,10 @@ class OtherSettingsPageState extends SettingsPageState {
                 maxLines: 2,
               ),
             ),
-            onChanged: (value){
-              if (value != _expandedSearchValue){
-                settingsPref.saveBoolPref("expandedSearch", value).then((data){
-                  setState(() {
-                    _expandedSearchValue = data;
-                  });
-                });
+            onChanged: (value) async {
+              if (value != _detailedContentInfoEnabled){
+                await (Settings.detailedContentInfoEnabled = value); // ignore: await_only_futures
+                (Settings.detailedContentInfoEnabled as Future).then((data) => setState(() => _detailedContentInfoEnabled = data));
               }
             },
           ),
@@ -109,8 +103,8 @@ class OtherSettingsPageState extends SettingsPageState {
             title: TitleText(S.of(context).clear_search_history),
             subtitle: Text(S.of(context).clear_search_history_description),
             enabled: true,
-            onTap: (){
-              settingsPref.saveListPref("searchHistory", []);
+            onTap: () async {
+              await (Settings.searchHistory = <String>[]);
               Interface.showSnackbar(S.of(context).search_history_cleared, context: context);
             },
           ),

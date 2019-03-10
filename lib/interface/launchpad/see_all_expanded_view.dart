@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/interface/content/overview.dart';
+import 'package:kamino/util/settings.dart';
 
 class ExpandedCard extends StatefulWidget{
   final String url, mediaType;
@@ -92,12 +92,7 @@ class _ExpandedCardState extends State<ExpandedCard> {
 
     _currentPages = 1;
 
-    settingsPref.getBoolPref("expandedSearch").then((data){
-      setState(() {
-        _expandedSearchPref = data;
-      });
-    });
-
+    (Settings.detailedContentInfoEnabled as Future).then((data) => setState(() => _expandedSearchPref = data));
 
     controller = new ScrollController()..addListener(_scrollListener);
     controllerList = new ScrollController()..addListener(_scrollListenerList);

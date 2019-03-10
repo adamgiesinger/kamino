@@ -2,10 +2,10 @@
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/launchpad2/Launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
 import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/skyspace/skyspace.dart';
 import 'package:kamino/util/interface.dart';
+import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
@@ -83,14 +83,13 @@ class KaminoAppState extends State<KaminoApp> {
   }
 
   Future<void> setLocale(Locale locale) async {
-    settingsPref.saveListPref('localeSettings', [locale.languageCode, locale.countryCode]);
+    await (Settings.locale = [locale.languageCode, locale.countryCode]);
     await _loadLocale();
   }
 
   Future<void> _loadLocale() async {
-    if(!(await settingsPref.hasPref("localeSettings"))) return;
-
-    var localePref = await settingsPref.getListPref('localeSettings');
+    if(!SettingsManager.hasKey("locale")) return;
+    var localePref = await Settings.locale;
 
     setState(() {
       _currentLocale = Locale(localePref[0], localePref[1]);
@@ -98,8 +97,8 @@ class KaminoAppState extends State<KaminoApp> {
   }
 
   Future<void> _loadActiveTheme() async {
-    var theme = await settingsPref.getStringPref('activeTheme');
-    var primaryColorOverride = await settingsPref.getStringPref('primaryColorOverride');
+    var theme = await (Settings.activeTheme);
+    var primaryColorOverride = await (Settings.primaryColorOverride);
 
     setState(() {
       // If the restored theme setting pref is not null AND the theme exists,
@@ -109,7 +108,7 @@ class KaminoAppState extends State<KaminoApp> {
 
       if(primaryColorOverride != null)
         if(_primaryColorOverride.toString() != primaryColorOverride)
-          _primaryColorOverride = new Color(  int.parse(primaryColorOverride.split('(0x')[1].split(')')[0], radix: 16)  );
+          _primaryColorOverride = new Color(int.parse(primaryColorOverride.split('(0x')[1].split(')')[0], radix: 16));
 
       // Update SystemUI
       SystemChrome.setSystemUIOverlayStyle(
@@ -181,7 +180,7 @@ class KaminoAppState extends State<KaminoApp> {
       );
 
       // Update preferences
-      settingsPref.savePref('activeTheme', activeTheme);
+      Settings.activeTheme = activeTheme;
     });
   }
 
@@ -194,7 +193,7 @@ class KaminoAppState extends State<KaminoApp> {
       _primaryColorOverride = color;
       setActiveTheme(getActiveTheme());
 
-      settingsPref.savePref('primaryColorOverride', color.toString());
+      Settings.primaryColorOverride = color.toString();
     });
   }
 
