@@ -100,6 +100,8 @@ class ConcealableTextState extends State<ConcealableText> {
 
 class VerticalIconButton extends StatelessWidget {
 
+  Color backgroundColor;
+  Color foregroundColor;
   Widget icon;
   Widget title;
   EdgeInsetsGeometry padding;
@@ -111,6 +113,7 @@ class VerticalIconButton extends StatelessWidget {
     @required this.icon,
     @required this.title,
     @required this.onTap,
+    this.backgroundColor,
     this.padding = const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
     this.borderRadius
   });
@@ -118,6 +121,7 @@ class VerticalIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: backgroundColor,
       borderRadius: borderRadius,
       clipBehavior: Clip.antiAlias,
       child: InkWell(

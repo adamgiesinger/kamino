@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/ui/ui_elements.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Interface {
 
@@ -31,6 +32,14 @@ class Interface {
     if(state != null) { state.showSnackBar(snackbar); return; }
 
     print("Unable to show snackbar (text='$text')! No context or state was provided.");
+  }
+
+  static Future<void> launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
 }

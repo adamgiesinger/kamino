@@ -75,11 +75,24 @@ class ContentPosterState extends State<ContentPoster> {
         width: widget.width,
       );
     }else{
-      imageWidget = new Image(
+      /*imageWidget = new Image(
         image: AssetImage("assets/images/no_image_detail.jpg"),
         fit: widget.imageFit,
         height: widget.height,
         width: widget.width,
+      );*/
+
+      imageWidget = Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Container(
+            color: Colors.black,
+            height: widget.height,
+            width: widget.width,
+          ),
+
+          Center(child: TitleText("No Poster", textColor: const Color(0xBFFFFFFF)))
+        ],
       );
     }
 

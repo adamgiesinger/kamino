@@ -59,7 +59,7 @@ class MovieContentModel extends ContentModel {
 
       // Object-specific properties.
       imdbId: json["imdb_id"],
-      runtime: json["runtime"],
+      runtime: json["runtime"] != null ? json["runtime"].toDouble() : null,
       recommendations: recommendations
     );
   }

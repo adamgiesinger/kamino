@@ -7,6 +7,7 @@ import 'package:flutter_parallax/flutter_parallax.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_advanced.dart';
 import 'package:kamino/interface/settings/page_extensions.dart';
+import 'package:kamino/util/settings.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:kamino/main.dart';

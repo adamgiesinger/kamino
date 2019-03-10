@@ -47,6 +47,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   TextSpan _titleSpan = TextSpan();
   bool _longTitle = false;
+  String _trailer;
   ContentModel _data;
   String _backdropImagePath;
   bool _favState = false;
@@ -127,6 +128,15 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   // Load the data from the source.
   Future<ContentModel> loadDataAsync() async {
+    http.Response videosRawResponse = await http.get(
+      "https://api.themoviedb.org/3/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/videos${TMDB.defaultArguments}"
+    );
+    List<dynamic> videos = Convert.jsonDecode(videosRawResponse.body)['results'];
+    if(videos != null && videos.isNotEmpty) {
+      var video = videos.firstWhere((video) => video['type'] == 'Trailer');
+      _trailer = video != null ? video['key'] : null;
+    }
+
     if(widget.contentType == ContentType.MOVIE){
 
       // Get the data from the server.
@@ -277,7 +287,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                       background: _generateBackdropImage(context),
                       collapseMode: CollapseMode.pin,
                     ),
-                  ),
+                  )
                 ];
               },
               body: Container(
@@ -424,9 +434,34 @@ class _ContentOverviewState extends State<ContentOverview> {
               ) :
               new Icon(Icons.error, size: 30.0)
           ),
+
           !_longTitle ?
           BottomGradient(color: Theme.of(context).backgroundColor)
-              : BottomGradient(offset: 1, finalStop: 0, color: Theme.of(context).backgroundColor)
+              : BottomGradient(offset: 1, finalStop: 0, color: Theme.of(context).backgroundColor),
+
+          _trailer != null ? Center(child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.white,
+                width: 1.5
+              ),
+              shape: BoxShape.circle
+            ),
+            child: Material(
+              color: const Color(0x1F000000),
+              clipBehavior: Clip.antiAlias,
+              shape: CircleBorder(),
+              child: InkWell(
+                onTap: (){
+                  Interface.launchURL("https://www.youtube.com/watch?v=$_trailer");
+                },
+                child: Padding(child: Icon(
+                  Icons.play_arrow,
+                  size: 36,
+                ), padding: EdgeInsets.all(4)),
+              ),
+            ),
+          )) : Container()
         ],
       ),
     );
@@ -579,7 +614,6 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// It is a good idea to reference another class to keep this clean.
   ///
   Widget _generateLayout(ContentType contentType) {
-
     switch(contentType){
       case ContentType.TV_SHOW:
         // Generate TV show information

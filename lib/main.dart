@@ -1,6 +1,5 @@
 // Import flutter libraries
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/interface/genre/all_genres.dart';
 import 'package:kamino/interface/launchpad2/Launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
@@ -10,8 +9,6 @@ import 'package:kamino/util/interface.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:logging/logging.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:kamino/interface/favorites.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
@@ -19,9 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:kamino/vendor/index.dart';
 
 // Import custom libraries / utils
-import 'animation/transition.dart';
 // Import pages
-import 'package:kamino/interface/launchpad/launchpad.dart';
 // Import views
 import 'package:kamino/interface/settings/settings.dart';
 
@@ -214,8 +209,6 @@ class KaminoAppHome extends StatefulWidget {
 
 class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderStateMixin {
 
-  int _currentPage = 0;
-
   Future<bool> _onWillPop() async {
     // Allow app close on back
     return true;
@@ -223,7 +216,6 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
 
   @override
   void initState() {
-    _currentPage = 0;
     OTA.updateApp(context, true);
     ApolloVendor.getLaunchpadConfiguration().initialize();
     super.initState();
@@ -239,10 +231,14 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
           backgroundColor: Theme.of(context).backgroundColor,
           // backgroundColor: backgroundColor,
           appBar: AppBar(
-            title: Image.asset(
-              appState.getActiveThemeData().brightness == Brightness.dark ?
-                "assets/images/header_text.png" : "assets/images/header_text_dark.png",
-              width: 125
+            title: Row(
+              children: <Widget>[
+                Image.asset(
+                    appState.getActiveThemeData().brightness == Brightness.dark ?
+                    "assets/images/header_text.png" : "assets/images/header_text_dark.png",
+                    height: kToolbarHeight - 38
+                )
+              ],
             ),
 
             //backgroundColor: Theme.of(context).backgroundColor,
@@ -265,10 +261,10 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
                 icon: Icon(Icons.more_vert),
                 onSelected: (String index){
                   switch(index){
-                    case 'discord': return _launchURL("https://discord.gg/euyQRWs");
-                    case 'blog': return _launchURL("https://medium.com/apolloblog");
-                    case 'privacy': return _launchURL("https://apollotv.xyz/legal/privacy");
-                    case 'donate': return _launchURL("https://apollotv.xyz/donate");
+                    case 'discord': return Interface.launchURL("https://discord.gg/euyQRWs");
+                    case 'blog': return Interface.launchURL("https://medium.com/apolloblog");
+                    case 'privacy': return Interface.launchURL("https://apollotv.xyz/legal/privacy");
+                    case 'donate': return Interface.launchURL("https://apollotv.xyz/donate");
                     case 'settings': return Navigator.push(context, MaterialPageRoute(
                         builder: (context) => SettingsView()
                     ));
@@ -316,14 +312,6 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
           body: Launchpad2(),
       )
     );
-  }
-
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 
 }

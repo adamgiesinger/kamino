@@ -23,100 +23,120 @@ class Launchpad2State extends State<Launchpad2> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      color: Theme.of(context).backgroundColor,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-
-        // ApolloTV Top Picks
-        Container(
-          margin: EdgeInsets.only(bottom: 20),
-          height: 200,
-          child: FutureBuilder<List<ContentModel>>(future: _memoizer.runOnce(() => TMDB.getList("107032")), builder: (BuildContext context, AsyncSnapshot<List<ContentModel>> snapshot){
-            if(snapshot.connectionState == ConnectionState.done){
-              if(snapshot.hasError) return Container(child: Text(snapshot.error.toString()));
-
-              List<ContentModel> contentList = snapshot.data;
-
-              return Container(
-                child: ScrollConfiguration(
-                  behavior: EmptyScrollBehaviour(),
-                  //child: PreloadPageView.builder(itemBuilder: (BuildContext context, int index){
-                  /*
-                  var content = contentList[index];
-
-                    return Container(
-                      child: ContentCard(content),
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                    );
-                   */
-                  //}, itemCount: contentList.length, scrollDirection: Axis.horizontal),
-                  child: CarouselSlider(
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 20),
-                    autoPlayAnimationDuration: Duration(milliseconds: 1400),
-                    enlargeCenterPage: true,
-                    height: 200,
-                    items: List.generate(contentList.length, (int index){
-                      return Builder(builder: (BuildContext context){
-                        var content = contentList[index];
-
-                        return Container(
-                          child: ContentCard(content),
-                          margin: EdgeInsets.symmetric(horizontal: 5),
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                        );
-                      });
-                    })
-
-                  )
-                ),
-              );
-            }
-
-            return Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
-                )
-            );
-          }),
-        ),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+      return SingleChildScrollView(
+        child: Column(
           children: <Widget>[
-            VerticalIconButton(
-              title: TitleText("TV Shows"),
-              icon: Icon(Icons.live_tv),
-              onTap: () => Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => AllGenres(contentType: 'tv')
-              )),
-              borderRadius: BorderRadius.circular(10),
-            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              color: Theme.of(context).backgroundColor,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
 
-            VerticalIconButton(
-              title: TitleText("Favorites"),
-              icon: Icon(Icons.favorite),
-              onTap: () => Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => FavoritesPage()
-              )),
-              borderRadius: BorderRadius.circular(10),
-            ),
+                // ApolloTV Top Picks
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  height: 200,
+                  child: FutureBuilder<List<ContentModel>>(future: _memoizer.runOnce(() => TMDB.getList("107032")), builder: (BuildContext context, AsyncSnapshot<List<ContentModel>> snapshot){
+                    if(snapshot.connectionState == ConnectionState.done){
+                      if(snapshot.hasError) return Container(child: Text(snapshot.error.toString()));
 
-            VerticalIconButton(
-              title: TitleText("Movies"),
-              icon: Icon(Icons.local_movies),
-              onTap: () => Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => AllGenres(contentType: 'movie')
-              )),
-              borderRadius: BorderRadius.circular(10),
+                      List<ContentModel> contentList = snapshot.data;
+
+                      return Container(
+                        child: ScrollConfiguration(
+                            behavior: EmptyScrollBehaviour(),
+                            child: CarouselSlider(
+                                autoPlay: true,
+                                autoPlayInterval: Duration(seconds: 20),
+                                autoPlayAnimationDuration: Duration(milliseconds: 1400),
+                                enlargeCenterPage: true,
+                                height: 200,
+                                items: List.generate(contentList.length, (int index){
+                                  return Builder(builder: (BuildContext context){
+                                    var content = contentList[index];
+
+                                    return Container(
+                                      child: ContentCard(content),
+                                      margin: EdgeInsets.symmetric(horizontal: 5),
+                                      padding: EdgeInsets.symmetric(vertical: 10),
+                                    );
+                                  });
+                                })
+
+                            )
+                        ),
+                      );
+                    }
+
+                    return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                        )
+                    );
+                  }),
+                ),
+
+                Container(
+                  margin: EdgeInsets.only(top: 10, bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      VerticalIconButton(
+                        title: TitleText("TV Shows"),
+                        icon: Icon(Icons.live_tv),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => AllGenres(contentType: 'tv')
+                        )),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+
+                      VerticalIconButton(
+                        title: TitleText("Favorites"),
+                        icon: Icon(Icons.favorite),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => FavoritesPage()
+                        )),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+
+                      VerticalIconButton(
+                        title: TitleText("Top Picks"),
+                        icon: Icon(Icons.local_activity),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+
+                      VerticalIconButton(
+                        title: TitleText("Movies"),
+                        icon: Icon(Icons.local_movies),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => AllGenres(contentType: 'movie')
+                        )),
+                        borderRadius: BorderRadius.circular(10),
+                      )
+                    ],
+                  ),
+                ),
+
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                  child: Column(
+                    children: <Widget>[
+                      Text("CONTINUE WATCHING", style: TextStyle(
+                        fontFamily: 'GlacialIndifference',
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        color: Theme.of(context).primaryTextTheme.display3.color,
+                      ))
+                    ],
+                  ),
+                )
+
+              ]),
             )
           ],
-        )
-
-      ]),
-    );
+        ),
+      );
+    });
   }
 
 }
