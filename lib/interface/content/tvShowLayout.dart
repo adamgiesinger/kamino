@@ -19,14 +19,9 @@ class TVShowLayout{
               /* Seasons Cards */
               Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  ListTile(
-                      title: TitleText(
-                          S.of(context).seasons_n(_data.seasons.length.toString()),
-                          fontSize: 22.0,
-                          textColor: Theme.of(context).primaryTextTheme.body1.color
-                      )
-                  ),
+                  SubtitleText(S.of(context).seasons_n(_data.seasons.length.toString())),
 
                   _generateSeasonsCards(context, _data)
                 ],
@@ -55,13 +50,13 @@ class TVShowLayout{
           }
 
           // Determine season image
-          var image = null;
+          var image;
           if(season["poster_path"] != null){
             image = "${TMDB.IMAGE_CDN_POSTER}" + season["poster_path"];
           }
 
           // Create leading widget
-          Widget leadingWidget = new Icon(Icons.live_tv);
+          Widget leadingWidget = Icon(Icons.live_tv);
           if(image != null){
             leadingWidget = new FadeInImage(
               placeholder: MemoryImage(kTransparentImage),
@@ -88,7 +83,12 @@ class TVShowLayout{
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
-                      leading: leadingWidget,
+                      leading: Container(
+                        child: leadingWidget,
+                        height: 92,
+                        width: 46,
+                        alignment: Alignment.center,
+                      ),
                       title: TitleText(season["name"]),
                       subtitle: Text(
                           (season["episode_count"] != 1 ?

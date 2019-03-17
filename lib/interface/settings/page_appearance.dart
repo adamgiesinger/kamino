@@ -31,7 +31,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
           child: ListTile(
             title: TitleText(S.of(context).change_theme),
             subtitle: Text(
-                "${appState.getActiveThemeMeta().getName()} v${appState.getActiveThemeMeta().getVersion()} (${S.of(context).by_x(appState.getActiveThemeMeta().getAuthor())})"
+                "${appState.getActiveThemeMeta().getName()} (${S.of(context).by_x(appState.getActiveThemeMeta().getAuthor())})"
             ),
             onTap: () => _showThemeChoice(context),
           ),
@@ -93,7 +93,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
                           Navigator.of(context).pop();
                           appState.setActiveTheme(theme.getId());
                         },
-                        title: TitleText("${theme.getName()} v${theme.getVersion()}"),
+                        title: TitleText("${theme.getName()}"),
                         subtitle: Text("${theme.getAuthor()}")
                     );
                   }

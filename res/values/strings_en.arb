@@ -119,5 +119,8 @@
   "restore_defaults": "Restore Defaults",
 
   "select_language": "Select Language",
-  "language_settings": "Language Settings"
+  "language_settings": "Language Settings",
+  "take_screenshot_report_apollotv_discord": "Please take a screenshot of this message and contact a member of staff in the ApolloTV Discord server.",
+  "an_error_occurred": "An error occurred.",
+  "cast_and_crew": "Cast & Crew"
 }

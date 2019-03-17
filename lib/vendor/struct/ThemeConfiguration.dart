@@ -9,7 +9,6 @@ abstract class ThemeConfiguration {
   final String id;
   final String name;
   final String author;
-  final String version;
 
   final SystemUiOverlayStyle overlayStyle;
 
@@ -20,8 +19,7 @@ abstract class ThemeConfiguration {
       @required this.overlayStyle,
 
       @required this.name,
-      @required this.author,
-      @required this.version
+      @required this.author
     }
   );
 
@@ -41,10 +39,6 @@ abstract class ThemeConfiguration {
 
   String getAuthor(){
     return this.author;
-  }
-
-  String getVersion(){
-    return this.version;
   }
 
   bool doesAllowVariants(){
@@ -67,7 +61,6 @@ class ThemeConfigurationAdapter {
       id: config.id,
       name: config.name,
       author: config.author,
-      version: config.version,
       allowsVariants: config.allowsVariants,
       overlayStyle: config.overlayStyle
     );

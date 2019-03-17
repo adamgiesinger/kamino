@@ -3,12 +3,12 @@ import 'package:kamino/interface/launchpad/launchpad_renderer.dart';
 import 'dart:async';
 import 'package:kamino/util/trakt.dart' as trakt;
 
-class LaunchpadController extends StatefulWidget {
+class Launchpad extends StatefulWidget {
   @override
-  LaunchpadControllerState createState() => new LaunchpadControllerState();
+  LaunchpadState createState() => new LaunchpadState();
 }
 
-class LaunchpadControllerState extends State<LaunchpadController> {
+class LaunchpadState extends State<Launchpad> {
 
   LaunchpadItemRenderer _renderer;
 

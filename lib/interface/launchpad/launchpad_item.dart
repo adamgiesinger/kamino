@@ -3,15 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:kamino/ui/ui_elements.dart';
-import 'package:kamino/vendor/index.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kamino/util/settings.dart';
 
 class LaunchpadItemManager {
 
   static LaunchpadItemManager _manager;
-
   Map<String, LaunchpadItemWrapper> _registeredItems;
-  //List<LaunchpadItemWrapper> _userItems;
 
   LaunchpadItemManager(){
     _registeredItems = new Map();
@@ -36,7 +33,7 @@ class LaunchpadItemManager {
   }
 
   LaunchpadItemWrapper getItemById(String id){
-    if(!_registeredItems.containsKey(id)) throw new Exception("Attempted to get invalid widget by id '$id'");
+    if(!_registeredItems.containsKey(id)) return null; // throw new Exception("Attempted to get invalid widget by id '$id'");
     return _registeredItems[id];
   }
 
@@ -48,11 +45,9 @@ class LaunchpadItemManager {
     return _registeredItems;
   }
 
-  Future<List<LaunchpadItemWrapper>> getLaunchpadConfiguration({bool onlyEnabled = false}) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
+  Future<List<LaunchpadItemWrapper>> getLaunchpadConfiguration() async {
     // Load userItemsTemp from SharedPreferences.
-    String launchpadItems = preferences.getString("launchpadItems");
+    String launchpadItems = await Settings.launchpadItems;
     LinkedHashMap<String, bool> userItemsTemp;
     userItemsTemp = launchpadItems != null ? new LinkedHashMap<String, bool>.from(jsonDecode(launchpadItems)) : new LinkedHashMap();
 
@@ -60,8 +55,10 @@ class LaunchpadItemManager {
     List<LaunchpadItemWrapper> userItemsResult = new List();
     userItemsTemp.forEach((id, enabled){
       var item = getItemById(id);
-      item.enabled = enabled;
-      userItemsResult.add(item);
+      if(item != null) {
+        item.enabled = enabled;
+        userItemsResult.add(item);
+      }
     });
 
     // Add any wrapper items that don't exist in the list to the end.
@@ -74,30 +71,23 @@ class LaunchpadItemManager {
 
     // Finally clone the List and if onlyEnabled is set to true, filter out ones that aren't enabled.
     List<LaunchpadItemWrapper> userItems = new List.from(userItemsResult);
-    if(onlyEnabled){
-      userItems.removeWhere((element) => !element.enabled);
-    }
+    userItems.removeWhere((element) => !element.enabled);
 
     return userItems;
   }
 
   Future<void> saveLaunchpadConfiguration(List<LaunchpadItemWrapper> userOptions) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
     LinkedHashMap<String, bool> launchpadItems = new LinkedHashMap();
 
     userOptions.forEach((wrapper){
       launchpadItems[wrapper.id] = wrapper.enabled;
     });
 
-    await preferences.setString("launchpadItems", jsonEncode(launchpadItems));
+    await (Settings.launchpadItems = jsonEncode(launchpadItems));
   }
 
   Future<void> clearLaunchpadConfiguration() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.remove("launchpadItems");
-
-    reset();
-    ApolloVendor.getLaunchpadConfiguration().initialize();
+    await (Settings.launchpadItems = null);
   }
 
 }
@@ -143,7 +133,7 @@ class LaunchpadItemState extends State<LaunchpadItem> {
   build(BuildContext context){
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      child: (widget.wrapContent != null && !widget.wrapContent) ? widget.contents : 
+      child: (widget.wrapContent != null && !widget.wrapContent) ? widget.contents :
         Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
@@ -157,7 +147,7 @@ class LaunchpadItemState extends State<LaunchpadItem> {
                   title: TitleText(widget.title),
                   trailing: widget.action != null ? widget.action : Icon(null)
               ),
-  
+
               /* Widget content */
               Padding(
                 padding: EdgeInsets.only(top: 5, bottom: 5, left: 5),

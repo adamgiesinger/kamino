@@ -21,6 +21,7 @@ import 'package:kamino/interface/content/tvShowLayout.dart';
 
 import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:transparent_image/transparent_image.dart';
 
 /*  CONTENT OVERVIEW WIDGET  */
 ///
@@ -47,12 +48,15 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   TextSpan _titleSpan = TextSpan();
   bool _longTitle = false;
-  String _trailer;
-  ContentModel _data;
   String _backdropImagePath;
   bool _favState = false;
   List<int> _favIDs = [];
   String _contentType;
+
+  ContentModel _data;
+  String _trailer;
+  List crew;
+  List cast;
 
   Widget _generateFavoriteIcon(bool state){
 
@@ -128,14 +132,22 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   // Load the data from the source.
   Future<ContentModel> loadDataAsync() async {
+    // Load trailer
     http.Response videosRawResponse = await http.get(
-      "https://api.themoviedb.org/3/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/videos${TMDB.defaultArguments}"
+      "${TMDB.ROOT_URL}/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/videos${TMDB.defaultArguments}"
     );
     List<dynamic> videos = Convert.jsonDecode(videosRawResponse.body)['results'];
-    if(videos != null && videos.isNotEmpty) {
+    if(videos != null && videos.isNotEmpty && videos.where((video) => video['type'] == 'Trailer').length > 0) {
       var video = videos.firstWhere((video) => video['type'] == 'Trailer');
       _trailer = video != null ? video['key'] : null;
     }
+
+    // Load cast & crew
+    var castCrewResponse = Convert.jsonDecode((await http.get(
+      "${TMDB.ROOT_URL}/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/credits${TMDB.defaultArguments}"
+    )).body);
+    cast = castCrewResponse["cast"] != null ? castCrewResponse["cast"] : [];
+    crew = castCrewResponse["crew"] != null ? castCrewResponse["crew"] : [];
 
     if(widget.contentType == ContentType.MOVIE){
 
@@ -317,8 +329,9 @@ class _ContentOverviewState extends State<ContentOverview> {
                                   *
                                   * Relevant means visually and by context.
                                 */
-                                  _generateGenreChipsRow(context),
-                                  _generateInformationCards(),
+                                  //_generateGenreChipsRow(context),
+                                  _generateSynopsisCard(),
+                                  _generateCastAndCrewInfo(),
 
                                   // Context-specific layout
                                   _generateLayout(widget.contentType)
@@ -545,16 +558,13 @@ class _ContentOverviewState extends State<ContentOverview> {
   }
 
   ///
-  /// InformationCardsWidget-
-  /// This generates cards containing basic information about the show.
+  /// This function generates the Synopsis Card.
   ///
-  Widget _generateInformationCards(){
+  Widget _generateSynopsisCard(){
     return Padding(
       padding: EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
       child: Column(
         children: <Widget>[
-
-          /* Synopsis */
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10)
@@ -600,11 +610,94 @@ class _ContentOverviewState extends State<ContentOverview> {
               ),
             )
           )
-          /* ./Synopsis */
-
-
         ],
       )
+    );
+  }
+  
+  ///
+  /// This function generates the cast and crew cards.
+  /// 
+  Widget _generateCastAndCrewInfo({bool emptyOnFail = true}){
+    print(cast);
+    print(crew);
+    if(emptyOnFail && (cast == null || crew == null || cast.isEmpty || crew.isEmpty))
+      return Container();
+
+    List castAndCrew = List.from(crew, growable: true);
+    castAndCrew.addAll(cast);
+
+    // Remove any with an invalid name, job/character, profile
+    castAndCrew.removeWhere((entry) => entry["name"] == null);
+    castAndCrew.removeWhere((entry) => entry["job"] == null && entry["character"] == null);
+    castAndCrew.removeWhere((entry) => entry["profile_path"] == null);
+
+    // Remove duplicates, leaving just the crew entry.
+    // (Duplicates will happen when cast is also crew.)
+    //
+    // The justification for leaving the crew over the cast is that when a crew
+    // member is also a cast member, it's usually because they are an important
+    // crew member.
+    // Crew job names can be shorter than character names which looks better.
+    castAndCrew.removeWhere((entry) => castAndCrew.firstWhere((_e) => _e["name"] == entry["name"]) != entry);
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16).copyWith(top: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SubtitleText(S.of(context).cast_and_crew),
+
+          Container(
+            height: 100,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: castAndCrew.length,
+              itemBuilder: (BuildContext context, int index){
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      // Profile Image
+                      Expanded(
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+                                  return CachedNetworkImage(
+                                    height: constraints.maxHeight,
+                                    width: constraints.maxHeight,
+                                    placeholder: Image.memory(kTransparentImage),
+                                    imageUrl: TMDB.IMAGE_CDN +
+                                        castAndCrew[index]["profile_path"],
+                                    fit: BoxFit.cover,
+                                  );
+                                })
+                            ),
+                          )
+                      ),
+
+                      // Name
+                      Text(castAndCrew[index]["name"]),
+
+                      // Character or job
+                      Text(
+                        castAndCrew[index]["character"] != null ? castAndCrew[index]["character"] : castAndCrew[index]["job"],
+                        style: TextStyle(
+                          color: Colors.white54
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            )
+          )
+        ],
+      ),
     );
   }
 

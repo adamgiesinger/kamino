@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 
 class TitleText extends Text {
 
-  TitleText(String data, {double fontSize : 18, Color textColor, bool allowOverflow = false, TextAlign textAlign}) : super(
-    data,
+  TitleText(String text, {double fontSize : 18, Color textColor, bool allowOverflow = false, TextAlign textAlign}) : super(
+    text,
     overflow: (allowOverflow ? null : TextOverflow.ellipsis),
     style: TextStyle(
       fontFamily: 'GlacialIndifference',
@@ -14,6 +13,31 @@ class TitleText extends Text {
     textAlign: textAlign,
     maxLines: (allowOverflow ? null : 1)
   );
+
+}
+
+class SubtitleText extends StatelessWidget {
+
+  final String text;
+  final EdgeInsetsGeometry padding;
+
+  SubtitleText(this.text, {
+    Key key,
+    this.padding = const EdgeInsets.symmetric(horizontal: 5, vertical: 10)
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      child: Text(text.toUpperCase(), style: TextStyle(
+        fontFamily: 'GlacialIndifference',
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1,
+        color: Theme.of(context).primaryTextTheme.display3.color,
+      ), textAlign: TextAlign.start),
+      padding: padding,
+    );
+  }
 
 }
 

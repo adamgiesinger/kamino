@@ -1,10 +1,31 @@
 import 'package:meta/meta.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: non_constant_identifier_names
-var Settings = (new _Settings() as dynamic);
+var Settings = (SettingsManager._wasInitialized ? new _Settings() as dynamic : throw new Exception("Tried to use Settings before the SettingsManager ran onInit check. You must call SettingsManager.onAppInit() in your main function!"));
 
 class SettingsManager {
+
+  static bool _wasInitialized = false;
+  static int _lastMajorRevision = 104001;
+
+  static Future<bool> _checkNeedsWipe(SharedPreferences sharedPreferences) async {
+    if(!sharedPreferences.getKeys().contains("__kaminoVersion")) return true;
+    if(sharedPreferences.getInt("__kaminoVersion") < _lastMajorRevision) return true;
+
+    return false;
+  }
+
+  static Future<void> onAppInit() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if(await _checkNeedsWipe(sharedPreferences)) await sharedPreferences.clear();
+
+    PackageInfo info = await PackageInfo.fromPlatform();
+    await sharedPreferences.setInt("__kaminoVersion", int.parse(info.buildNumber));
+
+    _wasInitialized = true;
+  }
 
   static bool hasKey(String key){
     return _Settings._settingDefinitions.containsKey(key);
@@ -25,6 +46,10 @@ class SettingsManager {
 }
 
 class _Settings {
+
+  /////// ATTENTION ///////
+  // MAKING MAJOR POTENTIALLY VERSION-BREAKING CHANGES TO SETTINGS?
+  // Remember to update SettingsManager._lastMajorRevision!!!
 
   /// NOTE: 'List' will be automatically cast to List<String>
   ///
@@ -53,7 +78,9 @@ class _Settings {
     ///   1 - refresh token
     ///   2 - expiry date
     ///
-    "traktCredentials": $(type: List, defaultValue: <String>[])
+    "traktCredentials": $(type: List, defaultValue: <String>[]),
+
+    "launchpadItems": $(type: String)
   };
 
   noSuchMethod(Invocation invocation) {

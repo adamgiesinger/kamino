@@ -1,9 +1,12 @@
 // Import flutter libraries
+import 'dart:async';
+
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/launchpad2/Launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/skyspace/skyspace.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
@@ -30,7 +33,71 @@ class PlatformType {
   static const TV = 1;
 }
 
-void main(){
+class ErrorScaffold extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
+  }
+}
+
+Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = false}) async {
+  print(error.toString());
+  print(stacktrace);
+
+  try {
+    OverlayState overlay = KaminoApp.navigatorKey.currentState.overlay;
+    if(overlay == null || overlay.context == null || !shouldShowDialog) return;
+    BuildContext context = overlay.context;
+
+    if(!(context.widget is KaminoApp)) Navigator.of(context).pop();
+
+    String _errorReference = "Unknown stack reference.";
+    try {
+      _errorReference = stacktrace.toString().split("\n").firstWhere((line) => line.contains("kamino")).split("     ")[1];
+    }catch(_){}
+
+    showDialog(context: context, builder: (BuildContext context) {
+      return AlertDialog(
+        title: TitleText(S.of(context).an_error_occurred, fontSize: 26, textAlign: TextAlign.center),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(S.of(context).take_screenshot_report_apollotv_discord, style: TextStyle(
+              fontFamily: 'GlacialIndifference',
+              fontSize: 18
+            )),
+            Container(child: Divider(), margin: EdgeInsets.symmetric(vertical: 10)),
+            Container(child: Text(error.toString() + "\n")),
+            RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(text: "Reference: ", style: TextStyle(
+                    color: Theme.of(context).textTheme.body1.color
+                  )),
+                  TextSpan(text: _errorReference, style: TextStyle(fontFamily: 'monospace', color: Theme.of(context).textTheme.body1.color))
+                ]
+              ),
+            )
+          ],
+        ),
+        actions: <Widget>[
+          FlatButton(
+            textColor: Theme.of(context).textTheme.button.color,
+            child: Text("Open Discord"),
+            onPressed: () => Interface.launchURL("https://discord.gg/euyQRWs"),
+          ),
+          FlatButton(
+            textColor: Theme.of(context).textTheme.button.color,
+            child: Text("Dismiss"),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ],
+      );
+    });
+  }catch(_){}
+}
+
+void main() async {
   // Setup logger
   Logger.root.level = Level.OFF;
   Logger.root.onRecord.listen((record) {
@@ -38,16 +105,33 @@ void main(){
   });
   log = new Logger(appName);
 
-  // Get device type
+  /// Get device type and initialize [SettingsManager]
   () async {
+    await SettingsManager.onAppInit();
     return (await platform.invokeMethod('getDeviceType')) as int;
   }().then((platformType){
+    FlutterError.onError = (FlutterErrorDetails details) async {
+      print("A Flutter exception was caught by the $appName internal error handler.");
+      await _reportError(details.exception, details.stack);
+    };
+
+    // Start Kamino (TV)
     if(platformType == PlatformType.TV) return runApp(KaminoSkyspace());
-    runApp(KaminoApp());
+
+    // Start Kamino (mobile)
+    runZoned<Future<void>>((){
+      runApp(KaminoApp());
+    }, onError: (error, StackTrace stacktrace) async {
+      print("A Dart zone exception was caught by the $appName internal error handler.");
+      await _reportError(error, stacktrace, shouldShowDialog: true);
+    });
+
   });
 }
 
 class KaminoApp extends StatefulWidget {
+
+  static final navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   State<StatefulWidget> createState() => KaminoAppState();
@@ -120,9 +204,85 @@ class KaminoAppState extends State<KaminoApp> {
     });
   }
 
+  Widget _getErrorWidget(FlutterErrorDetails error){
+    BuildContext context = KaminoApp.navigatorKey.currentState.overlay.context;
+
+    TextStyle _errorStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 14,
+      fontFamily: ApolloVendor.getThemeConfigs()[0].getThemeData().textTheme.body1.fontFamily,
+      decoration: TextDecoration.none,
+      fontWeight: FontWeight.normal
+    );
+
+    String _errorReference = "Unknown stack reference.";
+    try {
+      _errorReference = error.stack.toString().split("\n").firstWhere((line) => line.contains("kamino")).split("     ")[1];
+    }catch(_){}
+
+    return Container(
+      color: ApolloVendor.getThemeConfigs()[0].getThemeData().backgroundColor,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Image.asset("assets/images/logo.png", width: 64),
+
+          Container(
+            padding: EdgeInsets.only(top: 10),
+            child: Center(
+                child: Text(S.of(context).an_error_occurred, style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontFamily: 'GlacialIndifference',
+                    fontFamilyFallback: ['SF UI Display', 'Roboto'],
+                    decoration: TextDecoration.none,
+                    fontWeight: FontWeight.normal
+                ))
+            ),
+          ),
+
+          Container(
+            padding: EdgeInsets.only(top: 10),
+            child: Text(error.exceptionAsString(), style: _errorStyle),
+          ),
+
+          Container(child: Text("Library: ${error.library}", style: _errorStyle)),
+          Container(
+              margin: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.only(top: 30),
+              child: Text("Reference: $_errorReference",
+              textAlign: TextAlign.center,
+              style: _errorStyle)
+          ),
+
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 30),
+            padding: EdgeInsets.only(top: 30),
+            child: Text(S.of(context).take_screenshot_report_apollotv_discord, style: _errorStyle.copyWith(fontSize: 18, fontFamily: 'GlacialIndifference'), textAlign: TextAlign.center),
+          ),
+
+          Container(
+            padding: EdgeInsets.only(top: 30),
+            child: FlatButton(
+              color: context != null ? Theme.of(context).primaryColor
+              : ApolloVendor.getThemeConfigs()[0].getThemeData().primaryColor,
+              child: Text("Open Discord", style: _errorStyle),
+              onPressed: () => Interface.launchURL("https://discord.gg/euyQRWs")
+            ),
+          ),
+        ],
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    ErrorWidget.builder = (FlutterErrorDetails error) => _getErrorWidget(error);
+
     return new MaterialApp(
+      navigatorKey: KaminoApp.navigatorKey,
       localizationsDelegates: [
         S.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -216,7 +376,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
   @override
   void initState() {
     OTA.updateApp(context, true);
-    ApolloVendor.getLaunchpadConfiguration().initialize();
+    ApolloVendor.getLaunchpadConfiguration().initialize(context);
     super.initState();
   }
 
@@ -227,88 +387,87 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
-          backgroundColor: Theme.of(context).backgroundColor,
-          // backgroundColor: backgroundColor,
-          appBar: AppBar(
-            title: Row(
-              children: <Widget>[
-                Image.asset(
-                    appState.getActiveThemeData().brightness == Brightness.dark ?
-                    "assets/images/header_text.png" : "assets/images/header_text_dark.png",
-                    height: kToolbarHeight - 38
-                )
-              ],
-            ),
-
-            //backgroundColor: Theme.of(context).backgroundColor,
-            //elevation: 0,
-
-            backgroundColor: Theme.of(context).cardColor,
-            elevation: 5.0,
-
-            actions: <Widget>[
-              IconButton(
-                  icon: Icon(Icons.search),
-                  tooltip: "Search",
-                  onPressed: (){
-                    showSearch(context: context, delegate: SmartSearch());
-                  },
-              ),
-
-              PopupMenuButton<String>(
-                tooltip: "Options",
-                icon: Icon(Icons.more_vert),
-                onSelected: (String index){
-                  switch(index){
-                    case 'discord': return Interface.launchURL("https://discord.gg/euyQRWs");
-                    case 'blog': return Interface.launchURL("https://medium.com/apolloblog");
-                    case 'privacy': return Interface.launchURL("https://apollotv.xyz/legal/privacy");
-                    case 'donate': return Interface.launchURL("https://apollotv.xyz/donate");
-                    case 'settings': return Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => SettingsView()
-                    ));
-
-                    default: Interface.showSnackbar("Invalid menu option. Option '$index' was not defined.");
-                  }
-                },
-                itemBuilder: (BuildContext context){
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'discord',
-                      child: Container(child: Text("Discord"), padding: EdgeInsets.only(right: 50)),
-                    ),
-
-                    PopupMenuItem<String>(
-                      value: 'blog',
-                      child: Container(child: Text("Blog"), padding: EdgeInsets.only(right: 50))
-                    ),
-
-                    PopupMenuItem<String>(
-                      value: 'privacy',
-                      child: Container(child: Text("Privacy"), padding: EdgeInsets.only(right: 50))
-                    ),
-
-                    PopupMenuItem<String>(
-                      value: 'donate',
-                      child: Container(child: Text("Donate"), padding: EdgeInsets.only(right: 50))
-                    ),
-
-                    PopupMenuItem<String>(
-                      value: 'settings',
-                      child: Container(child: Text("Settings"), padding: EdgeInsets.only(right: 50))
-                    )
-                  ];
-                }
+        backgroundColor: Theme.of(context).backgroundColor,
+        // backgroundColor: backgroundColor,
+        appBar: AppBar(
+          title: Row(
+            children: <Widget>[
+              Image.asset(
+                  appState.getActiveThemeData().brightness == Brightness.dark ?
+                  "assets/images/header_text.png" : "assets/images/header_text_dark.png",
+                  height: kToolbarHeight - 38
               )
             ],
-
-            // Center title
-            centerTitle: false
           ),
-          //drawer: __buildAppDrawer(),
+
+          //backgroundColor: Theme.of(context).backgroundColor,
+          //elevation: 0,
+
+          backgroundColor: Theme.of(context).cardColor,
+          elevation: 5.0,
+
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.search),
+                tooltip: "Search",
+                onPressed: (){
+                  showSearch(context: context, delegate: SmartSearch());
+                },
+            ),
+
+            PopupMenuButton<String>(
+              tooltip: "Options",
+              icon: Icon(Icons.more_vert),
+              onSelected: (String index){
+                switch(index){
+                  case 'discord': return Interface.launchURL("https://discord.gg/euyQRWs");
+                  case 'blog': return Interface.launchURL("https://medium.com/apolloblog");
+                  case 'privacy': return Interface.launchURL("https://apollotv.xyz/legal/privacy");
+                  case 'donate': return Interface.launchURL("https://apollotv.xyz/donate");
+                  case 'settings': return Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => SettingsView()
+                  ));
+
+                  default: Interface.showSnackbar("Invalid menu option. Option '$index' was not defined.");
+                }
+              },
+              itemBuilder: (BuildContext context){
+                return [
+                  PopupMenuItem<String>(
+                    value: 'discord',
+                    child: Container(child: Text("Discord"), padding: EdgeInsets.only(right: 50)),
+                  ),
+
+                  PopupMenuItem<String>(
+                    value: 'blog',
+                    child: Container(child: Text("Blog"), padding: EdgeInsets.only(right: 50))
+                  ),
+
+                  PopupMenuItem<String>(
+                    value: 'privacy',
+                    child: Container(child: Text("Privacy"), padding: EdgeInsets.only(right: 50))
+                  ),
+
+                  PopupMenuItem<String>(
+                    value: 'donate',
+                    child: Container(child: Text("Donate"), padding: EdgeInsets.only(right: 50))
+                  ),
+
+                  PopupMenuItem<String>(
+                    value: 'settings',
+                    child: Container(child: Text("Settings"), padding: EdgeInsets.only(right: 50))
+                  )
+                ];
+              }
+            )
+          ],
+
+          // Center title
+          centerTitle: false
+        ),
 
           // Body content
-          body: Launchpad2(),
+        body: Launchpad2()
       )
     );
   }

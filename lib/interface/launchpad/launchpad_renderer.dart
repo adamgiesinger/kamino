@@ -31,8 +31,7 @@ class LaunchpadItemRendererState extends State<LaunchpadItemRenderer> {
     setState((){
       _userOptions = null;
 
-      LaunchpadItemManager.getManager().reset();
-      ApolloVendor.getLaunchpadConfiguration().initialize();
+      print("refreshed");
 
       _getLaunchPrefs();
     });
@@ -52,10 +51,11 @@ class LaunchpadItemRendererState extends State<LaunchpadItemRenderer> {
 
     List<Widget> builderList = new List();
 
-    builderList.add(_searchButton());
-
     _userOptions.forEach((userSelectedWidget){
-      builderList.add(LaunchpadItemManager.getManager().getWidgetById(userSelectedWidget.id));
+      try {
+        builderList.add(LaunchpadItemManager.getManager().getWidgetById(
+            userSelectedWidget.id));
+      } catch(_) {}
     });
 
     return Expanded(
@@ -64,64 +64,23 @@ class LaunchpadItemRendererState extends State<LaunchpadItemRenderer> {
           overscroll.disallowGlow();
         },
         child: ListView.builder(
-            itemCount: builderList.length,
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index){
-              return builderList[index];
-            }
+          itemCount: builderList.length,
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemBuilder: (BuildContext context, int index){
+            return builderList[index];
+          }
         )
       ),
     );
   }
 
   void _getLaunchPrefs(){
-    LaunchpadItemManager.getManager().getLaunchpadConfiguration(onlyEnabled: true).then((activeItems){
+    LaunchpadItemManager.getManager().getLaunchpadConfiguration().then((activeItems){
       setState(() {
         _userOptions = activeItems;
       });
     });
-  }
-
-  Widget _searchButton() {
-    return Container(
-      margin: EdgeInsets.only(top: 20, bottom: 10, left: 10, right: 10),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0),
-        child: new Material(
-          elevation: 5,
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(100),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(100),
-            onTap: () {
-              showSearch(context: context, delegate: SmartSearch());
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Padding(
-                  padding: EdgeInsets.only(top: 15, bottom: 15, left: 20),
-                  child: new Text(
-                    S.of(context).search_tv_shows_and_movies,
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'GlacialIndifference',
-                        color: Colors.grey),
-                  ),
-                ),
-                new Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: new Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ))
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
 }

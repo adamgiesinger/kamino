@@ -209,19 +209,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
 
   Widget _generateEpisodeImage(Map episode, ScrollController _controller){
     if (episode["still_path"] == null) {
-      return LayoutBuilder(builder: (BuildContext context, BoxConstraints size) {
-        return Center(
-          child: new Parallax.inside(
-              mainAxisExtent: 220.0,
-              child: new Image.asset(
-                "assets/images/no_image_detail.jpg",
-                height: 300,
-                width: size.maxWidth,
-                fit: BoxFit.cover,
-              )
-          ),
-        );
-      });
+      return Container();
     }
 
     return LayoutBuilder(builder: (BuildContext context, BoxConstraints size){

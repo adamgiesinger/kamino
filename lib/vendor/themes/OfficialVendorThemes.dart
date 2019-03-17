@@ -17,7 +17,6 @@ class _DarkVendorTheme extends ThemeConfiguration {
   _DarkVendorTheme(): super(
     id: "xyz.apollotv.dark",
     name: "ApolloTV Official",
-    version: "1.0.0",
     author: "Apollo15",
     allowsVariants: true,
     overlayStyle: SystemUiOverlayStyle.dark.copyWith(
@@ -69,7 +68,6 @@ class _LightVendorTheme extends ThemeConfiguration {
   _LightVendorTheme(): super(
     id: "xyz.apollotv.light",
     name: "ApolloTV Official (Light)",
-    version: "1.0.0",
     author: "Apollo15",
     allowsVariants: true,
     overlayStyle: SystemUiOverlayStyle.light.copyWith(
@@ -122,8 +120,7 @@ class _BlackVendorTheme extends ThemeConfiguration {
 
   _BlackVendorTheme(): super(
     id: "xyz.apollotv.black",
-    name: "ApolloTV Official (Black)",
-    version: "1.0.0",
+    name: "ApolloTV Official (AMOLED)",
     author: "Apollo15",
     allowsVariants: true,
     overlayStyle: SystemUiOverlayStyle.dark.copyWith(
@@ -138,7 +135,7 @@ class _BlackVendorTheme extends ThemeConfiguration {
     var _highlightColor = primaryColor.withOpacity(0.1490);
 
     var _backgroundColor = Color(0xFF000000);
-    var _cardColor = Color(0xFF151517);
+    var _cardColor = _backgroundColor;
 
     return ThemeData(
       brightness: Brightness.dark,

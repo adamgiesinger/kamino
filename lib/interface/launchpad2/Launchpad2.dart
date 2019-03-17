@@ -2,6 +2,7 @@ import 'package:async/async.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/api/trakt.dart';
 import 'package:kamino/interface/favorites.dart';
 import 'package:kamino/interface/genre/all_genres.dart';
 import 'package:kamino/models/content.dart';
@@ -19,7 +20,8 @@ class Launchpad2 extends StatefulWidget {
 
 class Launchpad2State extends State<Launchpad2> {
 
-  final AsyncMemoizer<List<ContentModel>> _memoizer = AsyncMemoizer();
+  final AsyncMemoizer<List<ContentModel>> _topBannerMemoizer = AsyncMemoizer();
+  final AsyncMemoizer<List<ContentModel>> _continueWatchingMemoizer = AsyncMemoizer();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class Launchpad2State extends State<Launchpad2> {
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   height: 200,
-                  child: FutureBuilder<List<ContentModel>>(future: _memoizer.runOnce(() => TMDB.getList("107032")), builder: (BuildContext context, AsyncSnapshot<List<ContentModel>> snapshot){
+                  child: FutureBuilder<List<ContentModel>>(future: _topBannerMemoizer.runOnce(() => TMDB.getList("107032")), builder: (BuildContext context, AsyncSnapshot<List<ContentModel>> snapshot){
                     if(snapshot.connectionState == ConnectionState.done){
                       if(snapshot.hasError) return Container(child: Text(snapshot.error.toString()));
 
@@ -120,13 +122,32 @@ class Launchpad2State extends State<Launchpad2> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text("CONTINUE WATCHING", style: TextStyle(
                         fontFamily: 'GlacialIndifference',
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1,
                         color: Theme.of(context).primaryTextTheme.display3.color,
-                      ))
+                      )),
+
+                      FutureBuilder<List<ContentModel>>(
+                        future: _continueWatchingMemoizer.runOnce(() => Trakt.getWatchProgress(context)),
+                        builder: (BuildContext context, AsyncSnapshot snapshot){
+                          if(snapshot.connectionState == ConnectionState.done) {
+                            if (snapshot.hasError) return Container(
+                                child: Text(snapshot.error.toString())
+                            );
+
+                            return Container();
+                          }
+
+                          return Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                              )
+                          );
+                      })
                     ],
                   ),
                 )

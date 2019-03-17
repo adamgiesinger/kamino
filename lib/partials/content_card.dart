@@ -55,9 +55,9 @@ class ContentCard extends StatelessWidget {
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: AutoSizeText(model.title, style: TextStyle(fontSize: 25.0), maxFontSize: 25.0, maxLines: 1, textAlign: TextAlign.center, overflow: TextOverflow.ellipsis)
+                    child: AutoSizeText(model.title, style: TextStyle(fontSize: 25.0, color: Colors.white), maxFontSize: 25.0, maxLines: 1, textAlign: TextAlign.center, overflow: TextOverflow.ellipsis)
                 ),
-                Text(DateFormat.y("en_US").format(DateTime.parse(model.releaseDate)), style: TextStyle(fontSize: 16))
+                Text(DateFormat.y("en_US").format(DateTime.parse(model.releaseDate)), style: TextStyle(fontSize: 16, color: Colors.white))
               ],
             ),
 
@@ -65,7 +65,8 @@ class ContentCard extends StatelessWidget {
               right: 20,
               bottom: 20,
               child: new Icon(
-                (model is MovieContentModel) ? Icons.local_movies : Icons.live_tv
+                (model is MovieContentModel) ? Icons.local_movies : Icons.live_tv,
+                color: Colors.white,
               ),
             ),
 

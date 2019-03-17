@@ -5,7 +5,6 @@ import 'package:kamino/api/tmdb.dart';
 
 import 'package:flutter/material.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/interface/launchpad/core_widgets/home_customise.dart';
 import 'package:kamino/interface/launchpad/launchpad_item.dart';
 import 'package:kamino/interface/launchpad/see_all_expanded_view.dart';
 import 'package:kamino/interface/smart_search/search_results.dart';
@@ -14,25 +13,10 @@ import 'package:kamino/interface/content/overview.dart';
 
 class LaunchpadConfiguration {
 
-  void initialize() {
-    _registerLaunchpadItems();
-  }
-
   ///
   /// You should edit this method to add/remove available launchpad items.
   ///
-  void _registerLaunchpadItems() {
-    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
-      id: "xyz.apollotv.widgets.welcome_card",
-      enabled: true,
-      child: LaunchpadItem(
-        title: "Welcome to ApolloTV",
-        icon: Icon(Icons.lightbulb_outline),
-        contents: HomeCustomiseWidget(),
-        wrapContent: false,
-      )
-    ));
-
+  void initialize(BuildContext context) {
     LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
         id: "xyz.apollotv.widgets.tmdb_popular_movies",
         enabled: true,
@@ -57,19 +41,6 @@ class LaunchpadConfiguration {
             contentType: ContentType.MOVIE,
           ),
           action: ListTmdbLaunchpadItem.buildExpandedCardAction(ContentType.MOVIE, "top_rated")
-        )
-    ));
-
-    LaunchpadItemManager.getManager().register(new LaunchpadItemWrapper(
-        id: "xyz.apollotv.widgets.tmdb_popular_tv_shows",
-        child: LaunchpadItem(
-          title: "Popular TV Shows",
-          icon: Icon(Icons.star),
-          contents: ListTmdbLaunchpadItem(
-            endpoint: "popular",
-            contentType: ContentType.TV_SHOW,
-          ),
-          action: ListTmdbLaunchpadItem.buildExpandedCardAction(ContentType.TV_SHOW, "popular"),
         )
     ));
 
