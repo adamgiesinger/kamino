@@ -1,6 +1,6 @@
 {
-  "blog": "مُدونة",
-  "tv_shows": "مُسلسلات",
+  "blog": "مدونة",
+  "tv_shows": "مسلسلات",
   "movies": "أفلام",
   "legal": "قانوني",
   "donate": "تبرع",
@@ -37,7 +37,7 @@
   "trakt_synchronization": "...Trakt مزامنة",
   "trakt_favorites_sync_detailed": ".سيتم إغلاق مربع الحوار تلقائياً عند اكتمال المزامنة .Trakt يرجى الإنتظار بينما نقوم بمزامنة مفضلاتك مع.",
 
-  "general_error": "($error) .حدث خطأ\n.يُرجى الإبلاغ عن هذا الخطأ",
+  "general_error": "($error) .حدث خطأ\n.يرجى الإبلاغ عن هذا الخطأ",
 
   "play_episode": "شغل الحلقة",
   "play_movie": "شغل الفيلم",
