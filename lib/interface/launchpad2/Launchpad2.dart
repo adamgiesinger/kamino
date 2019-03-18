@@ -1,5 +1,6 @@
 import 'package:async/async.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/api/trakt.dart';
