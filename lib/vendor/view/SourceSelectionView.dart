@@ -5,23 +5,34 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import "package:kamino/models/SourceModel.dart";
 import 'package:kamino/util/interface.dart';
+import 'package:kamino/vendor/struct/ClawsVendorConfiguration.dart';
 
 class SourceSelectionView extends StatefulWidget {
 
+  static const double _kAppBarProgressHeight = 4.0;
+
   final String title;
-  final List<SourceModel> sourceList;
+  final ClawsVendorDelegate delegate;
 
   @override
   State<StatefulWidget> createState() => SourceSelectionViewState();
 
   SourceSelectionView({
     @required this.title,
-    @required this.sourceList
+    @required this.delegate
   });
 
 }
 
 class SourceSelectionViewState extends State<SourceSelectionView> {
+
+  @override
+  void initState() {
+    widget.delegate.addSourceEvent((discoveredSource){ if(mounted) setState((){}); });
+    widget.delegate.addCloseEvent((){ if(mounted) setState((){}); });
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +44,23 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
             widget.title
         ),
         centerTitle: true,
+        bottom: PreferredSize(
+          child: (widget.delegate != null && !widget.delegate.inClosedState) ? SizedBox(
+            height: SourceSelectionView._kAppBarProgressHeight,
+            child: LinearProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).primaryColor
+              ),
+            ),
+          ) : Container(),
+          preferredSize: Size(double.infinity, SourceSelectionView._kAppBarProgressHeight)
+        ),
       ),
       body: Container(
         child: ListView.builder(
-          itemCount: widget.sourceList.length,
+          itemCount: widget.delegate.sourceList.length,
           itemBuilder: (BuildContext ctx, int index){
-            var source = widget.sourceList[index];
-
-            print(source);
+            var source = widget.delegate.sourceList[index];
 
             String qualityInfo = "-"; // until we sort out quality detection
             if(source.metadata.quality != null)

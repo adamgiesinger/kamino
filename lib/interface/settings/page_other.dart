@@ -159,6 +159,7 @@ class OtherSettingsPageState extends SettingsPageState {
 
                   // Flag corrections
                   if(iconFile == "ar") iconFile = "_assets/flags/arab_league.png";
+                  if(iconFile == "he") iconFile = "_assets/flags/hebrew.png";
                   if(iconFile == "en" && iconVariant == "GB") iconFile = "gb";
                   if(iconFile == "en") iconFile = "us";
                   // ./Flag corrections

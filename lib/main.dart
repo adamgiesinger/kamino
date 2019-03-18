@@ -376,7 +376,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
   @override
   void initState() {
     OTA.updateApp(context, true);
-    ApolloVendor.getLaunchpadConfiguration().initialize(context);
+    // ApolloVendor.getLaunchpadConfiguration().initialize(context);
     super.initState();
   }
 

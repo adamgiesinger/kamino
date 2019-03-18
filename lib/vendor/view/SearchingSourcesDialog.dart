@@ -7,10 +7,6 @@ import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 
 class SearchingSourcesDialog extends StatefulWidget {
 
-  //final ConnectionNegotiator negotiator;
-
-  //SearchingSourcesDialog({this.negotiator});
-
   @override
   State<StatefulWidget> createState() => SearchingSourcesDialogState();
 

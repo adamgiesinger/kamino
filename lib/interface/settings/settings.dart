@@ -175,12 +175,10 @@ class _SettingsViewState extends State<SettingsView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(S.of(context).make_appname_yours(appName.toUpperCase()), style: TextStyle(
-                            fontFamily: 'GlacialIndifference',
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                            color: Theme.of(context).primaryTextTheme.display3.color,
-                          ))
+                          SubtitleText(
+                            S.of(context).make_appname_yours(appName.toUpperCase()),
+                            padding: EdgeInsets.zero,
+                          )
                         ],
                       )
                     ),
@@ -218,12 +216,10 @@ class _SettingsViewState extends State<SettingsView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(S.of(context).boost_your_experience, style: TextStyle(
-                              fontFamily: 'GlacialIndifference',
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                              color: Theme.of(context).primaryTextTheme.display3.color,
-                            ))
+                            SubtitleText(
+                              S.of(context).boost_your_experience,
+                              padding: EdgeInsets.zero,
+                            )
                           ],
                         )
                     ),
@@ -248,12 +244,10 @@ class _SettingsViewState extends State<SettingsView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(S.of(context).miscellaneous, style: TextStyle(
-                              fontFamily: 'GlacialIndifference',
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                              color: Theme.of(context).primaryTextTheme.display3.color,
-                            ))
+                            SubtitleText(
+                              S.of(context).miscellaneous,
+                              padding: EdgeInsets.zero,
+                            )
                           ],
                         )
                     ),

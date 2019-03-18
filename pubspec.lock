@@ -21,7 +21,7 @@ packages:
       name: asn1lib
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.3"
+    version: "0.5.7"
   async:
     dependency: transitive
     description:
@@ -234,7 +234,7 @@ packages:
       name: flutter_webview_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0+2"
+    version: "0.3.1"
   html:
     dependency: "direct main"
     description:
@@ -360,14 +360,14 @@ packages:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.0"
   petitparser:
     dependency: transitive
     description:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.1"
   pointycastle:
     dependency: transitive
     description:
@@ -395,7 +395,7 @@ packages:
       name: screen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.5"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -444,7 +444,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.4"
+    version: "1.5.5"
   stack_trace:
     dependency: transitive
     description:
@@ -549,7 +549,7 @@ packages:
       name: w_common
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.15.1"
+    version: "1.16.0"
   w_transport:
     dependency: "direct main"
     description:
@@ -572,5 +572,5 @@ packages:
     source: hosted
     version: "2.1.15"
 sdks:
-  dart: ">=2.1.0 <3.0.0"
+  dart: ">=2.2.0 <3.0.0"
   flutter: ">=0.7.3 <2.0.0"

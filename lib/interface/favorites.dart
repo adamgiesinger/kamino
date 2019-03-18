@@ -213,8 +213,7 @@ class FavoritesPageState extends State<FavoritesPage>
 
     return Center(
       child: Padding(
-        padding:
-            const EdgeInsets.only(left: _paddingWeight, right: _paddingWeight),
+        padding: const EdgeInsets.only(left: _paddingWeight, right: _paddingWeight),
         child: Text(
           S.of(context).no_results_found,
           maxLines: 3,

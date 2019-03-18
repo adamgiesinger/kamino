@@ -97,7 +97,7 @@ class SmartSearch extends SearchDelegate<String> {
 
     _saveToSearchHistory(query);
     _promoteQuerySearchHistory(query);
-    return new SearchResult(query: query);
+    return SearchResultView(query: query);
   }
 
   Widget _searchHistoryListView(AsyncSnapshot snapshot) {
@@ -253,15 +253,17 @@ class SmartSearch extends SearchDelegate<String> {
                 AsyncSnapshot<List<SearchModel>> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.none:
-                  return Container();
+
                 case ConnectionState.active:
                 case ConnectionState.waiting:
-                  return Center(
+                  return Container();
+                  // This is just for suggestions.
+                  /*return Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
                         Theme.of(context).primaryColor
                       ),
-                    ));
+                    ));*/
                 case ConnectionState.done:
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');

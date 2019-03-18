@@ -70,7 +70,11 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
     if (await downloadFile.exists()) await downloadFile.delete();
   }
 
-  Map data = await checkUpdate(context, dismissSnackbar);
+  // TODO: Show network connection error message.
+  Map data;
+  try {
+    data = await checkUpdate(context, dismissSnackbar);
+  }catch(_){ return; }
 
   //show update dialog
   if (data["url"] != null) {

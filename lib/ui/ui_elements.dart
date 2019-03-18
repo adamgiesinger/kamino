@@ -46,13 +46,17 @@ class ConcealableText extends StatefulWidget {
   final String text;
   final String revealLabel;
   final String concealLabel;
+  final Color color;
+  final Color revealLabelColor;
 
   final int maxLines;
 
   ConcealableText(this.text, {
     @required this.revealLabel,
     @required this.concealLabel,
-    @required this.maxLines
+    @required this.maxLines,
+    this.color,
+    this.revealLabelColor
   });
 
   @override
@@ -71,7 +75,9 @@ class ConcealableTextState extends State<ConcealableText> {
         LayoutBuilder(builder: (context, size){
           var textSpan = TextSpan(
             text: widget.text,
-            style: Theme.of(context).primaryTextTheme.body1
+            style: Theme.of(context).primaryTextTheme.body1.copyWith(
+              color: widget.color
+            )
           );
 
           var textPainter = TextPainter(
@@ -106,7 +112,8 @@ class ConcealableTextState extends State<ConcealableText> {
                     child: Text(
                       isConcealed ? widget.revealLabel : widget.concealLabel,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold,
+                        color: widget.revealLabelColor
                       )
                     )
                   ),

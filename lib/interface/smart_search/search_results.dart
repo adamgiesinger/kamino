@@ -14,17 +14,18 @@ import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/util/settings.dart';
 
-class SearchResult extends StatefulWidget{
+class SearchResultView extends StatefulWidget {
+
   final String query;
 
-  SearchResult({Key key, @required this.query}) : super(key: key);
+  SearchResultView({Key key, @required this.query}) : super(key: key);
 
   @override
-  _SearchResultState createState() => new _SearchResultState();
+  _SearchResultViewState createState() => new _SearchResultViewState();
 
 }
 
-class _SearchResultState extends State<SearchResult> {
+class _SearchResultViewState extends State<SearchResultView> {
 
   ScrollController controller;
   ScrollController controllerList;
@@ -39,6 +40,7 @@ class _SearchResultState extends State<SearchResult> {
   List<int> _favIDs = [];
 
   Future<List<SearchModel>> _getContent(String query, int pageNumber) async {
+    hasLoaded = false;
 
     List<SearchModel> _data = [];
     Map _temp;
@@ -60,6 +62,7 @@ class _SearchResultState extends State<SearchResult> {
       }
     }
 
+    hasLoaded = true;
     return _data;
   }
 
@@ -87,8 +90,11 @@ class _SearchResultState extends State<SearchResult> {
     }
   }
 
+  bool hasLoaded;
+
   @override
   void initState() {
+    hasLoaded = false;
     (Settings.detailedContentInfoEnabled as Future).then((data) => setState(() => _expandedSearchPref = data));
 
     controller = new ScrollController()..addListener(_scrollListener);
@@ -100,7 +106,6 @@ class _SearchResultState extends State<SearchResult> {
     });
 
     _getContent(widget.query, _currentPages).then((data){
-
       setState(() {
         _results = data;
       });
@@ -111,13 +116,25 @@ class _SearchResultState extends State<SearchResult> {
 
   @override
   Widget build(BuildContext context) {
-    if(_results.length < 1) return Container(
-      child: Center(
-        child: Text("No results found!", style: TextStyle(
-          fontSize: 20
-        )),
-      ),
-    );
+    if(_results.length < 1){
+      if(widget.query == null || widget.query.isEmpty) return Container();
+
+      if(!hasLoaded) return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).primaryColor
+          ),
+        )
+      );
+
+      return Container(
+        child: Center(
+          child: Text("No results found!", style: TextStyle(
+            fontSize: 20
+          )),
+        ),
+      );
+    }
 
     return Scrollbar(
       child: _expandedSearchPref == false ? _gridPage() : _listPage(),
@@ -242,25 +259,6 @@ class _SearchResultState extends State<SearchResult> {
   }
 
 
-}
-
-Widget _nothingFoundScreen(BuildContext context) {
-  const _paddingWeight = 18.0;
-
-  return Center(
-    child: Padding(
-      padding:
-      const EdgeInsets.only(left: _paddingWeight, right: _paddingWeight),
-      child: Text(
-        S.of(context).no_results_found,
-        maxLines: 3,
-        style: TextStyle(
-            fontSize: 22.0,
-            fontFamily: 'GlacialIndifference',
-            color: Theme.of(context).primaryTextTheme.body1.color),
-      ),
-    ),
-  );
 }
 
 class SearchModel {

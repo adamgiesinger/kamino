@@ -12,21 +12,22 @@ import 'package:intl/intl.dart';
 import 'package:kamino/models/SourceModel.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
+import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:kamino/vendor/view/SearchingSourcesDialog.dart';
 import 'package:kamino/vendor/view/SourceSelectionView.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:w_transport/vm.dart' show vmTransportPlatform;
 import 'package:w_transport/w_transport.dart' as transport;
 import 'package:ntp/ntp.dart';
 
 class ClawsVendorConfiguration extends VendorConfiguration {
 
-  ConnectionNegotiator _negotiator;
+  ClawsVendorDelegate _delegate;
 
   // Settings
   static const bool ALLOW_SOURCE_SELECTION = true;
+  static const bool FORCE_TOKEN_REGENERATION = true;
 
   // Keys
   final String clawsKey;
@@ -65,27 +66,33 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     return server;
   }
 
+  Future<bool> sourceSelectionEnabled() async {
+    return ALLOW_SOURCE_SELECTION && await (Settings.manuallySelectSourcesEnabled);
+  }
+
   @override
   Future<bool> authenticate(BuildContext context, {bool force = false}) async {
     try {
       http.Response response = await http.get(server + 'api/v1/status');
       var status = Convert.jsonDecode(response.body);
     }catch(ex){
+      print(ex);
       _showAuthenticationFailureDialog(context, "Claws is currently offline for server upgrades.\nPlease check the #announcements channel in our Discord server for more information.");
       return false;
     }
 
-    final preferences = await SharedPreferences.getInstance();
+    String clawsToken = await Settings.clawsToken;
+    double clawsTokenSetTime = await Settings.clawsTokenSetTime;
 
     DateTime now = await NTP.now();
-    if (!force &&
-        preferences.getString("token") != null &&
-        preferences.getDouble("token_set_time") != null &&
-        preferences.getDouble("token_set_time") + 3600 >=
+    if (!FORCE_TOKEN_REGENERATION && !force &&
+        clawsToken != null &&
+        clawsTokenSetTime != null &&
+        clawsTokenSetTime + 3600 >=
             (now.millisecondsSinceEpoch / 1000).floor()) {
       // Return preferences token
       print("Re-using old token...");
-      _token = preferences.getString("token");
+      _token = clawsToken;
       return true;
     } else {
       // Return new token
@@ -99,8 +106,8 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       if (tokenResponse["auth"]) {
         var token = tokenResponse["token"];
         var tokenJson = jwtDecode(token);
-        await preferences.setString("token", token);
-        await preferences.setDouble("token_set_time", tokenJson['exp'].toDouble());
+        await (Settings.clawsToken = token);
+        await (Settings.clawsTokenSetTime = tokenJson['exp'].toDouble());
         print("Generated new token...");
         _token = token;
 
@@ -119,39 +126,60 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   /// To use this, override it and call super in your new method.
   ///
   Future<void> prepare(String title, BuildContext context) async {
-    if (_negotiator != null && !_negotiator.inClosedState) _negotiator.close();
-    _negotiator = new ConnectionNegotiator();
+    if (_delegate != null && !_delegate.inClosedState) _delegate.close();
+    _delegate = new ClawsVendorDelegate();
 
-    showDialog(barrierDismissible: false, context: context, builder: (BuildContext ctx){
-      return SearchingSourcesDialog();
-    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => WillPopScope(
+        onWillPop: () async => false,
+        child: AlertDialog(
+          title: TitleText('Connecting...'),
+          content: SingleChildScrollView(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Container(
+                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
+                    child: new CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor
+                      ),
+                    )
+                ),
+                Center(child: Text("Please wait..."))
+              ],
+            ),
+          )
+        ),
+      )
+    );
   }
 
   ///
   /// This is called when a source has been found. You can use this to either
   /// auto-play or show a source selection dialog.
   ///
-  Future<void> onComplete(BuildContext context, String title, List<SourceModel> sourceList) async {
+  Future<void> onComplete(BuildContext context, String title) async {
     //Navigator.of(context).pop();
 
-    if(sourceList.length > 0) {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-
-      if(preferences.getBool("sourceSelection") != null && preferences.getBool("sourceSelection")){
-        Navigator.pushReplacement(
+    if(_delegate.sourceList.length > 0) {
+      if(await sourceSelectionEnabled()){
+        return;
+        /*Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => SourceSelectionView(
               sourceList: sourceList.toSet().toList(), // to set, then back to list to eliminate duplicates
               title: title,
             ))
-        );
+        );*/
       } else {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) =>
                 CPlayer(
                     title: title,
-                    url: sourceList[0].file.data,
+                    url: _delegate.sourceList[0].file.data,
                     mimeType: 'video/mp4'
                 ))
         );
@@ -175,6 +203,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
               textColor: Theme.of(context).primaryColor,
               child: Text('Okay'),
               onPressed: () {
+                Navigator.of(context).pop();
                 Navigator.of(context).pop();
               },
             ),
@@ -260,14 +289,31 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     // Open a WebSocket connection at the API endpoint.
     try {
-      _negotiator.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform));
+      _delegate.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform));
+      
+      if(await sourceSelectionEnabled()){
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (_) => SourceSelectionView(
+              title: title,
+              delegate: _delegate
+            )
+        ));
+      }else {
+        Navigator.of(context).pop();
+        showDialog(barrierDismissible: false,
+          context: context,
+          builder: (BuildContext ctx) {
+            return SearchingSourcesDialog();
+          }
+        );
+      }
     } catch (ex) {
       print(ex.toString());
       // Just in case the app gets into a weird state. It did for me while developing. Hopefully this isn't necessary
       final isAuthenticated = await authenticate(context, force: true);
       if (isAuthenticated) {
         try {
-          _negotiator.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform));
+          _delegate.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform));
         } on transport.WebSocketException {
           // Probably should show a message to the user here...
           print("Currently can't connect to WebSocket");
@@ -277,14 +323,15 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     }
 
     List<Future> futureList = [];
-    List<SourceModel> sourceList = [];
     IntByRef scrapeResultsCounter = new IntByRef(0);
     bool doneEventStatus = false;
 
-    if(_negotiator.wasCancelled) return;
+    if(_delegate.wasCancelled) return;
 
     // Execute code when a new source is received.
-    _negotiator.socket.listen((message) async {
+    _delegate.socket.listen((message) async {
+      if(_delegate.wasCancelled || _delegate.inClosedState) return;
+
       var event = Convert.jsonDecode(message);
       var eventName = event["event"];
 
@@ -294,7 +341,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         if (event.containsKey('results')) {
           List results = event['results'];
           results.forEach((result) {
-            futureList.add(_onSourceFound(sourceList, result, context));
+            futureList.add(_onSourceFound(result, context));
           });
         } else if (event.containsKey('error')) {
           print(event["error"]);
@@ -304,14 +351,14 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         if (doneEventStatus && scrapeResultsCounter.value == 0) {
           //print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
           print('Server done scraping, closing WebSocket');
-          _negotiator.close();
+          _delegate.close();
           await Future.wait(futureList);
           //print('All sources received');
-          sourceList.sort((left, right) {
+          _delegate.sourceList.sort((left, right) {
             return left.metadata.ping.compareTo(right.metadata.ping);
           });
 
-          onComplete(context, displayTitle, sourceList);
+          onComplete(context, displayTitle);
         }
       }
 
@@ -320,14 +367,14 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         if (scrapeResultsCounter.value == 0) {
           print('======DONE EVENT======');
           print('Server done scraping, closing WebSocket');
-          _negotiator.close();
+          _delegate.close();
           await Future.wait(futureList);
           print('All sources received');
-          sourceList.sort((left, right) {
+          _delegate.sourceList.sort((left, right) {
             return left.metadata.ping.compareTo(right.metadata.ping);
           });
 
-          onComplete(context, displayTitle, sourceList);
+          onComplete(context, displayTitle);
         }
 
         return;
@@ -335,27 +382,27 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
       // The content can be accessed directly.
       if(eventName == 'result'){
-        futureList.add(_onSourceFound(sourceList, event, context));
+        futureList.add(_onSourceFound(event, context));
         return;
       }
 
       // Claws needs the request to be proxied.
       if(eventName == 'scrape'){
-        futureList.add(_onScrapeSource(event, _negotiator.socket, scrapeResultsCounter));
+        futureList.add(_onScrapeSource(event, _delegate.socket, scrapeResultsCounter));
         return;
       }
     }, onError: (error) {
       print("WebSocket error: " + error.toString());
     }, onDone: () {
-      _negotiator.close();
+      _delegate.close();
     });
 
-    _negotiator.socket.add(data);
+    _delegate.socket.add(data);
   }
 
 
   ///***** SCRAPING EVENT HANDLERS *****///
-  _onSourceFound (List sourceList, data, BuildContext context, {String cookie = ''}) async {
+  _onSourceFound (data, BuildContext context, {String cookie = ''}) async {
     var sourceFile = data["file"];
     String sourceStreamURL = sourceFile["data"];
 
@@ -400,7 +447,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     try {
       htmlContent = await http.get(sourceStreamURL, headers: headers).timeout(const Duration(seconds: 5));
     }catch(ex){
-      print("Error receiving stream data from source: " + ex.toString());
+      print("Error receiving stream data from source (_onSourceFound): " + ex.toString());
       return;
     }
     var ping = new DateTime.now().millisecondsSinceEpoch - before;
@@ -411,7 +458,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       return;
     }
 
-    sourceList.add(SourceModel.fromJSON(data));
+    _delegate.addSource(SourceModel.fromJSON(data));
   }
 
   _onScrapeSource(event, transport.WebSocket webSocket, IntByRef scrapeResultsCounter) async {
@@ -433,7 +480,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         cookie = cookieList.lastWhere((String i) => i.contains(cookieKey)).split(';').firstWhere((String i) => i.contains(cookieKey));
       }
     }catch(ex){
-      print("Error receiving stream data from source: " + ex.toString());
+      print("Error receiving stream data from source (_onScrapeSource): " + ex.toString());
       return;
     }
 
@@ -450,7 +497,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
   @override
   Future<void> cancel() async {
-    if(_negotiator != null) _negotiator.cancel();
+    if(_delegate != null) _delegate.cancel();
   }
 
 }
@@ -552,12 +599,17 @@ class LoadingWidgetState extends State<LoadingWidget> {
 
 }
 
-class ConnectionNegotiator {
+class ClawsVendorDelegate {
+
+  List<SourceModel> sourceList;
+
+  List<Function> sourceEvents;
+  List<Function> closeEvents;
 
   transport.WebSocket _webSocket;
   int _connectionStatus;
 
-  ConnectionNegotiator(){
+  ClawsVendorDelegate(){
     // -1 -> Unused connection
     _connectionStatus = -1;
   }
@@ -570,7 +622,37 @@ class ConnectionNegotiator {
   bool get inClosedState => status == 0 || status == 449;
   bool get wasCancelled => status == 449;
 
-  ConnectionNegotiator open(transport.WebSocket socket) {
+  void addSourceEvent(Function onSource){
+    sourceEvents.add(onSource);
+  }
+
+  void clearSourceEvents(){
+    sourceEvents.clear();
+  }
+
+  void addSource(SourceModel model){
+    sourceList.add(model);
+    if(sourceEvents != null) sourceEvents.forEach((func) => func(model));
+  }
+
+  List<SourceModel> getSources(){
+    return sourceList;
+  }
+
+  void addCloseEvent(Function onClose){
+    closeEvents.add(onClose);
+  }
+
+  void clearCloseEvents(){
+    closeEvents.clear();
+  }
+
+  ClawsVendorDelegate open(transport.WebSocket socket) {
+    sourceEvents = new List();
+    closeEvents = new List();
+
+    sourceList = new List();
+
     if(wasCancelled) return null;
     if (!inUnusedState) throw new Exception(
         "Tried to open cancelled or already open connection!");
@@ -582,6 +664,8 @@ class ConnectionNegotiator {
   }
 
   void close(){
+    if(closeEvents != null) closeEvents.forEach((func) => func());
+
     // Ignore if already in closed state.
     if(inClosedState || inUnusedState) return;
 

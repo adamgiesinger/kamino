@@ -186,14 +186,14 @@ class _ContentOverviewState extends State<ContentOverview> {
   }
 
   //Logic for the favorites button
-  _favButtonLogic(BuildContext context){
+  _favButtonLogic(BuildContext context) async {
 
     if (_favState == true) {
 
       //remove the show from the database
       databaseHelper.removeFavorite(widget.contentId);
 
-      trakt.removeMedia(
+      if(await trakt.isSetUp()) trakt.removeMedia(
           context,
           widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId
@@ -217,7 +217,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           _data.backdropPath,
           _data.releaseDate);
 
-      trakt.sendNewMedia(
+      if(await trakt.isSetUp()) trakt.sendNewMedia(
           context,
           widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
           _data.title,
@@ -330,7 +330,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                                   * Relevant means visually and by context.
                                 */
                                   //_generateGenreChipsRow(context),
-                                  _generateSynopsisCard(),
+                                  _generateSynopsisSection(),
                                   _generateCastAndCrewInfo(),
 
                                   // Context-specific layout
@@ -560,58 +560,31 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   /// This function generates the Synopsis Card.
   ///
-  Widget _generateSynopsisCard(){
+  Widget _generateSynopsisSection(){
     return Padding(
-      padding: EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
+      padding: EdgeInsets.only(top: 0, left: 16.0, right: 16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)
-            ),
-            elevation: 3,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 20),
-              child: Column(
-                children: <Widget>[
-                  ListTile(
-                      title: TitleText(
-                        S.of(context).synopsis,
-                        fontSize: 22.0,
-                        textColor: Theme.of(context).primaryTextTheme.body1.color
-                      )
-                  ),
-                  Container(
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: DefaultTextStyle(
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                color: const Color(0xFF9A9A9A)
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  ConcealableText(
-                                    _data.overview != "" ?
-                                    _data.overview :
-                                    // e.g: 'This TV Show has no synopsis available.'
-                                    S.of(context).this_x_has_no_synopsis_available(getOverviewContentTypeName(widget.contentType)),
-                                    maxLines: 6,
-                                    revealLabel: S.of(context).show_more,
-                                    concealLabel: S.of(context).show_less,
-                                  )
-                                ],
-                              )
-                          )
-                      )
-                  )
-                ],
-              ),
+          /*SubtitleText(
+            S.of(context).synopsis,
+          ),*/
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+            child: ConcealableText(
+              _data.overview != "" ?
+                _data.overview :
+                // e.g: 'This TV Show has no synopsis available.'
+                S.of(context).this_x_has_no_synopsis_available(getOverviewContentTypeName(widget.contentType)),
+
+              maxLines: 3,
+              revealLabel: S.of(context).show_more,
+              concealLabel: S.of(context).show_less,
+              color: const Color(0xFFBCBCBC)
             )
           )
         ],
-      )
+      ),
     );
   }
   
@@ -619,8 +592,6 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// This function generates the cast and crew cards.
   /// 
   Widget _generateCastAndCrewInfo({bool emptyOnFail = true}){
-    print(cast);
-    print(crew);
     if(emptyOnFail && (cast == null || crew == null || cast.isEmpty || crew.isEmpty))
       return Container();
 
@@ -642,7 +613,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     castAndCrew.removeWhere((entry) => castAndCrew.firstWhere((_e) => _e["name"] == entry["name"]) != entry);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16).copyWith(top: 30),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -651,49 +622,58 @@ class _ContentOverviewState extends State<ContentOverview> {
 
           Container(
             height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: castAndCrew.length,
-              itemBuilder: (BuildContext context, int index){
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      // Profile Image
-                      Expanded(
-                          child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
-                                  return CachedNetworkImage(
-                                    height: constraints.maxHeight,
-                                    width: constraints.maxHeight,
-                                    placeholder: Image.memory(kTransparentImage),
-                                    imageUrl: TMDB.IMAGE_CDN +
-                                        castAndCrew[index]["profile_path"],
-                                    fit: BoxFit.cover,
-                                  );
-                                })
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (notification){
+                notification.disallowGlow();
+                return false;
+              },
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: castAndCrew.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          // Profile Image
+                          Expanded(
+                              child: Container(
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+                                      return CachedNetworkImage(
+                                        height: constraints.maxHeight,
+                                        width: constraints.maxHeight,
+                                        placeholder: Image.memory(kTransparentImage),
+                                        imageUrl: TMDB.IMAGE_CDN +
+                                            castAndCrew[index]["profile_path"],
+                                        fit: BoxFit.cover,
+                                      );
+                                    })
+                                ),
+                              )
+                          ),
+
+                          // Name
+                          Text(castAndCrew[index]["name"], style: TextStyle(
+                              fontFamily: 'GlacialIndifference',
+                              fontSize: 16
+                          )),
+
+                          // Character or job
+                          Text(
+                            castAndCrew[index]["character"] != null ? castAndCrew[index]["character"] : castAndCrew[index]["job"],
+                            style: TextStyle(
+                                color: Colors.white54
                             ),
-                          )
+                          ),
+                        ],
                       ),
-
-                      // Name
-                      Text(castAndCrew[index]["name"]),
-
-                      // Character or job
-                      Text(
-                        castAndCrew[index]["character"] != null ? castAndCrew[index]["character"] : castAndCrew[index]["job"],
-                        style: TextStyle(
-                          color: Colors.white54
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
+                    );
+                  }
+              )
             )
           )
         ],

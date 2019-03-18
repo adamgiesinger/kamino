@@ -80,7 +80,10 @@ class _Settings {
     ///
     "traktCredentials": $(type: List, defaultValue: <String>[]),
 
-    "launchpadItems": $(type: String)
+    "launchpadItems": $(type: String),
+
+    "clawsToken": $(type: String),
+    "clawsTokenSetTime": $(type: double)
   };
 
   noSuchMethod(Invocation invocation) {
