@@ -5,7 +5,7 @@ Country | Locale | Version | Translator
 ENGLISH GB | en_gb | `v1.4.0` | @SamJakob#1079
 ENGLISH US | en | `v1.4.0` | @SamJakob#1079
 ARABIC | ar |  `v1.4.0` | @Captain Meliodas#2006
-CROATIAN | hr |  `v1.4.0` | Typhoon TV#1833
+CROATIAN | hr |  `v1.4.0` | [@SpajicM](https://github.com/SpajicM) / Typhoon TV#1833
 DUTCH | nl | `v1.4.0` | @Paul🐼#8731 / @Thomie#9918
 FRENCH | fr | `v1.4.0` | @LEADERS03#6563
 GERMAN | de | `v1.4.0` | @adagi#2499
