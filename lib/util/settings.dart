@@ -83,7 +83,10 @@ class _Settings {
     "launchpadItems": $(type: String),
 
     "clawsToken": $(type: String),
-    "clawsTokenSetTime": $(type: double)
+    "clawsTokenSetTime": $(type: double),
+
+    "maxConcurrentRequests": $(type: int, defaultValue: 5),
+    "requestTimeout": $(type: int, defaultValue: 10)
   };
 
   noSuchMethod(Invocation invocation) {

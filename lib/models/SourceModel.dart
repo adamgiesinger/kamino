@@ -33,8 +33,8 @@ class SourceMetadata {
   SourceMetadata.fromJSON(Map json)
     : cookie = json["cookie"],
       isDownload = json["isDownload"],
-      provider = json["provider"],
-      quality = "",
-      source = json["source"],
+      provider = json["provider"] != null ? json["provider"] : "Unknown",
+      quality = json["quality"] != null ? json["quality"] : null,
+      source = json["source"] != null ? json["source"] : "Unknown",
       ping = json["ping"];
 }

@@ -77,10 +77,6 @@ class _TraktAuthState extends State<TraktAuth> {
   }
 }
 
-Future<bool> isSetUp() async {
-  return (await ((Settings.traktCredentials) as Future)).length == 3;
-}
-
 void renewToken(BuildContext context) async {
   KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 

@@ -15,6 +15,7 @@ String getOverviewContentTypeName(ContentType type){
 
 class ContentModel {
   final int id;
+  final ContentType contentType;
 
   // Content Information
   final String title;
@@ -31,9 +32,14 @@ class ContentModel {
   final String backdropPath;
   final String posterPath;
 
+  // Watch information
+  double progress;
+  String lastWatched;
+
   ContentModel({
     @required this.id,
     @required this.title,
+    @required this.contentType,
     this.overview,
     this.releaseDate,
     this.homepage,
@@ -41,6 +47,8 @@ class ContentModel {
     this.rating,
     this.backdropPath,
     this.posterPath,
-    this.voteCount
+    this.voteCount,
+    this.progress,
+    this.lastWatched
   });
 }

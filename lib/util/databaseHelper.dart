@@ -27,7 +27,6 @@ Future saveFavorites(String name, String contentType, int tmdbid, String url, St
   };
 
   await db.insert(dataEntry);
-  print("wrote $dataEntry to the database");
 
   // 'tidy up' the db file
   db.tidy();
@@ -116,8 +115,6 @@ Future<List<String>> getSearchHistory() async {
 
   await db.close();
 
-  print("I found these search histories: $_data");
-
   //[0]["queries"] == null ? [] : _data[0]["queries"].split(querySplitter)
 
   if (_data["results"].length == 0){
@@ -177,8 +174,6 @@ Future<List<Map>> getFavMovies() async {
     "contentType": "movie"
   });
 
-  print("get movies returned ${_result.length}");
-
   db.close();
 
   return _result.length == 0 ? [] : _result;
@@ -197,9 +192,6 @@ Future<List<Map>> getFavTVShows() async {
     "docType": "favorites",
     "contentType": "tv"
   });
-
-  print("get tv returned ${_result.length} items");
-  print("get tv returned these $_result");
 
   db.tidy();
 
@@ -224,8 +216,6 @@ Future<Map> getAllFaves() async {
 
   await db.close();
 
-  print(_result);
-
   return _result;
 }
 
@@ -240,7 +230,6 @@ Future<String> bulkSaveFavorites(List<Map> documents) async {
   db.open();
 
   await db.insertMany(documents);
-  print("wrote ${documents.length} favorites to the database");
 
   // 'tidy up' the db file
   db.tidy();

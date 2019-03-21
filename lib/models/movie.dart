@@ -30,6 +30,7 @@ class MovieContentModel extends ContentModel {
   }) : super( // Call the parent constructor...
     id: id,
     title: title,
+    contentType: ContentType.MOVIE,
     overview: overview,
     releaseDate: releaseDate,
     homepage: homepage,

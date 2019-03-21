@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/util/settings.dart';
@@ -21,18 +22,38 @@ class Trakt {
     };
   }
 
-  static Future<List<ContentModel>> getWatchProgress(BuildContext context) async {
-    try {
-      // Make GET request to playback sync endpoint
-      var headers = await _getAuthHeaders(context);
-      var responseRaw = await http.get("https://api.trakt.tv/sync/playback/", headers: headers);
+  static Future<bool> isAuthenticated() async {
+    return (await ((Settings.traktCredentials) as Future)).length == 3;
+  }
 
-      print(responseRaw.body);
-      // Add TMDB ID and progress to database.
+  static Future<List<ContentModel>> getWatchHistory(BuildContext context, { bool includeComplete = false }) async {
+    List<ContentModel> progressData = [];
+
+    try {
+      // Generate Trakt authentication headers.
+      var headers = await _getAuthHeaders(context);
+
+      // Make GET request to history endpoint.
+      var responseRaw = await http.get("https://api.trakt.tv/sync/history/", headers: headers);
       List<dynamic> response = jsonDecode(responseRaw.body);
 
-      return [];
+      for(Map<String, dynamic> entry in response){
+        if(entry["type"] == 'episode'){
+          if(progressData.where((_entry) => _entry.id == entry["show"]["ids"]["tmdb"]).length > 0) continue;
+
+          var content = await TMDB.getContentInfo(ContentType.TV_SHOW, entry["show"]["ids"]["tmdb"].toString());
+
+          var progressResponse = jsonDecode((await http.get("https://api.trakt.tv/shows/${entry["show"]["ids"]["trakt"].toString()}/progress/watched", headers: headers)).body);
+          content.progress = (double.parse(progressResponse["completed"].toString()) / double.parse(progressResponse["aired"].toString()));
+          content.lastWatched = progressResponse["last_watched_at"];
+
+          if(content.progress < 1 || includeComplete) progressData.add(content);
+        }
+      }
+
+      return progressData;
     }catch(ex){
+      print(ex);
       throw new Exception("An error occurred whilst connecting to Trakt.tv.");
     }
   }

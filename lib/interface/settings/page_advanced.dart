@@ -9,6 +9,7 @@ import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/interface/settings/page.dart';
 import 'package:device_info/device_info.dart';
+import 'package:kamino/util/settings.dart';
 
 
 class AdvancedSettingsPage extends SettingsPage {
@@ -22,6 +23,19 @@ class AdvancedSettingsPage extends SettingsPage {
 }
 
 class AdvancedSettingsPageState extends SettingsPageState {
+
+  int _maxConcurrentRequests;
+  int _requestTimeout;
+
+  @override
+  void initState() {
+    () async {
+      _maxConcurrentRequests = await Settings.maxConcurrentRequests;
+      _requestTimeout = await Settings.requestTimeout;
+      setState(() {});
+    }();
+    super.initState();
+  }
 
   @override
   Widget buildPage(BuildContext context) {
@@ -38,6 +52,74 @@ class AdvancedSettingsPageState extends SettingsPageState {
             onTap: (){
 
             },
+          ),
+        ),
+
+        Material(
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
+          child: ListTile(
+            isThreeLine: true,
+            title: TitleText("Maximum Concurrent Requests"),
+            subtitle: Text("Limits the number of concurrent network requests that can be made by the app."),
+            enabled: true,
+            trailing: DropdownButton<int>(
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'GlacialIndifference',
+                  fontSize: 16
+                ),
+                hint: Text(_maxConcurrentRequests.toString(), style: TextStyle(
+                  color: Colors.white
+                )),
+                // Max value for 'Maximum concurrent requests' -> 5
+                items: List<DropdownMenuItem<int>>.generate(5, (value){
+                  value += 1;
+                  return DropdownMenuItem<int>(
+                    child: Text(value.toString()),
+                    value: value
+                  );
+                }),
+                onChanged: (value){
+                  Settings.maxConcurrentRequests = value;
+                  setState(() {
+                    _maxConcurrentRequests = value;
+                  });
+                }
+            ),
+          ),
+        ),
+
+        Material(
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
+          child: ListTile(
+            isThreeLine: true,
+            title: TitleText("Request Timeout Duration"),
+            subtitle: Text("The delay, in seconds, before which a network request will be timed out."),
+            enabled: true,
+            trailing: DropdownButton<int>(
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'GlacialIndifference',
+                    fontSize: 16
+                ),
+                hint: Text(_requestTimeout.toString(), style: TextStyle(
+                    color: Colors.white
+                )),
+                // Max value for 'Request timeout' -> 10
+                items: List<DropdownMenuItem<int>>.generate(10, (value){
+                  value += 1;
+                  return DropdownMenuItem<int>(
+                      child: Text(value.toString()),
+                      value: value
+                  );
+                }),
+                onChanged: (value){
+                  Settings.requestTimeout = value;
+                  setState(() {
+                    _requestTimeout = value;
+                  });
+                }
+            ),
           ),
         ),
 

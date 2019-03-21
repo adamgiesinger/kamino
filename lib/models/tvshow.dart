@@ -25,6 +25,8 @@ class TVShowContentModel extends ContentModel {
     String posterPath,
     int voteCount,
     double voteAverage,
+    double progress,
+    String lastWatched,
 
     // TV Show parameters
     this.createdBy,
@@ -34,16 +36,19 @@ class TVShowContentModel extends ContentModel {
     this.status,
     this.popularity
   }) : super( // Call the parent constructor...
-      id: id,
-      title: title,
-      overview: overview,
-      releaseDate: releaseDate,
-      homepage: homepage,
-      genres: genres,
-      rating: rating,
-      backdropPath: backdropPath,
-      posterPath: posterPath,
-      voteCount: voteCount
+    id: id,
+    title: title,
+    contentType: ContentType.TV_SHOW,
+    overview: overview,
+    releaseDate: releaseDate,
+    homepage: homepage,
+    genres: genres,
+    rating: rating,
+    backdropPath: backdropPath,
+    posterPath: posterPath,
+    voteCount: voteCount,
+    progress: progress,
+    lastWatched: lastWatched
   );
 
   static TVShowContentModel fromJSON(Map json){

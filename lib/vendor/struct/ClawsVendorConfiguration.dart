@@ -20,6 +20,7 @@ import 'package:meta/meta.dart';
 import 'package:w_transport/vm.dart' show vmTransportPlatform;
 import 'package:w_transport/w_transport.dart' as transport;
 import 'package:ntp/ntp.dart';
+import 'package:pool/pool.dart';
 
 class ClawsVendorConfiguration extends VendorConfiguration {
 
@@ -73,7 +74,9 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   @override
   Future<bool> authenticate(BuildContext context, {bool force = false}) async {
     try {
-      http.Response response = await http.get(server + 'api/v1/status');
+      http.Response response = await http.get(server + 'api/v1/status').timeout(Duration(seconds: 10), onTimeout: (){
+        _showAuthenticationFailureDialog(context, "The request timed out.\n\n(Is your connection too slow?)");
+      });
       var status = Convert.jsonDecode(response.body);
     }catch(ex){
       print(ex);
@@ -322,7 +325,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       }
     }
 
-    List<Future> futureList = [];
+    List<Function> futureList = [];
     IntByRef scrapeResultsCounter = new IntByRef(0);
     bool doneEventStatus = false;
 
@@ -341,7 +344,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         if (event.containsKey('results')) {
           List results = event['results'];
           results.forEach((result) {
-            futureList.add(_onSourceFound(result, context));
+            futureList.add(() => _onSourceFound(result, context));
           });
         } else if (event.containsKey('error')) {
           print(event["error"]);
@@ -350,31 +353,14 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
         if (doneEventStatus && scrapeResultsCounter.value == 0) {
           //print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
-          print('Server done scraping, closing WebSocket');
-          _delegate.close();
-          await Future.wait(futureList);
-          //print('All sources received');
-          _delegate.sourceList.sort((left, right) {
-            return left.metadata.ping.compareTo(right.metadata.ping);
-          });
-
-          onComplete(context, displayTitle);
+          _onDelegateComplete(context, displayTitle, futureList);
         }
       }
 
       if(eventName == 'done'){
         doneEventStatus = true;
         if (scrapeResultsCounter.value == 0) {
-          print('======DONE EVENT======');
-          print('Server done scraping, closing WebSocket');
-          _delegate.close();
-          await Future.wait(futureList);
-          print('All sources received');
-          _delegate.sourceList.sort((left, right) {
-            return left.metadata.ping.compareTo(right.metadata.ping);
-          });
-
-          onComplete(context, displayTitle);
+          _onDelegateComplete(context, displayTitle, futureList);
         }
 
         return;
@@ -382,13 +368,13 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
       // The content can be accessed directly.
       if(eventName == 'result'){
-        futureList.add(_onSourceFound(event, context));
+        futureList.add(() => _onSourceFound(event, context));
         return;
       }
 
       // Claws needs the request to be proxied.
       if(eventName == 'scrape'){
-        futureList.add(_onScrapeSource(event, _delegate.socket, scrapeResultsCounter));
+        futureList.add(() => _onScrapeSource(event, _delegate.socket, scrapeResultsCounter));
         return;
       }
     }, onError: (error) {
@@ -400,6 +386,32 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     _delegate.socket.add(data);
   }
 
+  _onDelegateComplete(BuildContext context, String displayTitle, List<Function> futureList) async {
+    print('====== DELEGATE COMPLETE ======');
+    print('Server done scraping, closing WebSocket');
+
+    print("Processing received scrape information...");
+    // Max concurrent requests
+    int maxConcurrentRequests = await (Settings.maxConcurrentRequests);
+    // Request timeout in settings
+    int requestTimeout = await (Settings.requestTimeout);
+
+    Pool pool = new Pool(maxConcurrentRequests, timeout: new Duration(seconds: requestTimeout));
+    for(Function function in futureList){
+      pool.withResource(() async {
+        return function();
+      });
+    }
+    await pool.close();
+
+    print('Done processing.');
+    _delegate.close();
+    _delegate.sourceList.sort((left, right) {
+      return left.metadata.ping.compareTo(right.metadata.ping);
+    });
+
+    onComplete(context, displayTitle);
+  }
 
   ///***** SCRAPING EVENT HANDLERS *****///
   _onSourceFound (data, BuildContext context, {String cookie = ''}) async {
@@ -445,7 +457,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     http.Response htmlContent;
     var before = new DateTime.now().millisecondsSinceEpoch;
     try {
-      htmlContent = await http.get(sourceStreamURL, headers: headers).timeout(const Duration(seconds: 5));
+      htmlContent = await http.get(sourceStreamURL, headers: headers).timeout(Duration(seconds: 10));
     }catch(ex){
       print("Error receiving stream data from source (_onSourceFound): " + ex.toString());
       return;
@@ -458,6 +470,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       return;
     }
 
+    print(data);
     _delegate.addSource(SourceModel.fromJSON(data));
   }
 

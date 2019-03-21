@@ -33,4 +33,36 @@ class TMDB {
     return contentList;
   }
 
+  static Future<ContentModel> getContentInfo(ContentType type, String id) async {
+    if(type == ContentType.MOVIE){
+
+      // Get the data from the server.
+      http.Response response = await http.get(
+          "${TMDB.ROOT_URL}/movie/$id${TMDB.defaultArguments}"
+      );
+      String json = response.body;
+
+      // Return movie content model.
+      return MovieContentModel.fromJSON(
+          Convert.jsonDecode(json)
+      );
+
+    }else if(type == ContentType.TV_SHOW){
+
+      // Get the data from the server.
+      http.Response response = await http.get(
+          "${TMDB.ROOT_URL}/tv/$id${TMDB.defaultArguments}"
+      );
+      String json = response.body;
+
+      // Return TV show content model.
+      return TVShowContentModel.fromJSON(
+          Convert.jsonDecode(json)
+      );
+
+    }
+
+    throw new Exception("Invalid content type: $type");
+  }
+
 }

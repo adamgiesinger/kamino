@@ -38,7 +38,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
     loadDataAsync().then((data) {
       // When complete, update the state which will allow us to
       // draw the UI.
-      setState(() {
+      if(mounted) setState(() {
         _season = data;
       });
     });
@@ -214,15 +214,12 @@ class _EpisodePickerState extends State<EpisodePicker> {
 
     return LayoutBuilder(builder: (BuildContext context, BoxConstraints size){
       return Center(
-        child: new Parallax.inside(
-          mainAxisExtent: 200.0,
-          child: new Image.network(
-            "${TMDB.IMAGE_CDN_LOWRES}${episode["still_path"]}",
-            height: 300,
-            width: size.maxWidth,
-            fit: BoxFit.cover,
-          )
-        ),
+        child: Image.network(
+          "${TMDB.IMAGE_CDN_LOWRES}${episode["still_path"]}",
+          height: 200,
+          width: size.maxWidth,
+          fit: BoxFit.cover
+        )
       );
     });
   }

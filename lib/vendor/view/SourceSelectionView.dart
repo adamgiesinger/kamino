@@ -62,8 +62,9 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
           itemBuilder: (BuildContext ctx, int index){
             var source = widget.delegate.sourceList[index];
 
-            String qualityInfo = "-"; // until we sort out quality detection
-            if(source.metadata.quality != null)
+            String qualityInfo; // until we sort out quality detection
+            if(source.metadata.quality != null
+                && source.metadata.quality.replaceAll(" ", "").isNotEmpty)
               qualityInfo = source.metadata.quality;
 
             /*

@@ -197,19 +197,19 @@ class _SettingsViewState extends State<SettingsView> {
                       ),
                     ),
 
-                    Material(
+                    /*Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
                         title: TitleText(S.of(context).launchpad),
                         subtitle: Text(S.of(context).customise_your_launchpad),
-                        leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+                        leading: new Icon(const IconData(0xe90F, fontFamily: 'apollotv-icons')),
                         onTap: (){
                           Navigator.push(context, FadeRoute(
                               builder: (context) => LaunchpadSettingsPage(context)
                           ));
                         },
                       ),
-                    ),
+                    ),*/
 
                     Container(
                         margin: EdgeInsets.only(top: 35, bottom: 5, left: 15, right: 15),

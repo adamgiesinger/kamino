@@ -5,6 +5,7 @@ import 'package:flutter_rating/flutter_rating.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
@@ -90,7 +91,6 @@ class _ContentOverviewState extends State<ContentOverview> {
     _contentType = "movie" : _contentType = "tv";
 
     databaseHelper.getAllFavIDs().then((data) {
-
       setState(() {
         _favIDs = data;
         _favState = data.contains(widget.contentId);
@@ -98,34 +98,45 @@ class _ContentOverviewState extends State<ContentOverview> {
     });
 
     // When the widget is initialized, download the overview data.
-    loadDataAsync().then((data) {
-      if(!this.mounted) return;
+    try {
+      loadDataAsync().then((data) {
+        if (!this.mounted) return;
 
-      // When complete, update the state which will allow us to
-      // draw the UI.
-      setState(() {
-        _data = data;
+        // When complete, update the state which will allow us to
+        // draw the UI.
+        setState(() {
+          _data = data;
 
-        _titleSpan = new TextSpan(
-            text: _data.title,
-            style: TextStyle(
-              fontFamily: 'GlacialIndifference',
-              fontSize: 19,
-              color: Theme.of(context).primaryTextTheme.title.color
-            )
-        );
+          _titleSpan = new TextSpan(
+              text: _data.title,
+              style: TextStyle(
+                  fontFamily: 'GlacialIndifference',
+                  fontSize: 19,
+                  color: Theme
+                      .of(context)
+                      .primaryTextTheme
+                      .title
+                      .color
+              )
+          );
 
-        var titlePainter = new TextPainter(
-            text: _titleSpan,
-            maxLines: 1,
-            textAlign: TextAlign.start,
-            textDirection: Directionality.of(context)
-        );
+          var titlePainter = new TextPainter(
+              text: _titleSpan,
+              maxLines: 1,
+              textAlign: TextAlign.start,
+              textDirection: Directionality.of(context)
+          );
 
-        titlePainter.layout(maxWidth: MediaQuery.of(context).size.width - 160);
-        _longTitle = titlePainter.didExceedMaxLines;
+          titlePainter.layout(maxWidth: MediaQuery
+              .of(context)
+              .size
+              .width - 160);
+          _longTitle = titlePainter.didExceedMaxLines;
+        });
       });
-    });
+    }catch(_){
+      return;
+    }
 
     super.initState();
   }
@@ -193,7 +204,7 @@ class _ContentOverviewState extends State<ContentOverview> {
       //remove the show from the database
       databaseHelper.removeFavorite(widget.contentId);
 
-      if(await trakt.isSetUp()) trakt.removeMedia(
+      if(await Trakt.isAuthenticated()) trakt.removeMedia(
           context,
           widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId
@@ -217,7 +228,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           _data.backdropPath,
           _data.releaseDate);
 
-      if(await trakt.isSetUp()) trakt.sendNewMedia(
+      if(await Trakt.isAuthenticated()) trakt.sendNewMedia(
           context,
           widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
           _data.title,
@@ -328,7 +339,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                                   * of 5, otherwise use a vertical padding of 5 - 10.
                                   *
                                   * Relevant means visually and by context.
-                                */
+                                  */
                                   //_generateGenreChipsRow(context),
                                   _generateSynopsisSection(),
                                   _generateCastAndCrewInfo(),
@@ -595,7 +606,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     if(emptyOnFail && (cast == null || crew == null || cast.isEmpty || crew.isEmpty))
       return Container();
 
-    List castAndCrew = List.from(crew, growable: true);
+    List castAndCrew = List.from(crew.length > 3 ? crew.sublist(0, 3) : crew, growable: true);
     castAndCrew.addAll(cast);
 
     // Remove any with an invalid name, job/character, profile

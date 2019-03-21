@@ -2,6 +2,8 @@
 import 'dart:async';
 
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/interface/favorites.dart';
+import 'package:kamino/interface/genre/all_genres.dart';
 import 'package:kamino/interface/launchpad2/Launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 import 'package:kamino/interface/smart_search/smart_search.dart';
@@ -49,7 +51,7 @@ Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = fals
     if(overlay == null || overlay.context == null || !shouldShowDialog) return;
     BuildContext context = overlay.context;
 
-    if(!(context.widget is KaminoApp)) Navigator.of(context).pop();
+    if(Navigator.of(context).canPop()) Navigator.of(context).pop();
 
     String _errorReference = "Unknown stack reference.";
     try {
@@ -59,26 +61,29 @@ Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = fals
     showDialog(context: context, builder: (BuildContext context) {
       return AlertDialog(
         title: TitleText(S.of(context).an_error_occurred, fontSize: 26, textAlign: TextAlign.center),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(S.of(context).take_screenshot_report_apollotv_discord, style: TextStyle(
-              fontFamily: 'GlacialIndifference',
-              fontSize: 18
-            )),
-            Container(child: Divider(), margin: EdgeInsets.symmetric(vertical: 10)),
-            Container(child: Text(error.toString() + "\n")),
-            RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  TextSpan(text: "Reference: ", style: TextStyle(
-                    color: Theme.of(context).textTheme.body1.color
-                  )),
-                  TextSpan(text: _errorReference, style: TextStyle(fontFamily: 'monospace', color: Theme.of(context).textTheme.body1.color))
-                ]
-              ),
-            )
-          ],
+        content: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 0.6 * MediaQuery.of(context).size.height,
+          child: ListView(
+            children: <Widget>[
+              Text(S.of(context).take_screenshot_report_apollotv_discord, style: TextStyle(
+                  fontFamily: 'GlacialIndifference',
+                  fontSize: 18
+              )),
+              Container(child: Divider(), margin: EdgeInsets.symmetric(vertical: 10)),
+              Container(child: Text(error.toString() + "\n")),
+              RichText(
+                text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: "Reference: ", style: TextStyle(
+                          color: Theme.of(context).textTheme.body1.color
+                      )),
+                      TextSpan(text: _errorReference, style: TextStyle(fontFamily: 'monospace', color: Theme.of(context).textTheme.body1.color))
+                    ]
+                ),
+              )
+            ],
+          ),
         ),
         actions: <Widget>[
           FlatButton(
@@ -366,7 +371,16 @@ class KaminoAppHome extends StatefulWidget {
 
 }
 
+class KaminoAppHomePages {
+  static const int PAGE_HOME = 0;
+  static const int PAGE_TV_SHOWS = 1;
+  static const int PAGE_MOVIES = 2;
+  static const int PAGE_FAVORITES = 3;
+}
+
 class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderStateMixin {
+
+  int _activePage;
 
   Future<bool> _onWillPop() async {
     // Allow app close on back
@@ -375,8 +389,8 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
 
   @override
   void initState() {
+    _activePage = KaminoAppHomePages.PAGE_HOME;
     OTA.updateApp(context, true);
-    // ApolloVendor.getLaunchpadConfiguration().initialize(context);
     super.initState();
   }
 
@@ -387,6 +401,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
+        resizeToAvoidBottomPadding: false,
         backgroundColor: Theme.of(context).backgroundColor,
         // backgroundColor: backgroundColor,
         appBar: AppBar(
@@ -404,7 +419,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
           //elevation: 0,
 
           backgroundColor: Theme.of(context).cardColor,
-          elevation: 5.0,
+          elevation: 6,
 
           actions: <Widget>[
             IconButton(
@@ -467,9 +482,64 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
         ),
 
           // Body content
-        body: Launchpad2()
+        body: _getActivePage(_activePage),
+
+        bottomNavigationBar: BottomNavigationBar(
+          elevation: 6,
+
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Theme.of(context).cardColor,
+          selectedItemColor: Theme.of(context).primaryColor,
+
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedFontSize: 14,
+          unselectedFontSize: 14,
+
+          onTap: (index) => {
+            setState(() => _activePage = index)
+          },
+          currentIndex: _activePage,
+
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              title: Text("Home"),
+              icon: Icon(Icons.home)
+            ),
+
+            BottomNavigationBarItem(
+              title: Text("TV Shows"),
+              icon: Icon(Icons.live_tv)
+            ),
+
+            BottomNavigationBarItem(
+              title: Text("Movies"),
+              icon: Icon(Icons.local_movies)
+            ),
+
+            BottomNavigationBarItem(
+              title: Text("Favorites"),
+              icon: Icon(Icons.favorite)
+            ),
+          ]
+        ),
       )
     );
+  }
+
+  _getActivePage(int _activePage){
+    switch(_activePage){
+      case KaminoAppHomePages.PAGE_TV_SHOWS:
+        return Container(child: Text("TV Shows"));
+      case KaminoAppHomePages.PAGE_MOVIES:
+        return Container(child: Text("Movies"));
+      case KaminoAppHomePages.PAGE_FAVORITES:
+        return FavoritesPage();
+      case KaminoAppHomePages.PAGE_HOME:
+      default:
+        return Launchpad2();
+    }
+
   }
 
 }

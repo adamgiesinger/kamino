@@ -9,7 +9,7 @@ import 'package:kamino/ui/ui_constants.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/content/overview.dart';
 
-class MovieLayout{
+class MovieLayout {
 
   static Widget generate(BuildContext context, MovieContentModel _data, List<int> _favsArray){
     return new WillPopScope(
