@@ -12,44 +12,36 @@ import 'package:kamino/interface/content/overview.dart';
 class MovieLayout {
 
   static Widget generate(BuildContext context, MovieContentModel _data, List<int> _favsArray){
-    return new WillPopScope(
-      onWillPop: () {
-        KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-        appState.getVendorConfigs()[0].cancel();
-
-        return new Future(() => true);
-      },
-      child: Padding(
+    return Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 30.0),
           child: Column(
-            children: <Widget>[
-              /* Similar Movies */
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                      title: TitleText(
-                          S.of(context).similar_movies,
-                          fontSize: 22.0,
-                          textColor: Theme.of(context).primaryTextTheme.body1.color
-                      )
-                  ),
+              children: <Widget>[
+                /* Similar Movies */
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                        title: TitleText(
+                            S.of(context).similar_movies,
+                            fontSize: 22.0,
+                            textColor: Theme.of(context).primaryTextTheme.body1.color
+                        )
+                    ),
 
-                  SizedBox(
-                    height: 200.0,
-                    child: _generateSimilarMovieCards(_data, _favsArray)
-                  )
-                ],
-              )
-              /* ./Similar Movies */
+                    SizedBox(
+                        height: 200.0,
+                        child: _generateSimilarMovieCards(_data, _favsArray)
+                    )
+                  ],
+                )
+                /* ./Similar Movies */
 
 
-            ]
+              ]
           ),
         )
-      )
     );
   }
 
@@ -60,34 +52,34 @@ class MovieLayout {
   ///
   static Widget getFloatingActionButton(BuildContext context, MovieContentModel model){
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: new Row(
             children: <Widget>[
               Expanded(
                   child: new FloatingActionButton.extended(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)
-                    ),
-                    onPressed: (){
-                      KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                      appState.getVendorConfigs()[0].playMovie(
-                          model.title,
-                          model.releaseDate,
-                          context
-                      );
-                    },
-                    icon: Container(),
-                    label: Text(
-                      S.of(context).play_movie,
-                      style: TextStyle(
-                        letterSpacing: 0.0,
-                        fontFamily: 'GlacialIndifference',
-                        fontSize: 18.0,
-                        color: Theme.of(context).accentTextTheme.body1.color
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)
                       ),
-                    ),
-                    backgroundColor: Theme.of(context).primaryColor,
-                    elevation: 30
+                      onPressed: (){
+                        KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                        appState.getVendorConfigs()[0].playMovie(
+                            model.title,
+                            model.releaseDate,
+                            context
+                        );
+                      },
+                      icon: Container(),
+                      label: Text(
+                        S.of(context).play_movie,
+                        style: TextStyle(
+                            letterSpacing: 0.0,
+                            fontFamily: 'GlacialIndifference',
+                            fontSize: 18.0,
+                            color: Theme.of(context).accentTextTheme.body1.color
+                        ),
+                      ),
+                      backgroundColor: Theme.of(context).primaryColor,
+                      elevation: 30
                   )
               )
             ]
@@ -110,9 +102,6 @@ class MovieLayout {
               : const EdgeInsets.only(left: 5.0),
           child: InkWell(
             onTap: () {
-                KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                appState.getVendorConfigs()[0].cancel();
-
                 Navigator.push(
                     context,
                     MaterialPageRoute(

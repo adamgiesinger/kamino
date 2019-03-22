@@ -50,8 +50,6 @@ abstract class VendorConfiguration {
       BuildContext context
     );
 
-  Future<void> cancel();
-
   String getTMDBKey(){
     if(tmdbKey != null){
       return tmdbKey;

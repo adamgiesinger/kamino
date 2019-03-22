@@ -75,11 +75,13 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   Future<bool> authenticate(BuildContext context, {bool force = false}) async {
     try {
       http.Response response = await http.get(server + 'api/v1/status').timeout(Duration(seconds: 10), onTimeout: (){
+        Navigator.of(context).pop();
         _showAuthenticationFailureDialog(context, "The request timed out.\n\n(Is your connection too slow?)");
       });
       var status = Convert.jsonDecode(response.body);
     }catch(ex){
       print(ex);
+      Navigator.of(context).pop();
       _showAuthenticationFailureDialog(context, "Claws is currently offline for server upgrades.\nPlease check the #announcements channel in our Discord server for more information.");
       return false;
     }
@@ -99,10 +101,16 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       return true;
     } else {
       // Return new token
-      var clawsClientHash = _generateClawsHash(clawsKey, now);
+      var clawsClientHash = await _generateClawsHash(clawsKey, now).timeout(Duration(seconds: 5), onTimeout: () async {
+        Navigator.of(context).pop();
+        _showAuthenticationFailureDialog(context, "Authentication timed out.\n\nPlease try again.");
+      });
       http.Response response = await http.post(server + 'api/v1/login',
           body: Convert.jsonEncode({"clientID": clawsClientHash}),
-          headers: {"Content-Type": "application/json"});
+          headers: {"Content-Type": "application/json"}).timeout(Duration(seconds: 10), onTimeout: () async {
+        Navigator.of(context).pop();
+        _showAuthenticationFailureDialog(context, "Authentication timed out.\n\nPlease try again.");
+      });
 
       var tokenResponse = Convert.jsonDecode(response.body);
 
@@ -223,7 +231,6 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       reason = "Unable to determine reason...";
     }
 
-    Navigator.of(context).pop();
     Interface.showAlert(
         context,
         TitleText("Unable to connect..."), // Title
@@ -251,7 +258,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
 
     var authenticationStatus = await authenticate(context);
-    if(!authenticationStatus) return;
+    if(!authenticationStatus) return Navigator.of(context).pop();
 
     // Connect to Claws
     String clawsToken = _token;
@@ -272,7 +279,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
 
     var authenticationStatus = await authenticate(context);
-    if(!authenticationStatus) return;
+    if(!authenticationStatus) return Navigator.of(context).pop();
 
     // Connect to Claws
     String clawsToken = _token;
@@ -292,44 +299,47 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     // Open a WebSocket connection at the API endpoint.
     try {
-      _delegate.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform));
+      _delegate.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform).timeout(Duration(seconds: 10)));
       
       if(await sourceSelectionEnabled()){
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (_) => SourceSelectionView(
-              title: title,
-              delegate: _delegate
+            builder: (_) => WillPopScope(
+              child: SourceSelectionView(
+                  title: title,
+                  delegate: _delegate
+              ),
+              onWillPop: () async {
+                _delegate.cancel();
+              },
             )
         ));
       }else {
         Navigator.of(context).pop();
-        showDialog(barrierDismissible: false,
-          context: context,
-          builder: (BuildContext ctx) {
-            return SearchingSourcesDialog();
-          }
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (_) => WillPopScope(
+              child: SearchingSourcesDialog(onCancel: () async {
+                _delegate.cancel();
+              }),
+              onWillPop: () async {
+                _delegate.cancel();
+                Navigator.of(context).pop();
+                return false;
+              },
+            )
         );
       }
     } catch (ex) {
+      Navigator.of(context).pop();
+      _showAuthenticationFailureDialog(context, "Connection failed. Please try again.");
       print(ex.toString());
-      // Just in case the app gets into a weird state. It did for me while developing. Hopefully this isn't necessary
-      final isAuthenticated = await authenticate(context, force: true);
-      if (isAuthenticated) {
-        try {
-          _delegate.open(await transport.WebSocket.connect(Uri.parse(url), transportPlatform: vmTransportPlatform));
-        } on transport.WebSocketException {
-          // Probably should show a message to the user here...
-          print("Currently can't connect to WebSocket");
-          return;
-        }
-      }
+      return;
     }
 
     List<Function> futureList = [];
     IntByRef scrapeResultsCounter = new IntByRef(0);
     bool doneEventStatus = false;
-
-    if(_delegate.wasCancelled) return;
 
     // Execute code when a new source is received.
     _delegate.socket.listen((message) async {
@@ -406,9 +416,6 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     print('Done processing.');
     _delegate.close();
-    _delegate.sourceList.sort((left, right) {
-      return left.metadata.ping.compareTo(right.metadata.ping);
-    });
 
     onComplete(context, displayTitle);
   }
@@ -521,7 +528,7 @@ class IntByRef {
 }
 
 ///******* libClaws *******///
-String _generateClawsHash(String clawsClientKey, DateTime now) {
+Future<String> _generateClawsHash(String clawsClientKey, DateTime now) async {
   final randGen = Random.secure();
 
   Uint8List ivBytes = Uint8List.fromList(new List.generate(8, (_) => randGen.nextInt(128)));

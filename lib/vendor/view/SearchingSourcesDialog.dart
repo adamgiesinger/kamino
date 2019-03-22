@@ -7,6 +7,12 @@ import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 
 class SearchingSourcesDialog extends StatefulWidget {
 
+  final Function onCancel;
+
+  SearchingSourcesDialog({
+    this.onCancel
+  });
+
   @override
   State<StatefulWidget> createState() => SearchingSourcesDialogState();
 
@@ -40,11 +46,9 @@ class SearchingSourcesDialogState extends State<SearchingSourcesDialog> {
             FlatButton(
               textColor: Theme.of(context).primaryColor,
               child: Text('Cancel'),
-              onPressed: () {
-                // Close all sockets
-                KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                for(VendorConfiguration vendor in appState.getVendorConfigs()) vendor.cancel();
-                Navigator.pop(context);
+              onPressed: () async {
+                await widget.onCancel();
+                Navigator.of(context).pop();
               },
             ),
           ]

@@ -105,9 +105,9 @@ class AdvancedSettingsPageState extends SettingsPageState {
                 hint: Text(_requestTimeout.toString(), style: TextStyle(
                     color: Colors.white
                 )),
-                // Max value for 'Request timeout' -> 10
-                items: List<DropdownMenuItem<int>>.generate(10, (value){
-                  value += 1;
+                // Generate 5 items (in this case - interval of 10)
+                items: List<DropdownMenuItem<int>>.generate(5, (value){
+                  value = (value + 1) * 10;
                   return DropdownMenuItem<int>(
                       child: Text(value.toString()),
                       value: value

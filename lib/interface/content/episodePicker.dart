@@ -63,36 +63,29 @@ class _EpisodePickerState extends State<EpisodePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
-      onWillPop: () {
-        KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-        appState.getVendorConfigs()[0].cancel();
-
-        return new Future(() => true);
-      },
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           backgroundColor: Theme.of(context).backgroundColor,
           title: TitleText(
-            _season != null ? "${widget.showContentModel.title} - ${_season.name}" : S.of(context).loading,
-            textColor: Theme.of(context).primaryTextTheme.title.color
+              _season != null ? "${widget.showContentModel.title} - ${_season.name}" : S.of(context).loading,
+              textColor: Theme.of(context).primaryTextTheme.title.color
           ),
           centerTitle: true,
         ),
         body: _season == null ?
 
-          // Shown whilst loading...
-          Center(
-              child: CircularProgressIndicator(
-                valueColor: new AlwaysStoppedAnimation<Color>(
+        // Shown whilst loading...
+        Center(
+            child: CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation<Color>(
                   Theme.of(context).primaryColor
-                ),
-              )
-          ) :
+              ),
+            )
+        ) :
 
-          // Shown once loading is complete.
-          ListView.builder(
+        // Shown once loading is complete.
+        ListView.builder(
             controller: _controller,
             itemCount: _season.episodes.length,
             itemBuilder: (BuildContext listContext, int index){
@@ -110,7 +103,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                 clipBehavior: Clip.antiAlias,
                 elevation: 5.0, // Boost shadow...
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
+                    borderRadius: BorderRadius.circular(10)
                 ),
 
                 child: new Column(
@@ -136,11 +129,11 @@ class _EpisodePickerState extends State<EpisodePicker> {
                     Padding(
                         padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
                         child: ConcealableText(
-                          episode["overview"],
-                          revealLabel: S.of(context).show_more,
-                          concealLabel: S.of(context).show_less,
+                            episode["overview"],
+                            revealLabel: S.of(context).show_more,
+                            concealLabel: S.of(context).show_less,
 
-                          maxLines: 4
+                            maxLines: 4
                         )
                     ),
 
@@ -149,39 +142,39 @@ class _EpisodePickerState extends State<EpisodePicker> {
                         child: new SizedBox(
                           width: double.infinity,
                           child: new Padding(
-                            padding: EdgeInsets.only(top: 15.0, bottom: 20, left: 15.0, right: 15.0),
-                            child: new SizedBox(
-                              height: 40,
-                              child: new RaisedButton(
-                                  shape: new RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5.0)
-                                  ),
-                                  onPressed: (){
-                                    int seasonNumber = episode["season_number"];
-                                    int episodeNumber = episode["episode_number"];
-
-                                    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                                    appState.getVendorConfigs()[0].playTVShow(
-                                        widget.showContentModel.title,
-                                        widget.showContentModel.releaseDate,
-                                        seasonNumber,
-                                        episodeNumber,
-                                        context
-                                    );
-                                  },
-                                  child: new Text(
-                                    S.of(context).play_episode,
-                                    style: TextStyle(
-                                        color: Theme.of(context).accentTextTheme.body1.color,
-                                        fontSize: 16,
-                                        fontFamily: 'GlacialIndifference'
+                              padding: EdgeInsets.only(top: 15.0, bottom: 20, left: 15.0, right: 15.0),
+                              child: new SizedBox(
+                                height: 40,
+                                child: new RaisedButton(
+                                    shape: new RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5.0)
                                     ),
-                                  ),
-                                  color: Theme.of(context).primaryColor,
+                                    onPressed: (){
+                                      int seasonNumber = episode["season_number"];
+                                      int episodeNumber = episode["episode_number"];
 
-                                  elevation: 1
-                              ),
-                            )
+                                      KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                                      appState.getVendorConfigs()[0].playTVShow(
+                                          widget.showContentModel.title,
+                                          widget.showContentModel.releaseDate,
+                                          seasonNumber,
+                                          episodeNumber,
+                                          context
+                                      );
+                                    },
+                                    child: new Text(
+                                      S.of(context).play_episode,
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentTextTheme.body1.color,
+                                          fontSize: 16,
+                                          fontFamily: 'GlacialIndifference'
+                                      ),
+                                    ),
+                                    color: Theme.of(context).primaryColor,
+
+                                    elevation: 1
+                                ),
+                              )
                           ),
                         )
                     )
@@ -202,8 +195,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                   child: card
               );
             }
-          )
-      )
+        )
     );
   }
 

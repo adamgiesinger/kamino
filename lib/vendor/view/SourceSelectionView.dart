@@ -2,6 +2,7 @@ import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/models/content.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import "package:kamino/models/SourceModel.dart";
 import 'package:kamino/util/interface.dart';
@@ -36,6 +37,9 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
   @override
   Widget build(BuildContext context) {
+    List<SourceModel> sourceList = widget.delegate.sourceList.toSet().toList();
+    _sortList(sourceList);
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -58,9 +62,9 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
       ),
       body: Container(
         child: ListView.builder(
-          itemCount: widget.delegate.sourceList.length,
+          itemCount: sourceList.length,
           itemBuilder: (BuildContext ctx, int index){
-            var source = widget.delegate.sourceList[index];
+            var source = sourceList[index];
 
             String qualityInfo; // until we sort out quality detection
             if(source.metadata.quality != null
@@ -117,6 +121,12 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
           })
       )
     );
+  }
+
+  _sortList(List<SourceModel> sourceList) {
+    sourceList.sort((SourceModel left, SourceModel right) {
+      return left.metadata.ping.compareTo(right.metadata.ping);
+    });
   }
 
 }
