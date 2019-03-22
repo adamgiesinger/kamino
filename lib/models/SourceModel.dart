@@ -24,7 +24,7 @@ class SourceFile {
 
 class SourceMetadata {
   final String cookie;
-  final bool isDownload;
+  final bool isStreamable;
   final String provider;
   final String quality;
   final String source;
@@ -32,7 +32,7 @@ class SourceMetadata {
 
   SourceMetadata.fromJSON(Map json)
     : cookie = json["cookie"],
-      isDownload = json["isDownload"],
+      isStreamable = json["isStreamable"],
       provider = json["provider"] != null ? json["provider"] : "Unknown",
       quality = json["quality"] != null ? json["quality"] : null,
       source = json["source"] != null ? json["source"] : "Unknown",

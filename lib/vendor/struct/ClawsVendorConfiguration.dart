@@ -418,8 +418,8 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     var sourceFile = data["file"];
     String sourceStreamURL = sourceFile["data"];
 
-    if (data['metadata']['isDownload']) {
-      print("Currently can't play download links");
+    if (data['metadata']['isStreamable']) {
+      print("Link is not streamable");
       return;
     }
 
