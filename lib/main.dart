@@ -1,5 +1,6 @@
 // Import flutter libraries
 import 'dart:async';
+import 'dart:io';
 
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/favorites.dart';
@@ -114,18 +115,25 @@ void main() async {
   /// Get device type and initialize [SettingsManager]
   () async {
     await SettingsManager.onAppInit();
-    return (await platform.invokeMethod('getDeviceType')) as int;
+
+    if(Platform.isAndroid) {
+      return (await platform.invokeMethod('getDeviceType')) as int;
+    }
+    return PlatformType.GENERAL;
   }().then((platformType){
     FlutterError.onError = (FlutterErrorDetails details) async {
       print("A Flutter exception was caught by the $appName internal error handler.");
       await _reportError(details.exception, details.stack);
     };
 
-    // Start Kamino (TV)
-    if(platformType == PlatformType.TV) return runApp(KaminoSkyspace());
-
-    // Start Kamino (mobile)
     runZoned<Future<void>>((){
+      if(platformType == PlatformType.TV) {
+        // Start Kamino (TV)
+        runApp(KaminoSkyspace());
+        return;
+      }
+
+      // Start Kamino (mobile)
       runApp(KaminoApp());
     }, onError: (error, StackTrace stacktrace) async {
       print("A Dart zone exception was caught by the $appName internal error handler.");
