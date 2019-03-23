@@ -7,7 +7,7 @@ import 'package:kamino/interface/smart_search/search_results.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kamino/ui/ui_constants.dart';
+import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/partials/content_poster.dart';

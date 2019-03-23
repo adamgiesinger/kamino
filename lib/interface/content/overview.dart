@@ -20,7 +20,7 @@ import 'package:kamino/interface/genre/genreResults.dart';
 import 'package:kamino/interface/content/movieLayout.dart';
 import 'package:kamino/interface/content/tvShowLayout.dart';
 
-import 'package:kamino/ui/ui_constants.dart';
+import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:transparent_image/transparent_image.dart';
 

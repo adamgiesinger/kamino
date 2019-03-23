@@ -25,6 +25,8 @@
   "disconnect": "Déconnecter",
   "default_": "Défaut",
   "done": "Terminé",
+  "next": "SUIVANT",
+  "skip": "SAUTER",
 
   "coming_soon": "Bientôt",
 
@@ -117,5 +119,12 @@
   "gathers_useful_information_for_debugging": "Rassemble des informations utiles pour le débogage.",
   "link_copied_to_clipboard": "Lien copié dans le presse-papier.",
   "the_default_configuration_has_been_restored": "TLa configuration par défaut a été restaurée.",
-  "restore_defaults": "Restaurer Les Valeurs Par Défaut"
+  "restore_defaults": "Restaurer Les Valeurs Par Défaut",
+
+  "select_language": "Choisir la Langue",
+  "language_settings": "Préférences de Langue",
+
+  "welcome_to_appname": "Bienvenue à $appName",
+  "app_tagline": "L'application streaming créé, pour la communauté, par la communauté.",
+  "lets_go": "ALLONS-Y"
 }

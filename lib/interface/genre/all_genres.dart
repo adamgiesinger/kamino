@@ -12,7 +12,7 @@ import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/partials/result_card.dart';
-import 'package:kamino/ui/ui_constants.dart';
+import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/interface/genre/genreResults.dart';
 import 'package:kamino/util/settings.dart';
 

@@ -3,11 +3,12 @@ import 'dart:async';
 
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/favorites.dart';
-import 'package:kamino/interface/genre/all_genres.dart';
+import 'package:kamino/interface/intro/kamino_intro.dart';
 import 'package:kamino/interface/launchpad2/Launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/skyspace/skyspace.dart';
+import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/settings.dart';
@@ -391,13 +392,20 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
   void initState() {
     _activePage = KaminoAppHomePages.PAGE_HOME;
     OTA.updateApp(context, true);
+    
+    (() async {
+      if(!await Settings.initialSetupComplete){
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => KaminoIntro()
+        ));
+      }
+    })();
+    
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
@@ -407,11 +415,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
         appBar: AppBar(
           title: Row(
             children: <Widget>[
-              Image.asset(
-                  appState.getActiveThemeData().brightness == Brightness.dark ?
-                  "assets/images/header_text.png" : "assets/images/header_text_dark.png",
-                  height: kToolbarHeight - 38
-              )
+              generateHeaderLogo(context)
             ],
           ),
 
@@ -485,7 +489,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
         body: _getActivePage(_activePage),
 
         bottomNavigationBar: BottomNavigationBar(
-          elevation: 6,
+          elevation: 0,
 
           type: BottomNavigationBarType.fixed,
           backgroundColor: Theme.of(context).cardColor,
@@ -532,7 +536,14 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
       case KaminoAppHomePages.PAGE_TV_SHOWS:
         return Container(child: Text("TV Shows"));
       case KaminoAppHomePages.PAGE_MOVIES:
-        return Container(child: Text("Movies"));
+        return Container(child: Center(
+          child: RaisedButton(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => KaminoIntro()
+            )),
+            child: Text("Intro"),
+          ),
+        ));
       case KaminoAppHomePages.PAGE_FAVORITES:
         return FavoritesPage();
       case KaminoAppHomePages.PAGE_HOME:

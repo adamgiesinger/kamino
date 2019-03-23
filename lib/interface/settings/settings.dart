@@ -14,7 +14,6 @@ import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 
-import 'package:kamino/interface/settings/page_launchpad.dart';
 import 'package:kamino/interface/settings/page_appearance.dart';
 import 'package:kamino/interface/settings/page_other.dart';
 

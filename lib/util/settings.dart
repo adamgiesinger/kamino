@@ -60,6 +60,8 @@ class _Settings {
   /// - bool
   /// - List<String>
   static const Map<String, $> _settingDefinitions = {
+    "initialSetupComplete": $(type: bool, defaultValue: false),
+
     "activeTheme": $(type: String),
     "primaryColorOverride": $(type: String),
 

@@ -5,7 +5,7 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/ui_elements.dart';
-import 'package:kamino/ui/ui_constants.dart';
+import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/content/overview.dart';
 

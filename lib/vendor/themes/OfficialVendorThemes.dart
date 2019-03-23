@@ -27,7 +27,6 @@ class _DarkVendorTheme extends ThemeConfiguration {
 
   @override
   ThemeData getThemeData({Color primaryColor : _primaryColor}) {
-    var _secondaryColor = primaryColor.withOpacity(0.0863);
     var _highlightColor = primaryColor.withOpacity(0.1490);
 
     var _backgroundColor = Color(0xFF26282C);
@@ -37,7 +36,7 @@ class _DarkVendorTheme extends ThemeConfiguration {
         brightness: Brightness.dark,
         primaryColorBrightness: Brightness.dark,
         primaryColor: primaryColor,
-        accentColor: _secondaryColor,
+        accentColor: primaryColor,
         highlightColor: _highlightColor,
         backgroundColor: _backgroundColor,
         cursorColor: primaryColor,
@@ -78,7 +77,6 @@ class _LightVendorTheme extends ThemeConfiguration {
 
   @override
   ThemeData getThemeData({Color primaryColor : _primaryColor}) {
-    var _secondaryColor = primaryColor.withOpacity(0.0863);
     var _highlightColor = primaryColor.withOpacity(0.1490);
 
     var _backgroundColor = Color(0xFFECF0F1);
@@ -89,7 +87,7 @@ class _LightVendorTheme extends ThemeConfiguration {
       primaryColorBrightness: Brightness.light,
       accentColorBrightness: Brightness.dark,
       primaryColor: primaryColor,
-      accentColor: _secondaryColor,
+      accentColor: primaryColor,
       highlightColor: _highlightColor,
       backgroundColor: _backgroundColor,
       cursorColor: primaryColor,
@@ -131,7 +129,6 @@ class _BlackVendorTheme extends ThemeConfiguration {
 
   @override
   ThemeData getThemeData({Color primaryColor : _primaryColor}) {
-    var _secondaryColor = primaryColor.withOpacity(0.0863);
     var _highlightColor = primaryColor.withOpacity(0.1490);
 
     var _backgroundColor = Color(0xFF000000);
@@ -141,7 +138,7 @@ class _BlackVendorTheme extends ThemeConfiguration {
       brightness: Brightness.dark,
       primaryColorBrightness: Brightness.dark,
       primaryColor: primaryColor,
-      accentColor: _secondaryColor,
+      accentColor: primaryColor,
       highlightColor: _highlightColor,
       backgroundColor: _backgroundColor,
       cursorColor: primaryColor,

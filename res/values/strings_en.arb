@@ -24,6 +24,8 @@
   "disconnect": "Disconnect",
   "default_": "Default",
   "done": "Done",
+  "next": "NEXT",
+  "skip": "SKIP",
 
   "coming_soon": "Coming Soon",
 
@@ -122,5 +124,11 @@
   "language_settings": "Language Settings",
   "take_screenshot_report_apollotv_discord": "Please take a screenshot of this message and contact a member of staff in the ApolloTV Discord server.",
   "an_error_occurred": "An error occurred.",
-  "cast_and_crew": "Cast & Crew"
+  "cast_and_crew": "Cast & Crew",
+
+  "welcome_to_appname": "Welcome to $appName",
+  "app_tagline": "The streaming app built, for the community, by the community.",
+  "lets_go": "LET'S GO",
+
+  "create_profile": "Create Profile"
 }
