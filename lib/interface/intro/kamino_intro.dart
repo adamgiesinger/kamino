@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_appearance.dart';
@@ -13,8 +15,14 @@ import 'package:kamino/ui/ui_utils.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/settings.dart';
+import 'package:kamino/util/trakt.dart' as trakt;
 
 class KaminoIntro extends StatefulWidget {
+
+  final bool skipAnimation;
+  final Function then;
+
+  KaminoIntro({ this.then, this.skipAnimation = false });
 
   @override
   State<StatefulWidget> createState() => KaminoIntroState();
@@ -24,14 +32,12 @@ class KaminoIntro extends StatefulWidget {
 class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderStateMixin {
 
   KaminoAppState appState;
-  List<Page> _pages;
 
-  bool get onLastPage {
-    return _controller.hasClients && _controller.page.round() == (_pages.length - 1);
-  }
+  Map<String, bool> _selectedCategories = {};
+  bool _autoplaySourcesEnabled = false;
+  List<String> _traktCred;
 
-  List<String> _selectedCategories = new List();
-  final Map<String, AsyncMemoizer> _categoryMemoizers = new Map();
+  final Map<String, AsyncMemoizer> _categoryMemoizers = {};
   final _fadeInTween = Tween<double>(begin: 0, end: 1);
   AnimationController _animationController;
   Animation<double> _fadeInAnimation;
@@ -45,9 +51,23 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
     (Settings.detailedContentInfoEnabled as Future).then(
       (result) => setState(() => _detailedLayoutType = result)
     );
+
     (Settings.homepageCategories as Future).then(
-      (result) => setState(() => _selectedCategories = result)
+      (result) => setState(() => _selectedCategories = jsonDecode(result).cast<String, bool>())
     );
+
+    ((Settings.traktCredentials) as Future).then((data) => setState((){
+      _traktCred = data;
+    }));
+
+    // This is done for legacy reasons.
+    // We would upgrade the setting but we do intent to switch back
+    // to having autoplay enabled by default.
+    (Settings.manuallySelectSourcesEnabled as Future).then((data){
+      setState(() {
+        _autoplaySourcesEnabled = !data;
+      });
+    });
 
     // Initialize controller.
     _controller = PageController();
@@ -66,7 +86,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
     );
 
     // Wait a second for the application to catch up.
-    Future.delayed(Duration(milliseconds: 500), () => _animationController.forward());
+    if(!widget.skipAnimation) Future.delayed(Duration(milliseconds: 500), () => _animationController.forward());
+    else _animationController.value = 1.0;
 
     super.initState();
   }
@@ -80,8 +101,9 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
   @override
   Widget build(BuildContext context){
     appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    bool traktConnected = _traktCred != null && _traktCred.length == 3;
 
-    _pages = <Page>[
+    final _pages = <Page>[
       Page(
         child: Builder(builder: (BuildContext context){
           const double size = 130;
@@ -179,7 +201,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
             child: ListView(
               children: <Widget>[
                 TitleText(S.of(context).customise_appearance, fontSize: 32),
-                Text(S.of(context).customise_appearance_description(appName)),
+                Text(S.of(context).customise_appearance_description(appName), style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 20),
@@ -216,6 +238,13 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                           children: <Widget>[
                             TitleText(
                                 "Which do you prefer?"
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5),
+                              child: Text(
+                                  "Card layouts are more detailed, however grid layouts can fit more items.",
+                                  style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)
+                              ),
                             ),
                             ButtonBar(
                               alignment: MainAxisAlignment.spaceBetween,
@@ -256,6 +285,106 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
       ),
 
       Page(
+        child: Builder(builder: (_) => Expanded(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              width: MediaQuery.of(context).size.width,
+              child: ListView(
+                children: <Widget>[
+                  TitleText("General Settings", fontSize: 32),
+                  Text("Here's some commonly used settings options that you might want to take a look at.", style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 20),
+                  ),
+
+                  Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        ListTile(
+                            onTap: () async {
+                              if(!traktConnected){
+                                Navigator.push(context, MaterialPageRoute(
+                                  fullscreenDialog: true,
+                                  builder: (_ctx) => trakt.TraktAuth(context: _ctx)
+                                )).then((var authCode) {
+                                  trakt.authUser(context, _traktCred, authCode, shouldShowDialog: false).then((_traktCred) async {
+                                    setState(() {
+                                      this._traktCred = _traktCred;
+                                    });
+
+                                    trakt.synchronize(context, _traktCred);
+                                  });
+                                });
+                              }else{
+                                if(await trakt.deauthUser(context, _traktCred, shouldShowScaffold: false)){
+                                  setState(() {
+                                    _traktCred = [];
+                                  });
+                                }
+                              }
+                            },
+                            leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
+                            isThreeLine: true,
+                            title: TitleText(traktConnected ? "Disconnect your Trakt account" : "Connect your Trakt account"),
+                            subtitle: Text("ApolloTV can synchronise your watch history and favorites from Trakt.tv...")
+                        ),
+
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                        ),
+
+                        Theme(
+                          data: Theme.of(context).copyWith(
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent
+                          ),
+                          child: SwitchListTile(
+                            isThreeLine: true,
+                            activeColor: Theme.of(context).primaryColor,
+                            value: _autoplaySourcesEnabled,
+                            title: Row(
+                              children: <Widget>[
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  margin: EdgeInsetsDirectional.only(end: 5),
+                                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                  child: Text("Experimental"),
+                                ),
+                                TitleText(S.of(context).source_autoplay)
+                              ],
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                S.of(context).source_autoplay_description,
+                                style: TextStyle(),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ),
+                            onChanged: (value) async {
+                              if (value != _autoplaySourcesEnabled){
+                                await (Settings.manuallySelectSourcesEnabled = value); // ignore: await_only_futures
+                                (Settings.manuallySelectSourcesEnabled as Future).then((data) => setState(() => _autoplaySourcesEnabled = data));
+                              }
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )
+        )),
+      ),
+
+      Page(
         canProceedFunction: (){
           return _selectedCategories.length >= 3;
         },
@@ -266,7 +395,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
               child: ListView(
                 children: <Widget>[
                   TitleText(S.of(context).choose_n_categories((3 - _selectedCategories.length < 0 ? 0 : 3 - _selectedCategories.length).toString()), fontSize: 32),
-                  Text("Tailor your experience! Choose your top 3 categories and get suggestions for the content that YOU like!"),
+                  Text("Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!", style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 20),
@@ -308,10 +437,10 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                   return Center(
                                     child: CircularProgressIndicator(),
                                   );
-                                  
+
                                 case ConnectionState.done:
                                   ContentListModel list = snapshot.data;
-                                  
+
                                   return Material(
                                     type: MaterialType.card,
                                     borderRadius: BorderRadius.circular(5),
@@ -343,16 +472,16 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                           child: Center(
                                             child: Icon(Icons.check),
                                           ),
-                                        ), opacity: _selectedCategories.contains(list.id.toString()) ? 1 : 0,
+                                        ), opacity: _selectedCategories.containsKey(list.id.toString()) ? 1 : 0,
                                             duration: Duration(milliseconds: 300)),
 
                                         Material(
                                           color: Colors.transparent,
                                           child: InkWell(
                                             onTap: () => setState((){
-                                              _selectedCategories.contains(list.id.toString())
+                                              _selectedCategories.containsKey(list.id.toString())
                                                   ? _selectedCategories.remove(list.id.toString())
-                                                  : _selectedCategories.add(list.id.toString());
+                                                  : _selectedCategories[list.id.toString()] = true;
                                             }),
                                           ),
                                         )
@@ -370,8 +499,12 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
               ),
             )
         )),
-      ),
+      )
     ];
+
+    bool onLastPage(){
+      return _controller.hasClients && _controller.page.round() == (_pages.length - 1);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -420,7 +553,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               IgnorePointer(
-                ignoring: onLastPage,
+                ignoring: onLastPage(),
                 child: AnimatedOpacity(child: FlatButton(
                   onPressed: (){
                     Navigator.of(context).pop();
@@ -431,7 +564,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                   )),
                   padding: EdgeInsets.symmetric(vertical: 15),
                   materialTapTargetSize: MaterialTapTargetSize.padded,
-                ), opacity: onLastPage ? 0 : 1, duration: Duration(milliseconds: 100)),
+                ), opacity: onLastPage() ? 0 : 1, duration: Duration(milliseconds: 100)),
               ),
 
               DotsIndicator(
@@ -444,18 +577,24 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
               new FlatButton(
                 onPressed: _pages[_controller.hasClients ? _controller.page.round() : _controller.initialPage]._canProceed() ? (){
-                  if(onLastPage){
-                    Settings.homepageCategories = _selectedCategories;
+                  // DONE BUTTON?: onLastPage
+                  if(onLastPage()){
+                    // Write settings.
+                    Settings.homepageCategories = jsonEncode(_selectedCategories);
                     Settings.initialSetupComplete = true;
 
                     Navigator.of(context).pop();
+
+                    // Perform OTA check now.
+                    if(widget.then != null) widget.then();
+
                     return;
                   }
 
                   _controller.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
                 } : null,
                 highlightColor: Colors.transparent,
-                child: Text(onLastPage ? S.of(context).lets_go : S.of(context).next, style: TextStyle(
+                child: Text(onLastPage() ? S.of(context).lets_go : S.of(context).next, style: TextStyle(
                     fontSize: 16
                 )),
                 padding: EdgeInsets.symmetric(vertical: 15),

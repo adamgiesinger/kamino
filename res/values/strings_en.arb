@@ -91,10 +91,10 @@
   "power_user_settings_for_rocket_scientists": "Power user settings for rocket scientists.",
   "with_thanks": "With thanks...",
   "appname_was_made_possible_by_all_of_these_amazing_people": "$appName was made possible by all of these amazing people:",
-  "manually_select_sources": "Manually Select Sources",
-  "manually_select_sources_description": "Shows a dialog with a list of discovered sources instead of automatically choosing one.",
-  "detailed_content_information": "Detailed Content Information",
-  "detailed_content_information_description": "Replaces the grid of posters with a list of more detailed cards on search and overview pages.",
+
+  "source_autoplay": "Enable Source Autoplay",
+  "source_autoplay_description": "Automatically selects a source to play instead of showing a dialog containing the source list.",
+
   "clear_search_history": "Clear Search History",
   "clear_search_history_description": "Removes search suggestions based on past searches.",
   "search_history_cleared": "Search history cleared.",

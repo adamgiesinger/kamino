@@ -399,14 +399,20 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
   @override
   void initState() {
     _activePage = KaminoAppHomePages.PAGE_HOME;
-    OTA.updateApp(context, true);
     
     (() async {
+
+      // If the initial setup is not complete, show the setup guide.
       if(!await Settings.initialSetupComplete){
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => KaminoIntro()
+          builder: (BuildContext context) => KaminoIntro(then: () => {
+            OTA.updateApp(context, true)
+          })
         ));
+      }else{
+        OTA.updateApp(context, true);
       }
+
     })();
     
     super.initState();

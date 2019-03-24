@@ -5,6 +5,7 @@ import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/interface/settings/page.dart';
 
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:kamino/util/settings.dart';
 
 class AppearanceSettingsPage extends SettingsPage {
 
@@ -18,6 +19,20 @@ class AppearanceSettingsPage extends SettingsPage {
 
 
 class AppearenceSettingsPageState extends SettingsPageState {
+
+  bool _detailedContentInfoEnabled = false;
+
+  @override
+  void initState() {
+    (Settings.detailedContentInfoEnabled as Future).then((data){
+      setState(() {
+        _detailedContentInfoEnabled = data;
+      });
+    });
+
+    super.initState();
+  }
+
   @override
   Widget buildPage(BuildContext context) {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
@@ -49,6 +64,54 @@ class AppearenceSettingsPageState extends SettingsPageState {
               color: Theme.of(context).primaryColor,
             ),
             onTap: () => setPrimaryColor(context, appState),
+          ),
+        ),
+
+        Container(margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15), child: Divider()),
+
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TitleText(
+                  "Set Layout"
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 5),
+                child: Text(
+                    "Card layouts are more detailed, however grid layouts can fit more items.",
+                    style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)
+                ),
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  VerticalIconButton(
+                    backgroundColor: _detailedContentInfoEnabled ? Theme.of(context).primaryColor : null,
+                    onTap: () async {
+                      await (Settings.detailedContentInfoEnabled = true);
+                      _detailedContentInfoEnabled = await Settings.detailedContentInfoEnabled;
+                      setState(() {});
+                    },
+                    title: TitleText("Card Layout"),
+                    icon: Icon(Icons.view_agenda),
+
+                  ),
+                  VerticalIconButton(
+                    backgroundColor: !_detailedContentInfoEnabled ? Theme.of(context).primaryColor : null,
+                    onTap: () async {
+                      await (Settings.detailedContentInfoEnabled = false);
+                      _detailedContentInfoEnabled = await Settings.detailedContentInfoEnabled;
+                      setState(() {});
+                    },
+                    title: TitleText("Grid Layout"),
+                    icon: Icon(Icons.grid_on),
+                  )
+                ],
+              )
+            ],
           ),
         )
       ],

@@ -659,13 +659,13 @@ void _dialogGenerator(String title, String body, BuildContext context, bool dism
 }
 
 //Trakt authentication logic
-Future<List<String>> authUser(BuildContext context, List<String> _traktCred, String code) async {
+Future<List<String>> authUser(BuildContext context, List<String> _traktCred, String code, { bool shouldShowDialog = true }) async {
   KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   if (code == null){
     //Trakt auth has failed
 
-    _dialogGenerator(
+    if(shouldShowDialog) _dialogGenerator(
         S.of(context).authentication_unsuccessful,
         S.of(context).appname_was_unable_to_authenticate_with_trakttv(appName),
         context,
@@ -720,7 +720,7 @@ Future<List<String>> authUser(BuildContext context, List<String> _traktCred, Str
       ];
 
       await (Settings.traktCredentials = temp);
-      _dialogGenerator(S.of(context).authentication_successful, S.of(context).you_can_now_tap_sync_to_synchronise_your_trakt_favorites, context, true);
+      if(shouldShowDialog) _dialogGenerator(S.of(context).authentication_successful, S.of(context).you_can_now_tap_sync_to_synchronise_your_trakt_favorites, context, true);
       return temp;
 
     } else {
@@ -738,7 +738,7 @@ Future<List<String>> authUser(BuildContext context, List<String> _traktCred, Str
   }
 }
 
-Future<bool> deauthUser(BuildContext context, _traktCred) async {
+Future<bool> deauthUser(BuildContext context, _traktCred, { bool shouldShowScaffold = true }) async {
   KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   Map body = {
@@ -751,8 +751,8 @@ Future<bool> deauthUser(BuildContext context, _traktCred) async {
   Response res = await post(url, body: body);
 
   if (res.statusCode == 200){
-    await (Settings.traktCredentials = []);
-    Interface.showSnackbar(S.of(context).disconnected_trakt_account, context: context, backgroundColor: Colors.red);
+    await (Settings.traktCredentials = <String>[]);
+    if(shouldShowScaffold) Interface.showSnackbar(S.of(context).disconnected_trakt_account, context: context, backgroundColor: Colors.red);
     return true;
   }
 

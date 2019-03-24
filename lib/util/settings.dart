@@ -66,7 +66,7 @@ class _Settings {
     "primaryColorOverride": $(type: String),
 
     "manuallySelectSourcesEnabled": $(type: bool, defaultValue: true),
-    "detailedContentInfoEnabled": $(type: bool, defaultValue: false),
+    "detailedContentInfoEnabled": $(type: bool, defaultValue: true),
     "locale": $(type: List, defaultValue: <String>["en", ""]),
 
     "serverURLOverride": $(type: String),
@@ -84,7 +84,7 @@ class _Settings {
 
     // TODO: Remove old launchpad code.
     "launchpadItems": $(type: String),
-    "homepageCategories": $(type: List, defaultValue: <String>[]),
+    "homepageCategories": $(type: String, defaultValue: "{}"),
 
     "clawsToken": $(type: String),
     "clawsTokenSetTime": $(type: double),

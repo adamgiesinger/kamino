@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/settings.dart';
@@ -29,7 +28,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
 
   @override
   Widget buildPage(BuildContext context) {
-    var traktConnected = _traktCred != null && _traktCred.length == 3;
+    bool traktConnected = _traktCred != null && _traktCred.length == 3;
 
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -63,8 +62,9 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                         textColor: Theme.of(context).primaryTextTheme.body1.color,
                         child: TitleText(S.of(context).connect),
                         onPressed: () {
-                          Navigator.push(context, SlideRightRoute(
-                              builder: (_ctx) => trakt.TraktAuth(context: _ctx)
+                          Navigator.push(context, MaterialPageRoute(
+                            fullscreenDialog: true,
+                            builder: (_ctx) => trakt.TraktAuth(context: _ctx)
                           )).then((var authCode) {
                             trakt.authUser(context, _traktCred, authCode).then((_traktCred) async {
                               setState(() {
@@ -79,7 +79,6 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).disconnect),
                       onPressed: () async {
-                        // TODO: Show disconnecting dialog
                         if(await trakt.deauthUser(context, _traktCred)){
                           setState(() {
                             _traktCred = [];
