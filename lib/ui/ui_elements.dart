@@ -153,10 +153,10 @@ class VerticalIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: backgroundColor,
-      borderRadius: borderRadius,
+      borderRadius: borderRadius ?? BorderRadius.circular(5),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: borderRadius,
+        borderRadius: borderRadius ?? BorderRadius.circular(5),
         onTap: onTap,
         child: Container(
           padding: padding,

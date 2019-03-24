@@ -33,28 +33,34 @@ class _DarkVendorTheme extends ThemeConfiguration {
     var _cardColor = Color(0xFF2F3136);
 
     return ThemeData(
-        brightness: Brightness.dark,
-        primaryColorBrightness: Brightness.dark,
-        primaryColor: primaryColor,
-        accentColor: primaryColor,
-        highlightColor: _highlightColor,
-        backgroundColor: _backgroundColor,
-        cursorColor: primaryColor,
-        textSelectionHandleColor: primaryColor,
-        buttonColor: primaryColor,
-        dialogTheme: DialogTheme(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5)
-          ),
+      brightness: Brightness.dark,
+      primaryColorBrightness: Brightness.dark,
+      primaryColor: primaryColor,
+      accentColor: primaryColor,
+      highlightColor: _highlightColor,
+      backgroundColor: _backgroundColor,
+      cursorColor: primaryColor,
+      textSelectionHandleColor: primaryColor,
+      buttonColor: primaryColor,
+      dialogTheme: DialogTheme(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5)
         ),
-        dialogBackgroundColor: _cardColor,
-        buttonTheme: ButtonThemeData(
-            buttonColor: primaryColor
-        ),
-        cardColor: _cardColor,
-        bottomAppBarColor: _backgroundColor,
-        scaffoldBackgroundColor: _cardColor,
-        canvasColor: _backgroundColor
+      ),
+      dialogBackgroundColor: _cardColor,
+      buttonTheme: ButtonThemeData(
+          buttonColor: primaryColor
+      ),
+      cardColor: _cardColor,
+      bottomAppBarColor: _backgroundColor,
+      scaffoldBackgroundColor: _cardColor,
+      canvasColor: _backgroundColor,
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
+        hintStyle: TextStyle(
+          color: _primaryColor
+        )
+      )
     );
   }
 
@@ -99,14 +105,20 @@ class _LightVendorTheme extends ThemeConfiguration {
           )
       ),
       buttonTheme: ButtonThemeData(
-          buttonColor: primaryColor,
-          textTheme: ButtonTextTheme.primary
+        buttonColor: primaryColor,
+        textTheme: ButtonTextTheme.primary,
       ),
       dialogBackgroundColor: _backgroundColor,
       cardColor: _cardColor,
       bottomAppBarColor: _backgroundColor,
       scaffoldBackgroundColor: _cardColor,
-      canvasColor: _backgroundColor
+      canvasColor: _backgroundColor,
+      inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
+          hintStyle: TextStyle(
+              color: _primaryColor
+          )
+      )
     );
   }
 
@@ -156,7 +168,13 @@ class _BlackVendorTheme extends ThemeConfiguration {
       cardColor: _cardColor,
       bottomAppBarColor: _backgroundColor,
       scaffoldBackgroundColor: _cardColor,
-      canvasColor: _backgroundColor
+      canvasColor: _backgroundColor,
+      inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
+          hintStyle: TextStyle(
+              color: _primaryColor
+          )
+      )
     );
   }
 

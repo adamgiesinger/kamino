@@ -65,7 +65,7 @@ class _Settings {
     "activeTheme": $(type: String),
     "primaryColorOverride": $(type: String),
 
-    "manuallySelectSourcesEnabled": $(type: bool, defaultValue: false),
+    "manuallySelectSourcesEnabled": $(type: bool, defaultValue: true),
     "detailedContentInfoEnabled": $(type: bool, defaultValue: false),
     "locale": $(type: List, defaultValue: <String>["en", ""]),
 
@@ -82,7 +82,9 @@ class _Settings {
     ///
     "traktCredentials": $(type: List, defaultValue: <String>[]),
 
+    // TODO: Remove old launchpad code.
     "launchpadItems": $(type: String),
+    "homepageCategories": $(type: List, defaultValue: <String>[]),
 
     "clawsToken": $(type: String),
     "clawsTokenSetTime": $(type: double),

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/ui/ui_elements.dart';
-import "package:kamino/models/SourceModel.dart";
+import "package:kamino/models/source.dart";
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/vendor/struct/ClawsVendorConfiguration.dart';
 

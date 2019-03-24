@@ -27,7 +27,7 @@ class Launchpad2State extends State<Launchpad2> {
   List<ContentModel> _continueWatchingList;
 
   Future<void> load() async {
-    _topPicksList = await TMDB.getList("107032");
+    _topPicksList = (await TMDB.getList("107032")).content;
 
     if(await Trakt.isAuthenticated()) {
       _continueWatchingList = await Trakt.getWatchHistory(context);
@@ -45,20 +45,23 @@ class Launchpad2State extends State<Launchpad2> {
       future: load(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.connectionState == ConnectionState.none || snapshot.hasError){
+          if(snapshot.hasError) print(snapshot.error);
+
           return Container(
             child: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Icon(Icons.offline_bolt, size: 48, color: Colors.grey),
+                  Icon(snapshot.hasError ? Icons.error : Icons.offline_bolt, size: 48, color: Colors.grey),
                   Container(padding: EdgeInsets.symmetric(vertical: 10)),
-                  TitleText("You're offline...", fontSize: 24),
+                  TitleText(snapshot.hasError ? "An error occurred." : "You're offline...", fontSize: 24),
                   Container(padding: EdgeInsets.symmetric(vertical: 3)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     child: Text(
-                      "$appName failed to connect to the internet. Please check your connection.",
+                      snapshot.hasError ? "Well this is awkward... An error occurred whilst loading your homepage."
+                          : "$appName failed to connect to the internet. Please check your connection.",
                       softWrap: true,
                       textAlign: TextAlign.center,
                       style: TextStyle(

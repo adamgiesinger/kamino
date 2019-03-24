@@ -130,5 +130,10 @@
   "app_tagline": "The streaming app built, for the community, by the community.",
   "lets_go": "LET'S GO",
 
-  "create_profile": "Create Profile"
+  "create_profile": "Create Profile",
+  "customise_appearance": "Customise Appearance",
+  "customise_appearance_description": "$appName is all about customisation. Let's get started by choosing your favorite theme!",
+  "choose_n_categoriesOther": "Choose $n categories...",
+  "choose_n_categoriesOne": "Choose $n category...",
+  "choose_n_categoriesZero": "Awesome!"
 }

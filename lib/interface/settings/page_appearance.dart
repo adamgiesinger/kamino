@@ -33,7 +33,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
             subtitle: Text(
                 "${appState.getActiveThemeMeta().getName()} (${S.of(context).by_x(appState.getActiveThemeMeta().getAuthor())})"
             ),
-            onTap: () => _showThemeChoice(context),
+            onTap: () => showThemeChoice(context, appState),
           ),
         ),
 
@@ -48,72 +48,70 @@ class AppearenceSettingsPageState extends SettingsPageState {
               circleSize: 32,
               color: Theme.of(context).primaryColor,
             ),
-            onTap: () => _setPrimaryColor(context, appState),
+            onTap: () => setPrimaryColor(context, appState),
           ),
         )
       ],
     );
   }
+}
 
-  void _showThemeChoice(BuildContext context){
-    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+void setPrimaryColor(BuildContext context, KaminoAppState appState){
+  showDialog(
+      context: context,
+      builder: (BuildContext dialog){
+        return PrimaryColorChooser(
+            initialColor: Theme.of(context).primaryColor
+        );
+      }
+  );
+}
 
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext dialog){
-          return AlertDialog(
-            // Title Row
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.palette),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: TitleText(S.of(context).change_theme),
-                    )
-                  ],
-                )
-              ],
+void showThemeChoice(BuildContext context, KaminoAppState appState){
+  showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialog){
+        return AlertDialog(
+          // Title Row
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Icon(Icons.palette),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: TitleText(S.of(context).change_theme),
+                  )
+                ],
+              )
+            ],
+          ),
+
+          // Body
+          content: Container(
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: appState.getThemeConfigs().length,
+                itemBuilder: (listContext, index){
+                  var theme = appState.getThemeConfigs()[index];
+
+                  return ListTile(
+                      onTap: (){
+                        Navigator.of(context).pop();
+                        appState.setActiveTheme(theme.getId());
+                      },
+                      title: TitleText("${theme.getName()}"),
+                      subtitle: Text("${theme.getAuthor()}")
+                  );
+                }
             ),
-
-            // Body
-            content: Container(
-              width: MediaQuery.of(context).size.width * 0.75,
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: appState.getThemeConfigs().length,
-                  itemBuilder: (listContext, index){
-                    var theme = appState.getThemeConfigs()[index];
-
-                    return ListTile(
-                        onTap: (){
-                          Navigator.of(context).pop();
-                          appState.setActiveTheme(theme.getId());
-                        },
-                        title: TitleText("${theme.getName()}"),
-                        subtitle: Text("${theme.getAuthor()}")
-                    );
-                  }
-              ),
-            ),
-          );
-        }
-    );
-  }
-
-  void _setPrimaryColor(BuildContext context, KaminoAppState appState){
-    showDialog(
-        context: context,
-        builder: (BuildContext dialog){
-          return PrimaryColorChooser(
-              initialColor: Theme.of(context).primaryColor
-          );
-        }
-    );
-  }
+          ),
+        );
+      }
+  );
 }
 
 /***** COLOR CHOOSER CODE *****/
