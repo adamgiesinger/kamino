@@ -9,7 +9,6 @@
   "donate": "Lahjoita",
   "settings": "Asetukset",
 
-
   "url_copied": "URL kopioitu!",
   "okay": "OK",
   "show_more": "Näytä enemmän...",
@@ -25,6 +24,8 @@
   "disconnect": "Katkaise yhteys",
   "default_": "Oletus",
   "done": "Valmis",
+  "next": "SEURAAVA",
+  "skip": "OHITA",
 
   "coming_soon": "Tulossa pian",
 
@@ -39,7 +40,8 @@
   "disconnected_trakt_account": "Trakt-tilin yhteys katkaistu.",
   "trakt_synchronization": "Traktin synkronisaatio...",
   "trakt_favorites_sync_detailed": "Odota, synkronoidaan. Tämä viesti sulkeutuu automaattisesti toiminnon valmistuttua",
-  "general_error": "Virhe tapahtui ($error)\nOle hyvä ja ilmoita virheestä.",
+
+  "general_error": "Tapahtui virhe ($error)\nOle hyvä ja ilmoita virheestä.",
 
   "play_episode": "Toista jakso",
   "play_movie": "Toista elokuva",
@@ -89,10 +91,10 @@
   "power_user_settings_for_rocket_scientists": "Tehokäyttäjän asetukset rakettitieteilijöille.",
   "with_thanks": "Kiitokset...",
   "appname_was_made_possible_by_all_of_these_amazing_people": "$appName:n mahdollistivat seuraavat upeat ihmiset:",
-  "manually_select_sources": "Valitse lähteet manuaalisesti",
-  "manually_select_sources_description": "Näyttää listan löydetyistä lähteistä automaattivalinnan sijaan.",
-  "detailed_content_information": "Tarkemmat sisältötiedot",
-  "detailed_content_information_description": "Näytä kohteiden tarkat tiedot julisteruudukon sijaan hakutuloksissa ja yleisnäkymissä.",
+
+  "source_autoplay": "Käytä lähteen automaattitoistoa",
+  "source_autoplay_description": "Valitsee automaattisesti toistettavan lähteen eikä näytä lähdelistausta.",
+ 
   "clear_search_history": "Tyhjennä hakuhistoria",
   "clear_search_history_description": "Poistaa aikasempiin hakuihin perustuvat hakuehdotukset.",
   "search_history_cleared": "Hakuhistoria tyhjennetty.",
@@ -116,5 +118,22 @@
   "gathers_useful_information_for_debugging": "Kerää tarpeellista tietoa virheenkorjausta varten.",
   "link_copied_to_clipboard": "Linkki kopioitu työpöydälle.",
   "the_default_configuration_has_been_restored": "Oletusasetukset palautettu.",
-  "restore_defaults": "Palauta oletusasetukset"
+  "restore_defaults": "Palauta oletusasetukset",
+
+  "select_language": "Valitse kieli",
+  "language_settings": "Kieliasetukset",
+  "take_screenshot_report_apollotv_discord": "Ole hyvä ja ota ruutukaappaus tästä viestistä ja ota yhteyttä ylläpitäjään ApolloTV Discord-palvelimella.",
+  "an_error_occurred": "Tapahtui virhe.",
+  "cast_and_crew": "Tekijät",
+ 
+  "welcome_to_appname": "Tervetuloa sovellukseen $appName",
+  "app_tagline": "Yhteisön kehittämä suoratoistosovellus, yhteisölle.",
+  "lets_go": "ALOITETAAN",
+ 
+  "create_profile": "Luo profiili",
+  "customise_appearance": "Muokkaa ulkoasua",
+  "customise_appearance_description": "$appName is all about customisation. Aloitetaan valitsemalla lempiteemasi!",
+  "choose_n_categoriesOther": "Valitse $n kategoriaa...",
+  "choose_n_categoriesOne": "Valitse $n kategoria...",
+  "choose_n_categoriesZero": "Hienoa!"
 }
