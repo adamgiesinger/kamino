@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_appearance.dart';
 import 'package:kamino/main.dart';
@@ -314,7 +315,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                       this._traktCred = _traktCred;
                                     });
 
-                                    trakt.synchronize(context, _traktCred);
+                                    if(await Trakt.isAuthenticated())
+                                      trakt.synchronize(context, _traktCred);
                                   });
                                 });
                               }else{

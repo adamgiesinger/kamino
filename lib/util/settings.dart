@@ -103,7 +103,7 @@ class _Settings {
         var result = await sharedPreferences.get(key);
 
         if(result != null || _settingDefinitions[key].defaultValue == null) {
-          if(result.runtimeType.toString() == "List<dynamic>") return result.cast<String>();
+          if(result.runtimeType.toString() == "List<dynamic>") return (result as List).cast<String>();
           return result;
         }
 
@@ -114,12 +114,19 @@ class _Settings {
     if(invocation.isSetter){
       var key = invocation.memberName.toString().substring(8, invocation.memberName.toString().length - 3);
       var value = invocation.positionalArguments.first;
+      if(value is List) value = new List<String>.from(value, growable: false);
 
       if(!_settingDefinitions.containsKey(key)) throw new Exception("Tried to set undefined settings key: $key");
 
-      var type = _settingDefinitions[key].type.toString();
+      String type = _settingDefinitions[key].type.toString();
       if(type == "List<dynamic>") type = "List<String>";
-      if(value.runtimeType.toString() != type) throw new Exception("Type of the value of settings key $key (${value.runtimeType}) does not match the defined type of that settings key: ${_settingDefinitions[key].type}.");
+
+      assert((){
+        if(value.runtimeType.toString() != type){
+          throw new Exception("Type mismatch: tried to set setting $key (of type $type) to a value of type ${value.runtimeType}.");
+        }
+        return true;
+      }());
 
       return Future<void>(() async {
         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

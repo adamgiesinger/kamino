@@ -65,7 +65,7 @@ Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = fals
         title: TitleText(S.of(context).an_error_occurred, fontSize: 26, textAlign: TextAlign.center),
         content: Container(
           width: MediaQuery.of(context).size.width,
-          height: 0.6 * MediaQuery.of(context).size.height,
+          height: 0.4 * MediaQuery.of(context).size.height,
           child: ListView(
             children: <Widget>[
               Text(S.of(context).take_screenshot_report_apollotv_discord, style: TextStyle(
