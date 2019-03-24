@@ -22,9 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/vendor/index.dart';
 
-// Import custom libraries / utils
-// Import pages
-// Import views
 import 'package:kamino/interface/settings/settings.dart';
 
 const appName = "ApolloTV";
@@ -550,14 +547,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
       case KaminoAppHomePages.PAGE_TV_SHOWS:
         return Container(child: Text("TV Shows"));
       case KaminoAppHomePages.PAGE_MOVIES:
-        return Container(child: Center(
-          child: RaisedButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => KaminoIntro()
-            )),
-            child: Text("Intro"),
-          ),
-        ));
+        return Container(child: Text("Movies"));
       case KaminoAppHomePages.PAGE_FAVORITES:
         return FavoritesPage();
       case KaminoAppHomePages.PAGE_HOME:

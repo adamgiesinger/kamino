@@ -48,6 +48,8 @@ class OtherSettingsPageState extends SettingsPageState {
             activeColor: Theme.of(context).primaryColor,
             value: _autoplaySourcesEnabled,
             title: Row(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
@@ -58,8 +60,9 @@ class OtherSettingsPageState extends SettingsPageState {
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: Text("Experimental"),
                 ),
-                TitleText(S.of(context).source_autoplay)
-              ],
+
+                Flexible(child: TitleText(S.of(context).source_autoplay, allowOverflow: true))
+              ]
             ),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -72,8 +75,8 @@ class OtherSettingsPageState extends SettingsPageState {
             ),
             onChanged: (value) async {
               if (value != _autoplaySourcesEnabled){
-                await (Settings.manuallySelectSourcesEnabled = value); // ignore: await_only_futures
-                (Settings.manuallySelectSourcesEnabled as Future).then((data) => setState(() => _autoplaySourcesEnabled = data));
+                await (Settings.manuallySelectSourcesEnabled = !value); // ignore: await_only_futures
+                (Settings.manuallySelectSourcesEnabled as Future).then((data) => setState(() => _autoplaySourcesEnabled = !data));
               }
             },
           ),

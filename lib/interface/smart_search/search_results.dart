@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 
 import 'package:flutter/material.dart';
@@ -30,6 +32,7 @@ class _SearchResultViewState extends State<SearchResultView> {
   ScrollController controller;
   ScrollController controllerList;
 
+  Widget _override;
   final _pageController = PageController(initialPage: 1);
 
   int _currentPages = 1;
@@ -97,18 +100,49 @@ class _SearchResultViewState extends State<SearchResultView> {
     hasLoaded = false;
     (Settings.detailedContentInfoEnabled as Future).then((data) => setState(() => _expandedSearchPref = data));
 
-    controller = new ScrollController()..addListener(_scrollListener);
-    controllerList = new ScrollController()..addListener(_scrollListenerList);
-
     databaseHelper.getAllFavIDs().then((data){
-
       _favIDs = data;
     });
 
-    _getContent(widget.query, _currentPages).then((data){
+    controller = new ScrollController()..addListener(_scrollListener);
+    controllerList = new ScrollController()..addListener(_scrollListenerList);
+
+    _getContent(widget.query, _currentPages).then((data) {
       setState(() {
         _results = data;
       });
+    }).catchError((ex){
+      if(ex is SocketException
+          || ex is HttpException) {
+        _override = OfflineMixin();
+        return;
+      }
+
+      _override = Container(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.error, size: 48, color: Colors.grey),
+              Container(padding: EdgeInsets.symmetric(vertical: 10)),
+              TitleText("An error occurred.", fontSize: 24),
+              Container(padding: EdgeInsets.symmetric(vertical: 3)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                child: Text(
+                  "Well this is awkward... An error occurred whilst loading search results.",
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 16
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
     });
 
     super.initState();
@@ -116,6 +150,8 @@ class _SearchResultViewState extends State<SearchResultView> {
 
   @override
   Widget build(BuildContext context) {
+    if(_override != null) return _override;
+
     if(_results.length < 1){
       if(widget.query == null || widget.query.isEmpty) return Container();
 

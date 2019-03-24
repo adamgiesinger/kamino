@@ -216,8 +216,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                         onTap: () => showThemeChoice(context, appState),
                         leading: Icon(Icons.style),
                         isThreeLine: true,
-                        title: TitleText("Choose a theme..."),
-                        subtitle: Text("Select a general theme! This is used primarily to decide the background color.")
+                        title: TitleText(S.of(context).choose_a_theme),
+                        subtitle: Text(S.of(context).choose_a_theme_description)
                       ),
 
                       ListTile(
@@ -227,8 +227,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                           color: Theme.of(context).primaryColor,
                         ),
                         isThreeLine: true,
-                        title: TitleText("What's your favorite color?"),
-                        subtitle: Text("Tap to set the accent color; it's used to give a splash of color to buttons, icons, etc..."),
+                        title: TitleText(S.of(context).whats_your_favorite_color),
+                        subtitle: Text(S.of(context).whats_your_favorite_color_description),
                       ),
 
                       Container(
@@ -238,12 +238,12 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             TitleText(
-                                "Which do you prefer?"
+                                S.of(context).which_do_you_prefer
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 5),
                               child: Text(
-                                  "Card layouts are more detailed, however grid layouts can fit more items.",
+                                  S.of(context).layout_preferences_subtitle,
                                   style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)
                               ),
                             ),
@@ -257,7 +257,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                     _detailedLayoutType = await Settings.detailedContentInfoEnabled;
                                     setState(() {});
                                   },
-                                  title: TitleText("Card Layout"),
+                                  title: TitleText(S.of(context).card_layout),
                                   icon: Icon(Icons.view_agenda),
 
                                 ),
@@ -268,7 +268,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                     _detailedLayoutType = await Settings.detailedContentInfoEnabled;
                                     setState(() {});
                                   },
-                                  title: TitleText("Grid Layout"),
+                                  title: TitleText(S.of(context).grid_layout),
                                   icon: Icon(Icons.grid_on),
                                 )
                               ],
@@ -292,8 +292,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
               width: MediaQuery.of(context).size.width,
               child: ListView(
                 children: <Widget>[
-                  TitleText("General Settings", fontSize: 32),
-                  Text("Here's some commonly used settings options that you might want to take a look at.", style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+                  TitleText(S.of(context).general_settings, fontSize: 32),
+                  Text(S.of(context).general_settings_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 20),
@@ -329,12 +329,12 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                             },
                             leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
                             isThreeLine: true,
-                            title: TitleText(traktConnected ? "Disconnect your Trakt account" : "Connect your Trakt account"),
-                            subtitle: Text("ApolloTV can synchronise your watch history and favorites from Trakt.tv...")
+                            title: TitleText(traktConnected ? S.of(context).disconnect_your_trakt_account : S.of(context).connect_your_trakt_account),
+                            subtitle: Text(S.of(context).appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(appName))
                         ),
 
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 20),
+                          margin: EdgeInsets.symmetric(vertical: 25),
                         ),
 
                         Theme(
@@ -347,6 +347,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                             activeColor: Theme.of(context).primaryColor,
                             value: _autoplaySourcesEnabled,
                             title: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Container(
                                   decoration: BoxDecoration(
@@ -355,9 +357,10 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                   ),
                                   margin: EdgeInsetsDirectional.only(end: 5),
                                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                  child: Text("Experimental"),
+                                  child: Text(S.of(context).experimental),
                                 ),
-                                TitleText(S.of(context).source_autoplay)
+
+                                Flexible(child: TitleText(S.of(context).source_autoplay, allowOverflow: true))
                               ],
                             ),
                             subtitle: Padding(
@@ -397,7 +400,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
               child: ListView(
                 children: <Widget>[
                   TitleText(S.of(context).choose_n_categories((3 - _selectedCategories.length < 0 ? 0 : 3 - _selectedCategories.length).toString()), fontSize: 32),
-                  Text("Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!", style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+                  Text(S.of(context).choose_n_categories_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 20),

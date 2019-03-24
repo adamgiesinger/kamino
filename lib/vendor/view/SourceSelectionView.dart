@@ -2,7 +2,6 @@ import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/models/content.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import "package:kamino/models/source.dart";
 import 'package:kamino/util/interface.dart';
@@ -34,10 +33,16 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    List<SourceModel> sourceList = widget.delegate.sourceList.toSet().toList();
+    List<SourceModel> sourceList = new List();
+    widget.delegate.sourceList.forEach((model){
+      // If sourceList does not contain a SourceModel with model's URL
+      if(sourceList.where((_searchModel) => _searchModel.file.data == model.file.data).length == 0){
+        sourceList.add(model);
+      }
+    });
+
     _sortList(sourceList);
 
     return Scaffold(
@@ -45,7 +50,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
         title: TitleText(
-            widget.title
+            "${widget.title} \u2022 ${sourceList.length} sources"
         ),
         centerTitle: true,
         bottom: PreferredSize(

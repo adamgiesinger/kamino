@@ -135,5 +135,23 @@
   "customise_appearance_description": "$appName is all about customisation. Let's get started by choosing your favorite theme!",
   "choose_n_categoriesOther": "Choose $n categories...",
   "choose_n_categoriesOne": "Choose $n category...",
-  "choose_n_categoriesZero": "Awesome!"
+  "choose_n_categories_description": "Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!",
+
+  "choose_n_categoriesZero": "Awesome!",
+  "experimental": "Experimental",
+  "general_settings": "General Settings",
+  "general_settings_description": "Here's some commonly used settings options that you might want to take a look at.",
+  "choose_a_theme": "Choose a theme...",
+  "choose_a_theme_description": "Select a general theme! This is used primarily to decide the background color.",
+  "whats_your_favorite_color": "What's your favorite color?",
+  "whats_your_favorite_color_description": "Tap to set the accent color; it's used to give a splash of color to buttons, icons, etc...",
+  "which_do_you_prefer": "Which do you prefer?",
+  "layout_preferences_subtitle": "Card layouts are more detailed, however grid layouts can fit more items.",
+  "card_layout": "Card Layout",
+  "grid_layout": "Grid Layout",
+  "disconnect_your_trakt_account": "Disconnect your Trakt account",
+  "connect_your_trakt_account": "Connect your Trakt account",
+  "appname_can_synchronise_your_watch_history_and_favorites_from_trakttv": "$appName can synchronise your watch history and favorites from Trakt.tv...",
+  "youre_offline": "You're offline...",
+  "appname_failed_to_connect_to_the_internet": "$appName failed to connect to the internet. Please check your connection."
 }

@@ -8,6 +8,14 @@ var Settings = (SettingsManager._wasInitialized ? new _Settings() as dynamic : t
 class SettingsManager {
 
   static bool _wasInitialized = false;
+
+  ///
+  /// Every time [_Settings._settingDefinitions] is updated irreversibly, this
+  /// variable should be updated.
+  ///
+  /// This WILL CAUSE LOCAL STORAGE TO BE WIPED should the previously installed
+  /// version number be lower than this version number.
+  ///
   static int _lastMajorRevision = 104001;
 
   static Future<bool> _checkNeedsWipe(SharedPreferences sharedPreferences) async {
@@ -31,9 +39,9 @@ class SettingsManager {
     return _Settings._settingDefinitions.containsKey(key);
   }
 
-  static void deleteKey(String key) async {
+  static Future<void> deleteKey(String key) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.remove(key);
+    await sharedPreferences.remove(key);
   }
 
   static Future<void> dumpFromStorage() async {
@@ -70,6 +78,7 @@ class _Settings {
     "locale": $(type: List, defaultValue: <String>["en", ""]),
 
     "serverURLOverride": $(type: String),
+    "serverKeyOverride": $(type: String),
     "searchHistory": $(type: List, defaultValue: <String>[]),
 
     ///

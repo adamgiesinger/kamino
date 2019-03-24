@@ -114,10 +114,10 @@ class _LightVendorTheme extends ThemeConfiguration {
       scaffoldBackgroundColor: _cardColor,
       canvasColor: _backgroundColor,
       inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
-          hintStyle: TextStyle(
-              color: _primaryColor
-          )
+        border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
+        hintStyle: TextStyle(
+          color: _primaryColor
+        )
       )
     );
   }

@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/models/source.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
@@ -60,11 +61,21 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   String _token;
 
   ///
-  /// Returns the server address declared by the Vendor.
-  /// If the vendor does not use a server, this will be `localhost`
+  /// Returns either the vendor server URL, or the URL of the override
+  /// server.
   ///
-  String getServer(){
+  Future<String> getServer() async {
+    if((await Settings.serverURLOverride) != null) return await Settings.serverURLOverride;
     return server;
+  }
+
+  ///
+  /// Returns either the vendor server key, or the key of the override
+  /// server.
+  ///
+  Future<String> getClawsKey() async {
+    if((await Settings.serverKeyOverride) != null) return await Settings.serverKeyOverride;
+    return clawsKey;
   }
 
   Future<bool> sourceSelectionEnabled() async {
@@ -74,15 +85,23 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   @override
   Future<bool> authenticate(BuildContext context, {bool force = false}) async {
     try {
-      http.Response response = await http.get(server + 'api/v1/status').timeout(Duration(seconds: 10), onTimeout: (){
+      http.Response response = await http.get((await getServer()) + 'api/v1/status').timeout(Duration(seconds: 10), onTimeout: (){
         Navigator.of(context).pop();
         _showAuthenticationFailureDialog(context, "The request timed out.\n\n(Is your connection too slow?)");
       });
+
       var status = Convert.jsonDecode(response.body);
     }catch(ex){
-      print(ex);
+      print("Exception whilst determining Claws status: $ex");
       Navigator.of(context).pop();
-      _showAuthenticationFailureDialog(context, "Claws is currently offline for server upgrades.\nPlease check the #announcements channel in our Discord server for more information.");
+
+      bool isOfficial = (await Settings.serverURLOverride) == null;
+
+      _showAuthenticationFailureDialog(context,
+          isOfficial
+              ? "The $appName server is currently offline for server upgrades.\nPlease check the #announcements channel in our Discord server for more information."
+              : "Unable to connect to server."
+      );
       return false;
     }
 
@@ -100,14 +119,18 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       _token = clawsToken;
       return true;
     } else {
+      String _clawsKey = await getClawsKey();
+
       // Return new token
-      var clawsClientHash = await _generateClawsHash(clawsKey, now).timeout(Duration(seconds: 5), onTimeout: () async {
+      var clawsClientHash = await _generateClawsHash(_clawsKey, now).timeout(Duration(seconds: 5), onTimeout: () async {
         Navigator.of(context).pop();
         _showAuthenticationFailureDialog(context, "Authentication timed out.\n\nPlease try again.");
       });
-      http.Response response = await http.post(server + 'api/v1/login',
-          body: Convert.jsonEncode({"clientID": clawsClientHash}),
-          headers: {"Content-Type": "application/json"}).timeout(Duration(seconds: 10), onTimeout: () async {
+      http.Response response = await http.post(
+        (await getServer()) + 'api/v1/login',
+        body: Convert.jsonEncode({"clientID": clawsClientHash}),
+        headers: {"Content-Type": "application/json"}
+      ).timeout(Duration(seconds: 10), onTimeout: () async {
         Navigator.of(context).pop();
         _showAuthenticationFailureDialog(context, "Authentication timed out.\n\nPlease try again.");
       });
@@ -136,8 +159,10 @@ class ClawsVendorConfiguration extends VendorConfiguration {
   ///
   /// To use this, override it and call super in your new method.
   ///
-  Future<void> prepare(String title, BuildContext context) async {
-    if (_delegate != null && !_delegate.inClosedState) _delegate.close();
+  void prepare(String title, BuildContext context){
+    try {
+      if (_delegate != null && !_delegate.inClosedState) _delegate.close();
+    }catch(_){}
     _delegate = new ClawsVendorDelegate();
 
     showDialog(
@@ -232,13 +257,13 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     }
 
     Interface.showAlert(
-        context,
-        TitleText("Unable to connect..."), // Title
-        <Widget>[
+        context: context,
+        title: TitleText("Unable to connect..."), // Title
+        content: <Widget>[
           Text(reason)
         ],
-        true,
-        [
+        dismissible: true,
+        actions: [
           new FlatButton(
             onPressed: (){
               Navigator.of(context).pop();
@@ -258,11 +283,11 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
 
     var authenticationStatus = await authenticate(context);
-    if(!authenticationStatus) return Navigator.of(context).pop();
+    if(!authenticationStatus) return;
 
     // Connect to Claws
     String clawsToken = _token;
-    String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
+    String webSocketServer = (await getServer()).replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
     String data = '{"type": "movies", "title": "$title", "year": "$year"}';
 
@@ -279,11 +304,11 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
 
     var authenticationStatus = await authenticate(context);
-    if(!authenticationStatus) return Navigator.of(context).pop();
+    if(!authenticationStatus) return;
 
     // Connect to Claws
     String clawsToken = _token;
-    String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
+    String webSocketServer = (await getServer()).replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
     String data = '{"type": "tv", "title": "$title", "year": "$year", "season": "$seasonNumber", "episode": "$episodeNumber"}';
 
@@ -310,6 +335,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
               ),
               onWillPop: () async {
                 _delegate.cancel();
+                return true;
               },
             )
         ));
@@ -364,6 +390,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         if (doneEventStatus && scrapeResultsCounter.value == 0) {
           //print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
           _onDelegateComplete(context, displayTitle, futureList);
+          //_delegate.close();
         }
       }
 
@@ -371,6 +398,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         doneEventStatus = true;
         if (scrapeResultsCounter.value == 0) {
           _onDelegateComplete(context, displayTitle, futureList);
+          //_delegate.close();
         }
 
         return;
@@ -391,6 +419,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       print("WebSocket error: " + error.toString());
     }, onDone: () {
       _delegate.close();
+      //_onDelegateComplete(context, displayTitle, futureList);
     });
 
     _delegate.socket.add(data);
@@ -412,11 +441,10 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         return function();
       });
     }
-    await pool.close();
-
+    await Future.delayed(Duration(seconds: 10), () => pool.close());
     print('Done processing.');
-    _delegate.close();
 
+    _delegate.close();
     onComplete(context, displayTitle);
   }
 
@@ -425,7 +453,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     var sourceFile = data["file"];
     String sourceStreamURL = sourceFile["data"];
 
-    if (data['metadata']['isStreamable']) {
+    if(data['metadata']['isStreamable'] != null && data['metadata']['isStreamable']) {
       print("Link is not streamable");
       return;
     }
@@ -470,10 +498,15 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       return;
     }
     var ping = new DateTime.now().millisecondsSinceEpoch - before;
-    if (htmlContent.statusCode < 400 && htmlContent.headers["content-type"].startsWith("video") || htmlContent.headers["content-type"].startsWith("application/octet-stream") || (sourceStreamURL.contains('clipwatching') && htmlContent.headers["content-type"].startsWith("text/plain"))) {
+    if (htmlContent.statusCode < 400
+        // Only test content-type header if it is present.
+        && (htmlContent.headers['content-type'] != null
+            ? htmlContent.headers["content-type"].startsWith("video") || htmlContent.headers["content-type"].startsWith("application/octet-stream") || (sourceStreamURL.contains('clipwatching') && htmlContent.headers["content-type"].startsWith("text/plain"))
+            : true)
+    ) {
       data['metadata']['ping'] = ping;
     } else {
-      print("Error: status: " + htmlContent.statusCode.toString() + " content-type: " + htmlContent.headers["content-type"] +  " receiving stream data from: $sourceStreamURL");
+      print("Error: status: " + htmlContent.statusCode.toString() + (htmlContent.headers["content-type"] != null ? " content-type: " + htmlContent.headers["content-type"] : "") +  " receiving stream data from: $sourceStreamURL");
       return;
     }
 
@@ -506,7 +539,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
     // POST the HTML content to Claws which will find the link.
     try {
-      String message = Convert.jsonEncode({ "type": "resolveHtml", "resolver": event["resolver"], "cookie": cookie, "html": Convert.base64.encode(Convert.utf8.encode(htmlContent.body)) });
+      String message = Convert.jsonEncode({ "type": "resolveHtml", "provider": event["provider"], "resolver": event["resolver"], "cookie": cookie, "html": Convert.base64.encode(Convert.utf8.encode(htmlContent.body)) });
       webSocket.add(message);
       scrapeResultsCounter.value++;
       print('# of SCRAPE events to wait for ' + scrapeResultsCounter.value.toString());

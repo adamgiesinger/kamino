@@ -4,8 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Interface {
 
-  static void showAlert(BuildContext context, Widget title, List<Widget> content, bool dismissible, List<Widget> actions){
-    showDialog<void>(
+  static void showAlert({@required BuildContext context, @required Widget title, @required List<Widget> content, bool dismissible = false, @required List<Widget> actions}){
+    showDialog(
       context: context,
       barrierDismissible: dismissible,
       builder: (BuildContext responseContext) {

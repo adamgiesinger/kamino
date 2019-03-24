@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/smart_search/search_results.dart';
 import 'package:kamino/interface/content/overview.dart';
+import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/models/content.dart';
@@ -24,7 +26,7 @@ class SmartSearch extends SearchDelegate<String> {
 
   Future<List<SearchModel>> _fetchSearchList(String criteria) async {
 
-    Future.delayed( new Duration(milliseconds: 500));
+    Future.delayed(new Duration(milliseconds: 500));
 
     List<SearchModel> _data = [];
 
@@ -56,14 +58,14 @@ class SmartSearch extends SearchDelegate<String> {
   @override
   ThemeData appBarTheme(BuildContext context) {
     return ThemeData(
-      primaryColor: Theme.of(context).cardColor,
+      primaryColor: Theme.of(context).backgroundColor,
       textTheme: TextTheme(
         title: TextStyle(
-            fontFamily: "GlacialIndifference",
-            fontSize: 19.0,
-            color: Theme.of(context).primaryTextTheme.body1.color),
+          fontFamily: "GlacialIndifference",
+          fontSize: 19.0,
+          color: Theme.of(context).textTheme.body1.color
+        ),
       ),
-      textSelectionColor: Theme.of(context).textSelectionColor,
     );
   }
 
@@ -266,11 +268,38 @@ class SmartSearch extends SearchDelegate<String> {
                     ));*/
                 case ConnectionState.done:
                   if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+
+                      if(snapshot.error is SocketException
+                          || snapshot.error is HttpException) return OfflineMixin();
+
+                      return Container(
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(Icons.error, size: 48, color: Colors.grey),
+                              Container(padding: EdgeInsets.symmetric(vertical: 10)),
+                              TitleText("An error occurred.", fontSize: 24),
+                              Container(padding: EdgeInsets.symmetric(vertical: 3)),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 50),
+                                child: Text(
+                                  "Well this is awkward... An error occurred whilst loading search results.",
+                                  softWrap: true,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 16
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+
                   } else if (snapshot.hasData) {
-                    return _expandedSearchPref == false
-                        ? _simplifiedSuggestions(snapshot)
-                        : _suggestionsPosterCard(snapshot);
+                    return _simplifiedSuggestions(snapshot);
                   }
                 //return Text('Result: ${snapshot.data}');
               }

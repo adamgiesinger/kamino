@@ -120,8 +120,8 @@ class _SettingsViewState extends State<SettingsView> {
                                   children: <Widget>[
 
                                     Container(
-                                        padding: EdgeInsets.only(bottom: 20),
-                                        child: Image.asset("assets/images/logo.png", width: 48, height: 48)
+                                        padding: EdgeInsets.only(bottom: 5),
+                                        child: Image.asset("assets/images/logo_foreground_lg.png", width: 64, height: 64)
                                     ),
 
                                     TitleText("$appName v${_packageInfo.version}", fontSize: 24, textColor: Colors.white),

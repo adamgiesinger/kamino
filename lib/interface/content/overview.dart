@@ -54,6 +54,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   List<int> _favIDs = [];
   String _contentType;
 
+  Widget _override;
   ContentModel _data;
   String _trailer;
   List crew;
@@ -91,6 +92,8 @@ class _ContentOverviewState extends State<ContentOverview> {
     _contentType = "movie" : _contentType = "tv";
 
     databaseHelper.getAllFavIDs().then((data) {
+      if (!this.mounted) return;
+
       setState(() {
         _favIDs = data;
         _favState = data.contains(widget.contentId);
@@ -133,6 +136,8 @@ class _ContentOverviewState extends State<ContentOverview> {
               .width - 160);
           _longTitle = titlePainter.didExceedMaxLines;
         });
+      }).catchError((error){
+        _override = OfflineMixin();
       });
     }catch(_){
       return;
@@ -190,7 +195,6 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Return TV show content model.
       return TVShowContentModel.fromJSON(Convert.jsonDecode(json));
-
     }
 
     throw new Exception("Unexpected content type.");
@@ -250,19 +254,24 @@ class _ContentOverviewState extends State<ContentOverview> {
   @override
   Widget build(BuildContext context) {
 
+    // If the content is overriden by a widget, that widget will be shown.
+    // This is primarily used for error messages.
+    if(_override != null) return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: _override
+    );
+
     // This is shown whilst the data is loading.
-    if (_data == null) {
-      return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: Center(
-          child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(
-                Theme.of(context).primaryColor
-            ),
-          )
+    if (_data == null) return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Center(
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(
+            Theme.of(context).primaryColor
+          ),
         )
-      );
-    }
+      )
+    );
 
     // When the data has loaded we can display the general outline and content-type specific body.
     return new Scaffold(

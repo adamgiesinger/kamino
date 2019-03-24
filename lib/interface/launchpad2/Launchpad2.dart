@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +47,8 @@ class Launchpad2State extends State<Launchpad2> {
       future: load(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.connectionState == ConnectionState.none || snapshot.hasError){
-          if(snapshot.hasError) print(snapshot.error);
+          if(snapshot.error is SocketException
+            || snapshot.error is HttpException) return OfflineMixin();
 
           return Container(
             child: Center(
@@ -53,15 +56,14 @@ class Launchpad2State extends State<Launchpad2> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Icon(snapshot.hasError ? Icons.error : Icons.offline_bolt, size: 48, color: Colors.grey),
+                  Icon(Icons.error, size: 48, color: Colors.grey),
                   Container(padding: EdgeInsets.symmetric(vertical: 10)),
-                  TitleText(snapshot.hasError ? "An error occurred." : "You're offline...", fontSize: 24),
+                  TitleText("An error occurred.", fontSize: 24),
                   Container(padding: EdgeInsets.symmetric(vertical: 3)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     child: Text(
-                      snapshot.hasError ? "Well this is awkward... An error occurred whilst loading your homepage."
-                          : "$appName failed to connect to the internet. Please check your connection.",
+                      "Well this is awkward... An error occurred whilst loading your homepage.",
                       softWrap: true,
                       textAlign: TextAlign.center,
                       style: TextStyle(
