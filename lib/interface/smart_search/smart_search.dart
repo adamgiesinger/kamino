@@ -338,7 +338,7 @@ class SmartSearch extends SearchDelegate<String> {
   /// of the search history.
   ///
   Future<void> _promoteQuerySearchHistory(String value) async {
-    List<String> searches = await (Settings.searchHistory);
+    List<String> searches = (await (Settings.searchHistory)).cast<String>();
 
     // Ensure duplicates are removed.
     searches = searches.toSet().toList();

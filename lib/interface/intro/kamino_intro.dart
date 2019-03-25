@@ -142,10 +142,24 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
                     Container(padding: EdgeInsets.symmetric(vertical: 10)),
 
-                    RaisedButton.icon(
+                    FlatButton.icon(
+                      shape: Border(
+                        top: BorderSide(color: Colors.white24),
+                        bottom: BorderSide(color: Colors.white24),
+                      ),
                       onPressed: () => showLanguageSelectionDialog(context),
-                      icon: Icon(Icons.translate),
-                      label: Text(S.of(context).select_language),
+                      icon: Icon(Icons.language, size: 24),
+                      //label: Text(/*S.of(context).select_language*/),
+                      label: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(S.of(context).$_language_name, style: TextStyle(
+                              fontSize: 16
+                          ), textAlign: TextAlign.left),
+                          Icon(Icons.arrow_drop_down)
+                        ],
+                      )
                     )
                   ],
                 )
@@ -212,27 +226,39 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      ListTile(
-                        onTap: () => showThemeChoice(context, appState),
-                        leading: Icon(Icons.style),
-                        isThreeLine: true,
-                        title: TitleText(S.of(context).choose_a_theme),
-                        subtitle: Text(S.of(context).choose_a_theme_description)
+                      Material(
+                        elevation: 3,
+                        borderRadius: BorderRadius.circular(5),
+                        color: Theme.of(context).cardColor,
+                        child: ListTile(
+                          onTap: () => showThemeChoice(context, appState),
+                          leading: Icon(Icons.style),
+                          isThreeLine: true,
+                          title: TitleText(S.of(context).choose_a_theme),
+                          subtitle: Text(S.of(context).choose_a_theme_description),
+                        ),
                       ),
 
-                      ListTile(
-                        onTap: () => setPrimaryColor(context, appState),
-                        leading: CircleColor(
-                          circleSize: 32,
-                          color: Theme.of(context).primaryColor,
+                      Container(margin: EdgeInsets.symmetric(vertical: 5)),
+
+                      Material(
+                        elevation: 3,
+                        borderRadius: BorderRadius.circular(5),
+                        color: Theme.of(context).cardColor,
+                        child: ListTile(
+                          onTap: () => setPrimaryColor(context, appState),
+                          leading: CircleColor(
+                            circleSize: 32,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          isThreeLine: true,
+                          title: TitleText(S.of(context).whats_your_favorite_color),
+                          subtitle: Text(S.of(context).whats_your_favorite_color_description),
                         ),
-                        isThreeLine: true,
-                        title: TitleText(S.of(context).whats_your_favorite_color),
-                        subtitle: Text(S.of(context).whats_your_favorite_color_description),
                       ),
 
                       Container(
-                        padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+                        padding: EdgeInsets.only(top: 30, left: 15, right: 15),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,34 +329,39 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        ListTile(
-                            onTap: () async {
-                              if(!traktConnected){
-                                Navigator.push(context, MaterialPageRoute(
-                                  fullscreenDialog: true,
-                                  builder: (_ctx) => trakt.TraktAuth(context: _ctx)
-                                )).then((var authCode) {
-                                  trakt.authUser(context, _traktCred, authCode, shouldShowDialog: false).then((_traktCred) async {
-                                    setState(() {
-                                      this._traktCred = _traktCred;
-                                    });
+                        Material(
+                          elevation: 3,
+                          borderRadius: BorderRadius.circular(5),
+                          color: Theme.of(context).cardColor,
+                          child: ListTile(
+                              onTap: () async {
+                                if(!traktConnected){
+                                  Navigator.push(context, MaterialPageRoute(
+                                    fullscreenDialog: true,
+                                    builder: (_ctx) => trakt.TraktAuth(context: _ctx)
+                                  )).then((var authCode) {
+                                    trakt.authUser(context, _traktCred, authCode, shouldShowDialog: false).then((_traktCred) async {
+                                      setState(() {
+                                        this._traktCred = _traktCred;
+                                      });
 
-                                    if(await Trakt.isAuthenticated())
-                                      trakt.synchronize(context, _traktCred);
+                                      if(await Trakt.isAuthenticated())
+                                        trakt.synchronize(context, _traktCred);
+                                    });
                                   });
-                                });
-                              }else{
-                                if(await trakt.deauthUser(context, _traktCred, shouldShowScaffold: false)){
-                                  setState(() {
-                                    _traktCred = [];
-                                  });
+                                }else{
+                                  if(await trakt.deauthUser(context, _traktCred, shouldShowScaffold: false)){
+                                    setState(() {
+                                      _traktCred = [];
+                                    });
+                                  }
                                 }
-                              }
-                            },
-                            leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
-                            isThreeLine: true,
-                            title: TitleText(traktConnected ? S.of(context).disconnect_your_trakt_account : S.of(context).connect_your_trakt_account),
-                            subtitle: Text(S.of(context).appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(appName))
+                              },
+                              leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
+                              isThreeLine: true,
+                              title: TitleText(traktConnected ? S.of(context).disconnect_your_trakt_account : S.of(context).connect_your_trakt_account),
+                              subtitle: Text(S.of(context).appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(appName))
+                          ),
                         ),
 
                         Container(
@@ -507,6 +538,10 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
       )
     ];
 
+    bool onFirstPage(){
+      return _controller.hasClients && _controller.page.round() == 0;
+    }
+
     bool onLastPage(){
       return _controller.hasClients && _controller.page.round() == (_pages.length - 1);
     }
@@ -557,19 +592,17 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              IgnorePointer(
-                ignoring: onLastPage(),
-                child: AnimatedOpacity(child: FlatButton(
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  },
-                  highlightColor: Colors.transparent,
-                  child: Text(S.of(context).skip, style: TextStyle(
-                      fontSize: 16
-                  )),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  materialTapTargetSize: MaterialTapTargetSize.padded,
-                ), opacity: onLastPage() ? 0 : 1, duration: Duration(milliseconds: 100)),
+              FlatButton(
+                onPressed: (){
+                  if(onFirstPage()) Navigator.of(context).pop();
+                  else _controller.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                },
+                highlightColor: Colors.transparent,
+                child: Text(onFirstPage() ? S.of(context).skip : S.of(context).back, style: TextStyle(
+                    fontSize: 16
+                )),
+                padding: EdgeInsets.symmetric(vertical: 15),
+                materialTapTargetSize: MaterialTapTargetSize.padded,
               ),
 
               DotsIndicator(

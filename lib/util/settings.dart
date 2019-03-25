@@ -112,7 +112,7 @@ class _Settings {
         var result = await sharedPreferences.get(key);
 
         if(result != null || _settingDefinitions[key].defaultValue == null) {
-          if(result.runtimeType.toString() == "List<dynamic>") return (result as List).cast<String>();
+          if(result is List) return result.cast<String>().toList();
           return result;
         }
 

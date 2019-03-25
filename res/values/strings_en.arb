@@ -25,6 +25,7 @@
   "default_": "Default",
   "done": "Done",
   "next": "NEXT",
+  "back": "BACK",
   "skip": "SKIP",
 
   "coming_soon": "Coming Soon",
@@ -153,5 +154,5 @@
   "connect_your_trakt_account": "Connect your Trakt account",
   "appname_can_synchronise_your_watch_history_and_favorites_from_trakttv": "$appName can synchronise your watch history and favorites from Trakt.tv...",
   "youre_offline": "You're offline...",
-  "appname_failed_to_connect_to_the_internet": "$appName failed to connect to the internet. Please check your connection."
+  "appname_failed_to_connect_to_the_internet": "$appName failed to connect to the internet. Please check your connection.",
 }
