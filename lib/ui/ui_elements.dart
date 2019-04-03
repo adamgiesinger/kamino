@@ -32,6 +32,7 @@ class SubtitleText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       child: Text(text.toUpperCase(), style: TextStyle(
+        fontSize: 14,
         fontFamily: 'GlacialIndifference',
         fontWeight: FontWeight.bold,
         letterSpacing: 1,

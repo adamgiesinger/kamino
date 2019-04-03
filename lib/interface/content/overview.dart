@@ -229,7 +229,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           _data.title,
           widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
           widget.contentId,
-          _data.backdropPath,
+          _data.posterPath,
           _data.releaseDate);
 
       if(await Trakt.isAuthenticated()) trakt.sendNewMedia(

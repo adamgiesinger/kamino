@@ -9,7 +9,7 @@ import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:simple_permissions/simple_permissions.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OTAHelper {
   static const platform = const MethodChannel('xyz.apollotv.kamino/ota');
@@ -58,8 +58,9 @@ Future<Map> checkUpdate(BuildContext context, bool dismissSnackbar) async {
 updateApp(BuildContext context, bool dismissSnackbar) async {
   if(!Platform.isAndroid) return;
 
-  bool permissionStatus = await SimplePermissions.checkPermission(Permission.WriteExternalStorage);
-  if(!permissionStatus) permissionStatus = (await SimplePermissions.requestPermission(Permission.WriteExternalStorage)) == PermissionStatus.authorized;
+  bool permissionStatus = (await PermissionHandler().checkPermissionStatus(PermissionGroup.storage)) == PermissionStatus.granted;
+  if(!permissionStatus) permissionStatus = (await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage]
+      == PermissionStatus.granted;
   if(!permissionStatus && dismissSnackbar) return;
 
   if(permissionStatus) {
@@ -120,8 +121,9 @@ runInstallProcedure (context, data) async {
   try {
     Navigator.of(context).pop();
 
-    bool permissionStatus = await SimplePermissions.checkPermission(Permission.WriteExternalStorage);
-    if(!permissionStatus) permissionStatus = (await SimplePermissions.requestPermission(Permission.WriteExternalStorage)) == PermissionStatus.authorized;
+    bool permissionStatus = (await PermissionHandler().checkPermissionStatus(PermissionGroup.storage)) == PermissionStatus.granted;
+    if(!permissionStatus) permissionStatus = (await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage]
+        == PermissionStatus.granted;
     if(!permissionStatus) throw new FileSystemException(S.of(context).permission_denied);
 
     final downloadDir = new Directory((await getExternalStorageDirectory()).path + "/.apollo");

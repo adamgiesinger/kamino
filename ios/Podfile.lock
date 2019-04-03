@@ -1,23 +1,21 @@
 PODS:
   - cplayer (0.0.1):
     - Flutter
+  - device_info (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_webview_plugin (0.0.1):
     - Flutter
-  - FMDB (2.7.5):
-    - FMDB/standard (= 2.7.5)
-  - FMDB/standard (2.7.5)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
+    - Flutter
+  - permission_handler (2.2.0):
     - Flutter
   - screen (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
     - Flutter
-  - sqflite (0.0.1):
-    - Flutter
-    - FMDB (~> 2.7.2)
   - uni_links (0.0.1):
     - Flutter
   - url_launcher (0.0.1):
@@ -27,38 +25,37 @@ PODS:
 
 DEPENDENCIES:
   - cplayer (from `.symlinks/plugins/cplayer/ios`)
-  - Flutter (from `.symlinks/flutter/ios-release`)
+  - device_info (from `.symlinks/plugins/device_info/ios`)
+  - Flutter (from `.symlinks/flutter/ios`)
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - screen (from `.symlinks/plugins/screen/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
-  - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
 
-SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - FMDB
-
 EXTERNAL SOURCES:
   cplayer:
     :path: ".symlinks/plugins/cplayer/ios"
+  device_info:
+    :path: ".symlinks/plugins/device_info/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios-release"
+    :path: ".symlinks/flutter/ios"
   flutter_webview_plugin:
     :path: ".symlinks/plugins/flutter_webview_plugin/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  permission_handler:
+    :path: ".symlinks/plugins/permission_handler/ios"
   screen:
     :path: ".symlinks/plugins/screen/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
-  sqflite:
-    :path: ".symlinks/plugins/sqflite/ios"
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
   url_launcher:
@@ -68,14 +65,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   cplayer: bb7e0640e97d56e39f98a9e55b4b6ec1517777ef
+  device_info: 76ce0b32e13034d1883be4a382433648f9dcee63
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
-  flutter_webview_plugin: 0b491d31c34ab5c86a71c9f1a57ac000dd1b75e9
-  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  flutter_webview_plugin: 116575b48572029304775b768e9f15ebfc316274
   package_info: d7c98b64f60add4c2908b9d94d82a45d3c8827ad
   path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
+  permission_handler: 0b2a5acb642be1ad2406adc31d0cda567b8b01e2
   screen: 22ab9c4a784112d4b21ad7d80e81729e0afdaa65
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
-  sqflite: 801b6b0983f722fa29baf00d1476e4556ada6de4
   uni_links: 5ee5240df5cbffc52d9e7f8017a576b6a6bc5141
   url_launcher: 92b89c1029a0373879933c21642958c874539095
   video_player: 906796a841943c8d370ac7c13b18039aa9b56498

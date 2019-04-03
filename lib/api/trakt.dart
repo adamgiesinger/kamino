@@ -18,7 +18,7 @@ class Trakt {
       HttpHeaders.authorizationHeader: 'Bearer ${traktCredentials[0]}',
       HttpHeaders.contentTypeHeader: 'application/json',
       'trakt-api-version': '2',
-      'trakt-api-key': appState.getVendorConfigs()[0].traktCredentials.id
+      'trakt-api-key': appState.getVendorConfigs()[0].getTraktCredentials().id
     };
   }
 

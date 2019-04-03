@@ -377,17 +377,17 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                             isThreeLine: true,
                             activeColor: Theme.of(context).primaryColor,
                             value: _autoplaySourcesEnabled,
-                            title: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            title: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
                                     color: Theme.of(context).primaryColor,
                                   ),
-                                  margin: EdgeInsetsDirectional.only(end: 5),
                                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                  margin: EdgeInsets.only(bottom: 10),
                                   child: Text(S.of(context).experimental),
                                 ),
 
@@ -405,8 +405,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                             ),
                             onChanged: (value) async {
                               if (value != _autoplaySourcesEnabled){
-                                await (Settings.manuallySelectSourcesEnabled = value); // ignore: await_only_futures
-                                (Settings.manuallySelectSourcesEnabled as Future).then((data) => setState(() => _autoplaySourcesEnabled = data));
+                                await (Settings.manuallySelectSourcesEnabled = !value); // ignore: await_only_futures
+                                (Settings.manuallySelectSourcesEnabled as Future).then((data) => setState(() => _autoplaySourcesEnabled = !data));
                               }
                             },
                           ),

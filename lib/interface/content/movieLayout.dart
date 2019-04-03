@@ -13,20 +13,19 @@ class MovieLayout {
 
   static Widget generate(BuildContext context, MovieContentModel _data, List<int> _favsArray){
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 0),
         child: Padding(
           padding: const EdgeInsets.only(bottom: 30.0),
           child: Column(
               children: <Widget>[
+
                 /* Similar Movies */
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
-                        title: TitleText(
-                            S.of(context).similar_movies,
-                            fontSize: 22.0,
-                            textColor: Theme.of(context).primaryTextTheme.body1.color
+                        title: SubtitleText(
+                            S.of(context).similar_movies
                         )
                     ),
 
@@ -37,7 +36,6 @@ class MovieLayout {
                   ],
                 )
                 /* ./Similar Movies */
-
 
               ]
           ),

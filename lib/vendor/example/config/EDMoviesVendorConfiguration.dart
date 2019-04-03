@@ -6,7 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kamino/vendor/struct/ClawsVendorConfiguration.dart';
+import 'package:kamino/vendor/services/LegacyClawsVendorService.dart';
 
 import 'package:cplayer/cplayer.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';

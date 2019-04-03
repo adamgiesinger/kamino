@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/vendor/struct/VendorService.dart';
 import 'package:meta/meta.dart';
-import 'package:w_transport/w_transport.dart' as transport;
 
 abstract class VendorConfiguration {
 
-  String tmdbKey;
-  TraktCredentials traktCredentials;
-
   final String name;
+  final VendorService service;
+
+  final String _tmdbKey;
+  final TraktCredentials _traktCredentials;
 
   ///
   /// A VendorConfiguration should be used to change the default settings in the
@@ -16,12 +17,17 @@ abstract class VendorConfiguration {
   /// [name] - The name of the vendor. If you are developing this independently,
   ///           use your GitHub name.
   ///
+  /// [service] - The service implementation for this vendor.
+  ///
   VendorConfiguration({
     @required this.name,
+    @required this.service,
 
-    this.tmdbKey,
-    this.traktCredentials
-  });
+    String tmdbKey,
+    TraktCredentials traktCredentials
+  }) :
+      _tmdbKey = tmdbKey,
+      _traktCredentials = traktCredentials;
 
   ///
   /// Returns the name of the Vendor, as provided when the configuration object
@@ -29,6 +35,22 @@ abstract class VendorConfiguration {
   ///
   String getName(){
     return name;
+  }
+
+  String getTMDBKey(){
+    if(_tmdbKey != null){
+      return _tmdbKey;
+    }else{
+      throw new Exception("Vendor ${getName()} does not have a TMDB key.");
+    }
+  }
+
+  TraktCredentials getTraktCredentials(){
+    if(_traktCredentials != null){
+      return _traktCredentials;
+    }else{
+      throw new Exception("Vendor ${getName()} does not have Trakt credentials.");
+    }
   }
 
   ///
@@ -43,28 +65,12 @@ abstract class VendorConfiguration {
 
   Future<void> playMovie(String title, String releaseDate, BuildContext context);
   Future<void> playTVShow(
-      String title,
-      String releaseDate,
-      int seasonNumber,
-      int episodeNumber,
-      BuildContext context
-    );
-
-  String getTMDBKey(){
-    if(tmdbKey != null){
-      return tmdbKey;
-    }else{
-      throw new Exception("Invalid TMDB API key for provider ${getName()}.");
-    }
-  }
-
-  TraktCredentials getTraktCredentials(){
-    if(traktCredentials != null){
-      return traktCredentials;
-    }else{
-      throw new Exception("Invalid TMDB API key for provider ${getName()}.");
-    }
-  }
+    String title,
+    String releaseDate,
+    int seasonNumber,
+    int episodeNumber,
+    BuildContext context
+  );
 
 }
 
