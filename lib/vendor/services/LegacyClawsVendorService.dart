@@ -374,26 +374,6 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       var event = Convert.jsonDecode(message);
       var eventName = event["event"];
 
-      if(eventName == 'scrapeResults'){
-        scrapeResultsCounter.value--;
-        //print('# of SCRAPE events to wait for: ' + scrapeResultsCounter.value.toString() + ". Is done scraping for results? " + doneEventStatus.toString());
-        if (event.containsKey('results')) {
-          List results = event['results'];
-          results.forEach((result) {
-            futureList.add(() => _onSourceFound(result, context));
-          });
-        } else if (event.containsKey('error')) {
-          print(event["error"]);
-          return;
-        }
-
-        if (doneEventStatus && scrapeResultsCounter.value == 0) {
-          //print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
-          _onDelegateComplete(context, displayTitle, futureList);
-          //_delegate.close();
-        }
-      }
-
       if(eventName == 'done'){
         doneEventStatus = true;
         if (scrapeResultsCounter.value == 0) {
@@ -405,10 +385,18 @@ class ClawsVendorConfiguration extends VendorConfiguration {
       }
 
       // The content can be accessed directly.
-      if(eventName == 'result'){
+      if (eventName == 'result') {
+        if (event.containsKey('isResultOfScrape')) {
+            scrapeResultsCounter.value--;
+        }
+        if (doneEventStatus && scrapeResultsCounter.value == 0) {
+          //print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
+          _onDelegateComplete(context, displayTitle, futureList);
+          //_delegate.close();
+        }
         futureList.add(() => _onSourceFound(event, context));
         return;
-      }
+    }
 
       // Claws needs the request to be proxied.
       if(eventName == 'scrape'){
