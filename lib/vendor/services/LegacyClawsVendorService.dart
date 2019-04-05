@@ -386,15 +386,19 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
       // The content can be accessed directly.
       if (eventName == 'result') {
-        if (event.containsKey('isResultOfScrape')) {
+        if (event['isResultOfScrape'] == true) {
             scrapeResultsCounter.value--;
-        }
+        } 
+
         if (doneEventStatus && scrapeResultsCounter.value == 0) {
           //print('======SCRAPE RESULTS EVENT AFTER DONE EVENT======');
           _onDelegateComplete(context, displayTitle, futureList);
           //_delegate.close();
         }
-        futureList.add(() => _onSourceFound(event, context));
+
+        if (!event.containsKey('error')) {	
+          futureList.add(() => _onSourceFound(event, context));
+        }
         return;
     }
 
