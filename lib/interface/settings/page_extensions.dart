@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/ui/ui_elements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/interface/settings/page.dart';

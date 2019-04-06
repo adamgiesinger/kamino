@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:kamino/ui/ui_elements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 
 import 'package:flutter/material.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'dart:async';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/ui/ui_elements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -13,7 +13,7 @@ import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/interface/genre/genreResults.dart';
-import 'package:kamino/util/interface.dart';
+import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 
 class AllGenres extends StatefulWidget{

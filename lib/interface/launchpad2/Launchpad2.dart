@@ -9,8 +9,8 @@ import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/content_card.dart';
-import 'package:kamino/ui/ui_elements.dart';
-import 'package:kamino/util/interface.dart';
+import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/interface.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class Launchpad2 extends StatefulWidget {

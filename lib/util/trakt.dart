@@ -7,9 +7,9 @@ import 'package:kamino/api/tmdb.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
-import 'package:kamino/ui/ui_elements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:kamino/util/interface.dart';
+import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/util/settings.dart';
 

@@ -13,8 +13,8 @@ import 'package:kamino/models/tvshow.dart';
 
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/res/BottomGradient.dart';
-import 'package:kamino/ui/ui_elements.dart';
-import 'package:kamino/util/interface.dart';
+import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/interface/genre/genreResults.dart';
 import 'package:kamino/interface/content/movieLayout.dart';

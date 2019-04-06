@@ -4,7 +4,7 @@ import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/res/BottomGradient.dart';
-import 'package:kamino/ui/ui_elements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/interface/content/overview.dart';
 

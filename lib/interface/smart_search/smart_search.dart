@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/smart_search/search_results.dart';
 import 'package:kamino/interface/content/overview.dart';
-import 'package:kamino/ui/ui_elements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/models/content.dart';
