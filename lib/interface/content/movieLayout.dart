@@ -5,8 +5,6 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/ui_elements.dart';
-import 'package:kamino/ui/ui_utils.dart';
-import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/content/overview.dart';
 
 class MovieLayout {
@@ -60,7 +58,7 @@ class MovieLayout {
                       ),
                       onPressed: (){
                         KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                        appState.getVendorConfigs()[0].playMovie(
+                        appState.getVendorConfigs()[0].service.playMovie(
                             model.title,
                             model.releaseDate,
                             context
@@ -109,12 +107,6 @@ class MovieLayout {
                         ),
                     )
                 );
-            },
-            onLongPress: (){
-              addFavoritePrompt(
-                  context, _data.recommendations[index]["title"], _data.recommendations[index]["id"],
-                  TMDB.IMAGE_CDN + _data.recommendations[index]["poster_path"],
-                  _data.recommendations[index]["release_date"], "movie");
             },
             splashColor: Colors.white,
             child: SizedBox(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/ui_elements.dart';
-import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/interface/settings/page.dart';
 
@@ -103,7 +102,7 @@ class OtherSettingsPageState extends SettingsPageState {
             title: TitleText(S.of(context).language_settings),
             subtitle: Text(S.of(context).$_language_name),
             enabled: true,
-            onTap: () => showLanguageSelectionDialog(context),
+            onTap: () => Interface.showLanguageSelectionDialog(context),
           ),
         )
 

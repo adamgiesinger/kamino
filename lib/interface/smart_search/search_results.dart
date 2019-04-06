@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
@@ -186,12 +184,6 @@ class _SearchResultViewState extends State<SearchResultView> {
         itemBuilder: (BuildContext context, int index){
           return InkWell(
             onTap: () => _openContentScreen(context, index),
-            onLongPress: (){
-              addFavoritePrompt(
-                  context, _results[index].name, _results[index].id,
-                  TMDB.IMAGE_CDN + _results[index].poster_path,
-                  _results[index].year, _results[index].mediaType);
-            },
             splashColor: Colors.white,
             child: ResultCard(
               background: _results[index].poster_path,
@@ -224,12 +216,6 @@ class _SearchResultViewState extends State<SearchResultView> {
           itemBuilder: (BuildContext context, int index){
             return InkWell(
               onTap: () => _openContentScreen(context, index),
-              onLongPress: (){
-                addFavoritePrompt(
-                    context, _results[index].name, _results[index].id,
-                    TMDB.IMAGE_CDN + _results[index].poster_path,
-                    _results[index].year, _results[index].mediaType);
-              },
               splashColor: Colors.white,
               child: ContentPoster(
                 background: _results[index].poster_path,

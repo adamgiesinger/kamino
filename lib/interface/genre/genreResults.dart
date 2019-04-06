@@ -10,7 +10,7 @@ import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/partials/result_card.dart';
-import 'package:kamino/ui/ui_utils.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/settings.dart';
 
 
@@ -156,7 +156,7 @@ class _GenreViewState extends State<GenreView>{
             elevation: 5.0,
             actions: <Widget>[
 
-              generateSearchIcon(context),
+              Interface.generateSearchIcon(context),
 
               //Add sorting functionality
               IconButton(
@@ -206,12 +206,6 @@ class _GenreViewState extends State<GenreView>{
         itemBuilder: (BuildContext context, int index){
           return InkWell(
             onTap: () => _openContentScreen(context, index),
-            onLongPress: (){
-              addFavoritePrompt(
-                  context, _results[index].name, _results[index].id,
-                  TMDB.IMAGE_CDN + _results[index].poster_path,
-                  _results[index].year, _results[index].mediaType);
-            },
             splashColor: Colors.white,
             child: ContentPoster(
               background: _results[index].poster_path,
@@ -233,12 +227,6 @@ class _GenreViewState extends State<GenreView>{
       itemBuilder: (BuildContext context, int index){
         return InkWell(
           onTap: () => _openContentScreen(context, index),
-          onLongPress: (){
-            addFavoritePrompt(
-                context, _results[index].name, _results[index].id,
-                TMDB.IMAGE_CDN + _results[index].poster_path,
-                _results[index].year, _results[index].mediaType);
-          },
           splashColor: Colors.white,
           child: ResultCard(
             background: _results[index].poster_path,

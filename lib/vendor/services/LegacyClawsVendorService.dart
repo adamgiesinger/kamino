@@ -126,6 +126,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
         Navigator.of(context).pop();
         _showAuthenticationFailureDialog(context, "Authentication timed out.\n\nPlease try again.");
       });
+
       http.Response response = await http.post(
         (await getServer()) + 'api/v1/login',
         body: Convert.jsonEncode({"clientID": clawsClientHash}),
@@ -139,7 +140,8 @@ class ClawsVendorConfiguration extends VendorConfiguration {
 
       if (tokenResponse["auth"]) {
         var token = tokenResponse["token"];
-        var tokenJson = jwtDecode(token);
+        //var tokenJson = jwtDecode(token);
+        dynamic tokenJson;
         await (Settings.clawsToken = token);
         await (Settings.clawsTokenSetTime = tokenJson['exp'].toDouble());
         print("Generated new token...");
@@ -584,36 +586,6 @@ String formatBytesAsHexString(Uint8List bytes) {
     result.write('${part < 16 ? '0' : ''}${part.toRadixString(16)}');
   }
   return result.toString();
-}
-
-String base64UrlDecode(String str) {
-  String output = str.replaceAll("-", "+").replaceAll("_", "/");
-  switch (output.length % 4) {
-    case 0:
-      break;
-    case 2:
-      output += "==";
-      break;
-    case 3:
-      output += "=";
-      break;
-    default:
-      throw "Illegal base64url string!";
-  }
-
-  try {
-    return Uri.decodeFull(Convert.utf8.decode(Convert.base64Url.decode(output)));
-  } catch (err) {
-    return Convert.utf8.decode(Convert.base64Url.decode(output));
-  }
-}
-
-dynamic jwtDecode(token) {
-  try {
-    return Convert.jsonDecode(base64UrlDecode(token.split('.')[1]));
-  } catch (e) {
-    throw "Invalid token specified: " + e.message;
-  }
 }
 
 class ClawsLoadingState {

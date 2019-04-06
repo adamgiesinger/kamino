@@ -20,7 +20,6 @@ import 'package:kamino/interface/genre/genreResults.dart';
 import 'package:kamino/interface/content/movieLayout.dart';
 import 'package:kamino/interface/content/tvShowLayout.dart';
 
-import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
 import 'package:transparent_image/transparent_image.dart';
 
@@ -285,7 +284,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                     backgroundColor: Theme.of(context).backgroundColor,
                     actions: <Widget>[
 
-                      generateSearchIcon(context),
+                      Interface.generateSearchIcon(context),
 
                       IconButton(
                         icon: _generateFavoriteIcon(_favState),

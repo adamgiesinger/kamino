@@ -3,11 +3,10 @@
     (Location: /lib/vendor/index.dart)
 */
 
-import 'package:kamino/vendor/dist/config/LaunchpadConfiguration.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 import 'package:kamino/vendor/themes/OfficialVendorThemes.dart';
-import 'package:kamino/vendor/dist/config/OfficialVendorConfiguration.dart';
+import 'package:kamino/vendor/dist/OfficialVendorConfiguration.dart';
 
 class ApolloVendor {
 
@@ -38,17 +37,6 @@ class ApolloVendor {
 
   static String getTMDBKey(){
     return getVendorConfigs()[0].getTMDBKey();
-  }
-
-  ///
-  /// This method allows you to define your own configuration file for your
-  /// own widgets.
-  ///
-  /// You either should modify this to return a different LaunchpadConfiguration
-  /// or modify the LaunchpadConfiguration.
-  ///
-  static LaunchpadConfiguration getLaunchpadConfiguration(){
-    return LaunchpadConfiguration();
   }
 
 }

@@ -12,10 +12,9 @@ import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/partials/result_card.dart';
-import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/interface/genre/genreResults.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/settings.dart';
-
 
 class AllGenres extends StatefulWidget{
   final String contentType;
@@ -226,7 +225,7 @@ class _AllGenresState extends State<AllGenres>{
             onChanged: changedDropDownItem,
           ),
 
-          generateSearchIcon(context),
+          Interface.generateSearchIcon(context),
 
           //Add sorting functionality
           IconButton(
@@ -265,12 +264,6 @@ class _AllGenresState extends State<AllGenres>{
         itemBuilder: (BuildContext context, int index){
           return InkWell(
             onTap: () => _openContentScreen(context, index),
-            onLongPress: (){
-              addFavoritePrompt(
-                  context, _results[index].name, _results[index].id,
-                  TMDB.IMAGE_CDN + _results[index].poster_path,
-                  _results[index].year, _results[index].mediaType);
-            },
             splashColor: Colors.white,
             child: ContentPoster(
               background: _results[index].poster_path,
@@ -293,12 +286,6 @@ class _AllGenresState extends State<AllGenres>{
       itemBuilder: (BuildContext context, int index){
         return InkWell(
           onTap: () => _openContentScreen(context, index),
-          onLongPress: (){
-            addFavoritePrompt(
-                context, _results[index].name, _results[index].id,
-                TMDB.IMAGE_CDN + _results[index].poster_path,
-                _results[index].year, _results[index].mediaType);
-          },
           splashColor: Colors.white,
           child: ResultCard(
             background: _results[index].poster_path,

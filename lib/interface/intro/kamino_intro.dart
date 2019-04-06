@@ -12,9 +12,9 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_appearance.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/list.dart';
-import 'package:kamino/ui/ui_utils.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:kamino/ui/ui_elements.dart';
+import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
 
@@ -147,7 +147,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                         top: BorderSide(color: Colors.white24),
                         bottom: BorderSide(color: Colors.white24),
                       ),
-                      onPressed: () => showLanguageSelectionDialog(context),
+                      onPressed: () => Interface.showLanguageSelectionDialog(context),
                       icon: Icon(Icons.language, size: 24),
                       //label: Text(/*S.of(context).select_language*/),
                       label: Row(
@@ -553,7 +553,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
         elevation: 0,
 
         centerTitle: true,
-        title: generateHeaderLogo(context),
+        title: Interface.generateHeaderLogo(context),
       ),
 
       backgroundColor: Theme.of(context).backgroundColor,

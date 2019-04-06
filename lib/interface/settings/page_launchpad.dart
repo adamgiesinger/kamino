@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/interface/launchpad/launchpad_item.dart';
 import 'package:kamino/interface/settings/page.dart';
 
 class LaunchpadSettingsPage extends SettingsPage {
@@ -14,7 +13,7 @@ class LaunchpadSettingsPage extends SettingsPage {
 
 class LaunchpadSettingsPageState extends SettingsPageState {
 
-  List<LaunchpadItemWrapper> _userOptions;
+  var _userOptions;
 
   @override
   void initState(){
@@ -45,11 +44,7 @@ class LaunchpadSettingsPageState extends SettingsPageState {
   }
 
   void _getLaunchPrefs(){
-    LaunchpadItemManager.getManager().getLaunchpadConfiguration().then((activeItems){
-      setState(() {
-        _userOptions = activeItems;
-      });
-    });
+
   }
 
 }

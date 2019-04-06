@@ -153,7 +153,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                       int episodeNumber = episode["episode_number"];
 
                                       KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                                      appState.getVendorConfigs()[0].playTVShow(
+                                      appState.getVendorConfigs()[0].service.playTVShow(
                                           widget.showContentModel.title,
                                           widget.showContentModel.releaseDate,
                                           seasonNumber,

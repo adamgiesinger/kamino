@@ -9,7 +9,6 @@ import 'package:kamino/interface/launchpad2/Launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/skyspace/skyspace.dart';
-import 'package:kamino/ui/ui_utils.dart';
 import 'package:kamino/ui/ui_elements.dart';
 import 'package:kamino/util/interface.dart';
 import 'package:kamino/util/settings.dart';
@@ -426,7 +425,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
         appBar: AppBar(
           title: Row(
             children: <Widget>[
-              generateHeaderLogo(context)
+              Interface.generateHeaderLogo(context)
             ],
           ),
 
