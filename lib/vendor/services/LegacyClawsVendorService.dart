@@ -24,7 +24,7 @@ import 'package:ntp/ntp.dart';
 import 'package:pool/pool.dart';
 
 class ClawsVendorConfiguration extends VendorConfiguration {
-
+/*
   ClawsVendorDelegate _delegate;
 
   // Settings
@@ -82,79 +82,6 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     return ALLOW_SOURCE_SELECTION && await (Settings.manuallySelectSourcesEnabled);
   }
 
-  @override
-  Future<bool> authenticate(BuildContext context, {bool force = false}) async {
-    try {
-      http.Response response = await http.get((await getServer()) + 'api/v1/status').timeout(Duration(seconds: 10), onTimeout: (){
-        Navigator.of(context).pop();
-        _showAuthenticationFailureDialog(context, "The request timed out.\n\n(Is your connection too slow?)");
-      });
-
-      var status = Convert.jsonDecode(response.body);
-    }catch(ex){
-      print("Exception whilst determining Claws status: $ex");
-      Navigator.of(context).pop();
-
-      bool isOfficial = (await Settings.serverURLOverride) == null;
-
-      _showAuthenticationFailureDialog(context,
-          isOfficial
-              ? "The $appName server is currently offline for server upgrades.\nPlease check the #announcements channel in our Discord server for more information."
-              : "Unable to connect to server."
-      );
-      return false;
-    }
-
-    String clawsToken = await Settings.clawsToken;
-    double clawsTokenSetTime = await Settings.clawsTokenSetTime;
-
-    DateTime now = await NTP.now();
-    if (!FORCE_TOKEN_REGENERATION && !force &&
-        clawsToken != null &&
-        clawsTokenSetTime != null &&
-        clawsTokenSetTime + 3600 >=
-            (now.millisecondsSinceEpoch / 1000).floor()) {
-      // Return preferences token
-      print("Re-using old token...");
-      _token = clawsToken;
-      return true;
-    } else {
-      String _clawsKey = await getClawsKey();
-
-      // Return new token
-      var clawsClientHash = await _generateClawsHash(_clawsKey, now).timeout(Duration(seconds: 5), onTimeout: () async {
-        Navigator.of(context).pop();
-        _showAuthenticationFailureDialog(context, "Authentication timed out.\n\nPlease try again.");
-      });
-
-      http.Response response = await http.post(
-        (await getServer()) + 'api/v1/login',
-        body: Convert.jsonEncode({"clientID": clawsClientHash}),
-        headers: {"Content-Type": "application/json"}
-      ).timeout(Duration(seconds: 10), onTimeout: () async {
-        Navigator.of(context).pop();
-        _showAuthenticationFailureDialog(context, "Authentication timed out.\n\nPlease try again.");
-      });
-
-      var tokenResponse = Convert.jsonDecode(response.body);
-
-      if (tokenResponse["auth"]) {
-        var token = tokenResponse["token"];
-        //var tokenJson = jwtDecode(token);
-        dynamic tokenJson;
-        await (Settings.clawsToken = token);
-        await (Settings.clawsTokenSetTime = tokenJson['exp'].toDouble());
-        print("Generated new token...");
-        _token = token;
-
-        return true;
-      } else {
-        _showAuthenticationFailureDialog(context, tokenResponse["message"]);
-        return false;
-      }
-    }
-  }
-
   ///
   /// Use this method to prepare your vendor configuration or to show
   /// loading messages.
@@ -167,31 +94,7 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     }catch(_){}
     _delegate = new ClawsVendorDelegate();
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => WillPopScope(
-        onWillPop: () async => false,
-        child: AlertDialog(
-          title: TitleText('Connecting...'),
-          content: SingleChildScrollView(
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
-                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
-                    child: new CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor
-                      ),
-                    )
-                ),
-                Center(child: Text("Please wait..."))
-              ],
-            ),
-          )
-        ),
-      )
-    );
+
   }
 
   ///
@@ -292,7 +195,6 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     String webSocketServer = (await getServer()).replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
     String data = '{"type": "movies", "title": "$title", "year": "$year"}';
-
     _openWebSocket(endpointURL, data, context, title);
   }
 
@@ -313,7 +215,6 @@ class ClawsVendorConfiguration extends VendorConfiguration {
     String webSocketServer = (await getServer()).replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
     String data = '{"type": "tv", "title": "$title", "year": "$year", "season": "$seasonNumber", "episode": "$episodeNumber"}';
-
     _openWebSocket(endpointURL, data, context, title, displayTitle: displayTitle);
   }
 
@@ -707,5 +608,5 @@ class ClawsVendorDelegate {
     _connectionStatus = 449;
     if(_webSocket != null) _webSocket.close(4449, "Client terminated connection.");
   }
-
+*/
 }

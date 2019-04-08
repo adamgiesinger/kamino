@@ -457,7 +457,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
                       builder: (context) => SettingsView()
                   ));
 
-                  default: Interface.showSnackbar("Invalid menu option. Option '$index' was not defined.");
+                  default: Interface.showSnackbar("Invalid menu option. Option '$index' was not defined.", context: context);
                 }
               },
               itemBuilder: (BuildContext context){

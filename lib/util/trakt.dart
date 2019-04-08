@@ -123,7 +123,7 @@ void renewToken(BuildContext context) async {
         ];
 
         await (Settings.traktCredentials = newCredentials);
-        Interface.showSnackbar(S.of(context).successfully_refreshed_trakt_token);
+        Interface.showSnackbar(S.of(context).successfully_refreshed_trakt_token, context: context);
       } else {
         showDialog(
             context: context,

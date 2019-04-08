@@ -152,6 +152,47 @@ class Interface {
     );
   }
 
+  static void showConnectingDialog(BuildContext context, { Function onPop }){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => WillPopScope(
+          onWillPop: () async {
+            if(onPop != null) onPop();
+            return false;
+          },
+          child: AlertDialog(
+              title: TitleText('Connecting...'),
+              content: SingleChildScrollView(
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Container(
+                        padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
+                        child: new CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor
+                          ),
+                        )
+                    ),
+                    Center(child: Text("Please wait..."))
+                  ],
+                ),
+              ),
+
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: (){
+                  if(onPop != null) onPop();
+                },
+                child: Text("Cancel"),
+                textColor: Theme.of(context).primaryColor,
+              )
+            ],
+          ),
+        )
+    );
+  }
+
 }
 
 class EmptyScrollBehaviour extends ScrollBehavior {

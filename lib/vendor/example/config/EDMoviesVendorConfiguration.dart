@@ -12,7 +12,7 @@ import 'package:cplayer/cplayer.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 
 class EDMoviesVendorConfiguration extends ClawsVendorConfiguration {
-
+/*
   EDMoviesVendorConfiguration() : super(
       /// The name of the vendor. If you are developing this independently,
       /// use your GitHub name.
@@ -33,5 +33,5 @@ class EDMoviesVendorConfiguration extends ClawsVendorConfiguration {
         secret: ""
       )
   );
-
+*/
 }

@@ -112,7 +112,7 @@ class _Settings {
         var result = await sharedPreferences.get(key);
 
         if(result != null || _settingDefinitions[key].defaultValue == null) {
-          if(result is List) return result.cast<String>().toList();
+          if(result is List) return result.cast<String>().toList( growable: true );
           return result;
         }
 
