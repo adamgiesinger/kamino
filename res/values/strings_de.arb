@@ -76,9 +76,9 @@
 
   "make_appname_yours": "MACHEN SIE $appName ZU IHREM",
   "appearance": "Aussehen",
-  "customise_the_theme_and_primary_colors": "Passen Sie das Theme und die Akzentfarben an.",
+  "customize_the_theme_and_primary_colors": "Passen Sie das Theme und die Akzentfarben an.",
   "launchpad": "Startseite",
-  "customise_your_launchpad": "Passen Sie Ihre Startseite an.",
+  "customize_your_launchpad": "Passen Sie Ihre Startseite an.",
   "boost_your_experience": "BRINGEN SIE IHR ERLEBNIS AUF DAS NÄCHSTE LEVEL",
   "extensions": "Erweiterungen",
   "manage_third_party_integrations": "Integrationen verwalten.",

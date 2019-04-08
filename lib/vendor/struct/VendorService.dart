@@ -35,6 +35,15 @@ abstract class VendorService {
   }
 
   ///
+  /// Clears the source list. (Usually in preparation to search for something
+  /// else.)
+  ///
+  void clearSourceList(){
+    _sourceList.clear();
+    triggerUpdate();
+  }
+
+  ///
   /// Adds a function to the event list that should be called
   /// every time an update is triggered.
   ///
@@ -78,12 +87,14 @@ abstract class VendorService {
     return allowSourceSelection && await (Settings.manuallySelectSourcesEnabled);
   }
 
+  Future<void> done(BuildContext context);
+
   ///
   /// Updates the status of the [VendorService].
   /// Triggers all update events, when the status is updated, as well as
   /// handling any necessary actions when the state is changed.
   ///
-  void setStatus(BuildContext context, VendorServiceStatus status, { String title }){
+  void setStatus(BuildContext context, VendorServiceStatus status, { String title }) async {
     VendorServiceStatus oldStatus = this.status;
 
     if(oldStatus == status) return;
@@ -137,6 +148,11 @@ abstract class VendorService {
 
           })();
         }
+        break;
+      case VendorServiceStatus.DONE:
+        if(oldStatus == VendorServiceStatus.PROCESSING)
+          await done(context);
+
         break;
       default:
         break;

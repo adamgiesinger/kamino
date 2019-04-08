@@ -84,7 +84,7 @@ class Interface {
     }
   }
 
-  static showLanguageSelectionDialog(BuildContext context){
+  static void showLanguageSelectionDialog(BuildContext context){
     showDialog(
         context: context,
         builder: (_) {
@@ -129,7 +129,6 @@ class Interface {
                                   !iconFile.startsWith("_") ?
                                   'icons/flags/png/$iconFile.png'
                                       : iconFile.replaceFirst("_", ""),
-                                  package: iconFile.startsWith("_") ? null : 'country_icons',
                                 ),
                                 fit: BoxFit.cover,
                                 alignment: Alignment.center,

@@ -41,9 +41,12 @@ class AppearenceSettingsPageState extends SettingsPageState {
       physics: widget.isPartial ? NeverScrollableScrollPhysics() : null,
       shrinkWrap: widget.isPartial ? true : false,
       children: <Widget>[
+        SubtitleText("Theme", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
+            leading: Icon(Icons.palette),
             title: TitleText(S.of(context).change_theme),
             subtitle: Text(
                 "${appState.getActiveThemeMeta().getName()} (${S.of(context).by_x(appState.getActiveThemeMeta().getAuthor())})"
@@ -59,7 +62,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
             subtitle: Text(
                 PrimaryColorChooser.colorToHexString(Theme.of(context).primaryColor)
             ),
-            trailing: CircleColor(
+            leading: CircleColor(
               circleSize: 32,
               color: Theme.of(context).primaryColor,
             ),
@@ -67,24 +70,12 @@ class AppearenceSettingsPageState extends SettingsPageState {
           ),
         ),
 
-        Container(margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15), child: Divider()),
+        SubtitleText("Layout", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 0)),
 
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              TitleText(
-                  "Set Layout"
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 5),
-                child: Text(
-                    "Card layouts are more detailed, however grid layouts can fit more items.",
-                    style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)
-                ),
-              ),
               ButtonBar(
                 alignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[

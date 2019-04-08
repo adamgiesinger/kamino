@@ -42,7 +42,10 @@ class ClawsVendorService extends VendorService {
 
   @override
   Future<bool> initialize(BuildContext context) async {
-    this.setStatus(context, VendorServiceStatus.INITIALIZING);
+    if(_webSocket != null) _webSocket.close();
+    clearSourceList();
+
+    setStatus(context, VendorServiceStatus.INITIALIZING);
 
     /* ATTEMPT TO CONNECT TO SERVER */
     try {
@@ -175,7 +178,7 @@ class ClawsVendorService extends VendorService {
     if(!await initialize(context)) return;
 
     var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
-    var displayTitle = "$title \u2022 S${seasonNumber.toString().padLeft(2, '0')} E$episodeNumber";
+    var displayTitle = "$title \u2022 S${seasonNumber.toString().padLeft(2, '0')} E${episodeNumber.toString().padLeft(2, '0')}";
 
     String clawsToken = _token;
     String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
@@ -217,7 +220,8 @@ class ClawsVendorService extends VendorService {
       return;
     }
 
-    int pendingScrapes = 0;
+    bool isServerDone = false;
+    List<String> pendingScrapes = [];
 
     // Initialize the websocket client.
     _webSocket.listen((message) async {
@@ -282,15 +286,27 @@ class ClawsVendorService extends VendorService {
                 'cookie': cookie,
                 'html': Convert.base64.encode(
                     Convert.utf8.encode(htmlContent.body)
-                )
+                ),
+                'scrapeId': event['scrapeId']
               });
 
               _webSocket.add(message);
-              pendingScrapes++;
+              pendingScrapes.add(event['scrapeId']);
             } catch (ex) {
               print(
                   "An error occurred whilst submitting HTML content to Claws for analysis.");
             }
+            break;
+
+          ///
+          /// Once Claws is finished scraping a source, it sends a 'scrapeEnd'
+          /// event. These can be used to keep track of when the connection to
+          /// the server can be closed.
+          case 'scrapeEnd':
+            pendingScrapes.remove(event['scrapeId']);
+
+            if (pendingScrapes.length == 0 && isServerDone)
+              setStatus(context, VendorServiceStatus.DONE);
             break;
 
           ///
@@ -301,19 +317,10 @@ class ClawsVendorService extends VendorService {
           /// as some metadata about the URL, such as quality information.
           ///
           case 'result':
-            print(event['isResultOfScrape']);
-            if (event['isResultOfScrape']) {
-              pendingScrapes--;
-            }
-
-            if (event['error'] != null) {
-              return;
-            }
-
             var sourceFile = event['file'];
             if (sourceFile == null) return;
             var sourceMeta = event['metadata'];
-            String sourceStreamURL = sourceFile['data'];
+            String sourceStreamURL =  sourceFile['data'];
 
             if (sourceMeta['isStreamable'] != null &&
                 !sourceMeta['isStreamable']) {
@@ -354,9 +361,9 @@ class ClawsVendorService extends VendorService {
             httpClient.close();
 
             if (htmlResponse == null) {
-              print("Request to check $sourceStreamURL timed out.");
-              event['metadata']['ping'] =
-              null; // Making this null, should we choose to allow such requests in future.
+              print("Request to $sourceStreamURL timed out whilst being analyzed.");
+              // Making this null, should we choose to allow such requests in future.
+              event['metadata']['ping'] = null;
               return;
             } else {
               int ping = (new DateTime.now().millisecondsSinceEpoch -
@@ -371,10 +378,6 @@ class ClawsVendorService extends VendorService {
             }
 
             addSource(SourceModel.fromJSON(event));
-
-            if (pendingScrapes < 1) {
-              _doneProcessing();
-            }
             break;
 
           ///
@@ -385,12 +388,13 @@ class ClawsVendorService extends VendorService {
           /// can be sent by the client at any time.
           ///
           case 'done':
+            isServerDone = true;
             print("-- Server done! --");
 
-            if (pendingScrapes < 1
+            if (pendingScrapes.length == 0
                 // (We don't want to call done twice.)
                 && status == VendorServiceStatus.PROCESSING) {
-              _doneProcessing();
+              setStatus(context, VendorServiceStatus.DONE);
             }
             break;
 
@@ -412,8 +416,10 @@ class ClawsVendorService extends VendorService {
     _webSocket.add(data);
   }
 
-  _doneProcessing(){
-    print("-- Client done! --");
+  @override
+  Future<void> done(BuildContext context) async {
+    print("-- All done! --");
+    _webSocket.close();
   }
 
   ///////////////////////////////

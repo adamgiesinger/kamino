@@ -53,7 +53,7 @@ dependencies:
   simple_moment: ^1.0.2
   pool: ^1.4.0
   dots_indicator: ^0.0.3
-  permission_handler: ^2.2.0
+  permission_handler: ^3.0.0
 
 # Compile-only dependencies
 dev_dependencies:

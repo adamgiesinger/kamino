@@ -77,9 +77,9 @@
 
   "make_appname_yours": "עשה את $appName שלך",
   "appearance": "נראות",
-  "customise_the_theme_and_primary_colors": "התאם אישית את ערכת הנושא שלך.",
+  "customize_the_theme_and_primary_colors": "התאם אישית את ערכת הנושא שלך.",
   "launchpad": "דף הבית",
-  "customise_your_launchpad": "התאמה אישית של דף הבית.",
+  "customize_your_launchpad": "התאמה אישית של דף הבית.",
   "boost_your_experience": "הגבר את החוויה שלך",
   "extensions": "תוספות",
   "manage_third_party_integrations": "נהל שילובים של צד שלישי.",

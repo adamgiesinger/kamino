@@ -215,8 +215,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
             width: MediaQuery.of(context).size.width,
             child: ListView(
               children: <Widget>[
-                TitleText(S.of(context).customise_appearance, fontSize: 32),
-                Text(S.of(context).customise_appearance_description(appName), style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+                TitleText(S.of(context).customize_appearance, fontSize: 32),
+                Text(S.of(context).customize_appearance_description(appName), style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 20),
@@ -594,7 +594,13 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
             children: <Widget>[
               FlatButton(
                 onPressed: (){
-                  if(onFirstPage()) Navigator.of(context).pop();
+                  if(onFirstPage()){
+                    Navigator.of(context).pop();
+                    Settings.initialSetupComplete = true;
+
+                    // Perform OTA check now.
+                    if(widget.then != null) widget.then();
+                  }
                   else _controller.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
                 },
                 highlightColor: Colors.transparent,

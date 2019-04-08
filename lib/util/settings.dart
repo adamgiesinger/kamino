@@ -99,7 +99,12 @@ class _Settings {
     "clawsTokenSetTime": $(type: double),
 
     "maxConcurrentRequests": $(type: int, defaultValue: 5),
-    "requestTimeout": $(type: int, defaultValue: 10)
+    "requestTimeout": $(type: int, defaultValue: 10),
+
+    // This is the third party player that should be used.
+    "playerInfo": $(type: List, defaultValue: <String>[]),
+
+    "contentSortSettings": $(type: List, defaultValue: <String>[])
   };
 
   noSuchMethod(Invocation invocation) {

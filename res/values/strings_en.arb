@@ -79,9 +79,9 @@
 
   "make_appname_yours": "MAKE $appName YOURS",
   "appearance": "Appearance",
-  "customise_the_theme_and_primary_colors": "Customise the theme and primary colors.",
+  "customize_the_theme_and_primary_colors": "Customize the theme and primary colors.",
   "launchpad": "Launchpad",
-  "customise_your_launchpad": "Customise your launchpad.",
+  "customize_your_launchpad": "Customize your launchpad.",
   "boost_your_experience": "BOOST YOUR EXPERIENCE",
   "extensions": "Extensions",
   "manage_third_party_integrations": "Manage third party integrations.",
@@ -121,7 +121,7 @@
   "the_default_configuration_has_been_restored": "The default configuration has been restored.",
   "restore_defaults": "Restore Defaults",
 
-  "select_language": "Select Language",
+  "select_language": "Select Language...",
   "language_settings": "Language Settings",
   "take_screenshot_report_apollotv_discord": "Please take a screenshot of this message and contact a member of staff in the ApolloTV Discord server.",
   "an_error_occurred": "An error occurred.",
@@ -132,8 +132,8 @@
   "lets_go": "LET'S GO",
 
   "create_profile": "Create Profile",
-  "customise_appearance": "Customise Appearance",
-  "customise_appearance_description": "$appName is all about customisation. Let's get started by choosing your favorite theme!",
+  "customize_appearance": "Customize Appearance",
+  "customize_appearance_description": "$appName is all about customization. Let's get started by choosing your favorite theme!",
   "choose_n_categoriesOther": "Choose $n categories...",
   "choose_n_categoriesOne": "Choose $n category...",
   "choose_n_categories_description": "Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!",
@@ -155,4 +155,6 @@
   "appname_can_synchronise_your_watch_history_and_favorites_from_trakttv": "$appName can synchronise your watch history and favorites from Trakt.tv...",
   "youre_offline": "You're offline...",
   "appname_failed_to_connect_to_the_internet": "$appName failed to connect to the internet. Please check your connection.",
+  "playback": "Playback",
+  "change_content_playback_settings": "Change content playback settings."
 }

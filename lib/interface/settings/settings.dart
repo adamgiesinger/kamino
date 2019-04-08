@@ -7,6 +7,7 @@ import 'package:flutter_parallax/flutter_parallax.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_advanced.dart';
 import 'package:kamino/interface/settings/page_extensions.dart';
+import 'package:kamino/interface/settings/page_playback.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:kamino/main.dart';
@@ -186,7 +187,7 @@ class _SettingsViewState extends State<SettingsView> {
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
                         title: TitleText(S.of(context).appearance),
-                        subtitle: Text(S.of(context).customise_the_theme_and_primary_colors),
+                        subtitle: Text(S.of(context).customize_the_theme_and_primary_colors),
                         leading: new Icon(Icons.style),
                         onTap: (){
                           Navigator.push(context, FadeRoute(
@@ -196,11 +197,25 @@ class _SettingsViewState extends State<SettingsView> {
                       ),
                     ),
 
+                    Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: ListTile(
+                        title: TitleText(S.of(context).playback),
+                        subtitle: Text(S.of(context).change_content_playback_settings),
+                        leading: new Icon(Icons.play_circle_filled),
+                        onTap: (){
+                          Navigator.push(context, FadeRoute(
+                              builder: (context) => PlaybackSettingsPage(context)
+                          ));
+                        },
+                      ),
+                    ),
+
                     /*Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
                         title: TitleText(S.of(context).launchpad),
-                        subtitle: Text(S.of(context).customise_your_launchpad),
+                        subtitle: Text(S.of(context).customize_your_launchpad),
                         leading: new Icon(const IconData(0xe90F, fontFamily: 'apollotv-icons')),
                         onTap: (){
                           Navigator.push(context, FadeRoute(

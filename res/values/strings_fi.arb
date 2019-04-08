@@ -78,9 +78,9 @@
 
   "make_appname_yours": "Tee oma $appName",
   "appearance": "Ulkoasu",
-  "customise_the_theme_and_primary_colors": "Mukauta teemaa ja päävärejä.",
+  "customize_the_theme_and_primary_colors": "Mukauta teemaa ja päävärejä.",
   "launchpad": "Laukaisualusta",
-  "customise_your_launchpad": "Mukauta aloitussivua.",
+  "customize_your_launchpad": "Mukauta aloitussivua.",
   "boost_your_experience": "BUUSTAA KOKEMUSTASI",
   "extensions": "Lisäosat",
   "manage_third_party_integrations": "Hallitse kolmannen osapuolen integreaatioita.",
@@ -131,8 +131,8 @@
   "lets_go": "ALOITETAAN",
  
   "create_profile": "Luo profiili",
-  "customise_appearance": "Muokkaa ulkoasua",
-  "customise_appearance_description": "$appName is all about customisation. Aloitetaan valitsemalla lempiteemasi!",
+  "customize_appearance": "Muokkaa ulkoasua",
+  "customize_appearance_description": "$appName is all about customisation. Aloitetaan valitsemalla lempiteemasi!",
   "choose_n_categoriesOther": "Valitse $n kategoriaa...",
   "choose_n_categoriesOne": "Valitse $n kategoria...",
   "choose_n_categoriesZero": "Hienoa!"

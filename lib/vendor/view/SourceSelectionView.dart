@@ -5,6 +5,7 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/VendorService.dart';
 
 class SourceSelectionView extends StatefulWidget {
@@ -33,14 +34,26 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
   @override
   void initState() {
+    (() async {
+      List sortingSettings = await Settings.contentSortSettings;
+
+      if(sortingSettings.length == 2) {
+        sortingMethod = sortingSettings[0];
+        sortReversed = sortingSettings[1].toLowerCase() == 'true';
+      }
+      setState(() {});
+    })();
+
     widget.service.addUpdateEvent(() {
       if (mounted) setState(() {});
     });
+
     super.initState();
   }
 
   Future<bool> _handlePop() async {
     widget.service.setStatus(context, VendorServiceStatus.IDLE);
+    Navigator.of(context).pop();
     return false;
   }
 
@@ -72,7 +85,10 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
             ),
             centerTitle: true,
             bottom: PreferredSize(
-                child: (widget.service.status != VendorServiceStatus.DONE)
+                child: (
+                    widget.service.status != VendorServiceStatus.DONE &&
+                    widget.service.status != VendorServiceStatus.IDLE
+                )
                     ? SizedBox(
                   height: SourceSelectionView._kAppBarProgressHeight,
                   child: LinearProgressIndicator(
@@ -138,16 +154,30 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                         ),
                         leading: Icon(Icons.insert_drive_file),
 
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) =>
-                                  CPlayer(
-                                      title: widget.title,
-                                      url: source.file.data,
-                                      mimeType: 'video/mp4'
-                                  ))
-                          );
+                        onTap: () async {
+                          var playerSettings = await Settings.playerInfo;
+
+                          if(playerSettings == null || playerSettings.length != 3) {
+                            // Use CPlayer
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) =>
+                                    CPlayer(
+                                        title: widget.title,
+                                        url: source.file.data,
+                                        mimeType: 'video/mp4'
+                                    ))
+                            );
+                          }else{
+                            // Launch external player
+                            MethodChannel playerChannel = const MethodChannel('xyz.apollotv.kamino/playThirdParty');
+                            playerChannel.invokeMethod('play', <String, dynamic>{
+                              'activityPackage': playerSettings[1].toString(),
+                              'activityName': playerSettings[0].toString(),
+                              'videoTitle': widget.title.toString(),
+                              'videoURL': source.file.data.toString()
+                            });
+                          }
                         },
                         onLongPress: () {
                           Clipboard.setData(
@@ -342,6 +372,11 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                 padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 onPressed: (){
+                  (() async {
+                    List sortingSettings = [sortingMethod, sortReversed.toString()];
+                    await (Settings.contentSortSettings = sortingSettings);
+                    setState(() {});
+                  })();
                   Navigator.of(context).pop([sortingMethod, sortReversed]);
                 },
                 child: Text("Done"),
