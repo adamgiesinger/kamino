@@ -26,7 +26,7 @@ addons:
       - fonts-droid
       - curl
 before_script:
-  - ./.travis/prebuild.sh
+  - ./.travis/prebuild.sh $WEBHOOK_URL
   - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
   - unzip -qq gradle-3.5-bin.zip
   - export ANDROID_HOME=`pwd`/android-sdk
