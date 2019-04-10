@@ -5,6 +5,7 @@ licenses:
   - 'android-sdk-preview-license-.+'
   - 'android-sdk-license-.+'
   - 'google-gdk-license-.+'
+
 android:
   components:
     - tools
@@ -24,29 +25,34 @@ addons:
     sources:
       - ubuntu-toolchain-r-test # if we don't specify this, the libstdc++6 we get is the wrong version
     packages:
+      - lib32stdc++6 # https://github.com/flutter/flutter/issues/6207
       - libstdc++6
       - fonts-droid
       - curl
+
 before_script:
   # Execute ApolloTV prebuild webhook.
   - ./.travis/prebuild.sh $WEBHOOK_URL
   # Setup gradle.
   - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
   - unzip -qq gradle-3.5-bin.zip
-  # Set SDK and PATH variables.
-  - export ANDROID_HOME=$PWD/android-sdk
-  - export GRADLE_HOME=$PWD/gradle-3.5
-  - export PATH=$GRADLE_HOME/bin:$ANDROID_HOME:$PATH
+  - export GRADLE_HOME=`pwd`/gradle-3.5
+  - export PATH=$GRADLE_HOME/bin:$PATH
+  # Setup Android SDK tools.
+  - wget https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
+  - mkdir android-sdk
+  - unzip -qq sdk-tools-linux-3859397.zip -d android-sdk
+  - export ANDROID_HOME=`pwd`/android-sdk
+  - export ANDROID_SDK_ROOT=`pwd`/android-sdk
+  - export PATH=`pwd`/android-sdk/tools/bin:$PATH
   # Clone Flutter
   - git clone https://github.com/flutter/flutter.git -b beta --depth 1
+  - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+
 script:
-  # Set SDK and PATH variables.
-  - export ANDROID_HOME=$PWD/android-sdk
-  - export GRADLE_HOME=$PWD/gradle-3.5
-  - export PATH=$GRADLE_HOME/bin:$ANDROID_HOME:$PATH
-  - export ANDROID_SDK_ROOT=$PWD/android-sdk
   # Run Flutter build
   - ./flutter/bin/flutter -v build apk
+
 after_success:
   - ./.travis/postbuild.sh success $WEBHOOK_URL
 after_failure:
