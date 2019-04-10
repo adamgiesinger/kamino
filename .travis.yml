@@ -1,8 +1,8 @@
 os: linux
 
 env:
-  - JOB_NAME="Kamino (Android)"
-  - global:
+  global:
+    - JOB_NAME="Kamino (Android)"
     - ANDROID_SDK_ROOT=/opt/android
 
 jdk: oraclejdk8
