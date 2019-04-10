@@ -7,11 +7,6 @@ COMMITTER_NAME="$(git log -1 "$TRAVIS_COMMIT" --pretty="%cN")"
 COMMIT_SUBJECT="$(git log -1 "$TRAVIS_COMMIT" --pretty="%s")"
 COMMIT_MESSAGE="$(git log -1 "$TRAVIS_COMMIT" --pretty="%b")"
 
-AUTHOR_NAME="$(git log -1 "$TRAVIS_COMMIT" --pretty="%aN")"
-COMMITTER_NAME="$(git log -1 "$TRAVIS_COMMIT" --pretty="%cN")"
-COMMIT_SUBJECT="$(git log -1 "$TRAVIS_COMMIT" --pretty="%s")"
-COMMIT_MESSAGE="$(git log -1 "$TRAVIS_COMMIT" --pretty="%b")"
-
 TIMESTAMP=$(date --utc +%FT%TZ)
 
 if [ "$status" = "success" ]; then
@@ -22,8 +17,6 @@ elif [ "$status" = "failure" ]; then
     STATUS_MESSAGE="Failed"
 fi
 
-
-
 WEBHOOK_DATA='{
   "username": "ApolloTV (Travis)",
   "embeds": [ {
@@ -31,7 +24,6 @@ WEBHOOK_DATA='{
     "author": {
       "name": "Job #'"$TRAVIS_JOB_NUMBER"' (Build #'"$TRAVIS_BUILD_NUMBER"') '"$STATUS_MESSAGE"' - '"$TRAVIS_REPO_SLUG"'",
       "url": "'"$TRAVIS_BUILD_WEB_URL"'",
-      "icon_url": "'$AVATAR'"
     },
     "title": "'"$COMMIT_SUBJECT"'",
     "url": "'"$URL"'",
