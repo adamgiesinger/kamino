@@ -43,7 +43,5 @@ WEBHOOK_DATA='{
   } ]
 }'
 
-echo $WEBHOOK_DATA
-
 (curl --fail --progress-bar -H Content-Type:application/json -d "$WEBHOOK_DATA" "$2" \
 && echo -e "\\n[Webhook]: Successfully sent the webhook.") || echo -e "\\n[Webhook]: Unable to send webhook."
