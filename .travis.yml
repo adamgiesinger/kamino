@@ -24,16 +24,21 @@ addons:
     packages:
       - libstdc++6
       - fonts-droid
+      - curl
 before_script:
   - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
   - unzip -qq gradle-3.5-bin.zip
   - export ANDROID_HOME=`pwd`/android-sdk
   - export ANDROID_SDK_ROOT=`pwd`/android-sdk
   - export GRADLE_HOME=$PWD/gradle-3.5
-  - export PATH=$GRADLE_HOME/bin:$PATH
+  - export PATH=$GRADLE_HOME/bin:$ANDROID_HOME:$PATH
   - git clone https://github.com/flutter/flutter.git -b beta
 script:
   - ./flutter/bin/flutter -v build apk
+after_success:
+  - ./.travis/postbuild.sh success $WEBHOOK_URL
+after_failure:
+  - ./.travis/postbuild.sh failure $WEBHOOK_URL
 
 cache:
   directories:
