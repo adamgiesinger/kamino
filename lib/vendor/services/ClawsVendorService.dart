@@ -317,6 +317,7 @@ class ClawsVendorService extends VendorService {
           /// as some metadata about the URL, such as quality information.
           ///
           case 'result':
+            print('result recieved: ${event["file"]["data"]}');
             var sourceFile = event['file'];
             if (sourceFile == null) return;
             var sourceMeta = event['metadata'];

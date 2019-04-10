@@ -117,7 +117,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
                     Padding(
                         padding: EdgeInsets.only(bottom: 5.0, left: 5.0, right: 5.0),
                         child: TitleText(
-                            '${episode["season_number"]}x${episode["episode_number"]} \u2022 $airDate',
+                            'S${episode["season_number"].toString().padLeft(2, '0')} E${episode["episode_number"].toString().padLeft(2, '0')} \u2022 $airDate',
 
                             fontSize: 18,
                             allowOverflow: true,

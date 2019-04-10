@@ -97,13 +97,13 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: TitleText("Dismiss", textColor: Theme.of(context).primaryTextTheme.body1.color)
+                  child: TitleText(S.of(context).dismiss, textColor: Theme.of(context).primaryTextTheme.body1.color)
                 ),
               ),
               Center(
                 child: FlatButton(
                   onPressed: () => runInstallProcedure(context, data),
-                  child: TitleText("Install", textColor: Theme.of(context).primaryTextTheme.body1.color)
+                  child: TitleText(S.of(context).install, textColor: Theme.of(context).primaryTextTheme.body1.color)
                 ),
               )
             ],
@@ -112,7 +112,7 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
         });
   } else {
     if (dismissSnackbar == false) {
-      Interface.showSnackbar('You have the latest version.', context: context);
+      Interface.showSnackbar(S.of(context).up_to_date, context: context);
     }
   }
 }
