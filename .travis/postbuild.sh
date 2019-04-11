@@ -1,11 +1,6 @@
 #!/bin/bash
 STATUS="$1"
 
-AUTHOR_NAME="$(git log -1 "$TRAVIS_COMMIT" --pretty="%aN")"
-COMMITTER_NAME="$(git log -1 "$TRAVIS_COMMIT" --pretty="%cN")"
-COMMIT_SUBJECT="$(git log -1 "$TRAVIS_COMMIT" --pretty="%s")"
-COMMIT_MESSAGE="$(git log -1 "$TRAVIS_COMMIT" --pretty="%b")"
-
 TIMESTAMP=$(date -u +%FT%TZ)
 
 if [ "$STATUS" = "success" ]; then
