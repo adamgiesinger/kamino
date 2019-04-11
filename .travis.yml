@@ -44,7 +44,7 @@ before_script:
   - git clone https://github.com/flutter/flutter.git -b beta --depth 1
   - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
   - mkdir -p `pwd`/lib/vendor/dist/
-  - ./generateVendorConfig.sh $TMDB_KEY $TRAKT_ID $TRAKT_SECRET https://beta.apollotv.xyz/ $CLAWS_KEY_BETA > `pwd`/lib/vendor/dist/OfficialVendorConfiguration.dart
+  - ./.travis/generateVendorConfig.sh $TMDB_KEY $TRAKT_ID $TRAKT_SECRET https://beta.apollotv.xyz/ $CLAWS_KEY_BETA > `pwd`/lib/vendor/dist/OfficialVendorConfiguration.dart
 
 script:
   # Run Flutter build
