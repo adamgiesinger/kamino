@@ -13,12 +13,12 @@ cat <<____HERE
 import 'package:kamino/vendor/services/ClawsVendorService.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
 
-class EDMoviesVendorConfiguration extends VendorConfiguration {
+class OfficialVendorConfiguration extends VendorConfiguration {
 
-  EDMoviesVendorConfiguration() : super(
+  OfficialVendorConfiguration() : super(
       /// The name of the vendor. If you are developing this independently,
       /// use your GitHub name.
-      name: "EDMovies",
+      name: "Official (Automated)",
 
       /// If you are using Claws, this is a [ClawsVendorService],
       /// including the port, protocol and trailing slash.
