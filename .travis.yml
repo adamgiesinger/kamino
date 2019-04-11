@@ -1,5 +1,7 @@
 os: linux
 language: ruby
+rvm:
+  - 2.6
 
 env:
   global:
@@ -58,7 +60,7 @@ after_success:
   - export COMMIT_SUBJECT=`git log -1 "$TRAVIS_COMMIT" --pretty="%s"`
   - export COMMIT_MESSAGE=`git log -1 "$TRAVIS_COMMIT" --pretty="%b"`
   # Upload to WeTransfer
-  - gem install wetransfer
+  - gem install wetransfer -v '0.9.0.beta2'
   - export BUILD_OUTPUT_URL=`ruby ./.travis/upload/runUpload.rb`
   # Post in chat
   - ./.travis/postbuild.sh success $WEBHOOK_URL $BUILD_OUTPUT_URL

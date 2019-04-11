@@ -1,4 +1,4 @@
-require 'we_transfer_client'
+require 'we_transfer'
 
 jobName = ENV.fetch("TRAVIS_JOB_NUMBER")
 buildName = ENV.fetch("TRAVIS_BUILD_NUMBER")
