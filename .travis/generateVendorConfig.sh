@@ -4,6 +4,7 @@ TRAKT_ID="$2"
 TRAKT_SECRET="$3"
 CLAWS_SERVER_BETA="$4"
 CLAWS_KEY_BETA="$5"
+VENDOR_NAME="$6"
 
 cat <<____HERE
 /*
@@ -18,7 +19,7 @@ class OfficialVendorConfiguration extends VendorConfiguration {
   OfficialVendorConfiguration() : super(
       /// The name of the vendor. If you are developing this independently,
       /// use your GitHub name.
-      name: "Official (Automated)",
+      name: "`echo $VENDOR_NAME`",
 
       /// If you are using Claws, this is a [ClawsVendorService],
       /// including the port, protocol and trailing slash.
