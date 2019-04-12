@@ -2,7 +2,7 @@
 TMDB_KEY="$1"
 TRAKT_ID="$2"
 TRAKT_SECRET="$3"
-CLAWS_SERVER_BETA="$4"
+CLAWS_URL_BETA="$4"
 CLAWS_KEY_BETA="$5"
 VENDOR_NAME="$6"
 
@@ -25,7 +25,7 @@ class OfficialVendorConfiguration extends VendorConfiguration {
       /// including the port, protocol and trailing slash.
       /// For example: https://claws.edmovies.com/
       service: ClawsVendorService(
-          server: "http://beta.apollotv.xyz/",
+          server: "`echo $CLAWS_URL_BETA`",
 
           // This is the key you set on the server.
           // It should be 32 characters long.

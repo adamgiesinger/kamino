@@ -49,7 +49,7 @@ before_script:
   - mkdir -p `pwd`/lib/vendor/dist/
   # Inject build configuration
   - yes | cp -rf ./android/app/build.gradle.debug ./android/app/build.gradle
-  - ./.travis/generateVendorConfig.sh $TMDB_KEY $TRAKT_ID $TRAKT_SECRET https://beta.apollotv.xyz/ $CLAWS_KEY_BETA $VENDOR_NAME > `pwd`/lib/vendor/dist/OfficialVendorConfiguration.dart
+  - ./.travis/generateVendorConfig.sh $TMDB_KEY $TRAKT_ID $TRAKT_SECRET $CLAWS_URL_BETA $CLAWS_KEY_BETA $VENDOR_NAME > `pwd`/lib/vendor/dist/OfficialVendorConfiguration.dart
 
 script:
   # Run Flutter build
