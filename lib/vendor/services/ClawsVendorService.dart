@@ -99,6 +99,8 @@ class ClawsVendorService extends VendorService {
     }else{
       var clawsClientHash;
 
+      print(clawsKey);
+
       try {
         clawsClientHash = await _generateClawsHash(clawsKey, now).timeout(
             Duration(seconds: 5),
