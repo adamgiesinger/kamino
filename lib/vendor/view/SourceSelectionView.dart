@@ -145,8 +145,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
                         title: TitleText(
                             (qualityInfo != null ? qualityInfo + " • " : "") +
-                                "${source.metadata.source} (${source.metadata
-                                    .provider}) • ${source.metadata.ping}ms"),
+                                "${source.metadata.provider} (${source.metadata
+                                    .source}) • ${source.metadata.ping}ms"),
                         subtitle: Text(
                           source.file.data,
                           maxLines: 2,
