@@ -170,7 +170,7 @@ class ClawsVendorService extends VendorService {
     String data = '{"type": "movies", "title": "$title", "year": "$year"}';
 
     if(!await authenticate(context)) return;
-    _beginProcessing(context, endpointURL, data, title);
+    _beginProcessing(context, endpointURL, data, title, displayTitle: title);
   }
 
   @override
@@ -195,8 +195,8 @@ class ClawsVendorService extends VendorService {
   ///
   _beginProcessing(BuildContext context, String url, String data, String title, { String displayTitle }) async {
     // Prepare to process the information.
-    this.setStatus(context, VendorServiceStatus.PROCESSING, title: displayTitle);
     if(displayTitle == null) displayTitle = title;
+    this.setStatus(context, VendorServiceStatus.PROCESSING, title: displayTitle);
 
     // Connect to the websocket server...
     try {
