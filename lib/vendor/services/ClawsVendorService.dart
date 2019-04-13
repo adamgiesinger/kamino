@@ -85,10 +85,10 @@ class ClawsVendorService extends VendorService {
     String token = await Settings.clawsToken;
     double tokenSetTime = await Settings.clawsTokenSetTime;
 
-    DateTime now = await NTP.now();
+    var now = await getNTPTime();
     if(!FORCE_TOKEN_REGENERATION
         && token != null
-        && (tokenSetTime + 3600) >= (now.millisecondsSinceEpoch / 1000).floor()
+        && (tokenSetTime + 3600) >= now
     ){
       print("Attempting to re-use token...");
 
@@ -427,7 +427,13 @@ class ClawsVendorService extends VendorService {
   /// CLAWS UTILITY FUNCTIONS ///
   ///////////////////////////////
 
-  Future<String> _generateClawsHash(String clawsClientKey, DateTime now) async {
+  Future<int> getNTPTime() async {
+    var ntpResponse = await
+      Convert.jsonDecode((await get("https://beta.apollotv.xyz/api/v1/ntp")).body);
+    return ntpResponse['now'];
+  }
+
+  Future<String> _generateClawsHash(String clawsClientKey, int now) async {
     final randGen = Random.secure();
 
     Uint8List ivBytes = Uint8List.fromList(new List.generate(8, (_) => randGen.nextInt(128)));
@@ -436,8 +442,7 @@ class ClawsVendorService extends VendorService {
 
     final key = clawsClientKey.substring(0, 32);
     final encrypter = new Encrypter(new Salsa20(key, iv));
-    num time = (now.millisecondsSinceEpoch / 1000).floor();
-    final plainText = "$time|$clawsClientKey";
+    final plainText = "$now|$clawsClientKey";
     final encryptedText = encrypter.encrypt(plainText);
 
     return "$ivHex|$encryptedText";
