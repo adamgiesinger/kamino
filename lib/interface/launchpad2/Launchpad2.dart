@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/interface/content/overview.dart';
-import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/content_card.dart';
 import 'package:kamino/ui/elements.dart';
@@ -104,9 +103,9 @@ class Launchpad2State extends State<Launchpad2> {
                       child: ScrollConfiguration(
                           behavior: EmptyScrollBehaviour(),
                           child: CarouselSlider(
-                              autoPlay: true,
+                              /* autoPlay: true,
                               autoPlayInterval: Duration(seconds: 20),
-                              autoPlayAnimationDuration: Duration(milliseconds: 1400),
+                              autoPlayAnimationDuration: Duration(milliseconds: 1400), */
                               enlargeCenterPage: true,
                               height: 200,
                               items: List.generate(_topPicksList.length, (int index){
