@@ -367,6 +367,11 @@ class ClawsVendorService extends VendorService {
               event['metadata']['ping'] = null;
               return;
             } else {
+              if (htmlResponse.redirects.length > 0){
+                event['file']['data'] = htmlResponse.redirects.last.location
+                    .toString();
+              }
+
               int ping = (new DateTime.now().millisecondsSinceEpoch -
                   preRequest);
               if (htmlResponse.statusCode >= 400) {
