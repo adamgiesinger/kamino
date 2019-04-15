@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/models/content.dart';
+import 'package:kamino/partials/carousel.dart';
 import 'package:kamino/partials/content_card.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
@@ -103,9 +103,10 @@ class Launchpad2State extends State<Launchpad2> {
                       child: ScrollConfiguration(
                           behavior: EmptyScrollBehaviour(),
                           child: CarouselSlider(
-                              /* autoPlay: true,
+                              autoPlay: true,
                               autoPlayInterval: Duration(seconds: 20),
-                              autoPlayAnimationDuration: Duration(milliseconds: 1400), */
+                              autoPlayAnimationDuration: Duration(milliseconds: 1400),
+                              pauseAutoPlayOnTouch: Duration(seconds: 1),
                               enlargeCenterPage: true,
                               height: 200,
                               items: List.generate(_topPicksList.length, (int index){
@@ -113,7 +114,7 @@ class Launchpad2State extends State<Launchpad2> {
                                   var content = _topPicksList[index];
 
                                   return Container(
-                                    child: ContentCard(content),
+                                    child: ContentCard(content, keepAlive: true),
                                     margin: EdgeInsets.symmetric(horizontal: 5),
                                     padding: EdgeInsets.symmetric(vertical: 10),
                                   );

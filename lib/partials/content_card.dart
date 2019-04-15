@@ -8,13 +8,21 @@ import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
 
-class ContentCard extends StatelessWidget {
+class ContentCard extends StatefulWidget {
 
-  ContentModel model;
-  double width;
-  double height;
+  final ContentModel model;
+  final double width;
+  final double height;
+  final bool keepAlive;
 
-  ContentCard(this.model, {this.width, this.height});
+  ContentCard(this.model, {this.width, this.height, this.keepAlive = false});
+
+  @override
+  State<StatefulWidget> createState() => ContentCardState();
+
+}
+
+class ContentCardState extends State<ContentCard> with AutomaticKeepAliveClientMixin<ContentCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +33,8 @@ class ContentCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
 
       child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
-        var height = this.height != null ? this.height : constraints.heightConstraints().maxHeight;
-        var width = this.width != null ? this.width : constraints.widthConstraints().maxWidth;
+        var height = widget.height != null ? widget.height : constraints.heightConstraints().maxHeight;
+        var width = widget.width != null ? widget.width : constraints.widthConstraints().maxWidth;
 
         return Stack(
           fit: StackFit.expand,
@@ -36,7 +44,7 @@ class ContentCard extends StatelessWidget {
                 direction: AxisDirection.right,
                 mainAxisExtent: height,
                 child: CachedNetworkImage(
-                  imageUrl: TMDB.IMAGE_CDN + model.backdropPath,
+                  imageUrl: TMDB.IMAGE_CDN + widget.model.backdropPath,
                   fit: BoxFit.cover,
                   placeholder: Container(color: Colors.black, width: width, height: height),
                   height: height,
@@ -55,9 +63,9 @@ class ContentCard extends StatelessWidget {
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: AutoSizeText(model.title, style: TextStyle(fontSize: 25.0, color: Colors.white), maxFontSize: 25.0, maxLines: 1, textAlign: TextAlign.center, overflow: TextOverflow.ellipsis)
+                    child: AutoSizeText(widget.model.title, style: TextStyle(fontSize: 25.0, color: Colors.white), maxFontSize: 25.0, maxLines: 1, textAlign: TextAlign.center, overflow: TextOverflow.ellipsis)
                 ),
-                Text(DateFormat.y("en_US").format(DateTime.parse(model.releaseDate)), style: TextStyle(fontSize: 16, color: Colors.white))
+                Text(DateFormat.y("en_US").format(DateTime.parse(widget.model.releaseDate)), style: TextStyle(fontSize: 16, color: Colors.white))
               ],
             ),
 
@@ -65,7 +73,7 @@ class ContentCard extends StatelessWidget {
               right: 20,
               bottom: 20,
               child: new Icon(
-                (model is MovieContentModel) ? Icons.local_movies : Icons.live_tv,
+                (widget.model is MovieContentModel) ? Icons.local_movies : Icons.live_tv,
                 color: Colors.white,
               ),
             ),
@@ -76,8 +84,8 @@ class ContentCard extends StatelessWidget {
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(
                       builder: (context) => ContentOverview(
-                        contentId: model.id,
-                        contentType: (model is MovieContentModel) ? ContentType.MOVIE : ContentType.TV_SHOW,
+                        contentId: widget.model.id,
+                        contentType: (widget.model is MovieContentModel) ? ContentType.MOVIE : ContentType.TV_SHOW,
                       )
                   ));
                 },
@@ -88,5 +96,8 @@ class ContentCard extends StatelessWidget {
       }),
     );
   }
+
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
 
 }
