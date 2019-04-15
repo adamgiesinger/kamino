@@ -376,15 +376,14 @@ class KaminoAppHome extends StatefulWidget {
 
 }
 
-class KaminoAppHomePages {
-  static const int PAGE_HOME = 0;
-  static const int PAGE_TV_SHOWS = 1;
-  static const int PAGE_MOVIES = 2;
-  static const int PAGE_FAVORITES = 3;
-}
+class KaminoAppHomeState extends State<KaminoAppHome> {
 
-class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderStateMixin {
-
+  final _pages = [
+    Launchpad2(),
+    Container(child: Text("TV Shows")),
+    Container(child: Text("Movies")),
+    FavoritesPage()
+  ];
   int _activePage;
 
   Future<bool> _onWillPop() async {
@@ -394,7 +393,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
 
   @override
   void initState() {
-    _activePage = KaminoAppHomePages.PAGE_HOME;
+    _activePage = 0;
     
     (() async {
 
@@ -496,7 +495,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
         ),
 
           // Body content
-        body: _getActivePage(_activePage),
+        body: _pages.elementAt(_activePage),
 
         bottomNavigationBar: BottomNavigationBar(
           elevation: 0,
@@ -539,21 +538,6 @@ class KaminoAppHomeState extends State<KaminoAppHome> with SingleTickerProviderS
         ),
       )
     );
-  }
-
-  _getActivePage(int _activePage){
-    switch(_activePage){
-      case KaminoAppHomePages.PAGE_TV_SHOWS:
-        return Container(child: Text("TV Shows"));
-      case KaminoAppHomePages.PAGE_MOVIES:
-        return Container(child: Text("Movies"));
-      case KaminoAppHomePages.PAGE_FAVORITES:
-        return FavoritesPage();
-      case KaminoAppHomePages.PAGE_HOME:
-      default:
-        return Launchpad2();
-    }
-
   }
 
 }

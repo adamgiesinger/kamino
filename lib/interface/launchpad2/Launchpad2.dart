@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
@@ -19,10 +20,9 @@ class Launchpad2 extends StatefulWidget {
 
 }
 
-class Launchpad2State extends State<Launchpad2> {
+class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMixin<Launchpad2> {
 
-  //final AsyncMemoizer<List<ContentModel>> _topBannerMemoizer = AsyncMemoizer();
-  //final AsyncMemoizer<List<ContentModel>> _continueWatchingMemoizer = AsyncMemoizer();
+  AsyncMemoizer _memoizer = new AsyncMemoizer();
 
   List<ContentModel> _topPicksList = List();
   List<ContentModel> _continueWatchingList;
@@ -33,6 +33,8 @@ class Launchpad2State extends State<Launchpad2> {
     if(await Trakt.isAuthenticated()) {
       _continueWatchingList = await Trakt.getWatchHistory(context);
     }
+    
+    updateKeepAlive();
   }
 
   @override
@@ -43,7 +45,7 @@ class Launchpad2State extends State<Launchpad2> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: load(),
+      future: _memoizer.runOnce(load),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.connectionState == ConnectionState.none || snapshot.hasError){
           if(snapshot.error is SocketException
@@ -140,54 +142,54 @@ class Launchpad2State extends State<Launchpad2> {
                         Container(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: _continueWatchingList.length,
-                            itemBuilder: (BuildContext context, int index){
-                              return GestureDetector(
-                                onTap: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ContentOverview(
-                                        contentId: _continueWatchingList[index].id,
-                                        contentType: _continueWatchingList[index].contentType
-                                      )
-                                    )
-                                  );
-                                },
-                                child: Card(
-                                  clipBehavior: Clip.antiAlias,
-                                  color: Theme.of(context).cardColor,
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: CachedNetworkImage(
-                                          imageUrl: TMDB.IMAGE_CDN + _continueWatchingList[index].posterPath,
-                                          height: 92,
-                                          width: 46,
-                                        ),
-                                        title: TitleText(_continueWatchingList[index].title),
-                                        subtitle: Text("${(_continueWatchingList[index].progress * 100).round()}% watched \u2022 ${DateTime.parse(_continueWatchingList[index].lastWatched).isAfter(DateTime.now()) ? "watching now" : Moment.now().from(DateTime.parse(_continueWatchingList[index].lastWatched))}"),
-                                      ),
-
-                                      SizedBox(
-                                        height: 4,
-                                        width: double.infinity,
-                                        child: LinearProgressIndicator(
-                                            value: _continueWatchingList[index].progress,
-                                            backgroundColor: const Color(0x22000000),
-                                            valueColor: AlwaysStoppedAnimation<Color>(
-                                                Theme.of(context).primaryColor
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: _continueWatchingList.length,
+                              itemBuilder: (BuildContext context, int index){
+                                return GestureDetector(
+                                  onTap: (){
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ContentOverview(
+                                                contentId: _continueWatchingList[index].id,
+                                                contentType: _continueWatchingList[index].contentType
                                             )
+                                        )
+                                    );
+                                  },
+                                  child: Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    color: Theme.of(context).cardColor,
+                                    child: Column(
+                                      children: <Widget>[
+                                        ListTile(
+                                          leading: CachedNetworkImage(
+                                            imageUrl: TMDB.IMAGE_CDN + _continueWatchingList[index].posterPath,
+                                            height: 92,
+                                            width: 46,
+                                          ),
+                                          title: TitleText(_continueWatchingList[index].title),
+                                          subtitle: Text("${(_continueWatchingList[index].progress * 100).round()}% watched \u2022 ${DateTime.parse(_continueWatchingList[index].lastWatched).isAfter(DateTime.now()) ? "watching now" : Moment.now().from(DateTime.parse(_continueWatchingList[index].lastWatched))}"),
                                         ),
-                                      )
-                                    ],
+
+                                        SizedBox(
+                                          height: 4,
+                                          width: double.infinity,
+                                          child: LinearProgressIndicator(
+                                              value: _continueWatchingList[index].progress,
+                                              backgroundColor: const Color(0x22000000),
+                                              valueColor: AlwaysStoppedAnimation<Color>(
+                                                  Theme.of(context).primaryColor
+                                              )
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            }
+                                );
+                              }
                           ),
                         )
                       ],
@@ -202,5 +204,8 @@ class Launchpad2State extends State<Launchpad2> {
       }
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
 }
