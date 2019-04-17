@@ -13,6 +13,7 @@ cat <<____HERE
 
 import 'package:kamino/vendor/services/ClawsVendorService.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
+import 'package:kamino/vendor/struct/VendorService.dart';
 
 class OfficialVendorConfiguration extends VendorConfiguration {
 
