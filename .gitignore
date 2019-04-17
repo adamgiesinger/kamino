@@ -85,7 +85,8 @@ fabric.properties
 
 # Vendor Configuration
 lib/vendor/.git
-lib/vendor/dist/
+lib/vendor/dist/*
+!lib/vendor/dist/ShimVendorConfiguration.dart
 lib/database_backup.zip
 
 # Android

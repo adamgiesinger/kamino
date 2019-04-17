@@ -56,9 +56,9 @@ class MovieLayout {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0)
                       ),
-                      onPressed: (){
-                        KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                        appState.getVendorConfigs()[0].service.playMovie(
+                      onPressed: () async {
+                        KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                        (await application.getPrimaryVendorService()).playMovie(
                             model.title,
                             model.releaseDate,
                             context

@@ -18,7 +18,7 @@ class Trakt {
       HttpHeaders.authorizationHeader: 'Bearer ${traktCredentials[0]}',
       HttpHeaders.contentTypeHeader: 'application/json',
       'trakt-api-version': '2',
-      'trakt-api-key': appState.getVendorConfigs()[0].getTraktCredentials().id
+      'trakt-api-key': appState.getPrimaryVendorConfig().getTraktCredentials().id
     };
   }
 
@@ -41,7 +41,7 @@ class Trakt {
         if(entry["type"] == 'episode'){
           if(progressData.where((_entry) => _entry.id == entry["show"]["ids"]["tmdb"]).length > 0) continue;
 
-          var content = await TMDB.getContentInfo(ContentType.TV_SHOW, entry["show"]["ids"]["tmdb"].toString());
+          var content = await TMDB.getContentInfo(context, ContentType.TV_SHOW, entry["show"]["ids"]["tmdb"].toString());
 
           var progressResponse = jsonDecode((await http.get("https://api.trakt.tv/shows/${entry["show"]["ids"]["trakt"].toString()}/progress/watched", headers: headers)).body);
           content.progress = (double.parse(progressResponse["completed"].toString()) / double.parse(progressResponse["aired"].toString()));

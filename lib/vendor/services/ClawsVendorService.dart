@@ -317,15 +317,18 @@ class ClawsVendorService extends VendorService {
           /// as some metadata about the URL, such as quality information.
           ///
           case 'result':
-            print('result recieved: ${event["file"]["data"]}');
             var sourceFile = event['file'];
-            if (sourceFile == null) return;
+            if (sourceFile == null){
+              print("No file provided (event['file']), therefore discarding. (${Convert.jsonEncode(event)})");
+              return;
+            }
+
             var sourceMeta = event['metadata'];
             String sourceStreamURL =  sourceFile['data'];
 
             if (sourceMeta['isStreamable'] != null &&
                 !sourceMeta['isStreamable']) {
-              print("Link is not streamable.");
+              print("Link is not streamable, therefore discarding. ($sourceStreamURL)");
               return;
             }
 

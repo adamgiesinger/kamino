@@ -24,14 +24,14 @@ class SmartSearch extends SearchDelegate<String> {
     (Settings.detailedContentInfoEnabled as Future).then((data) => _expandedSearchPref = data);
   }
 
-  Future<List<SearchModel>> _fetchSearchList(String criteria) async {
+  Future<List<SearchModel>> _fetchSearchList(BuildContext context, String criteria) async {
 
     Future.delayed(new Duration(milliseconds: 500));
 
     List<SearchModel> _data = [];
 
     String url = "${TMDB.ROOT_URL}/search/"
-        "multi${TMDB.defaultArguments}&"
+        "multi${TMDB.getDefaultArguments(context)}&"
         "query=$criteria&page=1&include_adult=false";
 
     http.Response res = await http.get(url);
@@ -250,7 +250,7 @@ class SmartSearch extends SearchDelegate<String> {
     return query.isEmpty
         ? _buildSearchHistory()
         : FutureBuilder<List<SearchModel>>(
-            future: _fetchSearchList(query), // a previously-obtained Future<String> or null
+            future: _fetchSearchList(context, query), // a previously-obtained Future<String> or null
             builder: (BuildContext context,
                 AsyncSnapshot<List<SearchModel>> snapshot) {
               switch (snapshot.connectionState) {

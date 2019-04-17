@@ -149,7 +149,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   Future<ContentModel> loadDataAsync() async {
     // Load trailer
     http.Response videosRawResponse = await http.get(
-      "${TMDB.ROOT_URL}/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/videos${TMDB.defaultArguments}"
+      "${TMDB.ROOT_URL}/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/videos${TMDB.getDefaultArguments(context)}"
     );
     List<dynamic> videos = Convert.jsonDecode(videosRawResponse.body)['results'];
     if(videos != null && videos.isNotEmpty && videos.where((video) => video['type'] == 'Trailer').length > 0) {
@@ -159,7 +159,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
     // Load cast & crew
     var castCrewResponse = Convert.jsonDecode((await http.get(
-      "${TMDB.ROOT_URL}/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/credits${TMDB.defaultArguments}"
+      "${TMDB.ROOT_URL}/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/credits${TMDB.getDefaultArguments(context)}"
     )).body);
     cast = castCrewResponse["cast"] != null ? castCrewResponse["cast"] : [];
     crew = castCrewResponse["crew"] != null ? castCrewResponse["crew"] : [];
@@ -168,13 +168,13 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Get the data from the server.
       http.Response response = await http.get(
-        "${TMDB.ROOT_URL}/movie/${widget.contentId}${TMDB.defaultArguments}"
+        "${TMDB.ROOT_URL}/movie/${widget.contentId}${TMDB.getDefaultArguments(context)}"
       );
       String json = response.body;
 
       // Get the recommendations data from the server.
       http.Response recommendedDataResponse = await http.get(
-        "${TMDB.ROOT_URL}/movie/${widget.contentId}/similar${TMDB.defaultArguments}&page=1"
+        "${TMDB.ROOT_URL}/movie/${widget.contentId}/similar${TMDB.getDefaultArguments(context)}&page=1"
       );
       String recommended = recommendedDataResponse.body;
 
@@ -188,7 +188,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       // Get the data from the server.
       http.Response response = await http.get(
-          "${TMDB.ROOT_URL}/tv/${widget.contentId}${TMDB.defaultArguments}"
+          "${TMDB.ROOT_URL}/tv/${widget.contentId}${TMDB.getDefaultArguments(context)}"
       );
       String json = response.body;
 

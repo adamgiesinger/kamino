@@ -35,8 +35,4 @@ class ApolloVendor {
     ];
   }
 
-  static String getTMDBKey(){
-    return getVendorConfigs()[0].getTMDBKey();
-  }
-
 }

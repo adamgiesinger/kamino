@@ -12,8 +12,10 @@ import 'package:kamino/skyspace/skyspace.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
+import 'package:kamino/vendor/dist/ShimVendorConfiguration.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
+import 'package:kamino/vendor/struct/VendorService.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -310,8 +312,23 @@ class KaminoAppState extends State<KaminoApp> {
     );
   }
 
-  List<VendorConfiguration> getVendorConfigs(){
-    return _vendorConfigs;
+  Future<VendorService> getPrimaryVendorService({ bool excludeShim = false }) async {
+    bool shimEnabled = await Settings.serverURLOverride != null &&
+      await Settings.serverKeyOverride != null;
+
+    if(!excludeShim && shimEnabled){
+      return ShimVendorConfiguration().getService();
+    }
+
+    return await getPrimaryVendorConfig().getService();
+  }
+
+  VendorConfiguration getPrimaryVendorConfig(){
+    return getAllVendorConfigs()[0];
+  }
+
+  List<VendorConfiguration> getAllVendorConfigs(){
+    return _vendorConfigs.toList(growable: false);
   }
 
   List<ThemeConfiguration> getThemeConfigs(){

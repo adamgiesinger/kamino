@@ -47,7 +47,7 @@ class _SearchResultViewState extends State<SearchResultView> {
     Map _temp;
 
     String url = "${TMDB.ROOT_URL}/search/"
-        "multi${TMDB.defaultArguments}&"
+        "multi${TMDB.getDefaultArguments(context)}&"
         "query=${query.replaceAll(" ", "+")}&page=$pageNumber&include_adult=false";
 
     http.Response _res = await http.get(url);

@@ -49,7 +49,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
   // Load the data from the source.
   Future<SeasonModel> loadDataAsync() async {
     String url = "${TMDB.ROOT_URL}/tv/${widget.contentId}/season/"
-        "${widget.seasonIndex}${TMDB.defaultArguments}";
+        "${widget.seasonIndex}${TMDB.getDefaultArguments(context)}";
 
     http.Response response  = await http.get(url);
 
@@ -148,12 +148,12 @@ class _EpisodePickerState extends State<EpisodePicker> {
                                     shape: new RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(5.0)
                                     ),
-                                    onPressed: (){
+                                    onPressed: () async {
                                       int seasonNumber = episode["season_number"];
                                       int episodeNumber = episode["episode_number"];
 
-                                      KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-                                      appState.getVendorConfigs()[0].service.playTVShow(
+                                      KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                                      (await application.getPrimaryVendorService()).playTVShow(
                                           widget.showContentModel.title,
                                           widget.showContentModel.releaseDate,
                                           seasonNumber,

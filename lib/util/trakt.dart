@@ -49,10 +49,10 @@ class _TraktAuthState extends State<TraktAuth> {
 
   @override
   Widget build(BuildContext context) {
-    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
     String _url = "https://trakt.tv/oauth/authorize?response_type=code&"
-        "client_id=${appState.getVendorConfigs()[0].getTraktCredentials().id}&"
+        "client_id=${application.getPrimaryVendorConfig().getTraktCredentials().id}&"
         "redirect_uri=urn:ietf:wg:oauth:2.0:oob";
 
     return WebviewScaffold(
@@ -78,7 +78,7 @@ class _TraktAuthState extends State<TraktAuth> {
 }
 
 void renewToken(BuildContext context) async {
-  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   //get trakt credentials
   List<String> _traktCred = [];
@@ -103,8 +103,8 @@ void renewToken(BuildContext context) async {
 
       Map body = {
         'refresh_token': _traktCred[1],
-        'client_id': appState.getVendorConfigs()[0].getTraktCredentials().id,
-        'client_secret': appState.getVendorConfigs()[0].getTraktCredentials().secret,
+        'client_id': application.getPrimaryVendorConfig().getTraktCredentials().id,
+        'client_secret': application.getPrimaryVendorConfig().getTraktCredentials().secret,
         'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
         'grant_type': 'refresh_token'
       };
@@ -176,7 +176,7 @@ void renewToken(BuildContext context) async {
 }
 
 Future<Null> getCollection(List<String> traktCred, BuildContext context) async {
-  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   List<String> _traktMediaTypes = ["movies", "shows"];
 
@@ -197,7 +197,7 @@ Future<Null> getCollection(List<String> traktCred, BuildContext context) async {
         HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
         HttpHeaders.contentTypeHeader: 'application/json',
         'trakt-api-version': '2',
-        'trakt-api-key': appState.getVendorConfigs()[0].getTraktCredentials().id
+        'trakt-api-key': application.getPrimaryVendorConfig().getTraktCredentials().id
       },
     );
 
@@ -224,12 +224,12 @@ Future<Null> getCollection(List<String> traktCred, BuildContext context) async {
     }
   }
 
-  String status = await updateDatabase(payload);
+  String status = await updateDatabase(context, payload);
 }
 
 Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) async {
 
-  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   //get all favorites from the database
   Map _favs = await databaseHelper.getAllFaves();
@@ -269,7 +269,7 @@ Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) as
             HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
             'Content-Type': 'application/json',
             'trakt-api-version': '2',
-            'trakt-api-key': appState.getVendorConfigs()[0].getTraktCredentials().id
+            'trakt-api-key': application.getPrimaryVendorConfig().getTraktCredentials().id
           },
           body: json.encode(body)
       );
@@ -281,7 +281,7 @@ Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) as
   return status_codes;
 }
 
-Future<String> updateDatabase(Map payload) async {
+Future<String> updateDatabase(BuildContext context, Map payload) async {
 
   List<int> _favIDs = await databaseHelper.getAllFavIDs();
   List<Map> collections = [];
@@ -300,7 +300,7 @@ Future<String> updateDatabase(Map payload) async {
 
       //get the info from tmdb
       String url =
-          "${TMDB.ROOT_URL}/tv/${payload["shows"]["tmdb"][i]}${TMDB.defaultArguments}";
+          "${TMDB.ROOT_URL}/tv/${payload["shows"]["tmdb"][i]}${TMDB.getDefaultArguments(context)}";
 
       var res = await http.get(url);
 
@@ -331,7 +331,7 @@ Future<String> updateDatabase(Map payload) async {
 
       //get the info from tmdb
       String url =
-          "${TMDB.ROOT_URL}/movie/${payload["movies"]["tmdb"][i]}${TMDB.defaultArguments}";
+          "${TMDB.ROOT_URL}/movie/${payload["movies"]["tmdb"][i]}${TMDB.getDefaultArguments(context)}";
       var res = await http.get(url);
 
       if (res.statusCode == 200) {
@@ -361,7 +361,7 @@ Future<String> updateDatabase(Map payload) async {
     await Future.delayed(new Duration(milliseconds: 300));
 
     String url = "${TMDB.ROOT_URL}/find/${payload["movies"]["imdb"][i]}"
-        "${TMDB.defaultArguments}&external_source=imdb_id";
+        "${TMDB.getDefaultArguments(context)}&external_source=imdb_id";
 
     var res = await http.get(url);
 
@@ -396,7 +396,7 @@ Future<String> updateDatabase(Map payload) async {
     await Future.delayed(new Duration(milliseconds: 300));
 
     String url = "${TMDB.ROOT_URL}/find/${payload["shows"]["imdb"][i]}"
-        "${TMDB.defaultArguments}&external_source=imdb_id";
+        "${TMDB.getDefaultArguments(context)}&external_source=imdb_id";
 
     var res = await http.get(url);
 
@@ -444,7 +444,7 @@ Future<String> updateDatabase(Map payload) async {
 //use this method when sending a single item to trakt
 Future<Null> sendNewMedia(BuildContext context, String mediaType, String title, String year, int id) async {
 
-  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   String header = mediaType == "movie" ? "movies" : "shows";
   List<String> traktCred = await Settings.getTraktCredentials();
@@ -469,7 +469,7 @@ Future<Null> sendNewMedia(BuildContext context, String mediaType, String title, 
         HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
         'Content-Type': 'application/json',
         'trakt-api-version': '2',
-        'trakt-api-key': appState.getVendorConfigs()[0].getTraktCredentials().id
+        'trakt-api-key': application.getPrimaryVendorConfig().getTraktCredentials().id
       },
       body: json.encode(body)
   );
@@ -477,7 +477,7 @@ Future<Null> sendNewMedia(BuildContext context, String mediaType, String title, 
 
 Future<Null> removeMedia(BuildContext context, String mediaType, int id) async {
 
-  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   String header = mediaType == "movie" ? "movies" : "shows";
   List<String> traktCred = await Settings.getTraktCredentials();
@@ -499,7 +499,7 @@ Future<Null> removeMedia(BuildContext context, String mediaType, int id) async {
         HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
         'Content-Type': 'application/json',
         'trakt-api-version': '2',
-        'trakt-api-key': appState.getVendorConfigs()[0].getTraktCredentials().id
+        'trakt-api-key': application.getPrimaryVendorConfig().getTraktCredentials().id
       },
       body: json.encode(body)
   );
@@ -575,7 +575,7 @@ Future<String> getWatchHistories(BuildContext context) async {
 Future<int> addToWatchHistory(List<String> traktCred, BuildContext context,
     String mediaType, String title, String year, int id, [int seasonNumber, int episodeNumber]) async{
 
-  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
   //List<String> traktMediaType = ["movies", "shows"];
   String url = "https://api.trakt.tv/sync/history";
 
@@ -619,7 +619,7 @@ Future<int> addToWatchHistory(List<String> traktCred, BuildContext context,
         HttpHeaders.authorizationHeader: 'Bearer ${traktCred[0]}',
         'Content-Type': 'application/json',
         'trakt-api-version': '2',
-        'trakt-api-key': appState.getVendorConfigs()[0].getTraktCredentials().id
+        'trakt-api-key': application.getPrimaryVendorConfig().getTraktCredentials().id
       },
       body: json.encode(body)
   );
@@ -660,7 +660,7 @@ void _dialogGenerator(String title, String body, BuildContext context, bool dism
 
 //Trakt authentication logic
 Future<List<String>> authUser(BuildContext context, List<String> _traktCred, String code, { bool shouldShowDialog = true }) async {
-  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   if (code == null){
     //Trakt auth has failed
@@ -690,8 +690,8 @@ Future<List<String>> authUser(BuildContext context, List<String> _traktCred, Str
 
     Map _body = {
       "code": code,
-      "client_id": appState.getVendorConfigs()[0].getTraktCredentials().id,
-      "client_secret": appState.getVendorConfigs()[0].getTraktCredentials().secret,
+      "client_id": application.getPrimaryVendorConfig().getTraktCredentials().id,
+      "client_secret": application.getPrimaryVendorConfig().getTraktCredentials().secret,
       "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
       "grant_type": "authorization_code"
     };
@@ -739,12 +739,12 @@ Future<List<String>> authUser(BuildContext context, List<String> _traktCred, Str
 }
 
 Future<bool> deauthUser(BuildContext context, _traktCred, { bool shouldShowScaffold = true }) async {
-  KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+  KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   Map body = {
     'token': _traktCred[0],
-    'client_id': appState.getVendorConfigs()[0].getTraktCredentials().id,
-    'client_secret': appState.getVendorConfigs()[0].getTraktCredentials().secret
+    'client_id': application.getPrimaryVendorConfig().getTraktCredentials().id,
+    'client_secret': application.getPrimaryVendorConfig().getTraktCredentials().secret
   };
 
   String url = "https://api.trakt.tv/oauth/revoke";

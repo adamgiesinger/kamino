@@ -77,36 +77,50 @@ class AdvancedSettingsPageState extends SettingsPageState {
                   content: SizedBox(
                     width: 500,
                     height: 200,
-                    child: ListView(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: Text("Be careful! This option could break the app if you don't know what you're doing."),
-                        ),
+                    child: Form(
+                      autovalidate: true,
+                      child: ListView(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: Text("Be careful! This option could break the app if you don't know what you're doing."),
+                          ),
 
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          child: TextField(
-                            controller: _serverURLController,
-                            keyboardType: TextInputType.url,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.public),
-                              labelText: "Server URL"
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: TextFormField(
+                              validator: (String arg){
+                                const String serverURLRegex = r"(https?):\/\/([-A-Z0-9.]+)(\/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?\/";
+                                bool isValid = new RegExp(serverURLRegex, caseSensitive: false).hasMatch(arg);
+                                if(!isValid && arg.length > 0) return "The URL must be valid and include a trailing /.";
+                              },
+                              controller: _serverURLController,
+                              keyboardType: TextInputType.url,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.public),
+                                labelText: "Server URL"
+                              ),
                             ),
                           ),
-                        ),
 
-                        Container(
-                          margin: EdgeInsets.only(top: 10),
-                          child: TextField(
-                            controller: _serverKeyController,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.vpn_key),
-                              labelText: "Server Key"
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: TextFormField(
+                              validator: (String arg){
+                                if(arg.length != 32 && arg.length > 0)
+                                  return "The key must be 32 characters in length.";
+                              },
+                              maxLength: 32,
+                              maxLengthEnforced: true,
+                              controller: _serverKeyController,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.vpn_key),
+                                labelText: "Server Key"
+                              ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
 

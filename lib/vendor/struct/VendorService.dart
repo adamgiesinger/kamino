@@ -106,6 +106,10 @@ abstract class VendorService {
           break;
         }
 
+        if(oldStatus == VendorServiceStatus.PROCESSING){
+          await done(context);
+        }
+
         Navigator.of(context).pop();
         break;
       case VendorServiceStatus.INITIALIZING:

@@ -72,7 +72,7 @@ class _GenreViewState extends State<GenreView>{
     Map _temp;
 
     String url = "${TMDB.ROOT_URL}/discover/$_contentType"
-        "${TMDB.defaultArguments}&"
+        "${TMDB.getDefaultArguments(context)}&"
         "sort_by=$_selectedParam&include_adult=false"
         "&include_video=false&"
         "page=${_currentPages.toString()}&with_genres=$_genreID";

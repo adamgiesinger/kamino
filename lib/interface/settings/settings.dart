@@ -79,7 +79,7 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
 
-    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
     return Scaffold(
         appBar: AppBar(
@@ -129,7 +129,7 @@ class _SettingsViewState extends State<SettingsView> {
 
                                     Container(
                                       padding: EdgeInsets.symmetric(vertical: 5),
-                                      child: Text("${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build \u2022 ${_packageInfo.buildNumber}", style: TextStyle(
+                                      child: Text("${application.getPrimaryVendorConfig().getName()} ${_getBuildType()} Build \u2022 ${_packageInfo.buildNumber}", style: TextStyle(
                                           color: Colors.white
                                       )),
                                     ),

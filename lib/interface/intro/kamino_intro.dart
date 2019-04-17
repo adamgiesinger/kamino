@@ -458,7 +458,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
                           return FutureBuilder(
                             future: _categoryMemoizers[TMDB.availableTraktLists[index]].runOnce(
-                                () => TMDB.getList(TMDB.availableTraktLists[index])
+                                () => TMDB.getList(context, TMDB.availableTraktLists[index])
                             ),
                             builder: (BuildContext context, AsyncSnapshot snapshot){
                               if(snapshot.hasError){

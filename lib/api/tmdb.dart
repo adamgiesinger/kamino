@@ -1,11 +1,12 @@
 import 'dart:convert' as Convert;
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/list.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/tvshow.dart';
-import 'package:kamino/vendor/index.dart';
 
 class TMDB {
 
@@ -16,7 +17,10 @@ class TMDB {
 
   /// You will need to define the API key in your vendor configuration file.
   /// Check our documentation for more information.
-  static final String defaultArguments = "?api_key=${ApolloVendor.getTMDBKey()}&language=en-US";
+  static String getDefaultArguments(BuildContext context) {
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    return "?api_key=${application.getPrimaryVendorConfig().getTMDBKey()}&language=en-US";
+  }
 
   // These lists are curated by the ApolloTV team and you're welcome to use them.
   // Otherwise, you can replace them by supplying an array of TMDB list IDs.
@@ -42,8 +46,8 @@ class TMDB {
   ];
 
 
-  static Future<ContentListModel> getList(String id, { bool loadFully = false }) async {
-    var rawContentResponse = (await http.get("https://api.themoviedb.org/4/list/$id$defaultArguments", headers: {
+  static Future<ContentListModel> getList(BuildContext context, String id, { bool loadFully = false }) async {
+    var rawContentResponse = (await http.get("https://api.themoviedb.org/4/list/$id${getDefaultArguments(context)}", headers: {
     'Content-Type': 'application/json;charset=utf-8'
     })).body;
 
@@ -54,7 +58,7 @@ class TMDB {
       // (TMDB starts at index of 1 *sigh*)
       for(int i = 1; i < listModel.totalPages; i++){
         // Make a request to TMDB for the desired page.
-        var sublistContentResponse = (await http.get("https://api.themoviedb.org/4/list/$id$defaultArguments&page=$i", headers: {
+        var sublistContentResponse = (await http.get("https://api.themoviedb.org/4/list/$id${getDefaultArguments(context)}&page=$i", headers: {
           'Content-Type': 'application/json;charset=utf-8'
         })).body;
 
@@ -75,12 +79,12 @@ class TMDB {
     return listModel;
   }
 
-  static Future<ContentModel> getContentInfo(ContentType type, String id) async {
+  static Future<ContentModel> getContentInfo(BuildContext context, ContentType type, String id) async {
     if(type == ContentType.MOVIE){
 
       // Get the data from the server.
       http.Response response = await http.get(
-          "${TMDB.ROOT_URL}/movie/$id${TMDB.defaultArguments}"
+          "${TMDB.ROOT_URL}/movie/$id${getDefaultArguments(context)}"
       );
       String json = response.body;
 
@@ -93,7 +97,7 @@ class TMDB {
 
       // Get the data from the server.
       http.Response response = await http.get(
-          "${TMDB.ROOT_URL}/tv/$id${TMDB.defaultArguments}"
+          "${TMDB.ROOT_URL}/tv/$id${getDefaultArguments(context)}"
       );
       String json = response.body;
 

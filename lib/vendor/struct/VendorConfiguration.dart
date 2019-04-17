@@ -5,8 +5,6 @@ import 'package:meta/meta.dart';
 abstract class VendorConfiguration {
 
   final String name;
-  final VendorService service;
-
   final String _tmdbKey;
   final TraktCredentials _traktCredentials;
 
@@ -17,12 +15,8 @@ abstract class VendorConfiguration {
   /// [name] - The name of the vendor. If you are developing this independently,
   ///           use your GitHub name.
   ///
-  /// [service] - The service implementation for this vendor.
-  ///
   VendorConfiguration({
     @required this.name,
-    @required this.service,
-
     String tmdbKey,
     TraktCredentials traktCredentials
   }) :
@@ -52,6 +46,8 @@ abstract class VendorConfiguration {
       throw new Exception("Vendor ${getName()} does not have Trakt credentials.");
     }
   }
+
+  Future<VendorService> getService();
 
 }
 

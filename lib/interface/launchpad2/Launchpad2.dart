@@ -28,7 +28,7 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
   List<ContentModel> _continueWatchingList;
 
   Future<void> load() async {
-    _topPicksList = (await TMDB.getList("107032")).content;
+    _topPicksList = (await TMDB.getList(context, "107032")).content;
 
     if(await Trakt.isAuthenticated()) {
       _continueWatchingList = await Trakt.getWatchHistory(context);
