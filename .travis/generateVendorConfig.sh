@@ -21,23 +21,6 @@ class OfficialVendorConfiguration extends VendorConfiguration {
       /// use your GitHub name.
       name: "`echo $VENDOR_NAME`",
 
-      /// If you are using Claws, this is a [ClawsVendorService],
-      /// including the port, protocol and trailing slash.
-      /// For example: https://claws.edmovies.com/
-      service: ClawsVendorService(
-          server: "`echo $CLAWS_URL_BETA`",
-
-          // This is the key you set on the server.
-          // It should be 32 characters long.
-          clawsKey: "`echo $CLAWS_KEY_BETA`",
-
-          isOfficial: true,
-
-          // This option allows you to enable the manually select
-          // sources option.
-          allowSourceSelection: true
-      ),
-
       /// These next options are not mandatory unless this configuration is the
       /// primary configuration.
       tmdbKey: "`echo $TMDB_KEY`",
@@ -46,6 +29,16 @@ class OfficialVendorConfiguration extends VendorConfiguration {
         secret: "`echo $TRAKT_SECRET`"
       )
   );
+
+  @override
+  Future<VendorService> getService() async {
+      return ClawsVendorService(
+          server: "`echo $CLAWS_URL_BETA`",
+          clawsKey: "`echo $CLAWS_KEY_BETA`",
+          isOfficial: true,
+          allowSourceSelection: true
+      );
+  }
 
 }
 ____HERE

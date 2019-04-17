@@ -88,6 +88,20 @@ flutter:
     - assets/flags/arab_league.png
     - assets/flags/texas.png
     - assets/flags/hebrew.png
+    - assets/flags/de.png
+    - assets/flags/es.png
+    - assets/flags/fi.png
+    - assets/flags/fr.png
+    - assets/flags/gb.png
+    - assets/flags/hr.png
+    - assets/flags/it.png
+    - assets/flags/nl.png
+    - assets/flags/pl.png
+    - assets/flags/pt.png
+    - assets/flags/ro.png
+    - assets/flags/sv.png
+    - assets/flags/tr.png
+    - assets/flags/us.png
 
 
   fonts:

@@ -108,8 +108,8 @@ class Interface {
                       var iconVariant = currentLocale.countryCode;
 
                       // Flag corrections
-                      if(iconFile == "ar") iconFile = "_assets/flags/arab_league.png";
-                      if(iconFile == "he") iconFile = "_assets/flags/hebrew.png";
+                      if(iconFile == "ar") iconFile = "arab_league";
+                      if(iconFile == "he") iconFile = "hebrew";
                       if(iconFile == "en" && iconVariant == "GB") iconFile = "gb";
                       if(iconFile == "en") iconFile = "us";
                       // ./Flag corrections
@@ -120,21 +120,17 @@ class Interface {
                         return ListTile(
                           title: TitleText(snapshot.data.$_language_name),
                           subtitle: Text(snapshot.data.$_language_name_english),
-                          leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(48),
-                              child: FadeInImage(
-                                fadeInDuration: Duration(milliseconds: 400),
-                                placeholder: MemoryImage(kTransparentImage),
-                                image: AssetImage(
-                                  !iconFile.startsWith("_") ?
-                                  'icons/flags/png/$iconFile.png'
-                                      : iconFile.replaceFirst("_", ""),
-                                ),
-                                fit: BoxFit.cover,
-                                alignment: Alignment.center,
-                                width: 48,
-                                height: 48,
-                              )
+                          leading: Container(
+                            child: FadeInImage(
+                              fadeInDuration: Duration(milliseconds: 400),
+                              placeholder: MemoryImage(kTransparentImage),
+                              image: AssetImage(
+                                "assets/flags/$iconFile.png"
+                              ),
+                              fit: BoxFit.contain,
+                              alignment: Alignment.center,
+                              width: 48,
+                            )
                           ),
                           enabled: true,
                           onTap: () async {
