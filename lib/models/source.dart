@@ -29,6 +29,7 @@ class SourceMetadata {
   final String quality;
   final String source;
   final int ping;
+  int contentLength;
 
   SourceMetadata.fromJSON(Map json)
     : cookie = json["cookie"],

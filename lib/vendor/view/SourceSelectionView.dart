@@ -5,6 +5,7 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/util/filesize.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/VendorService.dart';
 
@@ -145,6 +146,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
                         title: TitleText(
                             (qualityInfo != null ? qualityInfo + " • " : "") +
+                                (source.metadata.contentLength != null ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true) + " • " : "") +
                                 "${source.metadata.provider} (${source.metadata
                                     .source}) • ${source.metadata.ping}ms"),
                         subtitle: Text(
@@ -199,13 +201,16 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
      * Reversed, is descending. */
 
     sourceList.sort((SourceModel left, SourceModel right) {
-      if(sortingMethod == 'quality'){
-        return _getSourceQualityIndex(left.metadata.quality).compareTo(_getSourceQualityIndex(right.metadata.quality));
-      }else if(sortingMethod == 'name'){
-        return left.metadata.source.compareTo(right.metadata.source);
+      switch(sortingMethod){
+        case 'quality':
+          return _getSourceQualityIndex(left.metadata.quality).compareTo(_getSourceQualityIndex(right.metadata.quality));
+        case 'name':
+          return left.metadata.source.compareTo(right.metadata.source);
+        case 'fileSize':
+          return left.metadata.contentLength.compareTo(right.metadata.contentLength);
+        default:
+          return left.metadata.ping.compareTo(right.metadata.ping);
       }
-
-      return left.metadata.ping.compareTo(right.metadata.ping);
     });
 
     if(this.sortReversed) sourceList = sourceList.reversed.toList();
@@ -313,6 +318,22 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
               title: Text('Name'),
               subtitle: Text('Sorts alphabetically by name.'),
               value: 'name',
+              groupValue: sortingMethod,
+              onChanged: (value){
+                setState(() {
+                  sortingMethod = value;
+                });
+              },
+              activeColor: Theme.of(context).primaryColor,
+              controlAffinity: ListTileControlAffinity.trailing,
+            ),
+
+            RadioListTile(
+              isThreeLine: true,
+              secondary: Icon(Icons.import_export),
+              title: Text('File Size'),
+              subtitle: Text('Sorts by the size of the file.'),
+              value: 'fileSize',
               groupValue: sortingMethod,
               onChanged: (value){
                 setState(() {

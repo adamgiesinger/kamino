@@ -326,12 +326,7 @@ class ClawsVendorService extends VendorService {
             var sourceMeta = event['metadata'];
             String sourceStreamURL =  sourceFile['data'];
 
-            if (sourceMeta['isStreamable'] != null &&
-                !sourceMeta['isStreamable']) {
-              print("Link is not streamable, therefore discarding. ($sourceStreamURL)");
-              return;
-            }
-
+            // If the URL is invalid, discard the result.
             try {
               Uri.parse(sourceStreamURL);
             } catch (ex) {
@@ -339,17 +334,33 @@ class ClawsVendorService extends VendorService {
               return;
             }
 
+            // If the server was able to analyze the headers and could determine
+            // that the URL is not streamable, handle it accordingly.
+            if(!event['isResultOfScrape']) {
+              if (sourceMeta['isStreamable'] != null &&
+                  !sourceMeta['isStreamable']) {
+
+                // For now, the app cannot handle direct download links.
+                // Therefore, we will just discard the link.
+                print(
+                    "Link is not streamable, therefore discarding. ($sourceStreamURL)"
+                );
+                return;
+
+              }
+            }
+
             // Initialize HttpClient and response...
             HttpClient httpClient = HttpClient();
-            HttpClientResponse htmlResponse;
+            HttpClientResponse headResponse;
             // Measure epoch time in milliseconds (to determine ping).
             int preRequest = new DateTime.now().millisecondsSinceEpoch;
 
             try {
-              htmlResponse =
-              await httpClient.getUrl(Uri.parse(sourceStreamURL)).then((
+              headResponse =
+              await httpClient.headUrl(Uri.parse(sourceStreamURL)).then((
                   HttpClientRequest request) {
-                request.headers.add('Range', 'bytes=0-125000');
+                //request.headers.add('Range', 'bytes=0-125000');
                 request.followRedirects = true;
                 return request.close();
               }).timeout(
@@ -361,32 +372,53 @@ class ClawsVendorService extends VendorService {
                   .toString()})");
               return;
             }
-
             httpClient.close();
 
-            if (htmlResponse == null) {
+            if (headResponse == null) {
               print("Request to $sourceStreamURL timed out whilst being analyzed.");
               // Making this null, should we choose to allow such requests in future.
               event['metadata']['ping'] = null;
               return;
-            } else {
-              if (htmlResponse.redirects.length > 0){
-                event['file']['data'] = htmlResponse.redirects.last.location
-                    .toString();
-              }
-
-              int ping = (new DateTime.now().millisecondsSinceEpoch -
-                  preRequest);
-              if (htmlResponse.statusCode >= 400) {
-                print(
-                    "Request statusCode >= 400, therefore discarding. ($sourceStreamURL)");
-                return;
-              }
-
-              event['metadata']['ping'] = ping;
             }
 
-            addSource(SourceModel.fromJSON(event));
+            // If the client was redirected, update the URL, to reflect the
+            // redirect.
+            if (headResponse.redirects.length > 0){
+              event['file']['data'] = headResponse.redirects.last.location
+                  .toString();
+              sourceStreamURL = event['file']['data'];
+            }
+
+            // Get the response time of the URL.
+            int ping = (new DateTime.now().millisecondsSinceEpoch -
+                preRequest);
+            if (headResponse.statusCode >= 400) {
+              print(
+                  "Request statusCode >= 400, therefore discarding. ($sourceStreamURL)");
+              return;
+            }
+            event['metadata']['ping'] = ping;
+
+            // Get the HEAD request details.
+            print(headResponse.headers.toString());
+            bool supportsRange = headResponse.headers.value('accept-ranges')
+                .contains("bytes");
+            int contentLength = headResponse.contentLength;
+
+            if(!supportsRange){
+              // For now, the app cannot handle direct download links.
+              // Therefore, we will just discard the link.
+              print(
+                  "Link is not streamable, therefore discarding. ($sourceStreamURL)"
+              );
+              return;
+            }
+
+            // Finally, add the data to the source and add the source to the
+            // list of found content.
+            SourceModel source = SourceModel.fromJSON(event);
+            source.metadata.contentLength = contentLength;
+            addSource(source);
             break;
 
           ///
