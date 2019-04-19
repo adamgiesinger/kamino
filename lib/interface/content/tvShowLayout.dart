@@ -117,7 +117,7 @@ class TVShowLayout{
         context,
         MaterialPageRoute(builder: (context) => EpisodePicker(
             contentId: _data.id,
-            showContentModel: _data,
+            show: _data,
             seasonIndex: _data.seasons[index]["season_number"]
         ))
     );

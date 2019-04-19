@@ -13,13 +13,13 @@ import 'package:kamino/ui/elements.dart';
 class EpisodePicker extends StatefulWidget {
   final int contentId;
   final int seasonIndex;
-  final TVShowContentModel showContentModel;
+  final TVShowContentModel show;
 
   EpisodePicker({
     Key key,
     @required this.contentId,
     @required this.seasonIndex,
-    @required this.showContentModel
+    @required this.show
   }) : super(key: key);
 
   @override
@@ -67,7 +67,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).backgroundColor,
           title: TitleText(
-              _season != null ? "${widget.showContentModel.title} - ${_season.name}" : S.of(context).loading,
+              _season != null ? "${widget.show.title} - ${_season.name}" : S.of(context).loading,
               textColor: Theme.of(context).primaryTextTheme.title.color
           ),
           centerTitle: true,
@@ -154,8 +154,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
 
                                       KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
                                       (await application.getPrimaryVendorService()).playTVShow(
-                                          widget.showContentModel.title,
-                                          widget.showContentModel.releaseDate,
+                                          widget.show,
                                           seasonNumber,
                                           episodeNumber,
                                           context

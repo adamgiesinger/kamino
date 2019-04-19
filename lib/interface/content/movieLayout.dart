@@ -14,7 +14,7 @@ class MovieLayout {
   /// Allows this layout to apply transformations to the overview scaffold.
   /// This should be used to add a play FAB, for example.
   ///
-  static Widget getFloatingActionButton(BuildContext context, MovieContentModel model){
+  static Widget getFloatingActionButton(BuildContext context, MovieContentModel movie){
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: new Row(
@@ -27,8 +27,7 @@ class MovieLayout {
                       onPressed: () async {
                         KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
                         (await application.getPrimaryVendorService()).playMovie(
-                            model.title,
-                            model.releaseDate,
+                            movie,
                             context
                         );
                       },

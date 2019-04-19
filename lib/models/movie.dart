@@ -4,14 +4,13 @@ import 'package:meta/meta.dart';
 
 class MovieContentModel extends ContentModel {
 
-  //final List reviews;
-  final String imdbId;
   final double runtime;
 
   MovieContentModel({
     // Content model inherited parameters
     @required int id,
     @required String title,
+    String imdbId,
     String overview,
     String releaseDate,
     String homepage,
@@ -26,12 +25,10 @@ class MovieContentModel extends ContentModel {
     List videos,
 
     // Movie parameters
-    //this.reviews,
-    //this.recommendations,
-    this.imdbId,
     this.runtime
   }) : super( // Call the parent constructor...
     id: id,
+    imdbId: imdbId,
     title: title,
     contentType: ContentType.MOVIE,
     overview: overview,
@@ -61,6 +58,7 @@ class MovieContentModel extends ContentModel {
       // Inherited properties.
       // (Copy-paste these to other models.)
       id: json["id"],
+      imdbId: json["imdb_id"],
       title: json["title"],
       overview: json["overview"],
       releaseDate: json["release_date"],
@@ -70,14 +68,13 @@ class MovieContentModel extends ContentModel {
       backdropPath: json["backdrop_path"],
       posterPath: json["poster_path"],
       voteCount: json.containsKey("vote_count") ? json["vote_count"] : 0,
-
-      // Object-specific properties.
-      imdbId: json["imdb_id"],
-      runtime: json["runtime"] != null ? json["runtime"].toDouble() : null,
       cast: credits['cast'] != null ? (credits['cast'] as List).map((entry) => CastMemberModel.fromJSON(entry)).toList() : null,
       crew: credits['crew'] != null ? (credits['crew'] as List).map((entry) => CrewMemberModel.fromJSON(entry)).toList() : null,
       similar: similar,
-      videos: videos
+      videos: videos,
+
+      // Object-specific properties.
+      runtime: json["runtime"] != null ? json["runtime"].toDouble() : null
     );
   }
 }

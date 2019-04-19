@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:kamino/main.dart';
+import 'package:kamino/models/content.dart';
+import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/source.dart';
+import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/VendorService.dart';
@@ -159,23 +162,29 @@ class ClawsVendorService extends VendorService {
   }
 
   @override
-  Future<void> playMovie(String title, String releaseDate, BuildContext context) async {
+  Future<void> playMovie(MovieContentModel movie, BuildContext context) async {
     if(!await initialize(context)) return;
+
+    String title = movie.title;
+    String releaseDate = movie.releaseDate;
 
     var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
 
     String clawsToken = _token;
     String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
-    String data = '{"type": "movies", "title": "$title", "year": "$year"}';
+    String data = '{"type": "movies", "title": "$title", "year": "$year", "imdb_id": "${movie.imdbId}"}';
 
     if(!await authenticate(context)) return;
-    _beginProcessing(context, endpointURL, data, title, displayTitle: title);
+    _beginProcessing(context, endpointURL, data, movie, displayTitle: title);
   }
 
   @override
-  Future<void> playTVShow(String title, String releaseDate, int seasonNumber, int episodeNumber, BuildContext context) async {
+  Future<void> playTVShow(TVShowContentModel show, int seasonNumber, int episodeNumber, BuildContext context) async {
     if(!await initialize(context)) return;
+
+    String title = show.title;
+    String releaseDate = show.releaseDate;
 
     var year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
     var displayTitle = "$title \u2022 S${seasonNumber.toString().padLeft(2, '0')} E${episodeNumber.toString().padLeft(2, '0')}";
@@ -183,19 +192,19 @@ class ClawsVendorService extends VendorService {
     String clawsToken = _token;
     String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
-    String data = '{"type": "tv", "title": "$title", "year": "$year", "season": "$seasonNumber", "episode": "$episodeNumber"}';
+    String data = '{"type": "tv", "title": "$title", "year": "$year", "season": "$seasonNumber", "episode": "$episodeNumber", "imdb_id": "${show.imdbId}"}';
 
     if(!await authenticate(context)) return;
-    _beginProcessing(context, endpointURL, data, title, displayTitle: displayTitle);
+    _beginProcessing(context, endpointURL, data, show, displayTitle: displayTitle);
   }
 
   ///
   /// Once authenticated with the server, this method will handle interaction
   /// with the websocket to get results.
   ///
-  _beginProcessing(BuildContext context, String url, String data, String title, { String displayTitle }) async {
+  _beginProcessing(BuildContext context, String url, String data, ContentModel model, { String displayTitle }) async {
     // Prepare to process the information.
-    if(displayTitle == null) displayTitle = title;
+    if(displayTitle == null) displayTitle = model.title;
     this.setStatus(context, VendorServiceStatus.PROCESSING, title: displayTitle);
 
     // Connect to the websocket server...
@@ -400,7 +409,6 @@ class ClawsVendorService extends VendorService {
             event['metadata']['ping'] = ping;
 
             // Get the HEAD request details.
-            print(headResponse.headers.toString());
             bool supportsRange = headResponse.headers.value('accept-ranges')
                 .contains("bytes");
             int contentLength = headResponse.contentLength;

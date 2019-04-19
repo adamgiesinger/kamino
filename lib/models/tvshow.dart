@@ -15,6 +15,7 @@ class TVShowContentModel extends ContentModel {
     // Content model inherited parameters
     @required int id,
     @required String title,
+    String imdbId,
     String overview,
     String releaseDate,
     String homepage,
@@ -42,6 +43,7 @@ class TVShowContentModel extends ContentModel {
     this.popularity
   }) : super( // Call the parent constructor...
     id: id,
+    imdbId: imdbId,
     title: title,
     contentType: ContentType.TV_SHOW,
     overview: overview,
@@ -73,6 +75,7 @@ class TVShowContentModel extends ContentModel {
       // Inherited properties.
       // (Copy-paste these to other models - it is fine to make small changes.)
       id: json["id"],
+      imdbId: json["imdb_id"],
       title: json["name"] == null ? json["original_name"] : json["name"],
       overview: json["overview"],
       releaseDate: json["first_air_date"],
@@ -82,6 +85,10 @@ class TVShowContentModel extends ContentModel {
       backdropPath: json["backdrop_path"],
       posterPath: json["poster_path"],
       voteCount: json["vote_count"] != null ? json["vote_count"] : 0,
+      cast: credits['cast'] != null ? (credits['cast'] as List).map((entry) => CastMemberModel.fromJSON(entry)).toList() : null,
+      crew: credits['crew'] != null ? (credits['crew'] as List).map((entry) => CrewMemberModel.fromJSON(entry)).toList() : null,
+      similar: similar,
+      videos: videos,
 
       // Object-specific properties.
       createdBy: json["created_by"],
@@ -90,10 +97,6 @@ class TVShowContentModel extends ContentModel {
       networks: json["networks"],
       status: json["status"],
       popularity: json["popularity"],
-      cast: credits['cast'] != null ? (credits['cast'] as List).map((entry) => CastMemberModel.fromJSON(entry)).toList() : null,
-      crew: credits['crew'] != null ? (credits['crew'] as List).map((entry) => CrewMemberModel.fromJSON(entry)).toList() : null,
-      similar: similar,
-      videos: videos
     );
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/source.dart';
+import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/view/SearchingSourcesDialog.dart';
@@ -62,10 +64,9 @@ abstract class VendorService {
       onUpdate();
   }
 
-  Future<void> playMovie(String title, String releaseDate, BuildContext context);
+  Future<void> playMovie(MovieContentModel movie, BuildContext context);
   Future<void> playTVShow(
-    String title,
-    String releaseDate,
+    TVShowContentModel show,
     int seasonNumber,
     int episodeNumber,
     BuildContext context

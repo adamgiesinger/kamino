@@ -26,6 +26,7 @@ String getRawContentType(ContentType type){
 
 class ContentModel {
   final int id;
+  final String imdbId;
   final ContentType contentType;
 
   // Content Information
@@ -61,6 +62,7 @@ class ContentModel {
     @required this.id,
     @required this.title,
     @required this.contentType,
+    this.imdbId,
     this.overview,
     this.releaseDate,
     this.homepage,

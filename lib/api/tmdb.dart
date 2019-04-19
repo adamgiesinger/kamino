@@ -85,7 +85,7 @@ class TMDB {
     // Get the data from the server.
     http.Response response = await http.get(
         "${TMDB.ROOT_URL}/${getRawContentType(type)}/$id${getDefaultArguments(context)}"
-            + (appendToResponse != null ? "&append_to_response=$appendToResponse" : "")
+            + (appendToResponse != null ? "&append_to_response=$appendToResponse,external_ids" : "&append_to_response=external_ids")
     );
     String json = response.body;
 
