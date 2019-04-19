@@ -84,7 +84,7 @@ void renewToken(BuildContext context) async {
   //get trakt credentials
   List<String> _traktCred = [];
 
-  ((Settings.getTraktCredentials()) as Future).then((data){
+  ((Settings.traktCredentials) as Future).then((data){
     _traktCred = data;
   });
 
@@ -450,7 +450,7 @@ Future<Null> sendNewMedia(BuildContext context, String mediaType, String title, 
   KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   String header = mediaType == "movie" ? "movies" : "shows";
-  List<String> traktCred = await Settings.getTraktCredentials();
+  List<String> traktCred = await Settings.traktCredentials;
 
   Map body = {
     header: []
@@ -483,7 +483,7 @@ Future<Null> removeMedia(BuildContext context, String mediaType, int id) async {
   KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   String header = mediaType == "movie" ? "movies" : "shows";
-  List<String> traktCred = await Settings.getTraktCredentials();
+  List<String> traktCred = await Settings.traktCredentials;
 
   Map body = {
     header: []

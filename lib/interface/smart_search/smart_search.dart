@@ -236,13 +236,11 @@ class SmartSearch extends SearchDelegate<String> {
   }
 
   String _suggestionName(AsyncSnapshot snapshot, int index){
-
     if (snapshot.data[index].year != null && snapshot.data[index].year.length > 3){
-
-      return snapshot.data[index].title +"  ("+snapshot.data[index].year.toString().substring(0,4)+")";
+      return "${snapshot.data[index].name} (${snapshot.data[index].year.toString().substring(0,4)})";
     }
 
-    return snapshot.data[index].title;
+    return snapshot.data[index].name;
   }
 
   @override
