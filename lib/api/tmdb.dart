@@ -105,9 +105,10 @@ class TMDB {
 
   static List<String> getAlternativeTitles(ContentModel model){
     List<String> result = [];
-
+    
     if(model.alternativeTitles == null || model.alternativeTitles.length == 0)
-      return [];
+      return result;
+
     List<LocalizedTitleModel> alternativeTitles = model.alternativeTitles;
 
     // Select up to 3 English titles

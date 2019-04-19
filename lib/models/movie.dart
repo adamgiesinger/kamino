@@ -60,7 +60,7 @@ class MovieContentModel extends ContentModel {
         ).toList()
       : null;
     List<LocalizedTitleModel> alternativeTitles = json['alternative_titles'] != null
-        ? (json['alternative_titles']['results'] as List).map(
+        ? (json['alternative_titles']['titles'] as List).map(
             (element) => LocalizedTitleModel.fromJSON(element)
     ).toList() : null;
 
