@@ -39,15 +39,15 @@ String formatFilesize(size, {int round = 2, bool decimal = false}){
 
   if(size < divider*divider*divider*divider && size % divider == 0) return "${(size/(divider*divider*divider)).toStringAsFixed(0)} GB";
 
-  if(size < divider*divider*divider*divider) return "${(size/divider/divider/divider).toStringAsFixed(round)} GB";
+  if(size < divider*divider*divider*divider) return "${(size/divider/divider/divider).toStringAsFixed(1)} GB";
 
   if(size < divider*divider*divider*divider*divider && size % divider == 0)  return "${(size/divider/divider/divider/divider).toStringAsFixed(0)} TB" ;
 
-  if(size < divider*divider*divider*divider*divider)  return "${(size/divider/divider/divider/divider).toStringAsFixed(round)} TB" ;
+  if(size < divider*divider*divider*divider*divider)  return "${(size/divider/divider/divider/divider).toStringAsFixed(2)} TB" ;
 
   if(size < divider*divider*divider*divider*divider*divider && size % divider == 0) {  return "${(size/divider/divider/divider/divider/divider).toStringAsFixed(0)} PB" ;
 
-  } else { return "${(size/divider/divider/divider/divider/divider).toStringAsFixed(round)} PB";
+  } else { return "${(size/divider/divider/divider/divider/divider).toStringAsFixed(3)} PB";
   }
 
 }

@@ -655,11 +655,11 @@ class _ContentOverviewState extends State<ContentOverview> {
                                         MaterialPageRoute(
                                           builder: (context) => ContentOverview(
                                               contentId: model.similar[index].id,
-                                              contentType: ContentType.MOVIE
+                                              contentType: model.contentType
                                           ),
                                         )
                                     ),
-                                    mediaType: 'movie',
+                                    mediaType: getRawContentType(model.contentType),
                                     name: model.similar[index].title,
                                     background: model.similar[index].posterPath,
                                     releaseDate: model.similar[index].releaseDate
