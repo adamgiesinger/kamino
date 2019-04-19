@@ -50,7 +50,7 @@ class DatabaseHelper {
   }
 
   static Future<void> saveFavorites(List<FavoriteDocument> content) async {
-    bulkWrite(content.map((FavoriteDocument document) => document.toMap()));
+    bulkWrite(content.map((FavoriteDocument document) => document.toMap()).toList());
   }
 
   static Future<bool> isFavorite(int tmdbId) async {

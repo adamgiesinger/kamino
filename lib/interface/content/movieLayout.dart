@@ -9,7 +9,7 @@ import 'package:kamino/interface/content/overview.dart';
 
 class MovieLayout {
 
-  static Widget generate(BuildContext context, MovieContentModel _data, List<int> _favsArray){
+  static Widget generate(BuildContext context, MovieContentModel _data){
     return Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 0),
         child: Padding(
@@ -29,7 +29,7 @@ class MovieLayout {
 
                     SizedBox(
                         height: 200.0,
-                        child: _generateSimilarMovieCards(_data, _favsArray)
+                        child: _generateSimilarMovieCards(_data)
                     )
                   ],
                 )
@@ -85,8 +85,7 @@ class MovieLayout {
 
   /* PRIVATE SUBCLASS-SPECIFIC METHODS */
 
-  static Widget _generateSimilarMovieCards(MovieContentModel _data, List<int> _favsArray){
-
+  static Widget _generateSimilarMovieCards(MovieContentModel _data){
     return _data.recommendations == null ? Container() : ListView.builder(
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
@@ -115,8 +114,7 @@ class MovieLayout {
                 name: _data.recommendations[index]["title"],
                 background: _data.recommendations[index]["poster_path"],
                 mediaType: 'movie',
-                releaseDate: _data.recommendations[index]["release_date"],
-                isFav: _favsArray.contains(_data.recommendations[index]["id"]),
+                releaseDate: _data.recommendations[index]["release_date"]
               ),
             ),
           ),

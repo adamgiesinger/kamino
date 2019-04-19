@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:kamino/api/tmdb.dart';
@@ -316,7 +317,7 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
             "name": _data["name"],
             "tmdbID": _data["id"],
             "imageUrl": _data["poster_path"],
-            "year": _data["first_air_date"],
+            "year": DateFormat.y("en_US").format(DateTime.parse(_data["first_air_date"])),
             "saved_on": DateTime.now().toUtc().toString()
           })
         );
@@ -347,7 +348,7 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
           "name":  _data["title"],
           "tmdbID": _data["id"],
           "imageUrl": _data["poster_path"],
-          "year": _data["release_date"],
+          "year": DateFormat.y("en_US").format(DateTime.parse(_data["release_date"])),
           "saved_on": DateTime.now().toUtc().toString()
         }));
       }
@@ -383,7 +384,7 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
             "name":  _data["movie_results"][0]["title"],
             "tmdbID": _data["movie_results"][0]["id"],
             "imageUrl": _data["movie_results"][0]["poster_path"],
-            "year": _data["movie_results"][0]["release_date"],
+            "year": DateFormat.y("en_US").format(DateTime.parse(_data["release_date"])),
             "saved_on": DateTime.now().toUtc().toString()
           }));
         }
@@ -418,7 +419,7 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
             "name": _data["tv_results"][0]["name"],
             "tmdbID": _data["tv_results"][0]["id"],
             "imageUrl": _data["tv_results"][0]["poster_path"],
-            "year": _data["tv_results"][0]["first_air_date"],
+            "year": DateFormat.y("en_US").format(DateTime.parse(_data["first_air_date"])),
             "saved_on": DateTime.now().toUtc().toString()
           }));
         }

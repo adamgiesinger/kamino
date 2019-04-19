@@ -50,7 +50,6 @@ class _ContentOverviewState extends State<ContentOverview> {
   bool _longTitle = false;
   String _backdropImagePath;
   bool _favState = false;
-  List<int> _favIDs = [];
   String _contentType;
 
   Widget _override;
@@ -134,7 +133,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   // Load the data from the source.
   Future<ContentModel> loadDataAsync() async {
-    //_favState = await DatabaseHelper.isFavorite(_data.id);
+    _favState = await DatabaseHelper.isFavorite(widget.contentId);
 
     // Load trailer
     http.Response videosRawResponse = await http.get(
@@ -696,7 +695,7 @@ class _ContentOverviewState extends State<ContentOverview> {
         return TVShowLayout.generate(context, _data);
       case ContentType.MOVIE:
         // Generate movie information
-        return MovieLayout.generate(context, _data, _favIDs);
+        return MovieLayout.generate(context, _data);
       default:
         return Container();
     }
