@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/databaseHelper.dart';
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/partials/result_card.dart';
@@ -49,8 +50,7 @@ class _GenreViewState extends State<GenreView>{
     String _genreName = widget.genreName;
     String _genreID = widget.genreID.toString();
 
-    databaseHelper.getAllFavIDs().then((data){
-
+    DatabaseHelper.getAllFavoriteIds().then((data){
       _favIDs = data;
     });
 
@@ -178,8 +178,7 @@ class _GenreViewState extends State<GenreView>{
             onRefresh: () async {
 
               await Future.delayed(Duration(seconds: 2));
-              databaseHelper.getAllFavIDs().then((data){
-
+              DatabaseHelper.getAllFavoriteIds().then((data){
                 setState(() {
                   _favIDs = data;
                 });

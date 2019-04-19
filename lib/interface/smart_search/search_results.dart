@@ -10,7 +10,7 @@ import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/partials/content_poster.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/databaseHelper.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/util/settings.dart';
 
@@ -98,7 +98,7 @@ class _SearchResultViewState extends State<SearchResultView> {
     hasLoaded = false;
     (Settings.detailedContentInfoEnabled as Future).then((data) => setState(() => _expandedSearchPref = data));
 
-    databaseHelper.getAllFavIDs().then((data){
+    DatabaseHelper.getAllFavoriteIds().then((data){
       _favIDs = data;
     });
 

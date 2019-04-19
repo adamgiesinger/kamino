@@ -1,12 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/interface/smart_search/smart_search.dart';
 import 'package:kamino/main.dart';
+import 'package:kamino/models/content.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Interface {
+
+  static void openOverview(BuildContext context, dynamic reference, [ContentType type]){
+    int id = -1;
+    if(reference is ContentModel) {
+      id = reference.id;
+      type = reference.contentType;
+    } else id = reference;
+
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) => ContentOverview(
+          contentId: id,
+          contentType: type,
+        ))
+    );
+  }
 
   static Widget generateHeaderLogo(BuildContext context){
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
@@ -185,6 +202,49 @@ class Interface {
             ],
           ),
         )
+    );
+  }
+
+  static void showLoadingDialog(BuildContext context, { String title = "Loading...", bool canCancel = false, Function onCancel }){
+    showDialog(
+      barrierDismissible: canCancel,
+      context: context,
+      builder: (BuildContext context) => WillPopScope(
+        onWillPop: () async {
+          if(onCancel != null) onCancel();
+          return true;
+        },
+        child: AlertDialog(
+          title: TitleText(title),
+          content: SingleChildScrollView(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Container(
+                    padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
+                    child: new CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor
+                      ),
+                    )
+                ),
+                Center(child: Text("Please wait..."))
+              ],
+            ),
+          ),
+
+          actions: canCancel ? <Widget>[
+            new FlatButton(
+              onPressed: (){
+                if(onCancel != null) onCancel();
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+              textColor: Theme.of(context).primaryColor,
+            )
+          ] : [],
+        ),
+      )
     );
   }
 

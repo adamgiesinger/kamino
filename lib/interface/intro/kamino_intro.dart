@@ -451,18 +451,18 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                           mainAxisSpacing: spacing,
                           crossAxisSpacing: spacing
                         ),
-                        itemCount: TMDB.availableTraktLists.length,
+                        itemCount: TMDB.curatedTMDBLists.length,
                         itemBuilder: (BuildContext context, int index){
-                          if(!_categoryMemoizers.containsKey(TMDB.availableTraktLists[index]))
-                            _categoryMemoizers[TMDB.availableTraktLists[index]] = new AsyncMemoizer();
+                          if(!_categoryMemoizers.containsKey(TMDB.curatedTMDBLists[index]))
+                            _categoryMemoizers[TMDB.curatedTMDBLists[index]] = new AsyncMemoizer();
 
                           return FutureBuilder(
-                            future: _categoryMemoizers[TMDB.availableTraktLists[index]].runOnce(
-                                () => TMDB.getList(context, TMDB.availableTraktLists[index])
+                            future: _categoryMemoizers[TMDB.curatedTMDBLists[index]].runOnce(
+                                () => TMDB.getList(context, TMDB.curatedTMDBLists[index])
                             ),
                             builder: (BuildContext context, AsyncSnapshot snapshot){
                               if(snapshot.hasError){
-                                print("Error loading list: ${TMDB.availableTraktLists[index]}");
+                                print("Error loading list: ${TMDB.curatedTMDBLists[index]}");
                                 return Container();
                               }
 

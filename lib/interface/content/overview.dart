@@ -20,7 +20,7 @@ import 'package:kamino/interface/genre/genreResults.dart';
 import 'package:kamino/interface/content/movieLayout.dart';
 import 'package:kamino/interface/content/tvShowLayout.dart';
 
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/databaseHelper.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 /*  CONTENT OVERVIEW WIDGET  */
@@ -84,20 +84,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   @override
   void initState() {
-
-    //check if the show is a favorite
-
-    widget.contentType == ContentType.MOVIE ?
-    _contentType = "movie" : _contentType = "tv";
-
-    databaseHelper.getAllFavIDs().then((data) {
-      if (!this.mounted) return;
-
-      setState(() {
-        _favIDs = data;
-        _favState = data.contains(widget.contentId);
-      });
-    });
+    _contentType = getRawContentType(widget.contentType);
 
     // When the widget is initialized, download the overview data.
     try {
@@ -147,9 +134,11 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   // Load the data from the source.
   Future<ContentModel> loadDataAsync() async {
+    //_favState = await DatabaseHelper.isFavorite(_data.id);
+
     // Load trailer
     http.Response videosRawResponse = await http.get(
-      "${TMDB.ROOT_URL}/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/videos${TMDB.getDefaultArguments(context)}"
+      "${TMDB.ROOT_URL}/$_contentType/${widget.contentId}/videos${TMDB.getDefaultArguments(context)}"
     );
     List<dynamic> videos = Convert.jsonDecode(videosRawResponse.body)['results'];
     if(videos != null && videos.isNotEmpty && videos.where((video) => video['type'] == 'Trailer').length > 0) {
@@ -159,7 +148,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
     // Load cast & crew
     var castCrewResponse = Convert.jsonDecode((await http.get(
-      "${TMDB.ROOT_URL}/${widget.contentType == ContentType.MOVIE ? 'movie' : 'tv'}/${widget.contentId}/credits${TMDB.getDefaultArguments(context)}"
+      "${TMDB.ROOT_URL}/$_contentType/${widget.contentId}/credits${TMDB.getDefaultArguments(context)}"
     )).body);
     cast = castCrewResponse["cast"] != null ? castCrewResponse["cast"] : [];
     crew = castCrewResponse["crew"] != null ? castCrewResponse["crew"] : [];
@@ -205,11 +194,11 @@ class _ContentOverviewState extends State<ContentOverview> {
     if (_favState == true) {
 
       //remove the show from the database
-      databaseHelper.removeFavorite(widget.contentId);
+      DatabaseHelper.removeFavoriteById(widget.contentId);
 
       if(await Trakt.isAuthenticated()) trakt.removeMedia(
           context,
-          widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
+          _contentType,
           widget.contentId
       );
 
@@ -224,16 +213,11 @@ class _ContentOverviewState extends State<ContentOverview> {
     } else if (_favState == false){
 
       //add the show to the database
-      databaseHelper.saveFavorites(
-          _data.title,
-          widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
-          widget.contentId,
-          _data.posterPath,
-          _data.releaseDate);
+      DatabaseHelper.saveFavorite(_data);
 
       if(await Trakt.isAuthenticated()) trakt.sendNewMedia(
           context,
-          widget.contentType == ContentType.TV_SHOW ? "tv" : "movie",
+          _contentType,
           _data.title,
           _data.releaseDate != null ? _data.releaseDate.substring(0,4) : null,
           widget.contentId);
@@ -594,7 +578,7 @@ class _ContentOverviewState extends State<ContentOverview> {
               _data.overview != "" ?
                 _data.overview :
                 // e.g: 'This TV Show has no synopsis available.'
-                S.of(context).this_x_has_no_synopsis_available(getOverviewContentTypeName(widget.contentType)),
+                S.of(context).this_x_has_no_synopsis_available(getPrettyContentType(widget.contentType)),
 
               maxLines: 3,
               revealLabel: S.of(context).show_more,

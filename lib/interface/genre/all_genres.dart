@@ -7,7 +7,7 @@ import 'package:kamino/interface/content/overview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/databaseHelper.dart';
 import 'package:kamino/util/genre_names.dart' as genreNames;
 import 'package:kamino/util/genre_names.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
@@ -93,8 +93,7 @@ class _AllGenresState extends State<AllGenres>{
     controller = new ScrollController()..addListener(_scrollListener);
 
     String _contentType = widget.contentType;
-    databaseHelper.getAllFavIDs().then((data){
-
+    DatabaseHelper.getAllFavoriteIds().then((data){
       _favIDs = data;
     });
 

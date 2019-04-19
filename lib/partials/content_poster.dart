@@ -10,23 +10,33 @@ class ContentPoster extends StatefulWidget {
 
   final String background;
   final String name;
+  final String releaseYear;
   final String releaseDate;
   final String mediaType;
   final bool isFav;
   final double height, width;
   final BoxFit imageFit;
   final bool hideIcon;
+  final bool showGradient;
+  final double elevation;
+  final GestureTapCallback onTap;
+  final GestureLongPressCallback onLongPress;
 
   ContentPoster({
     @required this.background,
-    @required this.name,
-    @required this.releaseDate,
-    @required this.mediaType,
-    @required this.isFav,
+    this.name,
+    this.releaseYear,
+    this.releaseDate,
+    this.mediaType,
+    this.isFav = false,
     this.width = 500,
-    this.height = 750.0,
+    this.height = 750,
     this.imageFit = BoxFit.cover,
-    this.hideIcon = false
+    this.hideIcon = false,
+    this.showGradient = true,
+    this.elevation = 0,
+    this.onTap,
+    this.onLongPress
   });
 
   @override
@@ -48,10 +58,12 @@ class ContentPosterState extends State<ContentPoster> {
   @override
   Widget build(BuildContext context) {
     var releaseYear = "";
+    if(widget.releaseYear != null) releaseYear = widget.releaseYear;
     if(widget.releaseDate != null){
       try {
         releaseYear = new DateFormat.y("en_US").format(
-            DateTime.parse(widget.releaseDate));
+            DateTime.parse(widget.releaseDate)
+        );
       }catch(ex){
         releaseYear = "Unknown";
       }
@@ -61,7 +73,6 @@ class ContentPosterState extends State<ContentPoster> {
     if(widget.background != null) {
       imageWidget = new CachedNetworkImage(
         errorWidget: new Icon(Icons.error),
-
         imageUrl: "${TMDB.IMAGE_CDN_POSTER}/${widget.background}",
         fit: widget.imageFit,
         placeholder: Center(
@@ -75,13 +86,6 @@ class ContentPosterState extends State<ContentPoster> {
         width: widget.width,
       );
     }else{
-      /*imageWidget = new Image(
-        image: AssetImage("assets/images/no_image_detail.jpg"),
-        fit: widget.imageFit,
-        height: widget.height,
-        width: widget.width,
-      );*/
-
       imageWidget = Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -96,28 +100,22 @@ class ContentPosterState extends State<ContentPoster> {
       );
     }
 
-    return Container(
+    return Material(
+      elevation: widget.elevation,
+      clipBehavior: Clip.antiAlias,
+      borderRadius: BorderRadius.circular(5),
       child: Stack(
         fit: StackFit.expand,
-        alignment: Alignment.bottomCenter,
 
         children: <Widget>[
-          Card(
-              elevation: 5,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: imageWidget,
-              )
-          ),
-
-          Padding(
-              padding: EdgeInsets.all(3.5),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: BottomGradient(finalStop: 0.025)
-              )
-          ),
-
+          imageWidget,
+          widget.showGradient ? Positioned.fill(
+            top: -1,
+            left: -1,
+            right: -1,
+            bottom: -1,
+            child: BottomGradient(finalStop: 0.025),
+          ) : Container(),
           Align(
               alignment: Alignment.bottomCenter,
               child: Column(
@@ -126,11 +124,11 @@ class ContentPosterState extends State<ContentPoster> {
                 children: <Widget>[
                   new Padding(
                       padding: EdgeInsets.only(bottom: 2, left: 10, right: 10),
-                      child: TitleText(
+                      child: widget.name != null ? TitleText(
                         widget.name,
                         fontSize: 16,
                         textColor: _favoriteIndicator(),
-                      )
+                      ) : Container()
                   ),
 
                   Padding(
@@ -143,15 +141,15 @@ class ContentPosterState extends State<ContentPoster> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
+                          releaseYear != null ? Text(
                               releaseYear,
                               style: TextStyle(
                                   fontSize: 12,
                                 color: _favoriteIndicator()
                               )
-                          ),
+                          ) : Container(),
 
-                          widget.hideIcon == false ? Icon(
+                          widget.hideIcon == false && widget.mediaType != null ? Icon(
                               widget.mediaType == 'tv' ? Icons.tv : Icons.local_movies,
                               size: 16,
                             color: _favoriteIndicator(),
@@ -161,6 +159,15 @@ class ContentPosterState extends State<ContentPoster> {
                   )
                 ],
               )
+          ),
+
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: widget.onTap,
+              onLongPress: widget.onLongPress,
+              child: Container()
+            ),
           )
         ],
       ),

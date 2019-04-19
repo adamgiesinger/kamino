@@ -10,6 +10,7 @@ import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/interface/settings/page.dart';
 import 'package:device_info/device_info.dart';
+import 'package:kamino/util/databaseHelper.dart';
 import 'package:kamino/util/settings.dart';
 
 
@@ -326,6 +327,21 @@ class AdvancedSettingsPageState extends SettingsPageState {
           ),
         ),
 
+        Material(
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
+          child: ListTile(
+            leading: Icon(Icons.delete_forever),
+            title: TitleText("Wipe Database"),
+            subtitle: Text("Clears the application database."),
+            enabled: true,
+            onTap: () async {
+              Interface.showLoadingDialog(context, title: "Wiping database...");
+              await DatabaseHelper.wipe();
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+
         _showDebugItems ? Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
@@ -334,6 +350,17 @@ class AdvancedSettingsPageState extends SettingsPageState {
             subtitle: Text("(Debug only) Logs the application preferences in the console."),
             enabled: true,
             onTap: () => SettingsManager.dumpFromStorage(),
+          ),
+        ) : Container(),
+
+        _showDebugItems ? Material(
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
+          child: ListTile(
+            leading: Icon(Icons.storage),
+            title: TitleText("Dump Database"),
+            subtitle: Text("(Debug only) Logs the application database in the console."),
+            enabled: true,
+            onTap: () => DatabaseHelper.dump(),
           ),
         ) : Container(),
       ],

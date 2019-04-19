@@ -1,239 +1,175 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/models/content.dart';
 import 'package:objectdb/objectdb.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 
-//do not change value or remove until further notice
-// backup - "<ApolloQuery>"
-const querySplitter = "<ApolloQuery>";
+class DatabaseHelper {
 
-Future saveFavorites(String name, String contentType, int tmdbid, String url, String year) async{
-
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
-
-  //open connection to the database
-  db.open();
-
-  Map dataEntry = {
-    "name": name,
-    "docType": "favorites",
-    "contentType": contentType,
-    "tmdbID": tmdbid,
-    "imageUrl": url,
-    "year": year,
-    "saved_on": DateTime.now().toUtc().toString()
-  };
-
-  await db.insert(dataEntry);
-
-  // 'tidy up' the db file
-  db.tidy();
-
-  await db.close();
-}
-
-Future<List<int>> getAllFavIDs() async {
-
-  List<int> _results = [];
-
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
-
-  //open connection to the database
-  db.open();
-
-  List<Map> _data = await db.find({"docType": "favorites"});
-
-  for (int x=0; x < _data.length ; x++){
-
-    _results.add(_data[x]["tmdbID"]);
+  // GENERAL //
+  static Future<ObjectDB> openDatabase() async {
+    final Directory appDirectory = await getApplicationDocumentsDirectory();
+    return ObjectDB("${appDirectory.path}/apolloDB.db").open();
   }
 
-  await db.close();
+  static Future<void> bulkWrite(List<Map> content) async {
+    ObjectDB database = await openDatabase();
+    await database.insertMany(content);
+    database.close();
+  }
 
-  return _results;
-}
+  static Future<void> dump() async {
+    print("Opening database...");
+    ObjectDB database = await openDatabase();
+    print("Dumping contents...");
+    print((await database.find({})).toString());
+  }
 
-Future<bool> isFavorite(int tmdbid) async{
+  static Future<void> wipe() async {
+    ObjectDB database = await openDatabase();
+    await database.remove({});
+    await database.close();
+  }
 
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
-
-  //open connection to the database
-  db.open();
-
-  var results = await db.find({
-        "docType": "favorites",
-        "tmdbID":tmdbid
-      });
-
-  db.close();
-
-  //return true if the show is a known favorite, else return false
-  return results.length == 1 ? true : false;
-}
-
-Future removeFavorite(int tmdbid) async {
-
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
-
-  //open connection to the database
-  db.open();
+  // FAVORITES //
+  static Future<void> saveFavoriteById(BuildContext context, ContentType type, int id) async {
+    await saveFavorite(await TMDB.getContentInfo(context, type, id));
+  }
   
-  //remove the item from the database
-  db.remove({"docType": "favorites", "tmdbID":tmdbid});
+  static Future<void> saveFavorite(ContentModel content) async {
+    ObjectDB database = await openDatabase();
 
-  // 'tidy up' the db file
-  db.tidy();
+    Map dataEntry = FavoriteDocument.fromModel(content).toMap();
+    await database.insert(dataEntry);
 
-  db.close();
-}
-
-Future<List<String>> getSearchHistory() async {
-
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
-
-  db.open();
-
-  Map _data = {
-    "results": await db.find({ "docType": "searchHistory"}),
-  };
-
-  //db.tidy();
-
-  await db.close();
-
-  //[0]["queries"] == null ? [] : _data[0]["queries"].split(querySplitter)
-
-  if (_data["results"].length == 0){
-    return [];
+    database.close();
   }
 
-  return _data["results"].split(querySplitter);
-}
+  static Future<void> saveFavorites(List<FavoriteDocument> content) async {
+    bulkWrite(content.map((FavoriteDocument document) => document.toMap()));
+  }
 
-Future saveSearchHistory(String newHistory) async {
+  static Future<bool> isFavorite(int tmdbId) async {
+    ObjectDB database = await openDatabase();
 
-  if (newHistory.isEmpty != true){
-    //get the path of the database file
-    final directory = await getApplicationDocumentsDirectory();
-    final path =  directory.path  + "/apolloDB.db";
-    var db = ObjectDB(path);
-
-    db.open();
-
-    //get the current query values
-    List<Map> _currentHistory = await db.find({
-      "docType": "searchHistory"
+    var results = await database.find({
+      "docType": "favorites",
+      "tmdbID": tmdbId
     });
 
-    // add the new value to the end
-    String _finalHistory;
+    database.close();
+    return results.length == 1 ? true : false;
+  }
 
-    if (_currentHistory[0]["queries"] == null){
-      _finalHistory = newHistory;
-    } else {
-      _finalHistory = _currentHistory[0]["queries"]+querySplitter+newHistory;
-    }
+  static Future<void> removeFavorite(ContentModel model) async {
+    await removeFavoriteById(model.id);
+  }
+  
+  static Future<void> removeFavoriteById(int id) async {
+    ObjectDB database = await openDatabase();
+    database.remove({"docType": "favorites", "tmdbID": id});
+    database.close();
+  }
 
-    await db.update({
-      "docType": "searchHistory"
-    },{
-      "queries": _finalHistory
+  static Future<Map<String, List<FavoriteDocument>>> getAllFavorites() async {
+    return {
+      'tv': await getFavoritesByType(ContentType.TV_SHOW),
+      'movie': await getFavoritesByType(ContentType.MOVIE)
+    };
+  }
+
+  static Future<List<int>> getAllFavoriteIds() async {
+    ObjectDB database = await openDatabase();
+    List<Map> results = await database.find({
+      "docType": "favorites"
     });
 
-    db.tidy();
+    database.close();
+    return results.map((Map result) => result['tmdbID'] as int).toList();
+  }
 
-    await db.close();
+  static Future<List<FavoriteDocument>> getFavoritesByType(ContentType type) async {
+    ObjectDB database = await openDatabase();
+    List<Map> results = await database.find({
+      "docType": "favorites",
+      "contentType": getRawContentType(type)
+    });
+
+    database.close();
+    return results.map((Map result) => FavoriteDocument(result)).toList();
+  }
+
+  // SEARCH HISTORY //
+
+  static Future<List<String>> getSearchHistory() async {
+    ObjectDB database = await openDatabase();
+
+    List<Map> results = await database.find({
+      "docType": "pastSearch"
+    });
+
+    database.close();
+    return results.map((Map result) => result['text']).toList();
+  }
+
+  static Future<void> writeToHistory(String text) async {
+    ObjectDB database = await openDatabase();
+    database.insert({
+      "docType": "pastSearch",
+      "text": text
+    });
+    database.close();
+  }
+
+  static Future<void> removeFromHistory(String text) async {
+    ObjectDB database = await openDatabase();
+    database.remove({
+      "docType": "pastSearch",
+      "text": text
+    });
+    database.close();
   }
 }
 
-Future<List<Map>> getFavMovies() async {
+class FavoriteDocument {
 
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
+  int tmdbId;
+  String name;
+  ContentType contentType;
+  String imageUrl;
+  String year;
+  DateTime savedOn;
 
-  db.open();
+  FavoriteDocument(Map data) :
+    tmdbId = data['tmdbID'],
+    name = data['name'],
+    contentType = data['contentType'] == 'tv' ? ContentType.TV_SHOW : ContentType.MOVIE,
+    imageUrl = data['imageUrl'],
+    year = data['year'],
+    savedOn = DateTime.parse(data['saved_on']);
 
-  var _result = await db.find({
-    "docType": "favorites",
-    "contentType": "movie"
-  });
+  FavoriteDocument.fromModel(ContentModel model) :
+    tmdbId = model.id,
+    name = model.title,
+    contentType = model.contentType,
+    imageUrl = model.posterPath,
+    year = DateFormat.y("en_US").format(DateTime.parse(model.releaseDate)),
+    savedOn = DateTime.now().toUtc();
 
-  db.close();
+  Map toMap(){
+    return {
+      "docType": "favorites",
+      "tmdbID": tmdbId,
+      "name": name,
+      "contentType": getRawContentType(contentType),
+      "imageUrl": imageUrl,
+      "year": year,
+      "saved_on": savedOn.toString()
+    };
+  }
 
-  return _result.length == 0 ? [] : _result;
-}
-
-Future<List<Map>> getFavTVShows() async {
-
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  final db = ObjectDB(path);
-
-  db.open();
-
-  List<Map> _result = await db.find({
-    "docType": "favorites",
-    "contentType": "tv"
-  });
-
-  db.tidy();
-
-  await db.close();
-
-  return _result.length == 0 ? [] : _result;
-}
-
-Future<Map> getAllFaves() async {
-
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
-
-  db.open();
-
-  Map _result = {
-    "tv": await db.find({"docType": "favorites", "contentType": "tv"}),
-    "movie": await db.find({"docType": "favorites", "contentType": "movie"}),
-  };
-
-  await db.close();
-
-  return _result;
-}
-
-Future<String> bulkSaveFavorites(List<Map> documents) async {
-
-  //get the path of the database file
-  final directory = await getApplicationDocumentsDirectory();
-  final path =  directory.path  + "/apolloDB.db";
-  var db = ObjectDB(path);
-
-  //open connection to the database
-  db.open();
-
-  await db.insertMany(documents);
-
-  // 'tidy up' the db file
-  db.tidy();
-  await db.close();
-
-  return "done";
 }

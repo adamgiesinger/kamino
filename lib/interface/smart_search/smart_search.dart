@@ -156,7 +156,7 @@ class SmartSearch extends SearchDelegate<String> {
             child: ResultCard(
               isFav: false,
               background: snapshot.data[index].poster_path,
-              name: snapshot.data[index].name,
+              name: snapshot.data[index].title,
               overview: snapshot.data[index].overview,
               ratings: snapshot.data[index].vote_average,
               elevation: 0.0,
@@ -239,10 +239,10 @@ class SmartSearch extends SearchDelegate<String> {
 
     if (snapshot.data[index].year != null && snapshot.data[index].year.length > 3){
 
-      return snapshot.data[index].name +"  ("+snapshot.data[index].year.toString().substring(0,4)+")";
+      return snapshot.data[index].title +"  ("+snapshot.data[index].year.toString().substring(0,4)+")";
     }
 
-    return snapshot.data[index].name;
+    return snapshot.data[index].title;
   }
 
   @override

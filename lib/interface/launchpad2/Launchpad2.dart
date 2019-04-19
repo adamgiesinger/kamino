@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,6 +11,7 @@ import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/carousel.dart';
 import 'package:kamino/partials/content_card.dart';
+import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:simple_moment/simple_moment.dart';
@@ -24,10 +27,24 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
 
   AsyncMemoizer _memoizer = new AsyncMemoizer();
 
+  EditorsChoice _editorsChoice;
   List<ContentModel> _topPicksList = List();
   List<ContentModel> _continueWatchingList;
 
   Future<void> load() async {
+    // Randomly select a choice from the Editor's Choice list.
+    var editorsChoiceComments = jsonDecode((await TMDB.getList(context, "109986", loadFully: false, raw: true)))['comments'] as Map;
+    List<ContentModel> editorsChoiceList = (await TMDB.getList(context, "109986", loadFully: true)).content;
+
+    var selectedChoice = (editorsChoiceList[Random().nextInt(editorsChoiceList.length)]);
+    _editorsChoice = new EditorsChoice(
+      id: selectedChoice.id,
+      title: selectedChoice.title,
+      poster: selectedChoice.posterPath,
+      type: selectedChoice.contentType,
+      comment: editorsChoiceComments['${getRawContentType(selectedChoice.contentType)}:${selectedChoice.id}']
+    );
+
     _topPicksList = (await TMDB.getList(context, "107032")).content;
 
     if(await Trakt.isAuthenticated()) {
@@ -127,6 +144,51 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
                     ),
                   ),
 
+                  SubtitleText("Editor's Choice", padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10).copyWith(bottom: 0)),
+                  Container(
+                      height: 200,
+                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: Card(
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 107),
+                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      TitleText(_editorsChoice.title, fontSize: 24),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10, right: 5),
+                                        child: Text(_editorsChoice.comment),
+                                      )
+                                    ],
+                                  ),
+                                )
+                            ),
+                          ),
+
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            bottom: 0,
+                            width: 107,
+                            child: ContentPoster(
+                              elevation: 4,
+                              onTap: () => Interface.openOverview(context, _editorsChoice.id, _editorsChoice.type),
+                              background: _editorsChoice.poster,
+                              showGradient: false,
+                            ),
+                          )
+                        ],
+                      )
+                  ),
+
                   _continueWatchingList != null ? Container(
                     padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                     child: Column(
@@ -194,7 +256,7 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
                         )
                       ],
                     ),
-                  ) : Container()
+                  ) : Container(),
 
                 ]),
               )
@@ -207,5 +269,23 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
 
   @override
   bool get wantKeepAlive => true;
+
+}
+
+class EditorsChoice {
+
+  int id;
+  ContentType type;
+  String title;
+  String comment;
+  String poster;
+
+  EditorsChoice({
+    @required this.id,
+    @required this.type,
+    @required this.title,
+    @required this.comment,
+    @required this.poster
+  });
 
 }

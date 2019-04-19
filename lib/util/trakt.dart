@@ -10,7 +10,7 @@ import 'package:kamino/main.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:kamino/ui/interface.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
+import 'package:kamino/util/databaseHelper.dart';
 import 'package:kamino/util/settings.dart';
 
 class TraktAuth extends StatefulWidget {
@@ -232,7 +232,7 @@ Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) as
   KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
   //get all favorites from the database
-  Map _favs = await databaseHelper.getAllFaves();
+  Map<String, List<FavoriteDocument>> _favs = await DatabaseHelper.getAllFavorites();
 
   //media sent in batches to avoid timeout
   List<String> mediaTypes = ["shows","movies"];
@@ -253,11 +253,11 @@ Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) as
       for (int i = 0; i < _favs[dbSelector].length; i++) {
 
         body[header].add({
-          'collected_at': _favs[dbSelector][i]["saved_on"],
-          'title': _favs[dbSelector][i]["name"],
-          'year': _favs[dbSelector][i]["year"],
+          'collected_at': _favs[dbSelector][i].savedOn.toString(),
+          'title': _favs[dbSelector][i].name,
+          'year': _favs[dbSelector][i].year,
           'ids': {
-            'tmdb': _favs[dbSelector][i]["tmdbID"]
+            'tmdb': _favs[dbSelector][i].tmdbId
           }
         });
       }
@@ -283,8 +283,8 @@ Future<List<int>> addFavToTrakt(List<String> traktCred, BuildContext context) as
 
 Future<String> updateDatabase(BuildContext context, Map payload) async {
 
-  List<int> _favIDs = await databaseHelper.getAllFavIDs();
-  List<Map> collections = [];
+  List<int> _favIDs = await DatabaseHelper.getAllFavoriteIds();
+  List<FavoriteDocument> collections = [];
 
   //check to see if the item is already in the database
   //if not get info from tmdb and write to the database
@@ -309,15 +309,17 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
 
         _favIDs.add(_data["id"]);
 
-        collections.add({
-          "name": _data["name"],
-          "docType": "favorites",
-          "contentType": "tv",
-          "tmdbID": _data["id"],
-          "imageUrl": _data["poster_path"],
-          "year": _data["first_air_date"],
-          "saved_on": DateTime.now().toUtc().toString()
-        });
+        collections.add(
+          FavoriteDocument({
+            "docType": "favorites",
+            "contentType": "tv",
+            "name": _data["name"],
+            "tmdbID": _data["id"],
+            "imageUrl": _data["poster_path"],
+            "year": _data["first_air_date"],
+            "saved_on": DateTime.now().toUtc().toString()
+          })
+        );
       }
     }
   }
@@ -339,15 +341,15 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
         Map _data = jsonDecode(res.body);
         _favIDs.add(_data["id"]);
 
-        collections.add({
-          "name":  _data["title"],
+        collections.add(FavoriteDocument({
           "docType": "favorites",
           "contentType": "movie",
+          "name":  _data["title"],
           "tmdbID": _data["id"],
           "imageUrl": _data["poster_path"],
           "year": _data["release_date"],
           "saved_on": DateTime.now().toUtc().toString()
-        });
+        }));
       }
     }
   }
@@ -375,15 +377,15 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
 
           _favIDs.add(_data["movie_results"][0]["id"]);
 
-          collections.add({
-          "name":  _data["movie_results"][0]["title"],
-          "docType": "favorites",
-          "contentType": "movie",
-          "tmdbID": _data["movie_results"][0]["id"],
-          "imageUrl": _data["movie_results"][0]["poster_path"],
-          "year": _data["movie_results"][0]["release_date"],
-          "saved_on": DateTime.now().toUtc().toString()
-          });
+          collections.add(FavoriteDocument({
+            "docType": "favorites",
+            "contentType": "movie",
+            "name":  _data["movie_results"][0]["title"],
+            "tmdbID": _data["movie_results"][0]["id"],
+            "imageUrl": _data["movie_results"][0]["poster_path"],
+            "year": _data["movie_results"][0]["release_date"],
+            "saved_on": DateTime.now().toUtc().toString()
+          }));
         }
       }
     }
@@ -410,15 +412,15 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
 
           _favIDs.add(_data["tv_results"][0]["id"]);
 
-          collections.add({
-            "name":  _data["tv_results"][0]["name"],
+          collections.add(FavoriteDocument({
             "docType": "favorites",
             "contentType": "tv",
+            "name": _data["tv_results"][0]["name"],
             "tmdbID": _data["tv_results"][0]["id"],
             "imageUrl": _data["tv_results"][0]["poster_path"],
             "year": _data["tv_results"][0]["first_air_date"],
             "saved_on": DateTime.now().toUtc().toString()
-          });
+          }));
         }
       }
     }
@@ -431,7 +433,7 @@ Future<String> updateDatabase(BuildContext context, Map payload) async {
     var startTime = DateTime.now();
     print(startTime);
     print("items being written"+collections.toString());
-    String writeStatus = await databaseHelper.bulkSaveFavorites(collections);
+    await DatabaseHelper.saveFavorites(collections);
     await Future.delayed(new Duration(seconds: 2));
 
     var difference = startTime.difference(DateTime.now()).inSeconds;
@@ -565,7 +567,7 @@ Future<String> getWatchHistories(BuildContext context) async {
 
   if (documents.length > 0){
     //write the watched history to the database
-    String status = await databaseHelper.bulkSaveFavorites(documents);
+    await DatabaseHelper.bulkWrite(documents);
   }
 
 

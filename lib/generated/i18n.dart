@@ -85,6 +85,8 @@ class S implements WidgetsLocalizations {
   String get miscellaneous => "MISCELLANEOUS";
   String get movies => "Movies";
   String get next => "NEXT";
+  String get no_favorites_description => "You can add an item to favorites by tapping the heart on the top right of a content overview page.";
+  String get no_favorites_header => "No favorites here!";
   String get no_results_found => "No results found.";
   String get okay => "Okay";
   String get one_episode => "1 episode";

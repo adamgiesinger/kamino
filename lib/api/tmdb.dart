@@ -24,7 +24,7 @@ class TMDB {
 
   // These lists are curated by the ApolloTV team and you're welcome to use them.
   // Otherwise, you can replace them by supplying an array of TMDB list IDs.
-  static const List<String> availableTraktLists = [
+  static const List<String> curatedTMDBLists = [
     // ApolloTV Top Picks
     "107032",
     // Netflix Top Picks
@@ -46,12 +46,15 @@ class TMDB {
   ];
 
 
-  static Future<ContentListModel> getList(BuildContext context, String id, { bool loadFully = false }) async {
+  static Future<dynamic> getList(BuildContext context, String id, { bool loadFully = false, bool raw = false }) async {
     var rawContentResponse = (await http.get("https://api.themoviedb.org/4/list/$id${getDefaultArguments(context)}", headers: {
     'Content-Type': 'application/json;charset=utf-8'
     })).body;
 
+    if(raw) return rawContentResponse;
+
     ContentListModel listModel = ContentListModel.fromJSON(Convert.jsonDecode(rawContentResponse));
+
     if(!listModel.fullyLoaded && loadFully){
       List<ContentModel> fullContentList = new List();
 
@@ -79,7 +82,7 @@ class TMDB {
     return listModel;
   }
 
-  static Future<ContentModel> getContentInfo(BuildContext context, ContentType type, String id) async {
+  static Future<ContentModel> getContentInfo(BuildContext context, ContentType type, int id) async {
     if(type == ContentType.MOVIE){
 
       // Get the data from the server.

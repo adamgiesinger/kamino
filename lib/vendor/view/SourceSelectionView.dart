@@ -205,7 +205,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
         case 'quality':
           return _getSourceQualityIndex(left.metadata.quality).compareTo(_getSourceQualityIndex(right.metadata.quality));
         case 'name':
-          return left.metadata.source.compareTo(right.metadata.source);
+          return left.metadata.provider.compareTo(right.metadata.provider);
         case 'fileSize':
           return left.metadata.contentLength.compareTo(right.metadata.contentLength);
         default:
