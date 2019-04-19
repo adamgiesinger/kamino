@@ -71,7 +71,7 @@ class DatabaseHelper {
   
   static Future<void> removeFavoriteById(int id) async {
     ObjectDB database = await openDatabase();
-    database.remove({"docType": "favorites", "tmdbID": id});
+    await database.remove({"docType": "favorites", "tmdbID": id});
     database.close();
   }
 

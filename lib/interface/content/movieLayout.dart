@@ -1,44 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
-import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
-import 'package:kamino/partials/content_poster.dart';
-import 'package:kamino/ui/elements.dart';
-import 'package:kamino/interface/content/overview.dart';
 
 class MovieLayout {
 
   static Widget generate(BuildContext context, MovieContentModel _data){
-    return Padding(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 0),
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 30.0),
-          child: Column(
-              children: <Widget>[
-
-                /* Similar Movies */
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ListTile(
-                        title: SubtitleText(
-                            S.of(context).similar_movies
-                        )
-                    ),
-
-                    SizedBox(
-                        height: 200.0,
-                        child: _generateSimilarMovieCards(_data)
-                    )
-                  ],
-                )
-                /* ./Similar Movies */
-
-              ]
-          ),
-        )
-    );
+    return Container();
   }
 
   ///
@@ -81,45 +49,6 @@ class MovieLayout {
             ]
         )
     );
-  }
-
-  /* PRIVATE SUBCLASS-SPECIFIC METHODS */
-
-  static Widget _generateSimilarMovieCards(MovieContentModel _data){
-    return _data.recommendations == null ? Container() : ListView.builder(
-      shrinkWrap: true,
-      scrollDirection: Axis.horizontal,
-      itemCount: _data.recommendations.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: index == 0
-              ? const EdgeInsets.only(left: 18.0)
-              : const EdgeInsets.only(left: 5.0),
-          child: InkWell(
-            onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ContentOverview(
-                          contentId: _data.recommendations[index]["id"],
-                          contentType: ContentType.MOVIE
-                        ),
-                    )
-                );
-            },
-            splashColor: Colors.white,
-            child: SizedBox(
-              width: 152,
-              child:  ContentPoster(
-                name: _data.recommendations[index]["title"],
-                background: _data.recommendations[index]["poster_path"],
-                mediaType: 'movie',
-                releaseDate: _data.recommendations[index]["release_date"]
-              ),
-            ),
-          ),
-        );
-    });
   }
 
 }

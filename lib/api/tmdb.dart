@@ -52,7 +52,6 @@ class TMDB {
     })).body;
 
     if(raw) return rawContentResponse;
-
     ContentListModel listModel = ContentListModel.fromJSON(Convert.jsonDecode(rawContentResponse));
 
     if(!listModel.fullyLoaded && loadFully){
@@ -82,34 +81,24 @@ class TMDB {
     return listModel;
   }
 
-  static Future<ContentModel> getContentInfo(BuildContext context, ContentType type, int id) async {
-    if(type == ContentType.MOVIE){
+  static Future<ContentModel> getContentInfo(BuildContext context, ContentType type, int id, { String appendToResponse }) async {
+    // Get the data from the server.
+    http.Response response = await http.get(
+        "${TMDB.ROOT_URL}/${getRawContentType(type)}/$id${getDefaultArguments(context)}"
+            + (appendToResponse != null ? "&append_to_response=$appendToResponse" : "")
+    );
+    String json = response.body;
 
-      // Get the data from the server.
-      http.Response response = await http.get(
-          "${TMDB.ROOT_URL}/movie/$id${getDefaultArguments(context)}"
-      );
-      String json = response.body;
-
+    if (type == ContentType.MOVIE)
       // Return movie content model.
       return MovieContentModel.fromJSON(
           Convert.jsonDecode(json)
       );
-
-    }else if(type == ContentType.TV_SHOW){
-
-      // Get the data from the server.
-      http.Response response = await http.get(
-          "${TMDB.ROOT_URL}/tv/$id${getDefaultArguments(context)}"
-      );
-      String json = response.body;
-
+    else if (type == ContentType.TV_SHOW)
       // Return TV show content model.
       return TVShowContentModel.fromJSON(
           Convert.jsonDecode(json)
       );
-
-    }
 
     throw new Exception("Invalid content type: $type");
   }

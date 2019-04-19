@@ -116,31 +116,7 @@ class _SearchResultViewState extends State<SearchResultView> {
         return;
       }
 
-      _override = Container(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.error, size: 48, color: Colors.grey),
-              Container(padding: EdgeInsets.symmetric(vertical: 10)),
-              TitleText("An error occurred.", fontSize: 24),
-              Container(padding: EdgeInsets.symmetric(vertical: 3)),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                child: Text(
-                  "Well this is awkward... An error occurred whilst loading search results.",
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
+      _override = ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading search results.");
     });
 
     super.initState();

@@ -1,17 +1,17 @@
 import 'dart:async';
-import 'dart:convert' as Convert;
+import 'dart:io';
+import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_rating/flutter_rating.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/models/movie.dart';
-import 'package:kamino/models/tvshow.dart';
+import 'package:kamino/models/crew.dart';
 
 import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/res/BottomGradient.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
@@ -46,179 +46,80 @@ class ContentOverview extends StatefulWidget {
 ///
 class _ContentOverviewState extends State<ContentOverview> {
 
-  TextSpan _titleSpan = TextSpan();
-  bool _longTitle = false;
-  String _backdropImagePath;
-  bool _favState = false;
-  String _contentType;
+  final AsyncMemoizer _memoizer = new AsyncMemoizer();
 
-  Widget _override;
-  ContentModel _data;
+  String rawContentType;
+  bool isFavorite = false;
+
+  TextSpan titleSpan = TextSpan();
+  bool hasLongTitle = false;
+
   String _trailer;
-  List crew;
-  List cast;
-
-  Widget _generateFavoriteIcon(bool state){
-
-    Widget _result;
-
-    if(state == true) {
-
-      _result = Icon(
-        Icons.favorite,
-        color: Colors.red,
-      );
-
-    } else {
-
-      _result = Icon(
-        Icons.favorite_border,
-        color: Theme.of(context).primaryTextTheme.body1.color,
-      );
-    }
-
-    return _result;
-  }
-
+  List<CrewMemberModel> crew;
+  List<CastMemberModel> cast;
 
   @override
   void initState() {
-    _contentType = getRawContentType(widget.contentType);
-
-    // When the widget is initialized, download the overview data.
-    try {
-      loadDataAsync().then((data) {
-        if (!this.mounted) return;
-
-        // When complete, update the state which will allow us to
-        // draw the UI.
-        setState(() {
-          _data = data;
-
-          _titleSpan = new TextSpan(
-              text: _data.title,
-              style: TextStyle(
-                  fontFamily: 'GlacialIndifference',
-                  fontSize: 19,
-                  color: Theme
-                      .of(context)
-                      .primaryTextTheme
-                      .title
-                      .color
-              )
-          );
-
-          var titlePainter = new TextPainter(
-              text: _titleSpan,
-              maxLines: 1,
-              textAlign: TextAlign.start,
-              textDirection: Directionality.of(context)
-          );
-
-          titlePainter.layout(maxWidth: MediaQuery
-              .of(context)
-              .size
-              .width - 160);
-          _longTitle = titlePainter.didExceedMaxLines;
-        });
-      }).catchError((error){
-        _override = OfflineMixin();
-      });
-    }catch(_){
-      return;
-    }
-
+    rawContentType = getRawContentType(widget.contentType);
     super.initState();
   }
 
   // Load the data from the source.
-  Future<ContentModel> loadDataAsync() async {
-    _favState = await DatabaseHelper.isFavorite(widget.contentId);
+  Future<ContentModel> fetchOverviewData() async {
+    isFavorite = await DatabaseHelper.isFavorite(widget.contentId);
+
+    ContentModel contentInfo = await TMDB.getContentInfo(
+        context,
+        widget.contentType,
+        widget.contentId,
+        appendToResponse: "credits,videos,similar"
+    );
 
     // Load trailer
-    http.Response videosRawResponse = await http.get(
-      "${TMDB.ROOT_URL}/$_contentType/${widget.contentId}/videos${TMDB.getDefaultArguments(context)}"
-    );
-    List<dynamic> videos = Convert.jsonDecode(videosRawResponse.body)['results'];
+    List<dynamic> videos = contentInfo.videos;
     if(videos != null && videos.isNotEmpty && videos.where((video) => video['type'] == 'Trailer').length > 0) {
       var video = videos.firstWhere((video) => video['type'] == 'Trailer');
       _trailer = video != null ? video['key'] : null;
     }
 
     // Load cast & crew
-    var castCrewResponse = Convert.jsonDecode((await http.get(
-      "${TMDB.ROOT_URL}/$_contentType/${widget.contentId}/credits${TMDB.getDefaultArguments(context)}"
-    )).body);
-    cast = castCrewResponse["cast"] != null ? castCrewResponse["cast"] : [];
-    crew = castCrewResponse["crew"] != null ? castCrewResponse["crew"] : [];
+    cast = contentInfo.cast != null ? contentInfo.cast : [];
+    crew = contentInfo.crew != null ? contentInfo.crew : [];
 
-    if(widget.contentType == ContentType.MOVIE){
-
-      // Get the data from the server.
-      http.Response response = await http.get(
-        "${TMDB.ROOT_URL}/movie/${widget.contentId}${TMDB.getDefaultArguments(context)}"
-      );
-      String json = response.body;
-
-      // Get the recommendations data from the server.
-      http.Response recommendedDataResponse = await http.get(
-        "${TMDB.ROOT_URL}/movie/${widget.contentId}/similar${TMDB.getDefaultArguments(context)}&page=1"
-      );
-      String recommended = recommendedDataResponse.body;
-
-      // Return movie content model.
-      return MovieContentModel.fromJSON(
-          Convert.jsonDecode(json),
-          recommendations: Convert.jsonDecode(recommended)["results"]
-      );
-
-    }else if(widget.contentType == ContentType.TV_SHOW){
-
-      // Get the data from the server.
-      http.Response response = await http.get(
-          "${TMDB.ROOT_URL}/tv/${widget.contentId}${TMDB.getDefaultArguments(context)}"
-      );
-      String json = response.body;
-
-      // Return TV show content model.
-      return TVShowContentModel.fromJSON(Convert.jsonDecode(json));
-    }
-
-    throw new Exception("Unexpected content type.");
+    return contentInfo;
   }
 
-  //Logic for the favorites button
-  _favButtonLogic(BuildContext context) async {
+  // TODO: Rewrite logic for the favorites button
+  _favButtonLogic(BuildContext context, ContentModel content) async {
 
-    if (_favState == true) {
+    if (isFavorite) {
 
       //remove the show from the database
       DatabaseHelper.removeFavoriteById(widget.contentId);
 
       if(await Trakt.isAuthenticated()) trakt.removeMedia(
           context,
-          _contentType,
+          rawContentType,
           widget.contentId
       );
 
-      //show notification snackbar
       Interface.showSnackbar(S.of(context).removed_from_favorites, context: context, backgroundColor: Colors.red);
 
       //set fav to false to reflect change
       setState(() {
-        _favState = false;
+        isFavorite = false;
       });
 
-    } else if (_favState == false){
+    } else if (isFavorite == false){
 
       //add the show to the database
-      DatabaseHelper.saveFavorite(_data);
+      DatabaseHelper.saveFavorite(content);
 
       if(await Trakt.isAuthenticated()) trakt.sendNewMedia(
           context,
-          _contentType,
-          _data.title,
-          _data.releaseDate != null ? _data.releaseDate.substring(0,4) : null,
+          rawContentType,
+          content.title,
+          content.releaseDate != null ? content.releaseDate.substring(0,4) : null,
           widget.contentId);
 
       //show notification snackbar
@@ -226,7 +127,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
       //set fav to true to reflect change
       setState(() {
-        _favState = true;
+        isFavorite = true;
       });
     }
   }
@@ -235,132 +136,171 @@ class _ContentOverviewState extends State<ContentOverview> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _memoizer.runOnce(() => fetchOverviewData()),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(snapshot.connectionState == ConnectionState.none || snapshot.hasError){
+          // If the user is offline show the appropriate message.
+          if(snapshot.error is SocketException || snapshot.error is HttpException) {
+            return OfflineMixin();
+          }
 
-    // If the content is overriden by a widget, that widget will be shown.
-    // This is primarily used for error messages.
-    if(_override != null) return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: _override
-    );
+          // Otherwise an error must have occurred.
+          print(snapshot.error);
+          return ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading this ${getPrettyContentType(widget.contentType)}.");
+        }
 
-    // This is shown whilst the data is loading.
-    if (_data == null) return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Center(
-        child: CircularProgressIndicator(
-          valueColor: new AlwaysStoppedAnimation<Color>(
-            Theme.of(context).primaryColor
-          ),
-        )
-      )
-    );
-
-    // When the data has loaded we can display the general outline and content-type specific body.
-    return new Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Stack(
-        children: <Widget>[
-          NestedScrollView(
-              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    backgroundColor: Theme.of(context).backgroundColor,
-                    actions: <Widget>[
-
-                      Interface.generateSearchIcon(context),
-
-                      IconButton(
-                        icon: _generateFavoriteIcon(_favState),
-                        onPressed: (){
-                          _favButtonLogic(context);
-                        },
+        switch(snapshot.connectionState){
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+          case ConnectionState.active:
+            return Scaffold(
+                backgroundColor: Theme.of(context).backgroundColor,
+                body: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor
                       ),
-                    ],
-                    expandedHeight: 200.0,
-                    floating: false,
-                    pinned: true,
-                    flexibleSpace: FlexibleSpaceBar(
-                      centerTitle: true,
-                      title: LayoutBuilder(builder: (context, size){
-                        var titleTextWidget = new RichText(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          text: _titleSpan,
-                        );
+                    )
+                )
+            );
+          case ConnectionState.done:
+            ContentModel content = snapshot.data;
 
-                        if(_longTitle) return Container();
+            /* BEGIN: Render title */
+            titleSpan = new TextSpan(
+                text: content.title,
+                style: TextStyle(
+                    fontFamily: 'GlacialIndifference',
+                    fontSize: 19,
+                    color: Theme.of(context).primaryTextTheme.title.color
+                )
+            );
 
-                        return ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: size.maxWidth - 160
-                          ),
-                          child: titleTextWidget
-                        );
-                      }),
-                      background: _generateBackdropImage(context),
-                      collapseMode: CollapseMode.pin,
+            var titlePainter = new TextPainter(
+                text: titleSpan,
+                maxLines: 1,
+                textAlign: TextAlign.start,
+                textDirection: Directionality.of(context)
+            );
+
+            titlePainter.layout(maxWidth: MediaQuery.of(context).size.width - 160);
+            hasLongTitle = titlePainter.didExceedMaxLines;
+            /* END: Render title */
+
+            return new Scaffold(
+                backgroundColor: Theme.of(context).backgroundColor,
+                body: Stack(
+                  children: <Widget>[
+                    NestedScrollView(
+                        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                          return <Widget>[
+                            SliverAppBar(
+                              backgroundColor: Theme.of(context).backgroundColor,
+                              actions: <Widget>[
+
+                                Interface.generateSearchIcon(context),
+
+                                IconButton(
+                                  icon: Icon(
+                                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                                    color: isFavorite ? Colors.red : Theme.of(context).primaryTextTheme.body1.color,
+                                  ),
+                                  onPressed: (){
+                                    _favButtonLogic(context, content);
+                                  },
+                                ),
+                              ],
+                              expandedHeight: 200.0,
+                              floating: false,
+                              pinned: true,
+                              flexibleSpace: FlexibleSpaceBar(
+                                centerTitle: true,
+                                title: LayoutBuilder(builder: (context, size){
+                                  var titleTextWidget = new RichText(
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    text: titleSpan,
+                                  );
+
+                                  if(hasLongTitle) return Container();
+
+                                  return ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          maxWidth: size.maxWidth - 160
+                                      ),
+                                      child: titleTextWidget
+                                  );
+                                }),
+                                background: _generateBackdropImage(context, content),
+                                collapseMode: CollapseMode.pin,
+                              ),
+                            )
+                          ];
+                        },
+                        body: Container(
+                            child: NotificationListener<OverscrollIndicatorNotification>(
+                              onNotification: (notification){
+                                if(notification.leading){
+                                  notification.disallowGlow();
+                                }
+                              },
+                              child: ListView(
+
+                                  children: <Widget>[
+                                    // This is the summary line, just below the title.
+                                    _generateOverviewWidget(context, content),
+
+                                    // Content Widgets
+                                    Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                                        child: Column(
+                                          children: <Widget>[
+                                            /*
+                                            * If you're building a row widget, it should have a horizontal
+                                            * padding of 24 (narrow) or 16 (wide).
+                                            *
+                                            * If your row is relevant to the last, use a vertical padding
+                                            * of 5, otherwise use a vertical padding of 5 - 10.
+                                            *
+                                            * Relevant means visually and by context.
+                                            */
+                                            //_generateGenreChipsRow(context, content),
+                                            _generateSynopsisSection(content),
+                                            _generateCastAndCrewInfo(),
+
+                                            // Context-specific layout
+                                            _generateLayout(widget.contentType, content),
+
+                                            _generateSimilarContentCards(context, content)
+                                          ],
+                                        )
+                                    )
+                                  ]
+                              ),
+                            )
+                        )
                     ),
-                  )
-                ];
-              },
-              body: Container(
-                  child: NotificationListener<OverscrollIndicatorNotification>(
-                    onNotification: (notification){
-                      if(notification.leading){
-                        notification.disallowGlow();
-                      }
-                    },
-                    child: ListView(
 
-                        children: <Widget>[
-                          // This is the summary line, just below the title.
-                          _generateOverviewWidget(context),
-
-                          // Content Widgets
-                          Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.0),
-                              child: Column(
-                                children: <Widget>[
-                                  /*
-                                  * If you're building a row widget, it should have a horizontal
-                                  * padding of 24 (narrow) or 16 (wide).
-                                  *
-                                  * If your row is relevant to the last, use a vertical padding
-                                  * of 5, otherwise use a vertical padding of 5 - 10.
-                                  *
-                                  * Relevant means visually and by context.
-                                  */
-                                  //_generateGenreChipsRow(context),
-                                  _generateSynopsisSection(),
-                                  _generateCastAndCrewInfo(),
-
-                                  // Context-specific layout
-                                  _generateLayout(widget.contentType)
-                                ],
-                              )
+                    Positioned(
+                      left: -7.5,
+                      right: -7.5,
+                      bottom: 30,
+                      child: Container(
+                          child: _getFloatingActionButton(
+                              widget.contentType,
+                              context,
+                              content
                           )
-                        ]
-                    ),
-                  )
-              )
-          ),
-
-          Positioned(
-            left: -7.5,
-            right: -7.5,
-            bottom: 30,
-            child: Container(
-              child: _getFloatingActionButton(
-                widget.contentType,
-                context,
-                _data
-              )
-            ),
-          )
-        ],
-      ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling
+                      ),
+                    )
+                  ],
+                ),
+                floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling
+            );
+        }
+      }
     );
   }
 
@@ -368,16 +308,16 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// OverviewWidget -
   /// This is the summary line just below the title.
   ///
-  Widget _generateOverviewWidget(BuildContext context){
+  Widget _generateOverviewWidget(BuildContext context, ContentModel content){
     return new Padding(
       padding: EdgeInsets.only(bottom: 5.0, left: 30, right: 30),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _longTitle ? Padding(
+            hasLongTitle ? Padding(
               padding: EdgeInsets.only(bottom: 20),
               child: TitleText(
-                _data.title,
+                content.title,
                 allowOverflow: true,
                 textAlign: TextAlign.center,
                 fontSize: 23,
@@ -385,8 +325,8 @@ class _ContentOverviewState extends State<ContentOverview> {
             ) : Container(),
 
             Text(
-                _data.releaseDate != "" && _data.releaseDate != null ?
-                  "${S.of(context).released}: ${DateTime.parse(_data.releaseDate).year.toString()}" :
+                content.releaseDate != "" && content.releaseDate != null ?
+                  "${S.of(context).released}: ${DateTime.parse(content.releaseDate).year.toString()}" :
                   S.of(context).unknown_x(S.of(context).year),
                 style: TextStyle(
                     fontFamily: 'GlacialIndifference',
@@ -397,14 +337,14 @@ class _ContentOverviewState extends State<ContentOverview> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 StarRating(
-                  rating: _data.rating / 2, // Ratings are out of 10 from our source.
+                  rating: content.rating / 2, // Ratings are out of 10 from our source.
                   color: Theme.of(context).primaryColor,
                   borderColor: Theme.of(context).primaryColor,
                   size: 16.0,
                   starCount: 5,
                 ),
                 Text(
-                  "  \u2022  ${S.of(context).n_ratings(_data.voteCount.toString())}",
+                  "  \u2022  ${S.of(context).n_ratings(content.voteCount.toString())}",
                   style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.bold
@@ -422,14 +362,8 @@ class _ContentOverviewState extends State<ContentOverview> {
   /// This controls the background image and stacks the gradient on top
   /// of the image.
   ///
-  Widget _generateBackdropImage(BuildContext context){
+  Widget _generateBackdropImage(BuildContext context, ContentModel content){
     double contextWidth = MediaQuery.of(context).size.width;
-
-    //null trap to private slow urls crashing the screen
-    // (big issue with some old and foreign shows)
-    _data.backdropPath != null ?
-    _backdropImagePath = TMDB.IMAGE_CDN + _data.backdropPath :
-    _backdropImagePath = TMDB.IMAGE_CDN;
 
     return Container(
       height: 220,
@@ -438,19 +372,19 @@ class _ContentOverviewState extends State<ContentOverview> {
         alignment: AlignmentDirectional.bottomCenter,
         children: <Widget>[
           Container(
-              child: _data.backdropPath != null ?
-              CachedNetworkImage(
-                imageUrl: _backdropImagePath,
-                fit: BoxFit.cover,
-                placeholder: Container(),
-                height: 220.0,
-                width: contextWidth,
-                errorWidget: new Icon(Icons.error, size: 30.0)
-              ) :
+              child: content.backdropPath != null ?
+                CachedNetworkImage(
+                  imageUrl: TMDB.IMAGE_CDN + content.backdropPath,
+                  fit: BoxFit.cover,
+                  placeholder: Container(),
+                  height: 220.0,
+                  width: contextWidth,
+                  errorWidget: new Icon(Icons.error, size: 30.0)
+                ) :
               new Icon(Icons.error, size: 30.0)
           ),
 
-          !_longTitle ?
+          !hasLongTitle ?
           BottomGradient(color: Theme.of(context).backgroundColor)
               : BottomGradient(offset: 1, finalStop: 0, color: Theme.of(context).backgroundColor),
 
@@ -511,8 +445,8 @@ class _ContentOverviewState extends State<ContentOverview> {
     }
   }
 
-  Widget _generateGenreChipsRow(context){
-    return _data.genres == null ? Container() : SizedBox(
+  Widget _generateGenreChipsRow(BuildContext context, ContentModel content){
+    return content.genres == null ? Container() : SizedBox(
       width: MediaQuery.of(context).size.width,
       //height: 40.0,
       child: Container(
@@ -522,14 +456,14 @@ class _ContentOverviewState extends State<ContentOverview> {
           child: Builder(builder: (BuildContext context){
             var chips = <Widget>[];
 
-            for(int index = 0; index < _data.genres.length; index++){
+            for(int index = 0; index < content.genres.length; index++){
               chips.add(
                   Container(
                     child: InkWell(
                       borderRadius: BorderRadius.circular(100),
                       onTap: (){
-                        _loadMoreGenreMatches(_contentType,
-                            _data.genres[index]["id"], _data.genres[index]["name"]);
+                        _loadMoreGenreMatches(rawContentType,
+                            content.genres[index]["id"], content.genres[index]["name"]);
                       },
                       child: Padding(
                         padding: index != 0
@@ -537,7 +471,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                             : EdgeInsets.only(left: 6.0, right: 6.0),
                         child: new Chip(
                           label: Text(
-                            _data.genres[index]["name"],
+                            content.genres[index]["name"],
                             style: TextStyle(color: Theme.of(context).accentTextTheme.body1.color, fontSize: 15.0),
                           ),
                           backgroundColor: Theme.of(context).primaryColor,
@@ -562,7 +496,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   /// This function generates the Synopsis Card.
   ///
-  Widget _generateSynopsisSection(){
+  Widget _generateSynopsisSection(ContentModel content){
     return Padding(
       padding: EdgeInsets.only(top: 0, left: 16.0, right: 16.0),
       child: Column(
@@ -574,8 +508,8 @@ class _ContentOverviewState extends State<ContentOverview> {
           Container(
             padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
             child: ConcealableText(
-              _data.overview != "" ?
-                _data.overview :
+              content.overview != "" ?
+                content.overview :
                 // e.g: 'This TV Show has no synopsis available.'
                 S.of(context).this_x_has_no_synopsis_available(getPrettyContentType(widget.contentType)),
 
@@ -597,13 +531,13 @@ class _ContentOverviewState extends State<ContentOverview> {
     if(emptyOnFail && (cast == null || crew == null || cast.isEmpty || crew.isEmpty))
       return Container();
 
-    List castAndCrew = List.from(crew.length > 3 ? crew.sublist(0, 3) : crew, growable: true);
+    List<PersonModel> castAndCrew = List.from(crew.length > 3 ? crew.sublist(0, 3) : crew, growable: true);
     castAndCrew.addAll(cast);
 
     // Remove any with an invalid name, job/character, profile
-    castAndCrew.removeWhere((entry) => entry["name"] == null);
-    castAndCrew.removeWhere((entry) => entry["job"] == null && entry["character"] == null);
-    castAndCrew.removeWhere((entry) => entry["profile_path"] == null);
+    castAndCrew.removeWhere((entry) => entry.name == null);
+    castAndCrew.removeWhere((entry) => entry.role == null);
+    castAndCrew.removeWhere((entry) => entry.profilePath == null);
 
     // Remove duplicates, leaving just the crew entry.
     // (Duplicates will happen when cast is also crew.)
@@ -612,7 +546,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     // member is also a cast member, it's usually because they are an important
     // crew member.
     // Crew job names can be shorter than character names which looks better.
-    castAndCrew.removeWhere((entry) => castAndCrew.firstWhere((_e) => _e["name"] == entry["name"]) != entry);
+    castAndCrew.removeWhere((entry) => castAndCrew.firstWhere((_e) => _e.name == entry.name) != entry);
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -650,7 +584,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                                         width: constraints.maxHeight,
                                         placeholder: Image.memory(kTransparentImage),
                                         imageUrl: TMDB.IMAGE_CDN +
-                                            castAndCrew[index]["profile_path"],
+                                            castAndCrew[index].profilePath,
                                         fit: BoxFit.cover,
                                       );
                                     })
@@ -659,14 +593,14 @@ class _ContentOverviewState extends State<ContentOverview> {
                           ),
 
                           // Name
-                          Text(castAndCrew[index]["name"], style: TextStyle(
+                          Text(castAndCrew[index].name, style: TextStyle(
                               fontFamily: 'GlacialIndifference',
                               fontSize: 16
                           )),
 
                           // Character or job
                           Text(
-                            castAndCrew[index]["character"] != null ? castAndCrew[index]["character"] : castAndCrew[index]["job"],
+                            castAndCrew[index].role,
                             style: TextStyle(
                                 color: Colors.white54
                             ),
@@ -683,19 +617,81 @@ class _ContentOverviewState extends State<ContentOverview> {
     );
   }
 
+  static Widget _generateSimilarContentCards(BuildContext context, ContentModel model){
+    return Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 0),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 30.0),
+          child: Column(
+              children: <Widget>[
+
+                /* Similar Movies */
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                        title: SubtitleText(
+                          model.contentType == ContentType.TV_SHOW
+                            ? S.of(context).similar_tv_shows
+                            : S.of(context).similar_movies
+                        )
+                    ),
+
+                  SizedBox(
+                    height: 200,
+                    child: model.similar == null ? Container() : ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: model.similar.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 5)
+                                  .copyWith(left: index == 0 ? 25 : 5, top: 0),
+                              child: AspectRatio(
+                                aspectRatio: 2 / 3,
+                                child: ContentPoster(
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ContentOverview(
+                                              contentId: model.similar[index].id,
+                                              contentType: ContentType.MOVIE
+                                          ),
+                                        )
+                                    ),
+                                    mediaType: 'movie',
+                                    name: model.similar[index].title,
+                                    background: model.similar[index].posterPath,
+                                    releaseDate: model.similar[index].releaseDate
+                                ),
+                              )
+                          );
+                        }
+                      )
+                    )
+                  ],
+                )
+                /* ./Similar Movies */
+
+              ]
+          ),
+        )
+    );
+  }
+
   ///
   /// generateLayout -
   /// This generates the remaining layout for the specific content type.
   /// It is a good idea to reference another class to keep this clean.
   ///
-  Widget _generateLayout(ContentType contentType) {
+  Widget _generateLayout(ContentType contentType, ContentModel content) {
     switch(contentType){
       case ContentType.TV_SHOW:
         // Generate TV show information
-        return TVShowLayout.generate(context, _data);
+        return TVShowLayout.generate(context, content);
       case ContentType.MOVIE:
         // Generate movie information
-        return MovieLayout.generate(context, _data);
+        return MovieLayout.generate(context, content);
       default:
         return Container();
     }

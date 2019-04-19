@@ -1,10 +1,10 @@
 import 'package:kamino/models/content.dart';
+import 'package:kamino/models/crew.dart';
 import 'package:meta/meta.dart';
 
 class MovieContentModel extends ContentModel {
 
   //final List reviews;
-  final List recommendations;
   final String imdbId;
   final double runtime;
 
@@ -20,13 +20,16 @@ class MovieContentModel extends ContentModel {
     String backdropPath,
     String posterPath,
     int voteCount,
+    List cast,
+    List crew,
+    List<MovieContentModel> similar,
+    List videos,
 
     // Movie parameters
     //this.reviews,
     //this.recommendations,
     this.imdbId,
-    this.runtime,
-    this.recommendations
+    this.runtime
   }) : super( // Call the parent constructor...
     id: id,
     title: title,
@@ -38,12 +41,22 @@ class MovieContentModel extends ContentModel {
     rating: rating,
     backdropPath: backdropPath,
     posterPath: posterPath,
-    voteCount: voteCount
+    voteCount: voteCount,
+    cast: cast,
+    crew: crew,
+    similar: similar,
+    videos: videos
   );
 
-  static MovieContentModel fromJSON(Map json, {
-    List recommendations
-  }){
+  static MovieContentModel fromJSON(Map json){
+    Map credits = json['credits'] != null ? json['credits'] : {'cast': null, 'crew': null};
+    List videos = json['videos'] != null ? json['videos']['results'] : null;
+    List<MovieContentModel> similar = json['similar'] != null
+      ? (json['similar']['results'] as List).map(
+          (element) => MovieContentModel.fromJSON(element)
+        ).toList()
+      : null;
+
     return new MovieContentModel(
       // Inherited properties.
       // (Copy-paste these to other models.)
@@ -61,7 +74,10 @@ class MovieContentModel extends ContentModel {
       // Object-specific properties.
       imdbId: json["imdb_id"],
       runtime: json["runtime"] != null ? json["runtime"].toDouble() : null,
-      recommendations: recommendations
+      cast: credits['cast'] != null ? (credits['cast'] as List).map((entry) => CastMemberModel.fromJSON(entry)).toList() : null,
+      crew: credits['crew'] != null ? (credits['crew'] as List).map((entry) => CrewMemberModel.fromJSON(entry)).toList() : null,
+      similar: similar,
+      videos: videos
     );
   }
 }

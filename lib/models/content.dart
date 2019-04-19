@@ -47,6 +47,16 @@ class ContentModel {
   double progress;
   String lastWatched;
 
+  // Videos
+  List videos;
+
+  // Cast and Crew
+  final List cast;
+  final List crew;
+
+  // Recommendations
+  final List<ContentModel> similar;
+
   ContentModel({
     @required this.id,
     @required this.title,
@@ -60,6 +70,10 @@ class ContentModel {
     this.posterPath,
     this.voteCount,
     this.progress,
-    this.lastWatched
+    this.lastWatched,
+    this.cast,
+    this.crew,
+    this.similar,
+    this.videos
   });
 }

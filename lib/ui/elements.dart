@@ -180,28 +180,73 @@ class OfflineMixin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Icon(Icons.offline_bolt, size: 48, color: Colors.grey),
-            Container(padding: EdgeInsets.symmetric(vertical: 10)),
-            TitleText(S.of(context).youre_offline, fontSize: 24),
-            Container(padding: EdgeInsets.symmetric(vertical: 3)),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              child: Text(
-                S.of(context).appname_failed_to_connect_to_the_internet(appName),
-                softWrap: true,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Container(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.offline_bolt, size: 48, color: Colors.grey),
+              Container(padding: EdgeInsets.symmetric(vertical: 10)),
+              TitleText(S.of(context).youre_offline, fontSize: 24),
+              Container(padding: EdgeInsets.symmetric(vertical: 3)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                child: Text(
+                  S.of(context).appname_failed_to_connect_to_the_internet(appName),
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 16
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+}
+
+class ErrorLoadingMixin extends StatelessWidget {
+
+  final String errorMessage;
+
+  ErrorLoadingMixin({
+    this.errorMessage = "An error occurred whilst loading this page."
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Container(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.error, size: 48, color: Colors.grey),
+              Container(padding: EdgeInsets.symmetric(vertical: 10)),
+              TitleText("An error occurred.", fontSize: 24),
+              Container(padding: EdgeInsets.symmetric(vertical: 3)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 50),
+                child: Text(
+                  errorMessage,
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 16
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

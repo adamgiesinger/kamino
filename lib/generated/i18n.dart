@@ -112,6 +112,7 @@ class S implements WidgetsLocalizations {
   String get show_less => "Show less...";
   String get show_more => "Show more...";
   String get similar_movies => "Similar Movies";
+  String get similar_tv_shows => "Similar TV Shows";
   String get skip => "SKIP";
   String get sort => "Sort";
   String get source_autoplay => "Enable Source Autoplay";

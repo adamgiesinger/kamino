@@ -272,31 +272,7 @@ class SmartSearch extends SearchDelegate<String> {
                       if(snapshot.error is SocketException
                           || snapshot.error is HttpException) return OfflineMixin();
 
-                      return Container(
-                        child: Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(Icons.error, size: 48, color: Colors.grey),
-                              Container(padding: EdgeInsets.symmetric(vertical: 10)),
-                              TitleText("An error occurred.", fontSize: 24),
-                              Container(padding: EdgeInsets.symmetric(vertical: 3)),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 50),
-                                child: Text(
-                                  "Well this is awkward... An error occurred whilst loading search results.",
-                                  softWrap: true,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 16
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
+                      return ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading search results.");
 
                   } else if (snapshot.hasData) {
                     return _simplifiedSuggestions(snapshot);
