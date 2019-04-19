@@ -91,7 +91,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
                             margin: EdgeInsets.symmetric(vertical: 10),
                             child: TextFormField(
                               validator: (String arg){
-                                const String serverURLRegex = r"(https?):\/\/([-A-Z0-9.]+)(\/[-A-Z0-9+&@#/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#/%=~_|!:‌​,.;]*)?\/";
+                                const String serverURLRegex = r"^(http|https):\/\/(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?\/$";
                                 bool isValid = new RegExp(serverURLRegex, caseSensitive: false).hasMatch(arg);
                                 if(!isValid && arg.length > 0) return "The URL must be valid and include a trailing /.";
                               },
