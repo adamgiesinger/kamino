@@ -52,9 +52,7 @@ class FavoritesPageState extends State<FavoritesPage>
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
           setState(() {
-            for(var subList in favorites.values){
-              subList = subList.reversed.toList();
-            }
+            favorites.keys.forEach((key) => favorites[key] = favorites[key].reversed.toList());
           });
         },
         child: Icon(Icons.sort),
