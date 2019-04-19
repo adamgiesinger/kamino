@@ -7,6 +7,7 @@ import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
@@ -15,7 +16,6 @@ import 'package:kamino/models/tvshow.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/VendorService.dart';
-import 'package:ntp/ntp.dart';
 import 'package:w_transport/w_transport.dart' as Transport;
 import 'package:w_transport/vm.dart' show vmTransportPlatform;
 
@@ -192,7 +192,17 @@ class ClawsVendorService extends VendorService {
     String clawsToken = _token;
     String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
-    String data = '{"type": "tv", "title": "$title", "year": "$year", "season": "$seasonNumber", "episode": "$episodeNumber", "imdb_id": "${show.imdbId}"}';
+
+    String data = Convert.jsonEncode({
+      "type": "tv",
+      "title": title,
+      "titles": [title] + TMDB.getAlternativeTitles(show),
+      "year": year,
+      "season": seasonNumber,
+      "episode": episodeNumber,
+      "imdb_id": show.imdbId
+    });
+    print(data);
 
     if(!await authenticate(context)) return;
     _beginProcessing(context, endpointURL, data, show, displayTitle: displayTitle);
@@ -202,7 +212,7 @@ class ClawsVendorService extends VendorService {
   /// Once authenticated with the server, this method will handle interaction
   /// with the websocket to get results.
   ///
-  _beginProcessing(BuildContext context, String url, String data, ContentModel model, { String displayTitle }) async {
+  _beginProcessing(BuildContext context, String url, String data, ContentModel model, { @required String displayTitle }) async {
     // Prepare to process the information.
     if(displayTitle == null) displayTitle = model.title;
     this.setStatus(context, VendorServiceStatus.PROCESSING, title: displayTitle);

@@ -85,7 +85,7 @@ class TMDB {
     // Get the data from the server.
     http.Response response = await http.get(
         "${TMDB.ROOT_URL}/${getRawContentType(type)}/$id${getDefaultArguments(context)}"
-            + (appendToResponse != null ? "&append_to_response=$appendToResponse,external_ids" : "&append_to_response=external_ids")
+            + (appendToResponse != null ? "&append_to_response=$appendToResponse,external_ids,alternative_titles" : "&append_to_response=external_ids,alternative_titles")
     );
     String json = response.body;
 
@@ -101,6 +101,35 @@ class TMDB {
       );
 
     throw new Exception("Invalid content type: $type");
+  }
+
+  static List<String> getAlternativeTitles(ContentModel model){
+    List<String> result = [];
+
+    if(model.alternativeTitles == null || model.alternativeTitles.length == 0)
+      return [];
+    List<LocalizedTitleModel> alternativeTitles = model.alternativeTitles;
+
+    // Select up to 3 English titles
+    result.addAll(
+      alternativeTitles.where(
+        (LocalizedTitleModel title) => title.iso_3166_1 == "US"
+      ).take(3).map((LocalizedTitleModel title) => title.title).toList()
+    );
+
+    print(alternativeTitles.map((LocalizedTitleModel title) => title.iso_3166_1).toList());
+    print(model.originalCountry);
+
+    // ...and up to 2 titles from the native locale.
+    result.addAll(
+        alternativeTitles.where(
+                (LocalizedTitleModel title) => title.iso_3166_1 == model.originalCountry
+        ).take(2).map((LocalizedTitleModel title) => title.title).toList()
+    );
+
+    if(!result.contains(model.originalTitle))
+      result = [model.originalTitle] + result;
+    return result;
   }
 
 }

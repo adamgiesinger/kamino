@@ -10,6 +10,9 @@ class MovieContentModel extends ContentModel {
     // Content model inherited parameters
     @required int id,
     @required String title,
+    List<LocalizedTitleModel> alternativeTitles,
+    String originalTitle,
+    String originalCountry,
     String imdbId,
     String overview,
     String releaseDate,
@@ -30,6 +33,7 @@ class MovieContentModel extends ContentModel {
     id: id,
     imdbId: imdbId,
     title: title,
+    alternativeTitles: alternativeTitles,
     contentType: ContentType.MOVIE,
     overview: overview,
     releaseDate: releaseDate,
@@ -42,7 +46,9 @@ class MovieContentModel extends ContentModel {
     cast: cast,
     crew: crew,
     similar: similar,
-    videos: videos
+    videos: videos,
+    originalTitle: originalTitle,
+    originalCountry: originalCountry
   );
 
   static MovieContentModel fromJSON(Map json){
@@ -53,6 +59,10 @@ class MovieContentModel extends ContentModel {
           (element) => MovieContentModel.fromJSON(element)
         ).toList()
       : null;
+    List<LocalizedTitleModel> alternativeTitles = json['alternative_titles'] != null
+        ? (json['alternative_titles']['results'] as List).map(
+            (element) => LocalizedTitleModel.fromJSON(element)
+    ).toList() : null;
 
     return new MovieContentModel(
       // Inherited properties.
@@ -72,6 +82,10 @@ class MovieContentModel extends ContentModel {
       crew: credits['crew'] != null ? (credits['crew'] as List).map((entry) => CrewMemberModel.fromJSON(entry)).toList() : null,
       similar: similar,
       videos: videos,
+      alternativeTitles: alternativeTitles,
+      originalCountry: json['production_countries'] != null && json['production_countries'].length > 0
+          ? json['production_countries'][0]['iso_3166_1'] : null,
+      originalTitle: json['original_title'],
 
       // Object-specific properties.
       runtime: json["runtime"] != null ? json["runtime"].toDouble() : null

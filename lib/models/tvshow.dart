@@ -15,6 +15,9 @@ class TVShowContentModel extends ContentModel {
     // Content model inherited parameters
     @required int id,
     @required String title,
+    List<LocalizedTitleModel> alternativeTitles,
+    String originalTitle,
+    String originalCountry,
     String imdbId,
     String overview,
     String releaseDate,
@@ -45,6 +48,7 @@ class TVShowContentModel extends ContentModel {
     id: id,
     imdbId: imdbId,
     title: title,
+    alternativeTitles: alternativeTitles,
     contentType: ContentType.TV_SHOW,
     overview: overview,
     releaseDate: releaseDate,
@@ -60,6 +64,8 @@ class TVShowContentModel extends ContentModel {
     crew: crew,
     similar: similar,
     videos: videos,
+    originalTitle: originalTitle,
+    originalCountry: originalCountry
   );
 
   static TVShowContentModel fromJSON(Map json){
@@ -70,6 +76,10 @@ class TVShowContentModel extends ContentModel {
             (element) => TVShowContentModel.fromJSON(element)
     ).toList()
         : null;
+    List<LocalizedTitleModel> alternativeTitles = json['alternative_titles'] != null
+      ? (json['alternative_titles']['results'] as List).map(
+        (element) => LocalizedTitleModel.fromJSON(element)
+    ).toList() : null;
 
     return new TVShowContentModel(
       // Inherited properties.
@@ -89,6 +99,10 @@ class TVShowContentModel extends ContentModel {
       crew: credits['crew'] != null ? (credits['crew'] as List).map((entry) => CrewMemberModel.fromJSON(entry)).toList() : null,
       similar: similar,
       videos: videos,
+      alternativeTitles: alternativeTitles,
+      originalCountry: json['origin_country'] != null && json['origin_country'].length > 0
+          ? json['origin_country'][0] : null,
+      originalTitle: json['original_name'],
 
       // Object-specific properties.
       createdBy: json["created_by"],

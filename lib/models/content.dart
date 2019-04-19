@@ -31,9 +31,12 @@ class ContentModel {
 
   // Content Information
   final String title;
+  final List<LocalizedTitleModel> alternativeTitles;
+  final String originalTitle;
   final String overview;
   final String releaseDate; // For TV shows this is the first release date.
   final String homepage;
+  final String originalCountry;
 
   // Content Classification
   final List genres;
@@ -62,6 +65,9 @@ class ContentModel {
     @required this.id,
     @required this.title,
     @required this.contentType,
+    this.originalTitle,
+    this.originalCountry,
+    this.alternativeTitles,
     this.imdbId,
     this.overview,
     this.releaseDate,
@@ -78,4 +84,26 @@ class ContentModel {
     this.similar,
     this.videos
   });
+}
+
+class LocalizedTitleModel {
+
+  final String iso_3166_1;
+  final String title;
+  final String type;
+
+  LocalizedTitleModel({
+    @required this.title,
+    @required this.iso_3166_1,
+    this.type
+  });
+
+  static LocalizedTitleModel fromJSON(Map json){
+    return new LocalizedTitleModel(
+      iso_3166_1: json['iso_3166_1'],
+      title: json['title'],
+      type: json['type']
+    );
+  }
+
 }
