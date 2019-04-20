@@ -5,9 +5,10 @@ import 'dart:io';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/favorites.dart';
 import 'package:kamino/interface/intro/kamino_intro.dart';
-import 'package:kamino/interface/launchpad2/Launchpad2.dart';
+import 'package:kamino/interface/launchpad2/browse.dart';
+import 'package:kamino/interface/launchpad2/launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
-import 'package:kamino/interface/smart_search/smart_search.dart';
+import 'package:kamino/interface/search/smart_search.dart';
 import 'package:kamino/skyspace/skyspace.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
@@ -393,12 +394,25 @@ class KaminoAppHome extends StatefulWidget {
 
 }
 
+class KaminoAppPage extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+    return null;
+  }
+
+  Widget buildHeader(BuildContext context){
+    return null;
+  }
+
+}
+
 class KaminoAppHomeState extends State<KaminoAppHome> {
 
-  final _pages = [
+  final List<KaminoAppPage> _pages = [
     Launchpad2(),
-    Container(child: Text("TV Shows")),
-    Container(child: Text("Movies")),
+    BrowseTVShowsPage(),
+    BrowseMoviesPage(),
     FavoritesPage()
   ];
   int _activePage;
@@ -441,7 +455,9 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
         appBar: AppBar(
           title: Row(
             children: <Widget>[
-              Interface.generateHeaderLogo(context)
+              _pages.elementAt(_activePage).buildHeader(context) != null
+                ? _pages.elementAt(_activePage).buildHeader(context)
+                : Interface.generateHeaderLogo(context)
             ],
           ),
 

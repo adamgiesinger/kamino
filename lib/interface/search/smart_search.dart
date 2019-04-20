@@ -6,10 +6,10 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
-import 'package:kamino/interface/smart_search/search_results.dart';
+import 'package:kamino/interface/search/search_results.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/ui/elements.dart';
-import 'package:kamino/util/genre_names.dart' as genre;
+import 'package:kamino/util/genre.dart' as genre;
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/util/settings.dart';
@@ -161,7 +161,7 @@ class SmartSearch extends SearchDelegate<String> {
               ratings: snapshot.data[index].vote_average,
               elevation: 0.0,
               mediaType: snapshot.data[index].mediaType,
-              genre: genre.getGenreNames(snapshot.data[index].genre_ids,
+              genre: genre.resolveGenreNames(snapshot.data[index].genre_ids,
                   snapshot.data[index].mediaType),
             ),
           ),

@@ -1,6 +1,8 @@
+import 'package:kamino/models/content.dart';
 
-const Map movie_genres = {
-  "genres": [
+class Genre {
+
+  static const List movie = [
     {
       "id": 28,
       "name": "Action"
@@ -77,48 +79,9 @@ const Map movie_genres = {
       "id": 37,
       "name": "Western"
     }
-  ]
-};
+  ];
 
-List<String> getGenreNames(List ids, String mediaType) {
-
-  List<String> _data = [];
-
-  if (mediaType == "tv"){
-
-    ids.forEach((var element){
-
-      int arraySize = tv_genres["genres"].length;
-      for(int x = 0; x < arraySize; x++){
-
-        if (tv_genres["genres"][x]["id"] == element){
-          _data.add(tv_genres["genres"][x]["name"]);
-        }
-      }
-    });
-
-  } else if (mediaType == "movie") {
-
-    ids.forEach((var element){
-
-      int arraySize = movie_genres["genres"].length;
-      for(int x = 0; x < arraySize; x++){
-
-        if (movie_genres["genres"][x]["id"] == element){
-          _data.add(movie_genres["genres"][x]["name"]);
-        }
-      }
-    });
-
-  }
-
-  //print("i resolved the following $mediaType genres : $_data");
-
-  return _data;
-}
-
-const Map tv_genres = {
-  "genres": [
+  static const List tv = [
     {
       "id": 10759,
       "name": "Action & Adventure"
@@ -183,5 +146,39 @@ const Map tv_genres = {
       "id": 37,
       "name": "Western"
     }
-  ]
-};
+  ];
+
+  static String getFontImagePath(ContentType content, int genreId){
+    String mediaType = content == ContentType.TV_SHOW ? "tv" : "movie";
+    return "assets/genre/${getRawContentType(content)}/${resolveGenreName(mediaType, genreId)}.svg";
+  }
+
+  static String resolveGenreName(String mediaType, int genreId){
+    switch(mediaType){
+      case 'tv':
+        return Genre.tv.firstWhere((genre) => genre['id'] == genreId)['name'];
+      case 'movie':
+        return Genre.movie.firstWhere((genre) => genre['id'] == genreId)['name'];
+      default:
+        return null;
+    }
+  }
+
+}
+
+List<String> resolveGenreNames(List genreIds, String mediaType) {
+
+  Function getNames = (genres) => genres.where(
+          (genre) => genreIds.contains(genre['id'])
+  ).map((genre) => genre['name']).toList().cast<String>();
+
+  switch(mediaType){
+    case 'tv':
+      return getNames(Genre.tv);
+    case 'movie':
+      return getNames(Genre.movie);
+    default:
+      return [];
+  }
+
+}

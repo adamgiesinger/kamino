@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
-import 'package:kamino/models/tvshow.dart';
+import 'package:kamino/models/tv_show.dart';
 import 'package:kamino/ui/elements.dart';
 
 class EpisodePicker extends StatefulWidget {

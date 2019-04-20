@@ -6,28 +6,29 @@ import 'package:kamino/interface/content/overview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
-import 'package:kamino/util/databaseHelper.dart' as databaseHelper;
-import 'package:kamino/util/databaseHelper.dart';
-import 'package:kamino/util/genre_names.dart' as genre;
+import 'package:kamino/util/database_helper.dart' as databaseHelper;
+import 'package:kamino/util/database_helper.dart';
+import 'package:kamino/util/genre.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 
+class GenreSearch extends StatefulWidget{
 
-class GenreView extends StatefulWidget{
+
   final String contentType, genreName;
   final int genreID;
 
-  GenreView(
+  GenreSearch(
       {Key key, @required this.contentType, @required this.genreID,
         @required this.genreName}) : super(key: key);
 
   @override
-  _GenreViewState createState() => new _GenreViewState();
+  _GenreSearchState createState() => new _GenreSearchState();
 }
 
-class _GenreViewState extends State<GenreView>{
+class _GenreSearchState extends State<GenreSearch>{
 
   int _currentPages = 1;
   ScrollController controller;
@@ -35,9 +36,7 @@ class _GenreViewState extends State<GenreView>{
   List<DiscoverModel> _results = [];
   List<int> _favIDs = [];
   bool _expandedSearchPref = false;
-
-  String _selectedParam = "popularity.desc";
-  int total_pages = 1;
+  int totalPages = 1;
 
   @override
   void initState() {
@@ -47,7 +46,6 @@ class _GenreViewState extends State<GenreView>{
     controller = new ScrollController()..addListener(_scrollListener);
 
     String _contentType = widget.contentType;
-    String _genreName = widget.genreName;
     String _genreID = widget.genreID.toString();
 
     DatabaseHelper.getAllFavoriteIds().then((data){
@@ -55,11 +53,9 @@ class _GenreViewState extends State<GenreView>{
     });
 
     _getContent(_contentType, _genreID).then((data){
-
       setState(() {
         _results = data;
       });
-
     });
 
     super.initState();
@@ -73,7 +69,7 @@ class _GenreViewState extends State<GenreView>{
 
     String url = "${TMDB.ROOT_URL}/discover/$_contentType"
         "${TMDB.getDefaultArguments(context)}&"
-        "sort_by=$_selectedParam&include_adult=false"
+        "sort_by=popularity.desc&include_adult=false"
         "&include_video=false&"
         "page=${_currentPages.toString()}&with_genres=$_genreID";
 
@@ -81,12 +77,12 @@ class _GenreViewState extends State<GenreView>{
     _temp = jsonDecode(_res.body);
 
     if (_temp["results"] != null) {
-      total_pages = _temp["total_pages"];
+      totalPages = _temp["total_pages"];
       int resultsCount = _temp["results"].length;
 
       for(int x = 0; x < resultsCount; x++) {
         _data.add(DiscoverModel.fromJSON(
-            _temp["results"][x], total_pages, _contentType));
+            _temp["results"][x], totalPages, _contentType));
       }
     }
 
@@ -119,28 +115,6 @@ class _GenreViewState extends State<GenreView>{
     }
   }
 
-  _applyNewParam(String choice) {
-
-    if (choice != _selectedParam){
-
-      _selectedParam = choice;
-
-      _getContent(widget.contentType, widget.genreID.toString()).then((data){
-        setState(() {
-
-          //clear grid-view and replenish with new data
-          _results.clear();
-          _results = data;
-
-          //scroll to the top of the results
-          controller.jumpTo(controller.position.minScrollExtent);
-        });
-        _currentPages = 1;
-      });
-    }
-    Navigator.of(context).pop;
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -155,24 +129,8 @@ class _GenreViewState extends State<GenreView>{
             backgroundColor: Theme.of(context).backgroundColor,
             elevation: 5.0,
             actions: <Widget>[
-
               Interface.generateSearchIcon(context),
-
-              //Add sorting functionality
-              IconButton(
-                  icon: Icon(Icons.sort), onPressed: (){
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (_){
-                    return GenreSortDialog(
-                      onValueChange: _applyNewParam,
-                      selectedParam: _selectedParam,
-                    );
-                  }
-                );
-              }),
-          ],
+            ],
           ),
           body: RefreshIndicator(
             onRefresh: () async {
@@ -230,7 +188,7 @@ class _GenreViewState extends State<GenreView>{
           child: ResultCard(
             background: _results[index].poster_path,
             name: _results[index].name,
-            genre: genre.getGenreNames(_results[index].genre_ids,_results[index].mediaType),
+            genre: genre.resolveGenreNames(_results[index].genre_ids,_results[index].mediaType),
             mediaType: _results[index].mediaType,
             ratings: _results[index].vote_average,
             overview: _results[index].overview,
@@ -267,7 +225,7 @@ class _GenreViewState extends State<GenreView>{
     if (controller.offset >= controller.position.maxScrollExtent) {
 
       //check that you haven't already loaded the last page
-      if (_currentPages < total_pages){
+      if (_currentPages < totalPages){
 
         //load the next page
         _currentPages = _currentPages + 1;

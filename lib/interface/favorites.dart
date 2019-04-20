@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
-import 'package:kamino/util/databaseHelper.dart';
+import 'package:kamino/util/database_helper.dart';
 
-class FavoritesPage extends StatefulWidget {
+class FavoritesPage extends KaminoAppPage {
+
   @override
   FavoritesPageState createState() => new FavoritesPageState();
+
+  @override
+  Widget buildHeader(BuildContext context){
+    return TitleText(S.of(context).favorites, fontSize: 26);
+  }
+
 }
 
 class FavoritesPageState extends State<FavoritesPage>

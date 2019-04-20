@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/interface/content/overview.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/carousel.dart';
 import 'package:kamino/partials/content_card.dart';
@@ -16,7 +17,7 @@ import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:simple_moment/simple_moment.dart';
 
-class Launchpad2 extends StatefulWidget {
+class Launchpad2 extends KaminoAppPage {
 
   @override
   State<StatefulWidget> createState() => Launchpad2State();

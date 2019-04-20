@@ -103,6 +103,42 @@ flutter:
     - assets/flags/tr.png
     - assets/flags/us.png
 
+    - assets/genre/movie/Action.svg
+    - assets/genre/movie/Adventure.svg
+    - assets/genre/movie/Animation.svg
+    - assets/genre/movie/Comedy.svg
+    - assets/genre/movie/Crime.svg
+    - assets/genre/movie/Documentary.svg
+    - assets/genre/movie/Drama.svg
+    - assets/genre/movie/Family.svg
+    - assets/genre/movie/Fantasy.svg
+    - assets/genre/movie/History.svg
+    - assets/genre/movie/Horror.svg
+    - assets/genre/movie/Music.svg
+    - assets/genre/movie/Mystery.svg
+    - assets/genre/movie/Romance.svg
+    - assets/genre/movie/Science Fiction.svg
+    - assets/genre/movie/TV Movie.svg
+    - assets/genre/movie/Thriller.svg
+    - assets/genre/movie/War.svg
+    - assets/genre/movie/Western.svg
+
+    - assets/genre/tv/Action & Adventure.svg
+    - assets/genre/tv/Animation.svg
+    - assets/genre/tv/Comedy.svg
+    - assets/genre/tv/Crime.svg
+    - assets/genre/tv/Documentary.svg
+    - assets/genre/tv/Drama.svg
+    - assets/genre/tv/Family.svg
+    - assets/genre/tv/Kids.svg
+    - assets/genre/tv/Mystery.svg
+    - assets/genre/tv/News.svg
+    - assets/genre/tv/Reality.svg
+    - assets/genre/tv/Sci-Fi & Fantasy.svg
+    - assets/genre/tv/Soap.svg
+    - assets/genre/tv/Talk.svg
+    - assets/genre/tv/War & Politics.svg
+    - assets/genre/tv/Western.svg
 
   fonts:
     - family: GlacialIndifference

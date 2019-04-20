@@ -12,15 +12,15 @@ import 'package:kamino/models/crew.dart';
 
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/partials/content_poster.dart';
-import 'package:kamino/res/BottomGradient.dart';
+import 'package:kamino/res/bottom_gradient.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
-import 'package:kamino/interface/genre/genreResults.dart';
-import 'package:kamino/interface/content/movieLayout.dart';
-import 'package:kamino/interface/content/tvShowLayout.dart';
+import 'package:kamino/interface/search/genre_search.dart';
+import 'package:kamino/interface/content/movie_layout.dart';
+import 'package:kamino/interface/content/tv_show_layout.dart';
 
-import 'package:kamino/util/databaseHelper.dart';
+import 'package:kamino/util/database_helper.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 /*  CONTENT OVERVIEW WIDGET  */
@@ -254,7 +254,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
                                     // Content Widgets
                                     Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                                        padding: EdgeInsets.symmetric(vertical: 20.0).copyWith(top: 5),
                                         child: Column(
                                           children: <Widget>[
                                             /*
@@ -266,7 +266,12 @@ class _ContentOverviewState extends State<ContentOverview> {
                                             *
                                             * Relevant means visually and by context.
                                             */
-                                            //_generateGenreChipsRow(context, content),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                bottom: 20
+                                              ),
+                                              child: _generateGenreChipsRow(context, content),
+                                            ),
                                             _generateSynopsisSection(content),
                                             _generateCastAndCrewInfo(),
 
@@ -419,13 +424,13 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   /// GenreChipsRowWidget -
   /// This is the row of purple genre chips.
-  _loadMoreGenreMatches(String mediaType, int id, String genreName) {
+  showGenrePage(String mediaType, int id, String genreName) {
     if (mediaType == "tv"){
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  GenreView(
+                  GenreSearch(
                       contentType: "tv",
                       genreID: id,
                       genreName: genreName )
@@ -436,7 +441,7 @@ class _ContentOverviewState extends State<ContentOverview> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  GenreView(
+                  GenreSearch(
                       contentType: "movie",
                       genreID: id,
                       genreName: genreName )
@@ -448,7 +453,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   Widget _generateGenreChipsRow(BuildContext context, ContentModel content){
     return content.genres == null ? Container() : SizedBox(
       width: MediaQuery.of(context).size.width,
-      //height: 40.0,
+      height: 40.0,
       child: Container(
         child: Center(
           // We want the chips to overflow.
@@ -462,7 +467,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(100),
                       onTap: (){
-                        _loadMoreGenreMatches(rawContentType,
+                        showGenrePage(rawContentType,
                             content.genres[index]["id"], content.genres[index]["name"]);
                       },
                       child: Padding(

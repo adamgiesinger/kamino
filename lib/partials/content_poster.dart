@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kamino/res/BottomGradient.dart';
+import 'package:kamino/res/bottom_gradient.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

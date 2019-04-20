@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:kamino/ui/elements.dart';
-import 'package:kamino/util/genre_names.dart' as genre;
+import 'package:kamino/util/genre.dart' as genre;
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +10,7 @@ import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/partials/content_poster.dart';
-import 'package:kamino/util/databaseHelper.dart';
+import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/util/settings.dart';
 
@@ -164,7 +164,7 @@ class _SearchResultViewState extends State<SearchResultView> {
             child: ResultCard(
               background: _results[index].poster_path,
               name: _results[index].name,
-              genre: genre.getGenreNames(_results[index].genre_ids,_results[index].mediaType),
+              genre: genre.resolveGenreNames(_results[index].genre_ids, _results[index].mediaType),
               mediaType: _results[index].mediaType,
               ratings: _results[index].vote_average,
               overview: _results[index].overview,

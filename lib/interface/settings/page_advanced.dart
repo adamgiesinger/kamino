@@ -10,7 +10,7 @@ import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/interface/settings/page.dart';
 import 'package:device_info/device_info.dart';
-import 'package:kamino/util/databaseHelper.dart';
+import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/util/settings.dart';
 
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/source.dart';
-import 'package:kamino/models/tvshow.dart';
+import 'package:kamino/models/tv_show.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/view/SearchingSourcesDialog.dart';

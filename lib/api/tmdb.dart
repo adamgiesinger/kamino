@@ -6,7 +6,7 @@ import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/list.dart';
 import 'package:kamino/models/movie.dart';
-import 'package:kamino/models/tvshow.dart';
+import 'package:kamino/models/tv_show.dart';
 
 class TMDB {
 
@@ -105,7 +105,7 @@ class TMDB {
 
   static List<String> getAlternativeTitles(ContentModel model){
     List<String> result = [];
-    
+
     if(model.alternativeTitles == null || model.alternativeTitles.length == 0)
       return result;
 

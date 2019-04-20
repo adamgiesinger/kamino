@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/models/tvshow.dart';
+import 'package:kamino/models/tv_show.dart';
 import 'package:kamino/ui/elements.dart';
-import 'package:kamino/interface/content/episodePicker.dart';
+import 'package:kamino/interface/content/episode_picker.dart';
 
 import 'package:kamino/api/tmdb.dart';
 import 'package:transparent_image/transparent_image.dart';
