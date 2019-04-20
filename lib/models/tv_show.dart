@@ -85,7 +85,7 @@ class TVShowContentModel extends ContentModel {
       // Inherited properties.
       // (Copy-paste these to other models - it is fine to make small changes.)
       id: json["id"],
-      imdbId: json["imdb_id"],
+      imdbId: json["external_ids"] != null ? json["external_ids"]["imdb_id"] : null,
       title: json["name"] == null ? json["original_name"] : json["name"],
       overview: json["overview"],
       releaseDate: json["first_air_date"],

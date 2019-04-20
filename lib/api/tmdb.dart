@@ -118,9 +118,6 @@ class TMDB {
       ).take(3).map((LocalizedTitleModel title) => title.title).toList()
     );
 
-    print(alternativeTitles.map((LocalizedTitleModel title) => title.iso_3166_1).toList());
-    print(model.originalCountry);
-
     // ...and up to 2 titles from the native locale.
     result.addAll(
         alternativeTitles.where(

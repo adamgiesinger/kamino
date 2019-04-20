@@ -173,7 +173,16 @@ class ClawsVendorService extends VendorService {
     String clawsToken = _token;
     String webSocketServer = server.replaceFirst(new RegExp(r'https?'), "ws").replaceFirst(new RegExp(r'http?'), "ws");
     String endpointURL = "$webSocketServer?token=$clawsToken";
-    String data = '{"type": "movies", "title": "$title", "year": "$year", "imdb_id": "${movie.imdbId}"}';
+
+    String data = Convert.jsonEncode({
+      "type": "movies",
+      "title": title,
+      "titles": [title] + TMDB.getAlternativeTitles(movie),
+      "year": year,
+      "imdb_id": movie.imdbId
+    });
+
+    print(movie.imdbId);
 
     if(!await authenticate(context)) return;
     _beginProcessing(context, endpointURL, data, movie, displayTitle: title);
@@ -202,7 +211,6 @@ class ClawsVendorService extends VendorService {
       "episode": episodeNumber,
       "imdb_id": show.imdbId
     });
-    print(data);
 
     if(!await authenticate(context)) return;
     _beginProcessing(context, endpointURL, data, show, displayTitle: displayTitle);
