@@ -11,24 +11,37 @@ if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    throw new GradleException("You have not defined a version code in the pubspec.yaml file. Please check the file for version guidelines.")
-}
+/*
+The following code adds version information that should not actually be used.
 
+This fixes a bug where the version information is populated after the initial
+android configuration is set.
+===
+BEGIN: Provide default values for version code.
+*/
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if(flutterVersionName == null) {
-    throw new GradleException("You have not defined a version name in the pubspec.yaml file. Please check the file for version guidelines.")
+if (flutterVersionCode == null || flutterVersionName == null) {
+    flutterVersionCode = 1
+    flutterVersionName = "Invalid Version"
 }
+/*
+END: Provide default values for version code.
+*/
 
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+/*
+UNCOMMENT FOR RELEASE BUILD:
+
+----------------------------
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if(keystorePropertiesFile.exists()){
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
+*/
 
 android {
     compileSdkVersion 28
@@ -45,6 +58,10 @@ android {
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    
+/*
+UNCOMMENT FOR RELEASE BUILD:
+----------------------------
 
     signingConfigs {
         release {
@@ -54,11 +71,15 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+*/
 
     buildTypes {
         release {
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+
             // Sign with release keys
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
 
             minifyEnabled true
             useProguard false
