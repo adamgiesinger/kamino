@@ -366,50 +366,6 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
                         Container(
                           margin: EdgeInsets.symmetric(vertical: 25),
-                        ),
-
-                        Theme(
-                          data: Theme.of(context).copyWith(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent
-                          ),
-                          child: SwitchListTile(
-                            isThreeLine: true,
-                            activeColor: Theme.of(context).primaryColor,
-                            value: _autoplaySourcesEnabled,
-                            title: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  child: Text(S.of(context).experimental),
-                                ),
-
-                                Flexible(child: TitleText(S.of(context).source_autoplay, allowOverflow: true))
-                              ],
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(
-                                S.of(context).source_autoplay_description,
-                                style: TextStyle(),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                              ),
-                            ),
-                            onChanged: (value) async {
-                              if (value != _autoplaySourcesEnabled){
-                                await (Settings.manuallySelectSourcesEnabled = !value); // ignore: await_only_futures
-                                (Settings.manuallySelectSourcesEnabled as Future).then((data) => setState(() => _autoplaySourcesEnabled = !data));
-                              }
-                            },
-                          ),
                         )
                       ],
                     ),

@@ -84,67 +84,78 @@ class Genre {
   static const List tv = [
     {
       "id": 10759,
-      "name": "Action & Adventure"
+      "name": "Action & Adventure",
+      "banner": ""
     },
     {
       "id": 16,
-      "name": "Animation"
+      "name": "Animation",
+      "banner": ""
     },
     {
       "id": 35,
-      "name": "Comedy"
+      "name": "Comedy",
+      "banner": ""
     },
     {
       "id": 80,
-      "name": "Crime"
+      "name": "Crime",
+      "banner": ""
     },
     {
       "id": 99,
-      "name": "Documentary"
+      "name": "Documentary",
+      "banner": ""
     },
     {
       "id": 18,
-      "name": "Drama"
+      "name": "Drama",
+      "banner": ""
     },
     {
       "id": 10751,
-      "name": "Family"
+      "name": "Family",
+      "banner": ""
     },
     {
       "id": 10762,
-      "name": "Kids"
+      "name": "Kids",
+      "banner": ""
     },
     {
       "id": 9648,
-      "name": "Mystery"
+      "name": "Mystery",
+      "banner": ""
     },
     {
       "id": 10763,
-      "name": "News"
+      "name": "News",
+      "banner": ""
     },
     {
       "id": 10764,
-      "name": "Reality"
+      "name": "Reality",
+      "banner": ""
     },
     {
       "id": 10765,
-      "name": "Sci-Fi & Fantasy"
-    },
-    {
-      "id": 10766,
-      "name": "Soap"
+      "name": "Sci-Fi & Fantasy",
+      "banner": ""
     },
     {
       "id": 10767,
-      "name": "Talk"
+      "name": "Talk",
+      "banner": ""
     },
     {
       "id": 10768,
-      "name": "War & Politics"
+      "name": "War & Politics",
+      "banner": ""
     },
     {
       "id": 37,
-      "name": "Western"
+      "name": "Western",
+      "banner": ""
     }
   ];
 

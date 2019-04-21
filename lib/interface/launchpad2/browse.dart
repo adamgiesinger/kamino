@@ -12,7 +12,6 @@ import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/genre.dart';
-import 'package:shimmer/shimmer.dart';
 
 class BrowsePageState extends State<StatefulWidget> {
 
@@ -47,10 +46,11 @@ class BrowsePageState extends State<StatefulWidget> {
                   mainAxisSpacing: spacing,
                   crossAxisSpacing: spacing,
                 ),
-                itemCount: Genre.tv.length,
+                itemCount: genreList.length,
                 itemBuilder: (BuildContext context, int index){
                   final int genreId = genreList[index]['id'];
-                  final String genreAsset = Genre.getFontImagePath(
+                  final String genreBanner = genreList[index]['banner'];
+                  final String genreLabel = Genre.getFontImagePath(
                       type,
                       genreId
                   );
@@ -63,76 +63,44 @@ class BrowsePageState extends State<StatefulWidget> {
                     type: MaterialType.card,
                     borderRadius: BorderRadius.circular(5),
                     clipBehavior: Clip.antiAlias,
-                    child: FutureBuilder(
-                        future: memoizer.runOnce(
-                                () => fetchGenreData(genreId)
+                    child: Stack(
+                      fit: StackFit.expand,
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        CachedNetworkImage(
+                          imageUrl: TMDB.IMAGE_CDN_LOWRES + genreBanner,
+                          fit: BoxFit.cover,
                         ),
-                        builder: (BuildContext context, AsyncSnapshot snapshot){
-                          if(snapshot.hasError){
-                            print("Error loading genre: #$genreId");
-                            return Container();
-                          }
 
-                          switch(snapshot.connectionState){
-                            case ConnectionState.none:
-                            case ConnectionState.waiting:
-                            case ConnectionState.active:
-                              return Shimmer.fromColors(
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Container(
-                                        color: const Color(0x8F000000),
+                        Container(
+                          color: const Color(0x8F000000),
+                          child: Center(child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30
+                              ),
+                              height: 30,
+                              child: SvgPicture.asset(genreLabel)
+                          )),
+                        ),
+
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => GenreSearch(
+                                      genreID: genreId,
+                                      genreName: Genre.resolveGenreName(
+                                          getRawContentType(type),
+                                          genreId
                                       ),
+                                      contentType: getRawContentType(type),
                                     )
-                                  ],
-                                ),
-                                baseColor: const Color(0x1F000000),
-                                highlightColor: const Color(0x3FFFFFFF)
-                              );
-
-                            case ConnectionState.done:
-                              return Stack(
-                                fit: StackFit.expand,
-                                alignment: Alignment.center,
-                                children: <Widget>[
-                                  CachedNetworkImage(
-                                    imageUrl: TMDB.IMAGE_CDN_LOWRES + snapshot.data[0]['backdrop_path'],
-                                    fit: BoxFit.cover,
-                                  ),
-
-                                  Container(
-                                    color: const Color(0x8F000000),
-                                    child: Center(child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 30
-                                        ),
-                                        height: 30,
-                                        child: SvgPicture.asset(genreAsset)
-                                    )),
-                                  ),
-
-                                  Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: () => Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) => GenreSearch(
-                                                genreID: genreId,
-                                                genreName: Genre.resolveGenreName(
-                                                    getRawContentType(type),
-                                                    genreId
-                                                ),
-                                                contentType: getRawContentType(type),
-                                              )
-                                          )
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              );
-                          }
-                        }
+                                )
+                            ),
+                          ),
+                        )
+                      ],
                     )
                   );
                 },

@@ -69,7 +69,13 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.connectionState == ConnectionState.none || snapshot.hasError){
           if(snapshot.error is SocketException
-            || snapshot.error is HttpException) return OfflineMixin();
+            || snapshot.error is HttpException) return OfflineMixin(
+            reloadAction: () async {
+              _memoizer = new AsyncMemoizer();
+              await _memoizer.runOnce(load).catchError((error){});
+              setState(() {});
+            },
+          );
 
           return ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading your launchpad.");
         }
@@ -133,22 +139,31 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 10),
                             child: Card(
-                                child: Container(
+                              child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+                                return Container(
                                   margin: EdgeInsets.only(left: 107),
                                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                                   child: Column(
-                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      TitleText(_editorsChoice.title, fontSize: 24),
+                                      TitleText(
+                                          _editorsChoice.title,
+                                          fontSize: 24
+                                      ),
                                       Container(
                                         margin: EdgeInsets.only(top: 10, right: 5),
-                                        child: Text(_editorsChoice.comment),
+                                        child: Text(
+                                          _editorsChoice.comment,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 5,
+                                        ),
                                       )
                                     ],
                                   ),
-                                )
+                                );
+                              })
                             ),
                           ),
 

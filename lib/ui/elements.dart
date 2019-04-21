@@ -176,7 +176,26 @@ class VerticalIconButton extends StatelessWidget {
 
 }
 
-class OfflineMixin extends StatelessWidget {
+class OfflineMixin extends StatefulWidget {
+
+  final Function reloadAction;
+
+  OfflineMixin({
+    this.reloadAction
+  });
+
+  @override
+  State<StatefulWidget> createState() => OfflineMixinState();
+
+}
+
+class OfflineMixinState extends State<OfflineMixin> {
+
+  bool _isLoading;
+
+  OfflineMixinState() {
+    _isLoading = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +221,26 @@ class OfflineMixin extends StatelessWidget {
                       fontSize: 16
                   ),
                 ),
-              )
+              ),
+
+              widget.reloadAction != null ? Container(
+                padding: EdgeInsets.only(top: 10),
+                child: !_isLoading ? FlatButton(
+                  child: Text(S.of(context).reload.toUpperCase()),
+                  textColor: Theme.of(context).primaryColor,
+                  onPressed: () async {
+                    _isLoading = true;
+                    setState((){});
+                    await Future.delayed(Duration(seconds: 3));
+                    await widget.reloadAction();
+                    setState((){});
+                    _isLoading = false;
+                  },
+                ) : Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: CircularProgressIndicator(),
+                ),
+              ) : Container()
             ],
           ),
         ),

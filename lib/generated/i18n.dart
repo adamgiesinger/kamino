@@ -101,6 +101,7 @@ class S implements WidgetsLocalizations {
   String get power_user_settings_for_rocket_scientists => "Power user settings for rocket scientists.";
   String get rd_description => "Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet.";
   String get released => "Released";
+  String get reload => "Reload";
   String get removed_from_favorites => "Removed from favorites";
   String get restore_defaults => "Restore Defaults";
   String get run_connectivity_test => "Run Connectivity Test";
