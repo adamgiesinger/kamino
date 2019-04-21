@@ -48,7 +48,7 @@ before_script:
   - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
   - mkdir -p `pwd`/lib/vendor/dist/
   # Inject build configuration
-  - yes | cp -rf ./android/app/build.gradle.debug ./android/app/build.gradle
+  - yes | cp -rf ./android/app/build.gradle.example ./android/app/build.gradle
   - ./.travis/generateVendorConfig.sh $TMDB_KEY $TRAKT_ID $TRAKT_SECRET $CLAWS_URL_BETA $CLAWS_KEY_BETA $VENDOR_NAME > `pwd`/lib/vendor/dist/OfficialVendorConfiguration.dart
 
 script:
