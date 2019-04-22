@@ -54,12 +54,12 @@ Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = fals
 
     if(Navigator.of(context).canPop()) Navigator.of(context).pop();
 
-    String _errorReference = "Unknown stack reference.";
+    String _errorReference;
     try {
       _errorReference = stacktrace.toString().split("\n").firstWhere((line) => line.contains("kamino")).split("     ")[1];
     }catch(_){}
 
-    showDialog(context: context, builder: (BuildContext context) {
+    if(_errorReference != null) showDialog(context: context, builder: (BuildContext context) {
       return AlertDialog(
         title: TitleText(S.of(context).an_error_occurred, fontSize: 26, textAlign: TextAlign.center),
         content: Container(

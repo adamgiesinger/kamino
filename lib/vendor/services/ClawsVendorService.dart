@@ -182,8 +182,6 @@ class ClawsVendorService extends VendorService {
       "imdb_id": movie.imdbId
     });
 
-    print(movie.imdbId);
-
     if(!await authenticate(context)) return;
     _beginProcessing(context, endpointURL, data, movie, displayTitle: title);
   }
@@ -344,6 +342,8 @@ class ClawsVendorService extends VendorService {
           /// as some metadata about the URL, such as quality information.
           ///
           case 'result':
+            if(_webSocket.closeReason != null) return;
+
             var sourceFile = event['file'];
             if (sourceFile == null){
               print("No file provided (event['file']), therefore discarding. (${Convert.jsonEncode(event)})");
@@ -495,7 +495,7 @@ class ClawsVendorService extends VendorService {
 
   Future<int> getNTPTime() async {
     var ntpResponse = await
-      Convert.jsonDecode((await get("https://beta.apollotv.xyz/api/v1/ntp")).body);
+      Convert.jsonDecode((await get(server + "api/v1/ntp")).body);
     return ntpResponse['now'];
   }
 
