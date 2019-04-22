@@ -60,7 +60,7 @@ class Interface {
     );
   }
 
-  static Future<void> showSimpleErrorDialog(BuildContext context, {String title = "An error occurred", String reason = "Unable to determine reason..."}) async {
+  static Future<void> showSimpleErrorDialog(BuildContext context, {String title = "An error occurred", String reason = "Unable to determine reason...", FlatButton alternativeAction}) async {
     Interface.showAlert(
         context: context,
         title: TitleText(title), // Title
@@ -69,6 +69,10 @@ class Interface {
         ],
         dismissible: true,
         actions: [
+          alternativeAction != null
+            ? alternativeAction
+            : null,
+
           new FlatButton(
             onPressed: (){
               Navigator.of(context).pop();

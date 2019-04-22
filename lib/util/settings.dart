@@ -101,11 +101,19 @@ class _Settings {
     "maxConcurrentRequests": $(type: int, defaultValue: 5),
     "requestTimeout": $(type: int, defaultValue: 10),
 
+    "contentSortSettings": $(type: List, defaultValue: <String>[]),
+
     // This is the third party player that should be used.
     "playerInfo": $(type: List, defaultValue: <String>[]),
-
-    "contentSortSettings": $(type: List, defaultValue: <String>[])
   };
+
+  Future<PlayerSettings> get playerInfo async {
+    return PlayerSettings(await this.noSuchMethod(Invocation.getter(Symbol('playerInfo'))));
+  }
+
+  Future<void> setPlayerInfo(PlayerSettings info) async {
+    return await this.noSuchMethod(Invocation.setter(Symbol('playerInfo='), info.asList()));
+  }
 
   noSuchMethod(Invocation invocation) {
     if(invocation.isGetter){
@@ -161,4 +169,31 @@ class $ {
   final Type type;
   final dynamic defaultValue;
   const $({@required this.type, this.defaultValue});
+}
+
+/* Setting Objects */
+class PlayerSettings {
+
+  String activity;
+  String package;
+  String name;
+
+  PlayerSettings(List<String> data){
+    this.activity = data.length > 0 ? data[0] : null;
+    this.package = data.length > 1 ? data[1] : null;
+    this.name = data.length > 2 ? data[2] : null;
+  }
+
+  static PlayerSettings defaultPlayer() {
+    return new PlayerSettings([]);
+  }
+
+  List<String> asList(){
+    return [activity, package, name];
+  }
+
+  bool isValid(){
+    return activity != null && package != null && name != null;
+  }
+
 }

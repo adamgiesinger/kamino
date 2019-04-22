@@ -23,7 +23,7 @@ const platform = const MethodChannel('xyz.apollotv.kamino/playThirdParty');
 
 class PlaybackSettingsPageState extends SettingsPageState {
 
-  List<String> playerSettings = [];
+  PlayerSettings playerSettings = PlayerSettings.defaultPlayer();
 
   @override
   void initState(){
@@ -47,7 +47,7 @@ class PlaybackSettingsPageState extends SettingsPageState {
             title: TitleText("Change Player"),
             subtitle: Text(
               // CPlayer is hardcoded. Do not translate it.
-              playerSettings.length == 3 ? playerSettings[2] : "${PlaybackSettingsPage.BUILT_IN_PLAYER_NAME} (Default)"
+              playerSettings.isValid() ? playerSettings.name : "${PlaybackSettingsPage.BUILT_IN_PLAYER_NAME} (Default)"
             ),
             onTap: () => _showPlayerSelectDialog(context),
           ),
@@ -129,9 +129,9 @@ class PlaybackSettingsPageState extends SettingsPageState {
                             enabled: true,
                             onTap: () async {
                               setState(() {
-                                playerSettings = <String>[];
+                                playerSettings = PlayerSettings.defaultPlayer();
                               });
-                              await (Settings.playerInfo = playerSettings);
+                              await Settings.setPlayerInfo(playerSettings);
 
                               Navigator.of(context).pop();
                             },
@@ -157,14 +157,14 @@ class PlaybackSettingsPageState extends SettingsPageState {
                           enabled: true,
                           onTap: () async {
                             setState(() {
-                              playerSettings = <String>[
+                              playerSettings = new PlayerSettings([
                                 snapshot.data[index]['activity'],
                                 snapshot.data[index]['package'],
                                 snapshot.data[index]['name']
-                              ];
+                              ]);
                             });
 
-                            await (Settings.playerInfo = playerSettings);
+                            await Settings.setPlayerInfo(playerSettings);
                             Navigator.of(context).pop();
                           },
                         );

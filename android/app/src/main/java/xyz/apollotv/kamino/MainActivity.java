@@ -81,9 +81,10 @@ public class MainActivity extends FlutterActivity {
                 String activityName = methodCall.argument("activityName");
                 String videoTitle = methodCall.argument("videoTitle");
                 String videoURL = methodCall.argument("videoURL");
+                String mimeType = methodCall.argument("mimeType");
 
                 Intent playIntent = new Intent(Intent.ACTION_VIEW);
-                playIntent.setDataAndTypeAndNormalize(Uri.parse(videoURL), "video/*");
+                playIntent.setDataAndTypeAndNormalize(Uri.parse(videoURL), mimeType);
                 playIntent.putExtra("title", videoTitle);
                 playIntent.setClassName(activityPackage, activityName);
 
@@ -98,11 +99,41 @@ public class MainActivity extends FlutterActivity {
                     return;
                 }
 
-                result.error(getPackageName(), "Error whilst playing. Intent wasn't safe to use.", null);
+                result.error(getPackageName(), "Error whilst playing. Intent wasn't safe to use.", "unsafeIntent");
 
             }catch(Exception ex){
                 ex.printStackTrace();
-                result.error(getPackageName(), "Error whilst playing. Details have been logged.", null);
+                result.error(getPackageName(), "Error whilst playing. Details have been logged.", "generic");
+            }
+            return;
+        }
+
+        if(methodCall.method.equals("selectAndPlay")) {
+            try {
+                String videoTitle = methodCall.argument("videoTitle");
+                String videoURL = methodCall.argument("videoURL");
+                String mimeType = methodCall.argument("mimeType");
+
+                Intent playIntent = new Intent(Intent.ACTION_VIEW);
+                playIntent.setDataAndTypeAndNormalize(Uri.parse(videoURL), mimeType);
+                playIntent.putExtra("title", videoTitle);
+
+                List<ResolveInfo> activities = getPackageManager().queryIntentActivities(
+                        playIntent, 0
+                );
+                boolean isIntentSafe = activities.size() > 0;
+
+                if(isIntentSafe){
+                    startActivity(playIntent);
+                    result.success(null);
+                    return;
+                }
+
+                result.error(getPackageName(), "Error whilst playing. Intent wasn't safe to use.", "unsafeIntent");
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+                result.error(getPackageName(), "Error whilst playing. Details have been logged.", "generic");
             }
             return;
         }

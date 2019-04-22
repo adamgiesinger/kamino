@@ -6,6 +6,7 @@ import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/filesize.dart';
+import 'package:kamino/util/player.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/VendorService.dart';
 
@@ -157,29 +158,12 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                         leading: Icon(Icons.insert_drive_file),
 
                         onTap: () async {
-                          var playerSettings = await Settings.playerInfo;
-
-                          if(playerSettings == null || playerSettings.length != 3) {
-                            // Use CPlayer
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) =>
-                                    CPlayer(
-                                        title: widget.title,
-                                        url: source.file.data,
-                                        mimeType: 'video/mp4'
-                                    ))
-                            );
-                          }else{
-                            // Launch external player
-                            MethodChannel playerChannel = const MethodChannel('xyz.apollotv.kamino/playThirdParty');
-                            playerChannel.invokeMethod('play', <String, dynamic>{
-                              'activityPackage': playerSettings[1].toString(),
-                              'activityName': playerSettings[0].toString(),
-                              'videoTitle': widget.title.toString(),
-                              'videoURL': source.file.data.toString()
-                            });
-                          }
+                          PlayerHelper.play(
+                            context,
+                            title: widget.title,
+                            url: source.file.data,
+                            mimeType: 'video/*'
+                          );
                         },
                         onLongPress: () {
                           Clipboard.setData(

@@ -486,7 +486,7 @@ class ClawsVendorService extends VendorService {
   @override
   Future<void> done(BuildContext context) async {
     print("-- All done! --");
-    _webSocket.close();
+    if(_webSocket != null) _webSocket.close();
   }
 
   ///////////////////////////////
