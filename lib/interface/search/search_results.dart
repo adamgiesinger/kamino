@@ -206,8 +206,7 @@ class _SearchResultViewState extends State<SearchResultView> {
                 background: _results[index].poster_path,
                 name: _results[index].name,
                 releaseDate: _results[index].year,
-                mediaType: _results[index].mediaType,
-                isFav: _favIDs.contains(_results[index].id),
+                mediaType: _results[index].mediaType
               ),
             );
           }

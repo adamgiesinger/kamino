@@ -13,7 +13,6 @@ class ContentPoster extends StatefulWidget {
   final String releaseYear;
   final String releaseDate;
   final String mediaType;
-  final bool isFav;
   final double height, width;
   final BoxFit imageFit;
   final bool hideIcon;
@@ -28,7 +27,6 @@ class ContentPoster extends StatefulWidget {
     this.releaseYear,
     this.releaseDate,
     this.mediaType,
-    this.isFav = false,
     this.width = 500,
     this.height = 750,
     this.imageFit = BoxFit.cover,
@@ -45,15 +43,6 @@ class ContentPoster extends StatefulWidget {
 }
 
 class ContentPosterState extends State<ContentPoster> {
-
-  Color _favoriteIndicator() {
-
-    if (widget.isFav == true) {
-      return Colors.yellow;
-    }
-
-    return Colors.white;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +116,6 @@ class ContentPosterState extends State<ContentPoster> {
                       child: widget.name != null ? TitleText(
                         widget.name,
                         fontSize: 16,
-                        textColor: _favoriteIndicator(),
                       ) : Container()
                   ),
 
@@ -144,15 +132,13 @@ class ContentPosterState extends State<ContentPoster> {
                           releaseYear != null ? Text(
                               releaseYear,
                               style: TextStyle(
-                                  fontSize: 12,
-                                color: _favoriteIndicator()
+                                fontSize: 12,
                               )
                           ) : Container(),
 
                           widget.hideIcon == false && widget.mediaType != null ? Icon(
-                              widget.mediaType == 'tv' ? Icons.tv : Icons.local_movies,
-                              size: 16,
-                            color: _favoriteIndicator(),
+                            widget.mediaType == 'tv' ? Icons.tv : Icons.local_movies,
+                            size: 16,
                           ) : Container()
                         ],
                       )
