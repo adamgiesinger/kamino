@@ -11,6 +11,11 @@ class SourceModel {
       : file = SourceFile.fromJSON(json["file"]),
         isResultOfScrape = json["isResultOfScrape"],
         metadata = SourceMetadata.fromJSON(json["metadata"]);
+
+  SourceModel.fromRDJSON(Map json)
+      : file = SourceFile.fromRDJSON(json),
+        isResultOfScrape = true,
+        metadata = SourceMetadata.fromRDJSON(json);
 }
 
 class SourceFile {
@@ -18,24 +23,37 @@ class SourceFile {
   final String kind;
 
   SourceFile.fromJSON(Map json)
-    : data = json["data"],
-      kind = json["kind"];
+      : data = json["data"],
+        kind = json["kind"];
+
+  SourceFile.fromRDJSON(Map json)
+      : data = json["download"],
+        kind = json["mimeType"];
 }
 
 class SourceMetadata {
   final String cookie;
   final bool isStreamable;
-  final String provider;
-  final String quality;
-  final String source;
+  String provider;
+  String quality;
+  String source;
   final int ping;
   int contentLength;
 
   SourceMetadata.fromJSON(Map json)
-    : cookie = json["cookie"],
-      isStreamable = json["isStreamable"],
-      provider = json["provider"] != null ? json["provider"] : "Unknown",
-      quality = json["quality"] != null ? json["quality"] : null,
-      source = json["source"] != null ? json["source"] : "Unknown",
-      ping = json["ping"];
+      : cookie = json["cookie"],
+        isStreamable = json["isStreamable"],
+        provider = json["provider"] != null ? json["provider"] : "Unknown",
+        quality = json["quality"] != null ? json["quality"] : null,
+        source = json["source"] != null ? json["source"] : "Unknown",
+        ping = json["ping"];
+
+  SourceMetadata.fromRDJSON(Map json)
+      : cookie = "",
+        isStreamable = json["streamable"] != null && json["streamable"]  == 1 ? true : false,
+        provider = json["provider"] != null ? json["provider"] : "Unknown",
+        quality = json["quality"] != null ? json["quality"] : null,
+        source = json["source"] != null ? json["source"] : "Unknown",
+        contentLength = json["filesize"] != null ? json["filesize"] : "0",
+        ping = 0;
 }

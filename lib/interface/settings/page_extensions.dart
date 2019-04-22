@@ -3,6 +3,7 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/util/trakt.dart' as trakt;
+import 'package:kamino/util/rd.dart' as rd;
 import 'package:kamino/interface/settings/page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,6 +17,7 @@ class ExtensionsSettingsPage extends SettingsPage {
 class ExtensionsSettingsPageState extends SettingsPageState {
 
   List<String> _traktCred;
+  List<String> _rdCred;
 
   @override
   void initState(){
@@ -23,12 +25,18 @@ class ExtensionsSettingsPageState extends SettingsPageState {
       _traktCred = data;
     }));
 
+    ((Settings.rdCredentials) as Future).then((data) => setState((){
+      _rdCred = data;
+    }));
+
+
     super.initState();
   }
 
   @override
   Widget buildPage(BuildContext context) {
     bool traktConnected = _traktCred != null && _traktCred.length == 3;
+    bool rdConnected = _rdCred != null && _rdCred.length == 3;
 
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -108,10 +116,19 @@ class ExtensionsSettingsPageState extends SettingsPageState {
               ButtonTheme.bar( // make buttons use the appropriate styles for cards
                 child: ButtonBar(
                   children: <Widget>[
+                    !rdConnected ? FlatButton(
+                      textColor: Theme.of(context).primaryTextTheme.body1.color,
+                      child: TitleText(S.of(context).connect),
+                        onPressed: () async {
+                        _signinToRD();
+                        },
+                    ) :
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
-                      child: TitleText(S.of(context).coming_soon),
-                      onPressed: null,
+                      child: TitleText(S.of(context).disconnect),
+                      onPressed: () async {
+                        _clearRDCredentials();
+                      },
                     ),
                   ],
                 ),
@@ -120,6 +137,111 @@ class ExtensionsSettingsPageState extends SettingsPageState {
           ),
         )
       ],
+    );
+  }
+
+// MOVE THIS TO rd.dart?
+  void _signinToRD() async{
+
+    Map data = await rd.getOAuthInfo();
+
+    if (data["user_code"] != null){
+
+      //open registration webview
+
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => new rd.RealDebrid(oauth_data: data),
+        ),);
+
+      print("rd response $result");
+
+      //saving the token info, for future use
+
+      if (result["access_token"] != null ){
+
+        /*
+        * IMPORTANT RD INFO - DO NOT DELETE
+        * 0 - Access Code
+        * 1 - Refresh Token
+        * 2 - Expires in
+        * */
+
+        List<String> _cred = [result["access_token"],
+        result["refresh_token"],
+        DateTime.now().add(new Duration(seconds: result["expires_in"])).toString()];
+
+        setState(() {
+          _rdCred = _cred;
+          Settings.rdCredentials = _rdCred;
+        });
+      }
+
+
+    } else {
+
+      showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_){
+            return AlertDialog(
+              title: TitleText("Real Debrid authentication failed!"),
+              content: Text("Unable to connect to Real Debrid. Try again later.",
+                style: TextStyle(
+                    color: Colors.white
+                ),
+              ),
+              actions: <Widget>[
+                Center(
+                  child: FlatButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: TitleText("Okay", textColor: Colors.white)
+                  ),
+                )
+              ],
+              //backgroundColor: Theme.of(context).cardColor,
+            );
+          }
+      );
+
+    }
+  }
+
+  void _clearRDCredentials() {
+
+    //Ask user for confirmation
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_){
+          return AlertDialog(
+            title: TitleText("Disconnect from Real-Debrid"),
+            content: Text("Are you sure ?",
+              style: TextStyle(
+                  color: Colors.white
+              ),
+            ),
+            actions: <Widget>[
+              Center(
+                  child: FlatButton(
+                    child: TitleText("Yes", textColor: Colors.white),
+                    onPressed: (){
+
+                      //clear rd credentials
+                      setState(() {
+                        _rdCred = [];
+                        Settings.rdCredentials = _rdCred;
+                      });
+
+                      Navigator.pop(context);
+                    },
+                  )
+              )
+            ],
+            //backgroundColor: Theme.of(context).cardColor,
+          );
+        }
     );
   }
 
