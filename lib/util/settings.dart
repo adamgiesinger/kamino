@@ -79,7 +79,6 @@ class _Settings {
 
     "serverURLOverride": $(type: String),
     "serverKeyOverride": $(type: String),
-    "searchHistory": $(type: List, defaultValue: <String>[]),
 
     ///
     ///   ----------------------------------

@@ -8,26 +8,15 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/search/search_results.dart';
 import 'package:kamino/interface/content/overview.dart';
-import 'package:kamino/partials/content_card.dart';
 import 'package:kamino/ui/elements.dart';
-import 'package:kamino/util/genre.dart' as genre;
+import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/util/settings.dart';
 
 class SmartSearch extends SearchDelegate<String> {
 
-  final AsyncMemoizer _memoizer = AsyncMemoizer();
-
-  bool _expandedSearchPref = false;
-
-  SmartSearch() {
-    (Settings.detailedContentInfoEnabled as Future).then((data) => _expandedSearchPref = data);
-  }
+  final AsyncMemoizer<List<String>> _memoizer = AsyncMemoizer();
 
   Future<List<SearchModel>> _fetchSearchList(BuildContext context, String criteria) async {
-
-    Future.delayed(new Duration(milliseconds: 500));
-
     List<SearchModel> _data = [];
 
     String url = "${TMDB.ROOT_URL}/search/"
@@ -37,15 +26,12 @@ class SmartSearch extends SearchDelegate<String> {
     http.Response res = await http.get(url);
 
     Map results = jsonDecode(res.body);
-    //List<Map> _resultsList = [];
 
     var _resultsList = results["results"];
 
     if (_resultsList != null) {
       _resultsList.forEach((var element) {
         if (element["media_type"] != "person") {
-          String name =
-              element["name"] == null ? element["title"] : element["name"];
           _data.add(new SearchModel.fromJSON(element, 1));
         }
       });
@@ -97,8 +83,7 @@ class SmartSearch extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     if(query == null || query.isEmpty) return Container();
 
-    _saveToSearchHistory(query);
-    _promoteQuerySearchHistory(query);
+    DatabaseHelper.writeToSearchHistory(query);
     return SearchResultView(query: query);
   }
 
@@ -114,7 +99,7 @@ class SmartSearch extends SearchDelegate<String> {
               padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
               child: InkWell(
                 onTap: () {
-                  query = snapshot.data[index].toString();
+                  query = snapshot.data[index];
                   showResults(context);
                 },
                 child: ListTile(
@@ -136,60 +121,25 @@ class SmartSearch extends SearchDelegate<String> {
         });
   }
 
-  Widget _suggestionsPosterCard(AsyncSnapshot snapshot) {
-    return ListView.builder(
-      itemCount: snapshot.data.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 5.0, left: 3.0, right: 3.0),
-          child: ContentCard(
-            name: snapshot.data[index].title,
-            backdrop: snapshot.data[index].backdrop_path,
-            overview: snapshot.data[index].overview,
-            ratings: snapshot.data[index].vote_average,
-            elevation: 0.0,
-            mediaType: snapshot.data[index].mediaType,
-            genre: genre.resolveGenreNames(snapshot.data[index].genre_ids,
-                snapshot.data[index].mediaType),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ContentOverview(
-                          contentId: snapshot.data[index].id,
-                          contentType: snapshot.data[index].mediaType == "tv"
-                              ? ContentType.TV_SHOW
-                              : ContentType.MOVIE)));
-              }
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildSearchHistory() {
-    return FutureBuilder(
-      future: _memoizer.runOnce(() async => await Settings.searchHistory), // a previously-obtained Future<String> or null
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
+    return FutureBuilder<List<String>>(
+      future: _memoizer.runOnce(DatabaseHelper.getSearchHistory),
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.active:
           case ConnectionState.waiting:
             return Container();
-            /*return Center(child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(
-                Theme.of(context).primaryColor
-              ),
-            ));*/
           case ConnectionState.done:
             if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              return _searchHistoryListView(snapshot);
+              return ErrorLoadingMixin(
+                errorMessage: snapshot.error.toString(),
+              );
             }
-          //return Text('Result: ${snapshot.data}');
+
+            return _searchHistoryListView(snapshot);
         }
-        return null; // unreachable
+        return null;
       }
     );
   }
@@ -272,49 +222,6 @@ class SmartSearch extends SearchDelegate<String> {
             return null; // unreachable
           }),
     );
-  }
-
-  Future<void> _removeSearchItem(String value) async{
-    List<String> _searchHistory = ((await (Settings.searchHistory)) as List);
-    _searchHistory.remove(value);
-    await (Settings.searchHistory = _searchHistory);
-  }
-
-  Future<void> _saveToSearchHistory(String value) async {
-    if (value != null && value.isNotEmpty) {
-
-      // Load the stored search history.
-      List<String> _storedSearchHistory = await (Settings.searchHistory);
-
-      // Cancel if the stored search history already contains this element.
-      if(_storedSearchHistory.contains(value)) return;
-
-      // Prepend the new search history entry to the old search history.
-      List<String> _searchHistory = [value] + _storedSearchHistory;
-
-      // Cap the search history length at 40 by removing any trailing history items.
-      while(_searchHistory.length > 40) _searchHistory.remove(_searchHistory.last);
-
-      // Save the new search history list.
-      await (Settings.searchHistory = _searchHistory);
-    }
-  }
-
-  ///
-  /// Ensures the most recent search query remains at the top
-  /// of the search history.
-  ///
-  Future<void> _promoteQuerySearchHistory(String value) async {
-    List<String> searches = (await (Settings.searchHistory)).cast<String>();
-
-    // Ensure duplicates are removed.
-    searches = searches.toSet().toList();
-
-    // Remove current query from searches and re-add query at top of searches list.
-    searches.remove(value);
-    searches = [value] + searches;
-
-    await (Settings.searchHistory = searches);
   }
 
 }

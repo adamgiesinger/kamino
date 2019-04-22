@@ -13,7 +13,8 @@ class DatabaseHelper {
   // GENERAL //
   static Future<ObjectDB> openDatabase() async {
     final Directory appDirectory = await getApplicationDocumentsDirectory();
-    return ObjectDB("${appDirectory.path}/apolloDB.db").open();
+    ObjectDB database = await ObjectDB("${appDirectory.path}/apolloDB.db").open(false);
+    return database;
   }
 
   static Future<void> bulkWrite(List<Map> content) async {
@@ -107,29 +108,55 @@ class DatabaseHelper {
 
   static Future<List<String>> getSearchHistory() async {
     ObjectDB database = await openDatabase();
-
     List<Map> results = await database.find({
       "docType": "pastSearch"
     });
-
     database.close();
-    return results.map((Map result) => result['text']).toList();
+
+    results = results.take(40).toList(growable: false)
+      // Sort by timestamp
+      ..sort(
+          (Map current, Map next) =>
+              current['timestamp'].compareTo(next['timestamp'])
+      );
+    // ...and map to a simple List<String>
+    return results.map((Map result) => result['text']).toList(growable: false).cast<String>();
   }
 
-  static Future<void> writeToHistory(String text) async {
+  static Future<void> writeToSearchHistory(String text) async {
+    // Ignore if text is null.
+    if(text == null || text.isEmpty) return;
+
     ObjectDB database = await openDatabase();
-    database.insert({
+
+    // If already in the database, remove it.
+    await database.remove({
       "docType": "pastSearch",
       "text": text
     });
-    database.close();
+
+    await database.insert({
+      "docType": "pastSearch",
+      "text": text,
+      "timestamp": new DateTime.now().millisecondsSinceEpoch
+    });
+
+    await database.close();
   }
 
-  static Future<void> removeFromHistory(String text) async {
+  static Future<void> removeFromSearchHistory(String text) async {
     ObjectDB database = await openDatabase();
     database.remove({
       "docType": "pastSearch",
       "text": text
+    });
+    database.close();
+  }
+
+  static Future<void> clearSearchHistory() async {
+    ObjectDB database = await openDatabase();
+    database.remove({
+      "docType": "pastSearch"
     });
     database.close();
   }

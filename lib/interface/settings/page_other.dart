@@ -3,6 +3,7 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/interface/settings/page.dart';
+import 'package:kamino/util/database_helper.dart';
 
 import 'package:kamino/util/settings.dart';
 
@@ -88,7 +89,7 @@ class OtherSettingsPageState extends SettingsPageState {
             subtitle: Text(S.of(context).clear_search_history_description),
             enabled: true,
             onTap: () async {
-              await (Settings.searchHistory = <String>[]);
+              await DatabaseHelper.clearSearchHistory();
               Interface.showSnackbar(S.of(context).search_history_cleared, context: context);
             },
           ),
