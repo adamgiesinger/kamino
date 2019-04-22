@@ -39,6 +39,7 @@
   "trakt_renewal_failure_detailed": "Failed to renew Trakt token. Please check your details.",
   "appname_was_unable_to_authenticate_with_trakttv": "$appName was unable to authenticate with Trakt.tv.",
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)",
+  "connected_trakt_account": "Connected Trakt account.",
   "disconnected_trakt_account": "Disconnected Trakt account.",
   "trakt_synchronization": "Trakt Synchronization...",
   "trakt_favorites_sync_detailed": "Please wait while we synchronize your favorites with Trakt. This dialog will close automatically when synchronization is complete.",
@@ -163,5 +164,11 @@
   "up_to_date": "Up to date. Check back in 1 - 3 weeks.",
   "no_favorites_header": "No favorites here!",
   "no_favorites_description": "You can add an item to favorites by tapping the heart on the top right of a content overview page.",
-  "reload": "Reload"
+  "reload": "Reload",
+  "appname_has_successfully_authenticated_with_trakttv": "$appName has successfully authenticated with Trakt.tv!",
+  "action_unsuccessful": "Action unsuccessful.",
+  "an_error_occurred_whilst_deauthenticating_with_trakttv": "An error occurred whilst deauthenticating with Trakt.tv. ($errorCode)",
+  "uploading_favorites": "Uploading favorites...",
+  "downloading_trakt_data": "Downloading Trakt data...",
+  "saving_content_information": "Saving content information..."
 }

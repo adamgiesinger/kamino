@@ -36,7 +36,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
   Map<String, bool> _selectedCategories = {};
   bool _autoplaySourcesEnabled = false;
-  List<String> _traktCred;
+  TraktSettings traktCredentials;
 
   final Map<String, AsyncMemoizer> _categoryMemoizers = {};
   final _fadeInTween = Tween<double>(begin: 0, end: 1);
@@ -58,7 +58,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
     );
 
     ((Settings.traktCredentials) as Future).then((data) => setState((){
-      _traktCred = data;
+      traktCredentials = data;
     }));
 
     // This is done for legacy reasons.
@@ -102,7 +102,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
   @override
   Widget build(BuildContext context){
     appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-    bool traktConnected = _traktCred != null && _traktCred.length == 3;
+    bool traktConnected = traktCredentials != null && traktCredentials.isValid();
 
     final _pages = <Page>[
       Page(
@@ -336,25 +336,18 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                           child: ListTile(
                               onTap: () async {
                                 if(!traktConnected){
-                                  Navigator.push(context, MaterialPageRoute(
-                                    fullscreenDialog: true,
-                                    builder: (_ctx) => trakt.TraktAuth(context: _ctx)
-                                  )).then((var authCode) {
-                                    trakt.authUser(context, _traktCred, authCode, shouldShowDialog: false).then((_traktCred) async {
-                                      setState(() {
-                                        this._traktCred = _traktCred;
-                                      });
+                                  await Trakt.authenticate(context);
+                                  this.traktCredentials = await Trakt.getTraktSettings();
+                                  setState(() {});
 
-                                      if(await Trakt.isAuthenticated())
-                                        trakt.synchronize(context, _traktCred);
-                                    });
-                                  });
-                                }else{
-                                  if(await trakt.deauthUser(context, _traktCred, shouldShowScaffold: false)){
-                                    setState(() {
-                                      _traktCred = [];
-                                    });
+                                  if(await Trakt.isAuthenticated()){
+                                    Trakt.synchronize(context, silent: false);
                                   }
+                                }else{
+                                  await Trakt.deauthenticate(context);
+                                  setState(() {
+                                    traktCredentials = TraktSettings.unauthenticated();
+                                  });
                                 }
                               },
                               leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),

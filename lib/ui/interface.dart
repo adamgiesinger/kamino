@@ -60,6 +60,30 @@ class Interface {
     );
   }
 
+  static Future<void> showSimpleSuccessDialog(BuildContext context, {String title = "Success!", String message = "Action completed successfully.", FlatButton alternativeAction}) async {
+    Interface.showAlert(
+        context: context,
+        title: TitleText(title), // Title
+        content: <Widget>[
+          Text(message)
+        ],
+        dismissible: true,
+        actions: [
+          alternativeAction != null
+              ? alternativeAction
+              : null,
+
+          new FlatButton(
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+            child: Text("Okay"),
+            textColor: Theme.of(context).primaryColor,
+          )
+        ]
+    );
+  }
+
   static Future<void> showSimpleErrorDialog(BuildContext context, {String title = "An error occurred", String reason = "Unable to determine reason...", FlatButton alternativeAction}) async {
     Interface.showAlert(
         context: context,
@@ -215,6 +239,7 @@ class Interface {
       context: context,
       builder: (BuildContext context) => WillPopScope(
         onWillPop: () async {
+          if(!canCancel) return false;
           if(onCancel != null) onCancel();
           return true;
         },

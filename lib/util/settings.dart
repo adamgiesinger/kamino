@@ -114,6 +114,14 @@ class _Settings {
     return await this.noSuchMethod(Invocation.setter(Symbol('playerInfo='), info.asList()));
   }
 
+  Future<TraktSettings> get traktCredentials async {
+    return TraktSettings(await this.noSuchMethod(Invocation.getter(Symbol('traktCredentials'))));
+  }
+
+  Future<void> setTraktCredentials(TraktSettings credentials) async {
+    return await this.noSuchMethod(Invocation.setter(Symbol('traktCredentials='), credentials.asList()));
+  }
+
   noSuchMethod(Invocation invocation) {
     if(invocation.isGetter){
       var key = invocation.memberName.toString().substring(8, invocation.memberName.toString().length - 2);
@@ -193,6 +201,38 @@ class PlayerSettings {
 
   bool isValid(){
     return activity != null && package != null && name != null;
+  }
+
+}
+
+class TraktSettings {
+
+  String accessToken;
+  String refreshToken;
+  String expiryDate;
+
+  TraktSettings(List<String> data){
+    this.accessToken = data.length > 0 ? data[0] : null;
+    this.refreshToken = data.length > 1 ? data[1] : null;
+    this.expiryDate = data.length > 2 ? data[2] : null;
+  }
+
+  TraktSettings.named({
+    @required this.accessToken,
+    @required this.refreshToken,
+    @required this.expiryDate
+  });
+
+  static TraktSettings unauthenticated(){
+    return new TraktSettings([]);
+  }
+
+  List<String> asList(){
+    return [accessToken, refreshToken, expiryDate];
+  }
+
+  bool isValid(){
+    return accessToken != null && refreshToken != null && expiryDate != null;
   }
 
 }

@@ -197,20 +197,20 @@ class ContentCardState extends State<ContentCard> {
     if (widget.isFavorite) {
       DatabaseHelper.removeFavoriteById(widget.id);
 
-      if(await Trakt.isAuthenticated()) trakt.removeMedia(
-          context,
-          widget.mediaType,
-          widget.id
+      if(await Trakt.isAuthenticated()) Trakt.removeFavoriteFromTrakt(
+        context,
+        type: widget.mediaType == 'tv' ? ContentType.TV_SHOW : ContentType.MOVIE,
+        id: widget.id
       );
     } else {
       DatabaseHelper.saveFavoriteById(context, widget.mediaType == 'tv' ? ContentType.TV_SHOW : ContentType.MOVIE, widget.id);
 
-      if(await Trakt.isAuthenticated()) trakt.sendNewMedia(
+      if(await Trakt.isAuthenticated()) Trakt.sendFavoriteToTrakt(
           context,
-          widget.mediaType,
-          widget.name,
-          widget.year != null ? widget.year.substring(0,4) : null,
-          widget.id
+          id: widget.id,
+          type: widget.mediaType == 'tv' ? ContentType.TV_SHOW : ContentType.MOVIE,
+          title: widget.name,
+          year: widget.year != null ? widget.year.substring(0,4) : null,
       );
     }
 

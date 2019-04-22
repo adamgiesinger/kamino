@@ -97,10 +97,10 @@ class _ContentOverviewState extends State<ContentOverview> {
       //remove the show from the database
       DatabaseHelper.removeFavoriteById(widget.contentId);
 
-      if(await Trakt.isAuthenticated()) trakt.removeMedia(
-          context,
-          rawContentType,
-          widget.contentId
+      if(await Trakt.isAuthenticated()) Trakt.removeFavoriteFromTrakt(
+        context,
+        id: widget.contentId,
+        type: widget.contentType,
       );
 
       Interface.showSnackbar(S.of(context).removed_from_favorites, context: context, backgroundColor: Colors.red);
@@ -115,12 +115,13 @@ class _ContentOverviewState extends State<ContentOverview> {
       //add the show to the database
       DatabaseHelper.saveFavorite(content);
 
-      if(await Trakt.isAuthenticated()) trakt.sendNewMedia(
-          context,
-          rawContentType,
-          content.title,
-          content.releaseDate != null ? content.releaseDate.substring(0,4) : null,
-          widget.contentId);
+      if(await Trakt.isAuthenticated()) Trakt.sendFavoriteToTrakt(
+        context,
+        id: widget.contentId,
+        type: widget.contentType,
+        title: content.title,
+        year: content.releaseDate != null ? content.releaseDate.substring(0,4) : null,
+      );
 
       //show notification snackbar
       Interface.showSnackbar(S.of(context).added_to_favorites, context: context);

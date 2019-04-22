@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/settings.dart';
@@ -15,12 +16,12 @@ class ExtensionsSettingsPage extends SettingsPage {
 
 class ExtensionsSettingsPageState extends SettingsPageState {
 
-  List<String> _traktCred;
+  TraktSettings traktSettings;
 
   @override
   void initState(){
-    ((Settings.traktCredentials) as Future).then((data) => setState((){
-      _traktCred = data;
+    Settings.traktCredentials.then((data) => setState((){
+      traktSettings = data;
     }));
 
     super.initState();
@@ -28,7 +29,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
 
   @override
   Widget buildPage(BuildContext context) {
-    bool traktConnected = _traktCred != null && _traktCred.length == 3;
+    bool traktConnected = traktSettings != null && traktSettings.isValid();
 
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -53,7 +54,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).sync),
                       onPressed: (traktConnected) ? (){
-                        trakt.synchronize(context, _traktCred);
+                        Trakt.synchronize(context, silent: false);
                       } : null,
                     ),
                     !traktConnected ?
@@ -61,17 +62,10 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       FlatButton(
                         textColor: Theme.of(context).primaryTextTheme.body1.color,
                         child: TitleText(S.of(context).connect),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            fullscreenDialog: true,
-                            builder: (_ctx) => trakt.TraktAuth(context: _ctx)
-                          )).then((var authCode) {
-                            trakt.authUser(context, _traktCred, authCode).then((_traktCred) async {
-                              setState(() {
-                                this._traktCred = _traktCred;
-                              });
-                            });
-                          });
+                        onPressed: () async {
+                          await Trakt.authenticate(context, shouldShowSnackbar: true);
+                          this.traktSettings = await Trakt.getTraktSettings();
+                          setState(() {});
                         },
                       ) :
                     // Trakt account is linked: show disconnect option
@@ -79,11 +73,10 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).disconnect),
                       onPressed: () async {
-                        if(await trakt.deauthUser(context, _traktCred)){
-                          setState(() {
-                            _traktCred = [];
-                          });
-                        }
+                        await Trakt.deauthenticate(context, shouldShowSnackbar: true);
+                        setState(() {
+                          traktSettings = TraktSettings.unauthenticated();
+                        });
                       },
                     ),
                   ],

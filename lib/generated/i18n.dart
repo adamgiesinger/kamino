@@ -21,6 +21,7 @@ class S implements WidgetsLocalizations {
 
   String get $_language_name => "English";
   String get $_language_name_english => "English";
+  String get action_unsuccessful => "Action unsuccessful.";
   String get added_to_favorites => "Added to favorites";
   String get advanced => "Advanced";
   String get air_date => "Air date";
@@ -49,6 +50,7 @@ class S implements WidgetsLocalizations {
   String get coming_soon => "Coming Soon";
   String get connect => "Connect";
   String get connect_your_trakt_account => "Connect your Trakt account";
+  String get connected_trakt_account => "Connected Trakt account.";
   String get create_profile => "Create Profile";
   String get customize_appearance => "Customize Appearance";
   String get customize_the_theme_and_primary_colors => "Customize the theme and primary colors.";
@@ -61,6 +63,7 @@ class S implements WidgetsLocalizations {
   String get dismiss => "Dismiss";
   String get donate => "Donate";
   String get done => "Done";
+  String get downloading_trakt_data => "Downloading Trakt data...";
   String get downloading_update_file => "Downloading update file...";
   String get error_updating_app => "Error updating app...";
   String get experimental => "Experimental";
@@ -105,6 +108,7 @@ class S implements WidgetsLocalizations {
   String get removed_from_favorites => "Removed from favorites";
   String get restore_defaults => "Restore Defaults";
   String get run_connectivity_test => "Run Connectivity Test";
+  String get saving_content_information => "Saving content information...";
   String get search_history_cleared => "Search history cleared.";
   String get search_tv_shows_and_movies => "Search TV shows and movies...";
   String get select_language => "Select Language...";
@@ -134,6 +138,7 @@ class S implements WidgetsLocalizations {
   String get update_failed_please_try_again_later => "Update failed. Please try again later.";
   String get update_failed_storage_permission_denied => "Update failed. Storage permission denied.";
   String get updating => "Updating...";
+  String get uploading_favorites => "Uploading favorites...";
   String get url_copied => "URL copied!";
   String get vote_average => "Vote Average";
   String get whats_your_favorite_color => "What's your favorite color?";
@@ -143,8 +148,10 @@ class S implements WidgetsLocalizations {
   String get year => "Year";
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)";
   String get youre_offline => "You're offline...";
+  String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "An error occurred whilst deauthenticating with Trakt.tv. ($errorCode)";
   String appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(String appName) => "$appName can synchronise your watch history and favorites from Trakt.tv...";
   String appname_failed_to_connect_to_the_internet(String appName) => "$appName failed to connect to the internet. Please check your connection.";
+  String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName has successfully authenticated with Trakt.tv!";
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName was made possible by all of these amazing people:";
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName was unable to authenticate with Trakt.tv.";
   String by_x(String x) => "by $x";
