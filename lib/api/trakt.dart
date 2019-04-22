@@ -61,9 +61,6 @@ class Trakt {
   /// Allows the user to sign in and store their Trakt credentials in the
   /// application settings.
   ///
-  /// RECOMMENDED:
-  /// Interface.showSnackbar(S.of(context).connected_trakt_account, context: context, backgroundColor: Colors.green);
-  ///
   static Future<bool> authenticate(BuildContext context, { bool shouldShowSnackbar = false }) async {
     KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
@@ -121,9 +118,6 @@ class Trakt {
   ///
   /// Revokes the Trakt OAUTH token and clears the trakt credentials from the
   /// application settings.
-  ///
-  /// RECOMMENDED:
-  /// Interface.showSnackbar(S.of(context).disconnected_trakt_account, context: context, backgroundColor: Colors.red);
   ///
   static Future<bool> deauthenticate(BuildContext context, { bool shouldShowSnackbar = false }) async {
     KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());

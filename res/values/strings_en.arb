@@ -170,5 +170,8 @@
   "an_error_occurred_whilst_deauthenticating_with_trakttv": "An error occurred whilst deauthenticating with Trakt.tv. ($errorCode)",
   "uploading_favorites": "Uploading favorites...",
   "downloading_trakt_data": "Downloading Trakt data...",
-  "saving_content_information": "Saving content information..."
+  "saving_content_information": "Saving content information...",
+  "appname_was_unable_to_authenticate_with_real_debrid": "$appName was unable to authenticate with Real Debrid.",
+  "connected_real_debrid_account": "Connected Real Debrid Account.",
+  "disconnected_real_debrid_account": "Disconnected Real Debrid Account."
 }

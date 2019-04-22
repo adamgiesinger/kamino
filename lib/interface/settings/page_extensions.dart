@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/settings.dart';
-import 'package:kamino/util/rd.dart' as rd;
 import 'package:kamino/interface/settings/page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -112,14 +112,14 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).connect),
                         onPressed: () async {
-                        _signinToRD();
+                        RealDebrid.authenticate(context, shouldShowSnackbar: true);
                         },
                     ) :
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).disconnect),
                       onPressed: () async {
-                        _clearRDCredentials();
+                        RealDebrid.deauthenticate(context, shouldShowSnackbar: true);
                       },
                     ),
                   ],
@@ -129,111 +129,6 @@ class ExtensionsSettingsPageState extends SettingsPageState {
           ),
         )
       ],
-    );
-  }
-
-// MOVE THIS TO rd.dart?
-  void _signinToRD() async{
-
-    Map data = await rd.getOAuthInfo();
-
-    if (data["user_code"] != null){
-
-      //open registration webview
-
-      final result = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => new rd.RealDebrid(oauth_data: data),
-        ),);
-
-      print("rd response $result");
-
-      //saving the token info, for future use
-
-      if (result["access_token"] != null ){
-
-        /*
-        * IMPORTANT RD INFO - DO NOT DELETE
-        * 0 - Access Code
-        * 1 - Refresh Token
-        * 2 - Expires in
-        * */
-
-        List<String> _cred = [result["access_token"],
-        result["refresh_token"],
-        DateTime.now().add(new Duration(seconds: result["expires_in"])).toString()];
-
-        setState(() {
-          _rdCred = _cred;
-          Settings.rdCredentials = _rdCred;
-        });
-      }
-
-
-    } else {
-
-      showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (_){
-            return AlertDialog(
-              title: TitleText("Real Debrid authentication failed!"),
-              content: Text("Unable to connect to Real Debrid. Try again later.",
-                style: TextStyle(
-                    color: Colors.white
-                ),
-              ),
-              actions: <Widget>[
-                Center(
-                  child: FlatButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: TitleText("Okay", textColor: Colors.white)
-                  ),
-                )
-              ],
-              //backgroundColor: Theme.of(context).cardColor,
-            );
-          }
-      );
-
-    }
-  }
-
-  void _clearRDCredentials() {
-
-    //Ask user for confirmation
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (_){
-          return AlertDialog(
-            title: TitleText("Disconnect from Real-Debrid"),
-            content: Text("Are you sure ?",
-              style: TextStyle(
-                  color: Colors.white
-              ),
-            ),
-            actions: <Widget>[
-              Center(
-                  child: FlatButton(
-                    child: TitleText("Yes", textColor: Colors.white),
-                    onPressed: (){
-
-                      //clear rd credentials
-                      setState(() {
-                        _rdCred = [];
-                        Settings.rdCredentials = _rdCred;
-                      });
-
-                      Navigator.pop(context);
-                    },
-                  )
-              )
-            ],
-            //backgroundColor: Theme.of(context).cardColor,
-          );
-        }
     );
   }
 

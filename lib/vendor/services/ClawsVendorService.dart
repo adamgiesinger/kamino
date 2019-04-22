@@ -7,6 +7,7 @@ import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
@@ -18,7 +19,6 @@ import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/VendorService.dart';
 import 'package:w_transport/w_transport.dart' as Transport;
 import 'package:w_transport/vm.dart' show vmTransportPlatform;
-import 'package:kamino/util/rd.dart' as rd;
 
 class ClawsVendorService extends VendorService {
   // Settings
@@ -47,7 +47,7 @@ class ClawsVendorService extends VendorService {
     if (_webSocket != null) _webSocket.close();
     clearSourceList();
 
-    _userHasRd = await rd.userHasRD();
+    _userHasRd = await RealDebrid.isAuthenticated();
 
     setStatus(context, VendorServiceStatus.INITIALIZING);
 
@@ -57,7 +57,8 @@ class ClawsVendorService extends VendorService {
           .timeout(Duration(seconds: 10), onTimeout: () => null);
 
       if (response != null && response.statusCode == 200) {
-        var status = Convert.jsonDecode(response.body);
+        // TODO: Perhaps show a warning if the server is under high load?
+        // var status = Convert.jsonDecode(response.body);
         return true;
       }
 
@@ -283,8 +284,8 @@ class ClawsVendorService extends VendorService {
           ///
           case 'scrape':
             // Resolve with RD if user is logged in to RD
-            if (_userHasRd && rd.isProviderSupported(event['target'])) {
-              var rdResult = await rd.unrestrictLink(event['target']);
+            if (_userHasRd && RealDebrid.isProviderSupported(event['target'])) {
+              var rdResult = await RealDebrid.unrestrictLink(event['target']);
               SourceModel rdModel = new SourceModel.fromRDJSON(rdResult);
               rdModel.metadata.provider = event['provider'];
               rdModel.metadata.source = event['resolver'];

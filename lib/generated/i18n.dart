@@ -50,6 +50,7 @@ class S implements WidgetsLocalizations {
   String get coming_soon => "Coming Soon";
   String get connect => "Connect";
   String get connect_your_trakt_account => "Connect your Trakt account";
+  String get connected_real_debrid_account => "Connected Real Debrid Account.";
   String get connected_trakt_account => "Connected Trakt account.";
   String get create_profile => "Create Profile";
   String get customize_appearance => "Customize Appearance";
@@ -59,6 +60,7 @@ class S implements WidgetsLocalizations {
   String get descending => "Descending";
   String get disconnect => "Disconnect";
   String get disconnect_your_trakt_account => "Disconnect your Trakt account";
+  String get disconnected_real_debrid_account => "Disconnected Real Debrid Account.";
   String get disconnected_trakt_account => "Disconnected Trakt account.";
   String get dismiss => "Dismiss";
   String get donate => "Donate";
@@ -153,6 +155,7 @@ class S implements WidgetsLocalizations {
   String appname_failed_to_connect_to_the_internet(String appName) => "$appName failed to connect to the internet. Please check your connection.";
   String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName has successfully authenticated with Trakt.tv!";
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName was made possible by all of these amazing people:";
+  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName was unable to authenticate with Real Debrid.";
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName was unable to authenticate with Trakt.tv.";
   String by_x(String x) => "by $x";
   String customize_appearance_description(String appName) => "$appName is all about customization. Let's get started by choosing your favorite theme!";
