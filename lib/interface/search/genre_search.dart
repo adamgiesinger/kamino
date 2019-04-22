@@ -54,9 +54,8 @@ class _GenreSearchState extends State<GenreSearch>{
     });
 
     _getContent(_contentType, _genreID).then((data){
-      setState(() {
-        _results = data;
-      });
+      _results = data;
+      if(mounted) setState(() {});
     });
 
     super.initState();
@@ -171,15 +170,12 @@ class _GenreSearchState extends State<GenreSearch>{
         itemCount: _results.length,
 
         itemBuilder: (BuildContext context, int index){
-          return InkWell(
+          return ContentPoster(
+            background: _results[index].poster_path,
+            name: _results[index].name,
+            releaseDate: _results[index].year,
+            mediaType: _results[index].mediaType,
             onTap: () => _openContentScreen(context, index),
-            splashColor: Colors.white,
-            child: ContentPoster(
-              background: _results[index].poster_path,
-              name: _results[index].name,
-              releaseDate: _results[index].year,
-              mediaType: _results[index].mediaType
-            ),
           );
         }
     );

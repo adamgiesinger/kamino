@@ -184,7 +184,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
 
         SubtitleText("NETWORKING", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
 
-        Material(
+        /*Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             isThreeLine: true,
@@ -252,7 +252,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
                 }
             ),
           ),
-        ),
+        ),*/
 
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
