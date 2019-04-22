@@ -15,7 +15,6 @@ import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/res/bottom_gradient.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
-import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:kamino/interface/search/genre_search.dart';
 import 'package:kamino/interface/content/movie_layout.dart';
 import 'package:kamino/interface/content/tv_show_layout.dart';

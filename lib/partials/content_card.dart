@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_rating/flutter_rating.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/util/trakt.dart' as trakt;
 import 'package:flutter/material.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';

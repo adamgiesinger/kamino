@@ -16,7 +16,6 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
-import 'package:kamino/util/trakt.dart' as trakt;
 
 class KaminoIntro extends StatefulWidget {
 
