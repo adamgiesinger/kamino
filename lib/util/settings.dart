@@ -91,6 +91,18 @@ class _Settings {
     ///
     "traktCredentials": $(type: List, defaultValue: <String>[]),
 
+    ///
+    ///   ----------------------------------
+    ///   RealDebrid Credentials Array Structure:
+    ///   ----------------------------------
+    ///   0 - access token
+    ///   1 - refresh token
+    ///   2 - expiry date
+    ///
+
+    "rdCredentials": $(type: List, defaultValue: <String>[]),
+    "rdClientInfo": $(type: List, defaultValue: <String>[]),
+
     // TODO: Remove old launchpad code.
     "launchpadItems": $(type: String),
     "homepageCategories": $(type: String, defaultValue: "{}"),
