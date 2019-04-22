@@ -81,12 +81,13 @@ class FavoritesPageState extends State<FavoritesPage>
               child: ListView(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 10, left: 15, right: 15),
+                    padding: EdgeInsets.only(top: 20, bottom: 10),
                     child: Column(children: <Widget>[
                       (favorites['tv'].length > 0) ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           GestureDetector(child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
                             color: Colors.transparent,
                             child: Row(children: <Widget>[
                               SubtitleText(S.of(context).tv_shows),
@@ -103,6 +104,7 @@ class FavoritesPageState extends State<FavoritesPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           GestureDetector(child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
                             color: Colors.transparent,
                             child: Row(children: <Widget>[
                               SubtitleText(S.of(context).movies),
@@ -127,29 +129,35 @@ class FavoritesPageState extends State<FavoritesPage>
   Widget _buildSection(ContentType type) {
     var sectionList = favorites[getRawContentType(type)];
 
+    double idealWidth = 150;
+    double spacing = 10.0;
+
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      child: GridView.builder(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        physics: new NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, childAspectRatio: 0.66,
-          mainAxisSpacing: 10, crossAxisSpacing: 10
-        ),
-        itemCount: sectionList.length,
-        itemBuilder: (BuildContext context, int index) {
-          var favorite = sectionList[index];
-          return ContentPoster(
-            background: favorite.imageUrl,
-            name: favorite.name,
-            releaseYear: favorite.year,
-            mediaType: getRawContentType(type),
-            onTap: () => Interface.openOverview(context, favorite.tmdbId, type),
-            elevation: 4,
-            hideIcon: true,
-          );
-        }),
+      child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+        return GridView.builder(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          physics: new NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: (constraints.maxWidth / idealWidth).round(),
+            childAspectRatio: 0.76,
+            mainAxisSpacing: spacing,
+            crossAxisSpacing: spacing,
+          ),
+          itemCount: sectionList.length,
+          itemBuilder: (BuildContext context, int index) {
+            var favorite = sectionList[index];
+            return ContentPoster(
+              background: favorite.imageUrl,
+              name: favorite.name,
+              releaseYear: favorite.year,
+              mediaType: getRawContentType(type),
+              onTap: () => Interface.openOverview(context, favorite.tmdbId, type),
+              elevation: 4,
+              hideIcon: true,
+            );
+          });
+      }),
     );
   }
 
@@ -163,23 +171,26 @@ class FavoritesPageState extends State<FavoritesPage>
                 minHeight: viewportConstraints.maxHeight,
               ),
               child: IntrinsicHeight(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.favorite_border, size: 64),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: TitleText(
-                        S.of(context).no_favorites_header,
-                        fontSize: 28,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.favorite_border, size: 64),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: TitleText(
+                          S.of(context).no_favorites_header,
+                          fontSize: 28,
+                        ),
                       ),
-                    ),
-                    Text(
-                        S.of(context).no_favorites_description,
-                        textAlign: TextAlign.center
-                    )
-                  ],
+                      Text(
+                          S.of(context).no_favorites_description,
+                          textAlign: TextAlign.center
+                      )
+                    ],
+                  )
                 ),
               ),
             ),
