@@ -178,7 +178,8 @@ class ClawsVendorService extends VendorService {
       "title": title,
       "titles": [title] + TMDB.getAlternativeTitles(movie),
       "year": year,
-      "imdb_id": movie.imdbId
+      "imdb_id": movie.imdbId,
+      "hasRD": _userHasRd
     });
 
     print(movie.imdbId);
@@ -213,7 +214,8 @@ class ClawsVendorService extends VendorService {
       "year": year,
       "season": seasonNumber,
       "episode": episodeNumber,
-      "imdb_id": show.imdbId
+      "imdb_id": show.imdbId,
+      "hasRD": _userHasRd
     });
 
     if (!await authenticate(context)) return;

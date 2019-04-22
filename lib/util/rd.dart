@@ -10,7 +10,7 @@ const _client_id = "X245A4XAIBGVM";
 const url = "https://api.real-debrid.com/rest/1.0/";
 
 // TODO: pull this from RD API
-const supportedHosts = ["openload.com", "streamango.com"];
+const supportedHosts = ["openload.co", "streamango.com"];
 
 class RealDebrid extends StatefulWidget {
   final Map oauth_data;
