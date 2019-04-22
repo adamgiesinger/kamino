@@ -4,16 +4,24 @@ import 'package:kamino/main.dart';
 
 class TitleText extends Text {
 
-  TitleText(String text, {double fontSize : 18, Color textColor, bool allowOverflow = false, TextAlign textAlign}) : super(
+  TitleText(String text, {
+    double fontSize : 18,
+    Color textColor,
+    bool allowOverflow = false,
+    TextAlign textAlign,
+    int maxLines
+  }) : super(
     text,
-    overflow: (allowOverflow ? null : TextOverflow.ellipsis),
+    overflow: (allowOverflow
+        ? (maxLines == null ? null : TextOverflow.ellipsis)
+        : TextOverflow.ellipsis),
     style: TextStyle(
       fontFamily: 'GlacialIndifference',
       fontSize: fontSize,
       color: textColor,
     ),
     textAlign: textAlign,
-    maxLines: (allowOverflow ? null : 1)
+    maxLines: (allowOverflow ? maxLines : 1),
   );
 
 }
@@ -51,6 +59,7 @@ class ConcealableText extends StatefulWidget {
   final String concealLabel;
   final Color color;
   final Color revealLabelColor;
+  final TextOverflow overflowType;
 
   final int maxLines;
 
@@ -59,7 +68,8 @@ class ConcealableText extends StatefulWidget {
     @required this.concealLabel,
     @required this.maxLines,
     this.color,
-    this.revealLabelColor
+    this.revealLabelColor,
+    this.overflowType = TextOverflow.fade
   });
 
   @override
@@ -99,7 +109,7 @@ class ConcealableTextState extends State<ConcealableText> {
             children: <Widget>[
               Text.rich(
                 textSpan,
-                overflow: TextOverflow.fade,
+                overflow: widget.overflowType,
                 maxLines: (isConcealed ? widget.maxLines : null)
               ),
 

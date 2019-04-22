@@ -6,6 +6,7 @@ import 'package:kamino/interface/content/overview.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/partials/content_card.dart';
 import 'package:kamino/util/database_helper.dart' as databaseHelper;
 import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/util/genre.dart' as genre;
@@ -90,7 +91,6 @@ class _GenreSearchState extends State<GenreSearch>{
   }
 
   _openContentScreen(BuildContext context, int index) {
-    //print("id is ${snapshot.data[index].showID}");
 
     if (_results[index].mediaType == "tv") {
       Navigator.push(
@@ -123,6 +123,7 @@ class _GenreSearchState extends State<GenreSearch>{
 
     return Scrollbar(
         child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           appBar: new AppBar(
             title: Text(widget.genreName, style: _glacialFont,),
             centerTitle: true,
@@ -143,19 +144,28 @@ class _GenreSearchState extends State<GenreSearch>{
               });
             },
             child: Scrollbar(
-              child: _expandedSearchPref == false ? _gridResults() : _listResult(),
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints)
+                  => _expandedSearchPref == false ? _gridResults(context, constraints) : _listResult()
+              ),
             ),
           ),
         ),
     );
   }
 
-  Widget _gridResults(){
+  Widget _gridResults(BuildContext context, BoxConstraints constraints){
+    double idealWidth = 150;
+    double spacing = 10.0;
+
     return GridView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         controller: controller,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 0.76
+          crossAxisCount: (constraints.maxWidth / idealWidth).round(),
+          childAspectRatio: 0.76,
+          mainAxisSpacing: spacing,
+          crossAxisSpacing: spacing,
         ),
 
         itemCount: _results.length,
@@ -182,19 +192,18 @@ class _GenreSearchState extends State<GenreSearch>{
       controller: controller,
 
       itemBuilder: (BuildContext context, int index){
-        return InkWell(
+        return ContentCard(
+          id: _results[index].id,
           onTap: () => _openContentScreen(context, index),
-          splashColor: Colors.white,
-          child: ResultCard(
-            background: _results[index].poster_path,
-            name: _results[index].name,
-            genre: genre.resolveGenreNames(_results[index].genre_ids,_results[index].mediaType),
-            mediaType: _results[index].mediaType,
-            ratings: _results[index].vote_average,
-            overview: _results[index].overview,
-            isFav: _favIDs.contains(_results[index].id),
-            elevation: 5.0,
-          ),
+          backdrop: _results[index].backdrop_path,
+          year: _results[index].year,
+          name: _results[index].name,
+          genre: genre.resolveGenreNames(_results[index].genre_ids,_results[index].mediaType),
+          mediaType: _results[index].mediaType,
+          ratings: _results[index].vote_average,
+          overview: _results[index].overview,
+          elevation: 5.0,
+          isFavorite: _favIDs.contains(_results[index].id),
         );
       },
     );
@@ -220,7 +229,6 @@ class _GenreSearchState extends State<GenreSearch>{
   }
 
   void _scrollListener() {
-    print(controller.position.extentAfter);
 
     if (controller.offset >= controller.position.maxScrollExtent) {
 

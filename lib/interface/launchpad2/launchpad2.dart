@@ -11,7 +11,7 @@ import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/carousel.dart';
-import 'package:kamino/partials/content_card.dart';
+import 'package:kamino/partials/carousel_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
@@ -118,7 +118,7 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
                                   var content = _topPicksList[index];
 
                                   return Container(
-                                    child: ContentCard(content, keepAlive: true),
+                                    child: CarouselCard(content, keepAlive: true),
                                     margin: EdgeInsets.symmetric(horizontal: 5),
                                     padding: EdgeInsets.symmetric(vertical: 10),
                                   );

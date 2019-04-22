@@ -21,7 +21,7 @@ WEBHOOK_DATA='{
     },
     "title": "'"$COMMIT_SUBJECT"'",
     "url": "'"$URL"'",
-    "description": "'"${COMMIT_MESSAGE//$'\n'/ }"\\n\\n"$CREDITS"'",
+    "description": "@everyone A new build has completed: '"${COMMIT_MESSAGE//$'\n'/ }"\\n\\n"$CREDITS"'",
     "fields": [
       {
         "name": "Commit",

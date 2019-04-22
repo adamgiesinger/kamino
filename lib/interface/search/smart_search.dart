@@ -8,9 +8,9 @@ import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/search/search_results.dart';
 import 'package:kamino/interface/content/overview.dart';
+import 'package:kamino/partials/content_card.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/genre.dart' as genre;
-import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/util/settings.dart';
 
@@ -142,7 +142,15 @@ class SmartSearch extends SearchDelegate<String> {
       itemBuilder: (BuildContext context, int index) {
         return Padding(
           padding: const EdgeInsets.only(top: 5.0, left: 3.0, right: 3.0),
-          child: InkWell(
+          child: ContentCard(
+            name: snapshot.data[index].title,
+            backdrop: snapshot.data[index].backdrop_path,
+            overview: snapshot.data[index].overview,
+            ratings: snapshot.data[index].vote_average,
+            elevation: 0.0,
+            mediaType: snapshot.data[index].mediaType,
+            genre: genre.resolveGenreNames(snapshot.data[index].genre_ids,
+                snapshot.data[index].mediaType),
             onTap: () {
               Navigator.push(
                   context,
@@ -152,18 +160,7 @@ class SmartSearch extends SearchDelegate<String> {
                           contentType: snapshot.data[index].mediaType == "tv"
                               ? ContentType.TV_SHOW
                               : ContentType.MOVIE)));
-            },
-            child: ResultCard(
-              isFav: false,
-              background: snapshot.data[index].poster_path,
-              name: snapshot.data[index].title,
-              overview: snapshot.data[index].overview,
-              ratings: snapshot.data[index].vote_average,
-              elevation: 0.0,
-              mediaType: snapshot.data[index].mediaType,
-              genre: genre.resolveGenreNames(snapshot.data[index].genre_ids,
-                  snapshot.data[index].mediaType),
-            ),
+              }
           ),
         );
       },
@@ -245,40 +242,36 @@ class SmartSearch extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return query.isEmpty
-        ? _buildSearchHistory()
-        : FutureBuilder<List<SearchModel>>(
-            future: _fetchSearchList(context, query), // a previously-obtained Future<String> or null
-            builder: (BuildContext context,
-                AsyncSnapshot<List<SearchModel>> snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.none:
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: query.isEmpty
+          ? _buildSearchHistory()
+          : FutureBuilder<List<SearchModel>>(
+          future: _fetchSearchList(context, query), // a previously-obtained Future<String> or null
+          builder: (BuildContext context,
+              AsyncSnapshot<List<SearchModel>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.active:
+              case ConnectionState.waiting:
+                return Container();
 
-                case ConnectionState.active:
-                case ConnectionState.waiting:
-                  return Container();
-                  // This is just for suggestions.
-                  /*return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor
-                      ),
-                    ));*/
-                case ConnectionState.done:
-                  if (snapshot.hasError) {
+              case ConnectionState.done:
+                if (snapshot.hasError) {
 
-                      if(snapshot.error is SocketException
-                          || snapshot.error is HttpException) return OfflineMixin();
+                  if(snapshot.error is SocketException
+                      || snapshot.error is HttpException) return OfflineMixin();
 
-                      return ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading search results.");
+                  return ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading search results.");
 
-                  } else if (snapshot.hasData) {
-                    return _simplifiedSuggestions(snapshot);
-                  }
-                //return Text('Result: ${snapshot.data}');
-              }
-              return null; // unreachable
-            });
+                } else if (snapshot.hasData) {
+                  return _simplifiedSuggestions(snapshot);
+                }
+            //return Text('Result: ${snapshot.data}');
+            }
+            return null; // unreachable
+          }),
+    );
   }
 
   Future<void> _removeSearchItem(String value) async{

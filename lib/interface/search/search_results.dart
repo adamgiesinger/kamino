@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:kamino/partials/content_card.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/genre.dart' as genre;
 
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/interface/content/overview.dart';
@@ -124,30 +124,35 @@ class _SearchResultViewState extends State<SearchResultView> {
 
   @override
   Widget build(BuildContext context) {
-    if(_override != null) return _override;
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      body: Builder(builder: (BuildContext context){
+        if(_override != null) return _override;
 
-    if(_results.length < 1){
-      if(widget.query == null || widget.query.isEmpty) return Container();
+        if(_results.length < 1){
+          if(widget.query == null || widget.query.isEmpty) return Container();
 
-      if(!hasLoaded) return Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).primaryColor
-          ),
-        )
-      );
+          if(!hasLoaded) return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor
+                ),
+              )
+          );
 
-      return Container(
-        child: Center(
-          child: Text("No results found!", style: TextStyle(
-            fontSize: 20
-          )),
-        ),
-      );
-    }
+          return Container(
+            child: Center(
+              child: Text("No results found!", style: TextStyle(
+                  fontSize: 20
+              )),
+            ),
+          );
+        }
 
-    return Scrollbar(
-      child: _expandedSearchPref == false ? _gridPage() : _listPage(),
+        return Scrollbar(
+          child: _expandedSearchPref == false ? _gridPage() : _listPage(),
+        );
+      })
     );
   }
 
@@ -158,19 +163,18 @@ class _SearchResultViewState extends State<SearchResultView> {
         itemCount: _results.length,
         controller: controllerList,
         itemBuilder: (BuildContext context, int index){
-          return InkWell(
+          return ContentCard(
+            id: _results[index].id,
+            backdrop: _results[index].backdrop_path,
+            year: _results[index].year,
+            name: _results[index].name,
+            genre: genre.resolveGenreNames(_results[index].genre_ids, _results[index].mediaType),
+            mediaType: _results[index].mediaType,
+            ratings: _results[index].vote_average,
+            overview: _results[index].overview,
+            elevation: 5.0,
             onTap: () => _openContentScreen(context, index),
-            splashColor: Colors.white,
-            child: ResultCard(
-              background: _results[index].poster_path,
-              name: _results[index].name,
-              genre: genre.resolveGenreNames(_results[index].genre_ids, _results[index].mediaType),
-              mediaType: _results[index].mediaType,
-              ratings: _results[index].vote_average,
-              overview: _results[index].overview,
-              isFav: _favIDs.contains(_results[index].id),
-              elevation: 5.0,
-            ),
+            isFavorite: _favIDs.contains(_results[index].id),
           );
         },
       ),
@@ -178,13 +182,18 @@ class _SearchResultViewState extends State<SearchResultView> {
   }
 
   Widget _gridPage(){
-    return Padding(
-      padding: const EdgeInsets.only(top: 5.0),
-      child: GridView.builder(
+    return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+      double idealWidth = 150;
+      double spacing = 10.0;
+
+      return GridView.builder(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
           controller: controller,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 0.76
+            crossAxisCount: (constraints.maxWidth / idealWidth).round(),
+            childAspectRatio: 0.76,
+            mainAxisSpacing: spacing,
+            crossAxisSpacing: spacing,
           ),
 
           itemCount: _results.length,
@@ -202,13 +211,11 @@ class _SearchResultViewState extends State<SearchResultView> {
               ),
             );
           }
-      ),
-    );
+      );
+    });
   }
 
   void _scrollListener(){
-
-    print("current page is $_currentPages");
 
     if (controller.offset >= controller.position.extentAfter) {
 

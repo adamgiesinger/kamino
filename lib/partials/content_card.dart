@@ -1,103 +1,222 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_parallax/flutter_parallax.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_rating/flutter_rating.dart';
 import 'package:kamino/api/tmdb.dart';
-import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/models/content.dart';
-import 'package:kamino/models/movie.dart';
+import 'package:kamino/util/trakt.dart' as trakt;
+import 'package:flutter/material.dart';
+import 'package:kamino/api/trakt.dart';
+import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/ui/elements.dart';
+import 'package:kamino/util/database_helper.dart';
 
 class ContentCard extends StatefulWidget {
 
-  final ContentModel model;
-  final double width;
-  final double height;
-  final bool keepAlive;
-
-  ContentCard(this.model, {this.width, this.height, this.keepAlive = false});
+  final int id;
+  final String backdrop;
+  final String name;
+  final double elevation;
+  final List<String> genre;
+  final String mediaType;
+  final String year;
+  final int ratings;
+  final String overview;
+  final bool isFavorite;
+  final GestureTapCallback onTap;
+  final GestureLongPressCallback onLongPress;
 
   @override
-  State<StatefulWidget> createState() => ContentCardState();
+  State<StatefulWidget> createState() => ContentCardState(
+    isFavorite: isFavorite
+  );
+
+  ContentCard({
+    @required this.id,
+    @required this.backdrop,
+    @required this.name,
+    @required this.genre,
+    @required this.year,
+    @required this.mediaType,
+    @required this.ratings,
+    @required this.overview,
+    @required this.elevation,
+    @required this.isFavorite,
+    @required this.onTap,
+    @required this.onLongPress
+  });
 
 }
 
-class ContentCardState extends State<ContentCard> with AutomaticKeepAliveClientMixin<ContentCard> {
+class ContentCardState extends State<ContentCard> {
+
+  bool isFavorite;
+
+  ContentCardState({
+    this.isFavorite
+  });
+
+  /*
+  ContentPoster(
+    background: widget.background,
+  ),
+   */
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.black,
-      elevation: 2,
-      clipBehavior: Clip.antiAlias,
-      borderRadius: BorderRadius.circular(8),
-
-      child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
-        var height = widget.height != null ? widget.height : constraints.heightConstraints().maxHeight;
-        var width = widget.width != null ? widget.width : constraints.widthConstraints().maxWidth;
-
-        return Stack(
-          fit: StackFit.expand,
-
-          children: <Widget>[
-            Parallax.inside(
-                direction: AxisDirection.right,
-                mainAxisExtent: height,
-                child: CachedNetworkImage(
-                  imageUrl: TMDB.IMAGE_CDN + widget.model.backdropPath,
-                  fit: BoxFit.cover,
-                  placeholder: Container(color: Colors.black, width: width, height: height),
-                  height: height,
-                  width: width + 100,
-                  errorWidget: new Icon(Icons.error, size: 30.0)
-                )
-              // height: 220.0,
-              // fit: BoxFit.cover,
-            ),
-
-            Container(color: const Color(0x66000000)),
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      child: Material(
+          elevation: 4,
+          borderRadius: BorderRadius.circular(5),
+          clipBehavior: Clip.antiAlias,
+          color: Theme.of(context).cardColor,
+          child: InkWell(
+            onTap: widget.onTap,
+            onLongPress: widget.onLongPress,
+            child: Column(
               children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: AutoSizeText(widget.model.title, style: TextStyle(fontSize: 25.0, color: Colors.white), maxFontSize: 25.0, maxLines: 1, textAlign: TextAlign.center, overflow: TextOverflow.ellipsis)
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Expanded(
+                      child: Stack(
+                        fit: StackFit.passthrough,
+                        children: <Widget>[
+                          widget.backdrop != null ? Container(
+                            color: Colors.black,
+                            height: 150,
+                            child: Opacity(
+                              opacity: 0.6,
+                              child: CachedNetworkImage(
+                                imageUrl: TMDB.IMAGE_CDN + widget.backdrop,
+                                fit: BoxFit.cover,
+                                alignment: Alignment.topCenter,
+                              ),
+                            )
+                          ) : Container(
+                            height: 150,
+                            color: const Color(0x9A000000),
+                            child: Center(
+                              child: Text(
+                                  "No Poster",
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 16
+                                  )
+                              ),
+                            ),
+                          ),
+
+                          Positioned(
+                            bottom: 10,
+                            right: 15,
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                    widget.mediaType == 'tv'
+                                        ? Icons.live_tv
+                                        : Icons.local_movies
+                                )
+                              ],
+                            )
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                Text(DateFormat.y("en_US").format(DateTime.parse(widget.model.releaseDate)), style: TextStyle(fontSize: 16, color: Colors.white))
+
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 15
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              child: TitleText(
+                                widget.name,
+                                fontSize: 24,
+                                allowOverflow: true,
+                                textAlign: TextAlign.start,
+                                maxLines: 2,
+                              ),
+                              padding: EdgeInsets.only(bottom: 5),
+                            ),
+                            ConcealableText(
+                              widget.overview,
+                              revealLabel: S.of(context).show_more,
+                              concealLabel: S.of(context).show_less,
+                              maxLines: 2,
+                              color: Colors.grey,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 5
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Material(
+                            color: Theme.of(context).cardColor,
+                            clipBehavior: Clip.antiAlias,
+                            shape: CircleBorder(),
+                            child: IconButton(
+                              padding: EdgeInsets.all(3),
+                              onPressed: () => _toggleFavorite(context),
+                              highlightColor: Colors.transparent,
+                              icon: isFavorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+                              color: isFavorite ? Colors.red : Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
-
-            Positioned(
-              right: 20,
-              bottom: 20,
-              child: new Icon(
-                (widget.model is MovieContentModel) ? Icons.local_movies : Icons.live_tv,
-                color: Colors.white,
-              ),
-            ),
-
-            Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => ContentOverview(
-                        contentId: widget.model.id,
-                        contentType: (widget.model is MovieContentModel) ? ContentType.MOVIE : ContentType.TV_SHOW,
-                      )
-                  ));
-                },
-              ),
-            )
-          ],
-        );
-      }),
+          )
+      ),
     );
   }
 
-  @override
-  bool get wantKeepAlive => widget.keepAlive;
+  _toggleFavorite(BuildContext context) async {
+    if (widget.isFavorite) {
+      DatabaseHelper.removeFavoriteById(widget.id);
+
+      if(await Trakt.isAuthenticated()) trakt.removeMedia(
+          context,
+          widget.mediaType,
+          widget.id
+      );
+    } else {
+      DatabaseHelper.saveFavoriteById(context, widget.mediaType == 'tv' ? ContentType.TV_SHOW : ContentType.MOVIE, widget.id);
+
+      if(await Trakt.isAuthenticated()) trakt.sendNewMedia(
+          context,
+          widget.mediaType,
+          widget.name,
+          widget.year != null ? widget.year.substring(0,4) : null,
+          widget.id
+      );
+    }
+
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+  }
 
 }

@@ -95,7 +95,7 @@ class ContentPosterState extends State<ContentPoster> {
             width: widget.width,
           ),
 
-          Center(child: TitleText("No Poster", textColor: const Color(0xBFFFFFFF)))
+          Center(child: TitleText("No Image", textColor: const Color(0xBFFFFFFF)))
         ],
       );
     }
