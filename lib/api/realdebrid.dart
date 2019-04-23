@@ -19,13 +19,6 @@ class RealDebrid {
   // ('Authentication for applications' header)
   static const CLIENT_ID = "X245A4XAIBGVM";
 
-  // This is a list of hosts that are known to support
-  // Real Debrid.
-  // TODO: Pull this from RD API.
-  static const SUPPORTED_HOSTS = ["openload.co", "streamango.com"];
-
-
-
   ///
   /// This method authenticates the user with the RD API.
   ///
@@ -90,17 +83,6 @@ class RealDebrid {
   static Future<bool> isAuthenticated() async {
     var _rdCred = await Settings.rdCredentials;
     return _rdCred != null && _rdCred.length == 3;
-  }
-
-  ///
-  /// Returns whether or not the provider of a URL ([url]) is supported.
-  ///
-  static bool isProviderSupported(String url) {
-    for (var host in RealDebrid.SUPPORTED_HOSTS) {
-      if(url.contains(host))
-        return true;
-    }
-    return false;
   }
 
   static Future<Map> _getSecret(String device_code) async {

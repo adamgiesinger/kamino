@@ -34,6 +34,7 @@ class SourceFile {
 class SourceMetadata {
   final String cookie;
   final bool isStreamable;
+  final bool isRD;
   String provider;
   String quality;
   String source;
@@ -43,6 +44,7 @@ class SourceMetadata {
   SourceMetadata.fromJSON(Map json)
       : cookie = json["cookie"],
         isStreamable = json["isStreamable"],
+        isRD = false,
         provider = json["provider"] != null ? json["provider"] : "Unknown",
         quality = json["quality"] != null ? json["quality"] : null,
         source = json["source"] != null ? json["source"] : "Unknown",
@@ -51,8 +53,9 @@ class SourceMetadata {
   SourceMetadata.fromRDJSON(Map json)
       : cookie = "",
         isStreamable = json["streamable"] != null && json["streamable"]  == 1 ? true : false,
+        isRD = true,
         provider = json["provider"] != null ? json["provider"] : "Unknown",
-        quality = json["quality"] != null ? json["quality"] : null,
+        quality = "HQ",
         source = json["source"] != null ? json["source"] : "Unknown",
         contentLength = json["filesize"] != null ? json["filesize"] : "0",
         ping = 0;

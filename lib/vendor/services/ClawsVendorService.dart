@@ -283,16 +283,6 @@ class ClawsVendorService extends VendorService {
           /// https://github.com/ApolloTVofficial/Claws/wiki/IP-Locking
           ///
           case 'scrape':
-            // Resolve with RD if user is logged in to RD
-            if (_userHasRd && RealDebrid.isProviderSupported(event['target'])) {
-              var rdResult = await RealDebrid.unrestrictLink(event['target']);
-              SourceModel rdModel = new SourceModel.fromRDJSON(rdResult);
-              rdModel.metadata.provider = event['provider'];
-              rdModel.metadata.source = event['resolver'];
-              rdModel.metadata.quality = "RD";
-              addSource(rdModel);
-              return;
-            }
             // Ensure that the headers array is not null.
             if (event['headers'] == null) {
               event['headers'] = new Map<String, String>();
@@ -349,7 +339,17 @@ class ClawsVendorService extends VendorService {
             if (pendingScrapes.length == 0 && isServerDone)
               setStatus(context, VendorServiceStatus.DONE);
             break;
-
+          ///
+          /// If user has RD, he will be served scrape events modified for RD
+          /// Events are separated so it doesn't mess with scrape counter
+          ///
+          case 'RDScrape':
+            var rdResult = await RealDebrid.unrestrictLink(event['target']);
+            SourceModel rdModel = new SourceModel.fromRDJSON(rdResult);
+            rdModel.metadata.provider = event['provider'];
+            rdModel.metadata.source = event['resolver'];
+            addSource(rdModel);
+            break;
           ///
           /// Once Claws has found a result from a source, it is sent to the
           /// client in the form of a 'result' event.
