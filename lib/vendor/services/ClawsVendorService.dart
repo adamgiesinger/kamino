@@ -48,6 +48,9 @@ class ClawsVendorService extends VendorService {
     clearSourceList();
 
     _userHasRd = await RealDebrid.isAuthenticated();
+    if (_userHasRd) {
+      await RealDebrid.validateToken();
+    }
 
     setStatus(context, VendorServiceStatus.INITIALIZING);
 
