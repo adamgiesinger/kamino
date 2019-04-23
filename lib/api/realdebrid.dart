@@ -206,11 +206,7 @@ class RealDebrid {
 
     if (!tokenCheck) {
       //refresh the token
-      bool refreshSuccess = await _refreshToken();
-
-      if (refreshSuccess == false) {
-        return null;
-      }
+      return await _refreshToken();
     }
   }
 }
