@@ -130,11 +130,11 @@ class RealDebrid {
     List<String> _rdCred = [];
     List<String> _rdIDSecret = [];
 
-    ((Settings.rdCredentials) as Future).then((data) {
+    await ((Settings.rdCredentials) as Future).then((data) {
       _rdCred = data;
     });
 
-    ((Settings.rdClientInfo) as Future).then((data) {
+    await ((Settings.rdClientInfo) as Future).then((data) {
       _rdIDSecret = data;
     });
 
