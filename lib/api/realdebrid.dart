@@ -195,7 +195,24 @@ class RealDebrid {
     return null;
   }
 
+  static Future<bool> validateToken() async {
+    List<String> _rdCred = [];
 
+    await ((Settings.rdCredentials) as Future).then((data) {
+      _rdCred = data;
+    });
+
+    bool tokenCheck = DateTime.now().isBefore(DateTime.parse(_rdCred[2]));
+
+    if (!tokenCheck) {
+      //refresh the token
+      bool refreshSuccess = await _refreshToken();
+
+      if (refreshSuccess == false) {
+        return null;
+      }
+    }
+  }
 }
 
 class RealDebridAuthenticator extends StatefulWidget {
