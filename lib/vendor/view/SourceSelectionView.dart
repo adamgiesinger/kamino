@@ -1,4 +1,3 @@
-import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
@@ -110,71 +109,122 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
             ],
           ),
           body: Container(
-              child: ListView.builder(
-                  itemCount: sourceList.length,
-                  itemBuilder: (BuildContext ctx, int index) {
-                    var source = sourceList[index];
+            child: ListView.builder(
+                itemCount: sourceList.length,
+                itemBuilder: (BuildContext ctx, int index) {
+                  var source = sourceList[index];
 
-                    String qualityInfo; // until we sort out quality detection
-                    if (source.metadata.quality != null
-                        && source.metadata.quality
-                            .replaceAll(" ", "")
-                            .isNotEmpty)
-                      qualityInfo = source.metadata.quality;
+                  String qualityInfo; // until we sort out quality detection
+                  if (source.metadata.quality != null
+                      && source.metadata.quality
+                          .replaceAll(" ", "")
+                          .isNotEmpty)
+                    qualityInfo = source.metadata.quality;
 
-                    /*
-                  if(source["metadata"]["extended"] != null){
-                    var extendedMeta = source["metadata"]["extended"]["streams"][0];
-                    var resolution = extendedMeta["coded_height"];
+                  /*
+                if(source["metadata"]["extended"] != null){
+                  var extendedMeta = source["metadata"]["extended"]["streams"][0];
+                  var resolution = extendedMeta["coded_height"];
 
-                    if(resolution < 360) qualityInfo = "[LQ]";
-                    if(resolution >= 360) qualityInfo = "[SD]";
-                    if(resolution > 720) qualityInfo = "[HD]";
-                    if(resolution > 1080) qualityInfo = "[FHD]";
-                    if(resolution > 2160) qualityInfo = "[4K]";
+                  if(resolution < 360) qualityInfo = "[LQ]";
+                  if(resolution >= 360) qualityInfo = "[SD]";
+                  if(resolution > 720) qualityInfo = "[HD]";
+                  if(resolution > 1080) qualityInfo = "[FHD]";
+                  if(resolution > 2160) qualityInfo = "[4K]";
 
-                    qualityInfo += " [" + extendedMeta["codec_name"].toUpperCase() + "]";
-                  }
-                */
+                  qualityInfo += " [" + extendedMeta["codec_name"].toUpperCase() + "]";
+                }
+              */
 
-                    return Material(
-                      color: Theme
-                          .of(context)
-                          .backgroundColor,
-                      child: ListTile(
-                        enabled: true,
-                        isThreeLine: true,
+                  return Container(
+                    padding: EdgeInsets.all(5),
+                    child: Material(
+                      clipBehavior: Clip.antiAlias,
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).cardColor,
+                      elevation: 2,
+                      child: IntrinsicHeight(
+                        child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
 
-                        title: TitleText(
-                            (qualityInfo != null ? qualityInfo + " • " : "") +
-                                (source.metadata.contentLength != null ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true) + " • " : "") +
-                                "${source.metadata.provider} (${source.metadata
-                                    .source}) • ${source.metadata.ping}ms"),
-                        subtitle: Text(
-                          source.file.data,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        leading: Icon(Icons.insert_drive_file),
+                              Container(
+                                width: 80,
+                                color: Color.fromRGBO(
+                                  Theme.of(context).cardColor.red + 10,
+                                  Theme.of(context).cardColor.green + 10,
+                                  Theme.of(context).cardColor.blue + 10,
+                                  Theme.of(context).cardColor == const Color(0xFF000000) ? 0.0 : 1.0
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.symmetric(vertical: 5),
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.white, width: 1.5),
+                                        borderRadius: BorderRadius.circular(5)
+                                      ),
+                                      child: TitleText(
+                                        (qualityInfo != null ? qualityInfo : "ERROR"),
+                                        textAlign: TextAlign.center,
+                                      )
+                                    ),
 
-                        onTap: () async {
-                          PlayerHelper.play(
-                            context,
-                            title: widget.title,
-                            url: source.file.data,
-                            mimeType: 'video/*'
-                          );
-                        },
-                        onLongPress: () {
-                          Clipboard.setData(
-                              new ClipboardData(text: source.file.data));
-                          Interface.showSnackbar(S
-                              .of(context)
-                              .url_copied, context: ctx);
-                        },
+                                    Container(
+                                        child: TitleText(
+                                            (
+                                                source.metadata.contentLength != null
+                                                    ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true)
+                                                    : ""
+                                            )
+                                        )
+                                    )
+                                  ],
+                                )
+                              ),
+
+                              Expanded(
+                                  child: ListTile(
+                                    enabled: true,
+                                    isThreeLine: true,
+
+                                    title: TitleText(
+                                        "${source.metadata.provider} (${source.metadata
+                                            .source}) • ${source.metadata.ping}ms"),
+                                    subtitle: Text(
+                                      source.file.data,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+
+                                    onTap: () async {
+                                      PlayerHelper.play(
+                                          context,
+                                          title: widget.title,
+                                          url: source.file.data,
+                                          mimeType: 'video/*'
+                                      );
+                                    },
+                                    onLongPress: () {
+                                      Clipboard.setData(
+                                          new ClipboardData(text: source.file.data));
+                                      Interface.showSnackbar(S
+                                          .of(context)
+                                          .url_copied, context: ctx);
+                                    },
+                                  )
+                              )
+
+                            ]
+                        )
                       ),
-                    );
-                  })
+                    )
+                  );
+                })
           )
       ),
     );

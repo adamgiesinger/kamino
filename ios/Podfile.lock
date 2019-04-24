@@ -10,7 +10,7 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - permission_handler (2.2.0):
+  - permission_handler (3.0.0):
     - Flutter
   - screen (0.0.1):
     - Flutter
@@ -70,7 +70,7 @@ SPEC CHECKSUMS:
   flutter_webview_plugin: 116575b48572029304775b768e9f15ebfc316274
   package_info: d7c98b64f60add4c2908b9d94d82a45d3c8827ad
   path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
-  permission_handler: 0b2a5acb642be1ad2406adc31d0cda567b8b01e2
+  permission_handler: 03dcf3ade9d5f398b8854b366cb9de718d3daa76
   screen: 22ab9c4a784112d4b21ad7d80e81729e0afdaa65
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
   uni_links: 5ee5240df5cbffc52d9e7f8017a576b6a6bc5141

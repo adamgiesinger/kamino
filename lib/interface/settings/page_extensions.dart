@@ -111,9 +111,9 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                     !rdConnected ? FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).connect),
-                        onPressed: () async {
+                      onPressed: () async {
                         RealDebrid.authenticate(context, shouldShowSnackbar: true);
-                        },
+                      },
                     ) :
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,

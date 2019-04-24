@@ -134,6 +134,14 @@ class _Settings {
     return await this.noSuchMethod(Invocation.setter(Symbol('traktCredentials='), credentials.asList()));
   }
 
+  /*Future<RealDebridCredentials> get rdCredentials async {
+    return RealDebridCredentials(await this.noSuchMethod(Invocation.getter(Symbol('rdCredentials'))));
+  }*/
+
+  Future<void> setRdCredentials(RealDebridCredentials credentials) async {
+    return await this.noSuchMethod(Invocation.setter(Symbol('rdCredentials='), credentials.asList()));
+  }
+
   noSuchMethod(Invocation invocation) {
     if(invocation.isGetter){
       var key = invocation.memberName.toString().substring(8, invocation.memberName.toString().length - 2);
@@ -237,6 +245,38 @@ class TraktSettings {
 
   static TraktSettings unauthenticated(){
     return new TraktSettings([]);
+  }
+
+  List<String> asList(){
+    return [accessToken, refreshToken, expiryDate];
+  }
+
+  bool isValid(){
+    return accessToken != null && refreshToken != null && expiryDate != null;
+  }
+
+}
+
+class RealDebridCredentials {
+
+  String accessToken;
+  String refreshToken;
+  String expiryDate;
+
+  RealDebridCredentials(List<String> data){
+    this.accessToken = data.length > 0 ? data[0] : null;
+    this.refreshToken = data.length > 1 ? data[1] : null;
+    this.expiryDate = data.length > 2 ? data[2] : null;
+  }
+
+  RealDebridCredentials.named({
+    @required this.accessToken,
+    @required this.refreshToken,
+    @required this.expiryDate
+  });
+
+  static RealDebridCredentials unauthenticated(){
+    return new RealDebridCredentials([]);
   }
 
   List<String> asList(){
