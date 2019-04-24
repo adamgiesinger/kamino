@@ -9,7 +9,6 @@
   "donate": "تبرع",
   "settings": "إعدادات",
 
-
   "url_copied": "!تم نسخ الرابط",
   "okay": "حسناً",
   "show_more": "...أظهر أكثر",
@@ -25,7 +24,11 @@
   "disconnect": "إقطع الإتصال",
   "default_": "الإفتراضي",
   "done": "إنتهي",
-
+  "install": "Install",
+  "next": "التالى",
+  "back": "السابق",
+  "skip": "تخطى",
+  
   "coming_soon": "قريباً",
 
   "authentication_successful": "نجح التوثيق",
@@ -36,6 +39,7 @@
   "trakt_renewal_failure_detailed": ".يرجي تأكيد معلوماتك .Trakt فشل تجديد رمز",
   "appname_was_unable_to_authenticate_with_trakttv": " .Trakt.tv لم يتمكن من التوثيق مع $appName",
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": ".ApolloTV مع مفضلات Trakt يمكنك الأن الضغط علي 'مزامنة' لمزامنة مفضلات\n\n(.محدود لأنه لا يزال قيد التطوير Trakt دمج)",
+  "connected_trakt_account": "Connected Trakt account.",
   "disconnected_trakt_account": ".Trakt تم قطع إتصال حساب",
   "trakt_synchronization": "...Trakt مزامنة",
   "trakt_favorites_sync_detailed": ".سيتم إغلاق مربع الحوار تلقائياً عند اكتمال المزامنة .Trakt يرجى الإنتظار بينما نقوم بمزامنة مفضلاتك مع",
@@ -45,6 +49,7 @@
   "play_episode": "شغل الحلقة",
   "play_movie": "شغل الفيلم",
   "similar_movies": "أفلام مماثلة",
+  "similar_tv_shows": "مسلسلات مماثلة",
 
   "removed_from_favorites": "تمت إزالته من المفضلات",
   "added_to_favorites": "تمت إضافته الي المفضلات",
@@ -60,6 +65,7 @@
 
   "released": "تم الإصدار",
   "ongoing": "مستمر",
+  "year": "سنة",
 
   "popularity": "الشعبية",
   "air_date": "تاريخ العرض",
