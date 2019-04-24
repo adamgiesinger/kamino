@@ -38,7 +38,7 @@
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": ".ApolloTV مع مفضلات Trakt يمكنك الأن الضغط علي 'مزامنة' لمزامنة مفضلات\n\n(.محدود لأنه لا يزال قيد التطوير Trakt دمج)",
   "disconnected_trakt_account": ".Trakt تم قطع إتصال حساب",
   "trakt_synchronization": "...Trakt مزامنة",
-  "trakt_favorites_sync_detailed": ".سيتم إغلاق مربع الحوار تلقائياً عند اكتمال المزامنة .Trakt يرجى الإنتظار بينما نقوم بمزامنة مفضلاتك مع.",
+  "trakt_favorites_sync_detailed": ".سيتم إغلاق مربع الحوار تلقائياً عند اكتمال المزامنة .Trakt يرجى الإنتظار بينما نقوم بمزامنة مفضلاتك مع",
 
   "general_error": "($error) .حدث خطأ\n.يرجى الإبلاغ عن هذا الخطأ",
 
@@ -103,7 +103,7 @@
   "update_failed_please_try_again_later": ".فشل التحديث. حاول مرة أخرى في وقتٍ لاحق",
   "update_failed_storage_permission_denied": ".فشل التحديث. تم رفض إذن التخزين",
   "error_updating_app": "...خطأ في تحديث التطبيق",
-  "trakt_description": " ...تتبع ما تشاهده تلقائياً و زامن قائمة تشغيلك عبر الأجهزة والمزيد",
+  "trakt_description": "...تتبع ما تشاهده تلقائياً و زامن قائمة تشغيلك عبر الأجهزة والمزيد",
   "rd_description": ".هو موقع تنزيل غير محدود يسمح لك بتنزيل الملفات الموجودة على الإنترنت بسرعة Real-Debrid",
   "change_theme": "...غير المظهر الإجمالي",
   "by_x": "$x من قِبل",
