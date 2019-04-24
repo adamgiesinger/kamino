@@ -35,7 +35,7 @@ WEBHOOK_DATA='{
       },
       {
         "name": "Files",
-        "value": "'"[WeTransfer]($BUILD_OUTPUT_URL)"'"
+        "value": "'"[Download APK]($BUILD_OUTPUT_URL)"'"
       }
     ],
     "timestamp": "'"$TIMESTAMP"'"
