@@ -125,10 +125,10 @@
   "restore_defaults": "إستعد الضبط الإفتراضي"
 
   "select_language": "...إختار اللغة",
-  "language_settings": "Language Settings",
+  "language_settings": "إعدادات اللغة",
   "take_screenshot_report_apollotv_discord": "Please take a screenshot of this message and contact a member of staff in the ApolloTV Discord server.",
-  "an_error_occurred": "An error occurred.",
-  "cast_and_crew": "Cast & Crew",
+  "an_error_occurred": ".لقد حدث خطأ",
+  "cast_and_crew": "طاقم العمل",
 
   "welcome_to_appname": "Welcome to $appName",
   "app_tagline": "The streaming app built, for the community, by the community.",
