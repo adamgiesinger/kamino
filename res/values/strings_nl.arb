@@ -1,4 +1,7 @@
 {
+  "$_language_name": "Nederlands",
+  "$_language_name_english": "Dutch",
+
   "blog": "Blog",
   "tv_shows": "TV Shows",
   "movies": "Films",
@@ -74,14 +77,14 @@
 
   "make_appname_yours": "MAAK $appName VAN JOU",
   "appearance": "Uiterlijk",
-  "customise_the_theme_and_primary_colors": "Pas het thema en kleurenschema aan.",
+  "customize_the_theme_and_primary_colors": "Pas het thema en kleurenschema aan.",
   "launchpad": "Launchpad",
-  "customise_your_launchpad": "Pas je launchpad aan.",
+  "customize_your_launchpad": "Pas je launchpad aan.",
   "boost_your_experience": "VERBETER JE ERVARING",
   "extensions": "Extensies",
   "manage_third_party_integrations": "Extensies van derden beheren.",
   "miscellaneous": "DIVERSEN",
-  "other_": "OVERIGE",ALGEMENE applicatie-instellingen
+  "other_": "Overige",
   "general_application_settings": "Algemene applicatie-instellingen.",
   "advanced": "Geavanceerd",
   "power_user_settings_for_rocket_scientists": "Power user opties voor raket wetenschappers.",

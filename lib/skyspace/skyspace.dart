@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/skyspace/tv_remote.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:kamino/vendor/themes/OfficialVendorThemes.dart';
 
 class KaminoSkyspace extends StatefulWidget {

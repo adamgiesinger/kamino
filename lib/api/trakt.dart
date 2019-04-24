@@ -1,0 +1,396 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/main.dart';
+import 'package:kamino/models/content.dart';
+import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/interface.dart';
+import 'package:kamino/util/database_helper.dart';
+import 'package:kamino/util/settings.dart';
+
+class Trakt {
+
+  /*
+
+  TODO: Auto-renew Trakt token when it expires.
+  (Not high priority -> tokens expire after 3 months.)
+
+   */
+
+  static const String TRAKT_AUTH_GET_TOKEN = "https://api.trakt.tv/oauth/token";
+  static const String TRAKT_AUTH_REVOKE_TOKEN = "https://api.trakt.tv/oauth/revoke";
+
+  static const String TRAKT_SYNC_HISTORY = "https://api.trakt.tv/sync/history";
+  static const String TRAKT_SYNC_COLLECTION = "https://api.trakt.tv/sync/collection";
+
+  static Future<Map<String, String>> _getAuthHeaders(BuildContext context) async {
+    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    TraktSettings traktCredentials = await getTraktSettings();
+
+    return {
+      HttpHeaders.authorizationHeader: 'Bearer ${traktCredentials.accessToken}',
+      HttpHeaders.contentTypeHeader: 'application/json',
+      'trakt-api-version': '2',
+      'trakt-api-key': appState.getPrimaryVendorConfig().getTraktCredentials().id
+    };
+  }
+
+  ///
+  /// This acts as a convenient way of getting [Settings.traktCredentials]
+  /// as a [TraktSettings] object.
+  ///
+  static Future<TraktSettings> getTraktSettings() async {
+    return await Settings.traktCredentials;
+  }
+
+  ///
+  /// Returns true if the user has signed into and/or connected Trakt to
+  /// ApolloTV.
+  ///
+  static Future<bool> isAuthenticated() async {
+    return (await getTraktSettings()).isValid();
+  }
+
+  ///
+  /// Allows the user to sign in and store their Trakt credentials in the
+  /// application settings.
+  ///
+  static Future<bool> authenticate(BuildContext context, { bool shouldShowSnackbar = false }) async {
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
+    String authCode = await Navigator.push(context, MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (BuildContext context) => TraktAuthenticator(context: context)
+    ));
+
+    // If the authentication code is null, the user probably exited the
+    // authentication manually, but let's show a dialog to be safe.
+    if(authCode == null){
+      Interface.showSimpleErrorDialog(
+        context,
+        title: S.of(context).authentication_unsuccessful,
+        reason: S.of(context).appname_was_unable_to_authenticate_with_trakttv(appName)
+      );
+
+      return false;
+    }
+
+    http.Response response = await http.post(TRAKT_AUTH_GET_TOKEN, body: {
+      'code': authCode,
+      'client_id': application.getPrimaryVendorConfig().getTraktCredentials().id,
+      'client_secret': application.getPrimaryVendorConfig().getTraktCredentials().secret,
+      'redirect_uri': "urn:ietf:wg:oauth:2.0:oob",
+      'grant_type': "authorization_code"
+    });
+
+    if(response.statusCode == 200){
+
+      Map responsePayload = json.decode(response.body);
+      Settings.setTraktCredentials(new TraktSettings.named(
+          accessToken: responsePayload["access_token"],
+          refreshToken: responsePayload["refresh_token"],
+
+          // Trakt tokens expire in 3 months (84 days), after which
+          // the token will need to be refreshed.
+          expiryDate: DateTime.now().add(Duration(days: 84)).toString()
+      ));
+      if(shouldShowSnackbar) Interface.showSnackbar(S.of(context).connected_trakt_account, context: context, backgroundColor: Colors.green);
+      
+      return true;
+
+    }
+
+    Interface.showSimpleErrorDialog(
+        context,
+        title: S.of(context).authentication_unsuccessful,
+        reason: S.of(context).appname_was_unable_to_authenticate_with_trakttv(appName) +
+            "\n\nError ${response.statusCode.toString()}"
+    );
+    return false;
+  }
+
+  ///
+  /// Revokes the Trakt OAUTH token and clears the trakt credentials from the
+  /// application settings.
+  ///
+  static Future<bool> deauthenticate(BuildContext context, { bool shouldShowSnackbar = false }) async {
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    TraktSettings traktSettings = await getTraktSettings();
+
+    http.Response response = await http.post(TRAKT_AUTH_REVOKE_TOKEN, body: {
+      'token': traktSettings.accessToken,
+      'client_id': application.getPrimaryVendorConfig().getTraktCredentials().id,
+      'client_secret': application.getPrimaryVendorConfig().getTraktCredentials().secret
+    });
+
+    if(response.statusCode == 200){
+      await Settings.setTraktCredentials(TraktSettings.unauthenticated());
+      if(shouldShowSnackbar) Interface.showSnackbar(S.of(context).disconnected_trakt_account, context: context, backgroundColor: Colors.red);
+
+      return true;
+    }
+
+    Interface.showSimpleErrorDialog(
+      context,
+      title: S.of(context).action_unsuccessful,
+      reason: S.of(context).an_error_occurred_whilst_deauthenticating_with_trakttv(response.statusCode.toString())
+    );
+    return false;
+  }
+
+  ///
+  /// Performs a full synchronization of the ApolloTV app databases with the
+  /// connected Trakt.tv profile.
+  /// This should ideally be done in the background, every few days and upon
+  /// initial setup.
+  ///
+  static Future<void> synchronize(BuildContext context, { bool silent = false }) async {
+    /* SYNCHRONIZE FAVORITES */
+
+    // Step 1 -> Add favorites to Trakt.
+    if(!silent) Interface.showLoadingDialog(context, title: S.of(context).uploading_favorites, canCancel: false);
+
+    Map data = {};
+
+    Map<String, List<FavoriteDocument>> storedFavorites = await DatabaseHelper.getAllFavorites();
+    storedFavorites.forEach((String type, List<FavoriteDocument> documents){
+      String traktMediaType = (type == 'movie') ? "movies" : "shows";
+      data[traktMediaType] = [];
+
+      documents.forEach((FavoriteDocument document){
+        data[traktMediaType].add({
+          'collected_at': document.savedOn.toString(),
+          'title': document.name,
+          'year': document.year,
+          'ids': {
+            'tmdb': document.tmdbId
+          }
+        });
+      });
+    });
+
+    await http.post(
+      TRAKT_SYNC_COLLECTION,
+      headers: await _getAuthHeaders(context),
+      body: json.encode(data)
+    );
+
+    if(!silent) Navigator.of(context).pop();
+
+    // Step 2 -> Fetch favorites and store in array.
+    if(!silent) Interface.showLoadingDialog(context, title: S.of(context).downloading_trakt_data, canCancel: false);
+    
+    Stream<String> mediaTypes = Stream.fromIterable(['shows', 'movies']);
+    var favorites = {
+      'shows': <int>[],
+      'movies': <int>[]
+    };
+
+    await for (String mediaType in mediaTypes){
+      http.Response response = await http.get(
+        TRAKT_SYNC_COLLECTION + "/$mediaType",
+        headers: await _getAuthHeaders(context)
+      );
+
+      if(response.statusCode != 200){
+        print("An error occurred whilst fetching Trakt data for $mediaType.");
+        continue;
+      }
+
+      List payload = jsonDecode(response.body);
+      String mediaTypeObject = mediaType.substring(0, mediaType.length - 1);
+
+      for(var index = 0; index < payload.length; index++){
+        if(payload[index][mediaTypeObject]['ids']['tmdb'] != null)
+          favorites[mediaType].add(
+              payload[index][mediaTypeObject]['ids']['tmdb']
+          );
+      }
+
+    }
+    if(!silent) Navigator.of(context).pop();
+
+    // Step 3 -> Map IDs to FavoriteDocuments.
+    if(!silent) Interface.showLoadingDialog(context, title: S.of(context).saving_content_information, canCancel: false);
+    List<Future> favoriteSyncDelegate = new List();
+
+    for(var entry in favorites.entries){
+      String mediaType = entry.key;
+      List<int> data = entry.value;
+
+      List<FavoriteDocument> documents = [];
+
+      await for (int id in Stream.fromIterable(data)){
+
+        // Don't bother writing if already a favorite.
+        if(!await DatabaseHelper.isFavorite(id)) {
+          ContentModel model = await TMDB.getContentInfo(
+              context,
+              mediaType == 'shows' ? ContentType.TV_SHOW : ContentType.MOVIE,
+              id
+          );
+          documents.add(new FavoriteDocument.fromModel(model));
+        }
+
+      }
+
+      DatabaseHelper.saveFavorites(documents);
+    }
+
+    Future.wait(favoriteSyncDelegate);
+    if(!silent) Navigator.of(context).pop();
+
+    /* END: SYNCHRONIZE FAVORITES */
+  }
+
+  ///
+  /// This adds an item to a user's Trakt favorites.
+  ///
+  static Future<void> sendFavoriteToTrakt(BuildContext context, {
+    @required ContentType type,
+    @required int id,
+    @required String title,
+    @required String year
+  }) async {
+    String mediaType = (type == ContentType.TV_SHOW) ? 'shows' : 'movies';
+
+    await http.post(
+      TRAKT_SYNC_COLLECTION,
+      headers: await _getAuthHeaders(context),
+      body: json.encode({
+        mediaType: {
+          'collected_at': DateTime.now().toUtc().toString(),
+          'title': title,
+          'year': year,
+          'ids': {
+            'tmdb': id
+          }
+        }
+      })
+    );
+  }
+
+  ///
+  /// This removes an item from a user's Trakt favorites.
+  ///
+  static Future<void> removeFavoriteFromTrakt(BuildContext context, {
+    @required ContentType type,
+    @required int id
+  }) async {
+    String mediaType = (type == ContentType.TV_SHOW) ? 'shows' : 'movies';
+
+    await http.post(
+      TRAKT_SYNC_COLLECTION,
+      headers: await _getAuthHeaders(context),
+      body: json.encode({
+        mediaType: {
+          'ids': { 'tmdb': id }
+        }
+      })
+    );
+  }
+
+  ///
+  /// This gets a user's Trakt watch history.
+  ///
+  static Future<List<ContentModel>> getWatchHistory(BuildContext context, { bool includeComplete = false }) async {
+    List<ContentModel> progressData = [];
+
+    try {
+      // Generate Trakt authentication headers.
+      var headers = await _getAuthHeaders(context);
+
+      // Make GET request to history endpoint.
+      var responseRaw = await http.get(TRAKT_SYNC_HISTORY, headers: headers);
+      List<dynamic> response = jsonDecode(responseRaw.body);
+
+      for(Map<String, dynamic> entry in response){
+        if(entry["type"] == 'episode'){
+          if(progressData.where((_entry) => _entry.id == entry["show"]["ids"]["tmdb"]).length > 0) continue;
+
+          var content = await TMDB.getContentInfo(context, ContentType.TV_SHOW, entry["show"]["ids"]["tmdb"]);
+
+          var progressResponse = jsonDecode((await http.get("https://api.trakt.tv/shows/${entry["show"]["ids"]["trakt"].toString()}/progress/watched", headers: headers)).body);
+          content.progress = (double.parse(progressResponse["completed"].toString()) / double.parse(progressResponse["aired"].toString()));
+          content.lastWatched = progressResponse["last_watched_at"];
+
+          if(content.progress < 1 || includeComplete) progressData.add(content);
+        }
+      }
+
+      return progressData;
+    }catch(ex){
+      print(ex);
+      throw new Exception("An error occurred whilst connecting to Trakt.tv.");
+    }
+  }
+
+}
+
+class TraktAuthenticator extends StatefulWidget {
+
+  final BuildContext context;
+  TraktAuthenticator({ this.context });
+
+  @override
+  _TraktAuthenticatorState createState() => new _TraktAuthenticatorState();
+
+}
+
+class _TraktAuthenticatorState extends State<TraktAuthenticator> {
+
+  final flutterWebviewPlugin = new FlutterWebviewPlugin();
+  StreamSubscription<String> _onUrlChanged;
+
+  @override
+  void initState() {
+    flutterWebviewPlugin.close();
+
+    // Listen for the code via URL change.
+    _onUrlChanged = flutterWebviewPlugin.onUrlChanged.listen((String url) {
+      if (mounted && url.contains("native?code=")) {
+        _onUrlChanged.cancel();
+        String authCode = url.split("code=")[1].replaceAll("#", "");
+        Navigator.of(this.context).pop(authCode);
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+
+    String _url = "https://trakt.tv/oauth/authorize?response_type=code&"
+        "client_id=${application.getPrimaryVendorConfig().getTraktCredentials().id}&"
+        "redirect_uri=urn:ietf:wg:oauth:2.0:oob";
+
+    return WebviewScaffold(
+      url: _url,
+      userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+          "(KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+      clearCache: true,
+      clearCookies: true,
+      appBar: AppBar(
+        title: TitleText(S.of(context).trakt_authenticator),
+        centerTitle: true,
+        elevation: 8.0,
+        backgroundColor: Theme.of(context).cardColor,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    flutterWebviewPlugin.dispose();
+    super.dispose();
+  }
+
+}

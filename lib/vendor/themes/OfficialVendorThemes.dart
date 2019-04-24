@@ -17,7 +17,6 @@ class _DarkVendorTheme extends ThemeConfiguration {
   _DarkVendorTheme(): super(
     id: "xyz.apollotv.dark",
     name: "ApolloTV Official",
-    version: "1.0.0",
     author: "Apollo15",
     allowsVariants: true,
     overlayStyle: SystemUiOverlayStyle.dark.copyWith(
@@ -28,35 +27,40 @@ class _DarkVendorTheme extends ThemeConfiguration {
 
   @override
   ThemeData getThemeData({Color primaryColor : _primaryColor}) {
-    var _secondaryColor = primaryColor.withOpacity(0.0863);
     var _highlightColor = primaryColor.withOpacity(0.1490);
 
     var _backgroundColor = Color(0xFF26282C);
     var _cardColor = Color(0xFF2F3136);
 
     return ThemeData(
-        brightness: Brightness.dark,
-        primaryColorBrightness: Brightness.dark,
-        primaryColor: primaryColor,
-        accentColor: _secondaryColor,
-        highlightColor: _highlightColor,
-        backgroundColor: _backgroundColor,
-        cursorColor: primaryColor,
-        textSelectionHandleColor: primaryColor,
-        buttonColor: primaryColor,
-        dialogTheme: DialogTheme(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5)
-          ),
+      brightness: Brightness.dark,
+      primaryColorBrightness: Brightness.dark,
+      primaryColor: primaryColor,
+      accentColor: primaryColor,
+      highlightColor: _highlightColor,
+      backgroundColor: _backgroundColor,
+      cursorColor: primaryColor,
+      textSelectionHandleColor: primaryColor,
+      buttonColor: primaryColor,
+      dialogTheme: DialogTheme(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5)
         ),
-        dialogBackgroundColor: _cardColor,
-        buttonTheme: ButtonThemeData(
-            buttonColor: primaryColor
-        ),
-        cardColor: _cardColor,
-        bottomAppBarColor: _backgroundColor,
-        scaffoldBackgroundColor: _cardColor,
-        canvasColor: _backgroundColor
+      ),
+      dialogBackgroundColor: _cardColor,
+      buttonTheme: ButtonThemeData(
+          buttonColor: primaryColor
+      ),
+      cardColor: _cardColor,
+      bottomAppBarColor: _backgroundColor,
+      scaffoldBackgroundColor: _cardColor,
+      canvasColor: _backgroundColor,
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
+        hintStyle: TextStyle(
+          color: _primaryColor
+        )
+      )
     );
   }
 
@@ -69,7 +73,6 @@ class _LightVendorTheme extends ThemeConfiguration {
   _LightVendorTheme(): super(
     id: "xyz.apollotv.light",
     name: "ApolloTV Official (Light)",
-    version: "1.0.0",
     author: "Apollo15",
     allowsVariants: true,
     overlayStyle: SystemUiOverlayStyle.light.copyWith(
@@ -80,7 +83,6 @@ class _LightVendorTheme extends ThemeConfiguration {
 
   @override
   ThemeData getThemeData({Color primaryColor : _primaryColor}) {
-    var _secondaryColor = primaryColor.withOpacity(0.0863);
     var _highlightColor = primaryColor.withOpacity(0.1490);
 
     var _backgroundColor = Color(0xFFECF0F1);
@@ -91,7 +93,7 @@ class _LightVendorTheme extends ThemeConfiguration {
       primaryColorBrightness: Brightness.light,
       accentColorBrightness: Brightness.dark,
       primaryColor: primaryColor,
-      accentColor: _secondaryColor,
+      accentColor: primaryColor,
       highlightColor: _highlightColor,
       backgroundColor: _backgroundColor,
       cursorColor: primaryColor,
@@ -103,14 +105,20 @@ class _LightVendorTheme extends ThemeConfiguration {
           )
       ),
       buttonTheme: ButtonThemeData(
-          buttonColor: primaryColor,
-          textTheme: ButtonTextTheme.primary
+        buttonColor: primaryColor,
+        textTheme: ButtonTextTheme.primary,
       ),
       dialogBackgroundColor: _backgroundColor,
       cardColor: _cardColor,
       bottomAppBarColor: _backgroundColor,
       scaffoldBackgroundColor: _cardColor,
-      canvasColor: _backgroundColor
+      canvasColor: _backgroundColor,
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
+        hintStyle: TextStyle(
+          color: _primaryColor
+        )
+      )
     );
   }
 
@@ -122,8 +130,7 @@ class _BlackVendorTheme extends ThemeConfiguration {
 
   _BlackVendorTheme(): super(
     id: "xyz.apollotv.black",
-    name: "ApolloTV Official (Black)",
-    version: "1.0.0",
+    name: "ApolloTV Official (AMOLED)",
     author: "Apollo15",
     allowsVariants: true,
     overlayStyle: SystemUiOverlayStyle.dark.copyWith(
@@ -134,17 +141,16 @@ class _BlackVendorTheme extends ThemeConfiguration {
 
   @override
   ThemeData getThemeData({Color primaryColor : _primaryColor}) {
-    var _secondaryColor = primaryColor.withOpacity(0.0863);
     var _highlightColor = primaryColor.withOpacity(0.1490);
 
     var _backgroundColor = Color(0xFF000000);
-    var _cardColor = Color(0xFF151517);
+    var _cardColor = _backgroundColor;
 
     return ThemeData(
       brightness: Brightness.dark,
       primaryColorBrightness: Brightness.dark,
       primaryColor: primaryColor,
-      accentColor: _secondaryColor,
+      accentColor: primaryColor,
       highlightColor: _highlightColor,
       backgroundColor: _backgroundColor,
       cursorColor: primaryColor,
@@ -162,7 +168,13 @@ class _BlackVendorTheme extends ThemeConfiguration {
       cardColor: _cardColor,
       bottomAppBarColor: _backgroundColor,
       scaffoldBackgroundColor: _cardColor,
-      canvasColor: _backgroundColor
+      canvasColor: _backgroundColor,
+      inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
+          hintStyle: TextStyle(
+              color: _primaryColor
+          )
+      )
     );
   }
 

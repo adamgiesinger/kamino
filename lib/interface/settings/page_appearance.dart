@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:kamino/interface/settings/page.dart';
 
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:kamino/util/settings.dart';
 
 class AppearanceSettingsPage extends SettingsPage {
 
@@ -18,6 +19,20 @@ class AppearanceSettingsPage extends SettingsPage {
 
 
 class AppearenceSettingsPageState extends SettingsPageState {
+
+  bool _detailedContentInfoEnabled = false;
+
+  @override
+  void initState() {
+    (Settings.detailedContentInfoEnabled as Future).then((data){
+      setState(() {
+        _detailedContentInfoEnabled = data;
+      });
+    });
+
+    super.initState();
+  }
+
   @override
   Widget buildPage(BuildContext context) {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
@@ -26,14 +41,17 @@ class AppearenceSettingsPageState extends SettingsPageState {
       physics: widget.isPartial ? NeverScrollableScrollPhysics() : null,
       shrinkWrap: widget.isPartial ? true : false,
       children: <Widget>[
+        SubtitleText("Theme", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
+            leading: Icon(Icons.palette),
             title: TitleText(S.of(context).change_theme),
             subtitle: Text(
-                "${appState.getActiveThemeMeta().getName()} v${appState.getActiveThemeMeta().getVersion()} (${S.of(context).by_x(appState.getActiveThemeMeta().getAuthor())})"
+                "${appState.getActiveThemeMeta().getName()} (${S.of(context).by_x(appState.getActiveThemeMeta().getAuthor())})"
             ),
-            onTap: () => _showThemeChoice(context),
+            onTap: () => showThemeChoice(context, appState),
           ),
         ),
 
@@ -44,76 +62,110 @@ class AppearenceSettingsPageState extends SettingsPageState {
             subtitle: Text(
                 PrimaryColorChooser.colorToHexString(Theme.of(context).primaryColor)
             ),
-            trailing: CircleColor(
+            leading: CircleColor(
               circleSize: 32,
               color: Theme.of(context).primaryColor,
             ),
-            onTap: () => _setPrimaryColor(context, appState),
+            onTap: () => setPrimaryColor(context, appState),
+          ),
+        ),
+
+        SubtitleText("Layout", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 0)),
+
+        Container(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              ButtonBar(
+                alignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  VerticalIconButton(
+                    backgroundColor: _detailedContentInfoEnabled ? Theme.of(context).primaryColor : null,
+                    onTap: () async {
+                      await (Settings.detailedContentInfoEnabled = true);
+                      _detailedContentInfoEnabled = await Settings.detailedContentInfoEnabled;
+                      setState(() {});
+                    },
+                    title: TitleText("Card Layout"),
+                    icon: Icon(Icons.view_agenda),
+
+                  ),
+                  VerticalIconButton(
+                    backgroundColor: !_detailedContentInfoEnabled ? Theme.of(context).primaryColor : null,
+                    onTap: () async {
+                      await (Settings.detailedContentInfoEnabled = false);
+                      _detailedContentInfoEnabled = await Settings.detailedContentInfoEnabled;
+                      setState(() {});
+                    },
+                    title: TitleText("Grid Layout"),
+                    icon: Icon(Icons.grid_on),
+                  )
+                ],
+              )
+            ],
           ),
         )
       ],
     );
   }
+}
 
-  void _showThemeChoice(BuildContext context){
-    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+void setPrimaryColor(BuildContext context, KaminoAppState appState){
+  showDialog(
+      context: context,
+      builder: (BuildContext dialog){
+        return PrimaryColorChooser(
+            initialColor: Theme.of(context).primaryColor
+        );
+      }
+  );
+}
 
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext dialog){
-          return AlertDialog(
-            // Title Row
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(Icons.palette),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: TitleText(S.of(context).change_theme),
-                    )
-                  ],
-                )
-              ],
+void showThemeChoice(BuildContext context, KaminoAppState appState){
+  showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialog){
+        return AlertDialog(
+          // Title Row
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Icon(Icons.palette),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: TitleText(S.of(context).change_theme),
+                  )
+                ],
+              )
+            ],
+          ),
+
+          // Body
+          content: Container(
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: appState.getThemeConfigs().length,
+                itemBuilder: (listContext, index){
+                  var theme = appState.getThemeConfigs()[index];
+
+                  return ListTile(
+                      onTap: (){
+                        Navigator.of(context).pop();
+                        appState.setActiveTheme(theme.getId());
+                      },
+                      title: TitleText("${theme.getName()}"),
+                      subtitle: Text("${theme.getAuthor()}")
+                  );
+                }
             ),
-
-            // Body
-            content: Container(
-              width: MediaQuery.of(context).size.width * 0.75,
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: appState.getThemeConfigs().length,
-                  itemBuilder: (listContext, index){
-                    var theme = appState.getThemeConfigs()[index];
-
-                    return ListTile(
-                        onTap: (){
-                          Navigator.of(context).pop();
-                          appState.setActiveTheme(theme.getId());
-                        },
-                        title: TitleText("${theme.getName()} v${theme.getVersion()}"),
-                        subtitle: Text("${theme.getAuthor()}")
-                    );
-                  }
-              ),
-            ),
-          );
-        }
-    );
-  }
-
-  void _setPrimaryColor(BuildContext context, KaminoAppState appState){
-    showDialog(
-        context: context,
-        builder: (BuildContext dialog){
-          return PrimaryColorChooser(
-              initialColor: Theme.of(context).primaryColor
-          );
-        }
-    );
-  }
+          ),
+        );
+      }
+  );
 }
 
 /***** COLOR CHOOSER CODE *****/

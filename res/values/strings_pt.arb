@@ -1,4 +1,7 @@
 {
+  "$_language_name": "Português",
+  "$_language_name_english": "Portuguese",
+
   "blog": "Blog",
   "tv_shows": "Séries",
   "movies": "Filmes",
@@ -73,10 +76,10 @@
   "check_for_updates": "Procurar por Updates",
 
   "make_appname_yours": "Faz $appName teu",
-  "appearance": "Aparrência",
-  "customise_the_theme_and_primary_colors": "Modificar Tema e cores Primárias.",
+  "appearance": "Aparência",
+  "customize_the_theme_and_primary_colors": "Modificar Tema e cores Primárias.",
   "launchpad": "Launchpad",
-  "customise_your_launchpad": "Modifica o teu launchpad.",
+  "customize_your_launchpad": "Modifica o teu launchpad.",
   "boost_your_experience": "IMPULSIONA A TUA EXPERIÊNCIA",
   "extensions": "Extensões",
   "manage_third_party_integrations": "Gerenciar integrações de terceiros.",

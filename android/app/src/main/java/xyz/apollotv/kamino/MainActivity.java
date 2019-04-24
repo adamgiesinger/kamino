@@ -1,13 +1,27 @@
 package xyz.apollotv.kamino;
 
 import android.app.UiModeManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.AdaptiveIconDrawable;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.List;
 
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodChannel;
@@ -56,6 +70,124 @@ public class MainActivity extends FlutterActivity {
         }
 
         result.notImplemented();
+    });
+
+    new MethodChannel(getFlutterView(), "xyz.apollotv.kamino/playThirdParty").setMethodCallHandler((methodCall, result) -> {
+
+        if(methodCall.method.equals("play")){
+            try {
+
+                String activityPackage = methodCall.argument("activityPackage");
+                String activityName = methodCall.argument("activityName");
+                String videoTitle = methodCall.argument("videoTitle");
+                String videoURL = methodCall.argument("videoURL");
+                String mimeType = methodCall.argument("mimeType");
+
+                Intent playIntent = new Intent(Intent.ACTION_VIEW);
+                playIntent.setDataAndTypeAndNormalize(Uri.parse(videoURL), mimeType);
+                playIntent.putExtra("title", videoTitle);
+                playIntent.setClassName(activityPackage, activityName);
+
+                List<ResolveInfo> activities = getPackageManager().queryIntentActivities(
+                    playIntent, 0
+                );
+                boolean isIntentSafe = activities.size() > 0;
+
+                if(isIntentSafe){
+                    startActivity(playIntent);
+                    result.success(null);
+                    return;
+                }
+
+                result.error(getPackageName(), "Error whilst playing. Intent wasn't safe to use.", "unsafeIntent");
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+                result.error(getPackageName(), "Error whilst playing. Details have been logged.", "generic");
+            }
+            return;
+        }
+
+        if(methodCall.method.equals("selectAndPlay")) {
+            try {
+                String videoTitle = methodCall.argument("videoTitle");
+                String videoURL = methodCall.argument("videoURL");
+                String mimeType = methodCall.argument("mimeType");
+
+                Intent playIntent = new Intent(Intent.ACTION_VIEW);
+                playIntent.setDataAndTypeAndNormalize(Uri.parse(videoURL), mimeType);
+                playIntent.putExtra("title", videoTitle);
+
+                List<ResolveInfo> activities = getPackageManager().queryIntentActivities(
+                        playIntent, 0
+                );
+                boolean isIntentSafe = activities.size() > 0;
+
+                if(isIntentSafe){
+                    startActivity(playIntent);
+                    result.success(null);
+                    return;
+                }
+
+                result.error(getPackageName(), "Error whilst playing. Intent wasn't safe to use.", "unsafeIntent");
+
+            }catch(Exception ex){
+                ex.printStackTrace();
+                result.error(getPackageName(), "Error whilst playing. Details have been logged.", "generic");
+            }
+            return;
+        }
+
+        if(methodCall.method.equals("list")){
+            JSONArray response = new JSONArray();
+
+            // Create a video view intent.
+            Intent playIntent = new Intent(Intent.ACTION_VIEW);
+            playIntent.setDataAndType(null, "video/*");
+
+            // Get a list of activities that support the intent.
+            List<ResolveInfo> activities = getPackageManager().queryIntentActivities(playIntent, 0);
+
+            for(ResolveInfo activity : activities){
+                try {
+                    // Store activity info in a JSON object.
+                    JSONObject infoObject = new JSONObject();
+                    infoObject.put("activity", activity.activityInfo.name);
+                    infoObject.put("package", activity.activityInfo.packageName);
+                    infoObject.put("name", activity.activityInfo.applicationInfo.loadLabel(getPackageManager()));
+                    infoObject.put("version", getPackageManager().getPackageInfo(
+                        activity.activityInfo.applicationInfo.packageName,
+                        0
+                    ).versionName);
+                    infoObject.put("isDefault", activity.isDefault);
+
+                    // Convert app icon to bitmap
+                    Drawable iconDrawable = activity.loadIcon(getPackageManager());
+                    Bitmap icon = Bitmap.createBitmap(iconDrawable.getIntrinsicWidth(), iconDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                    Canvas canvas = new Canvas(icon);
+                    iconDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                    iconDrawable.draw(canvas);
+
+                    // Encode the icon for transmission.
+                    ByteArrayOutputStream iconOut = new ByteArrayOutputStream();
+                    icon.compress(Bitmap.CompressFormat.PNG, 100, iconOut);
+                    iconOut.close();
+                    infoObject.put("icon", Base64.encodeToString(
+                        iconOut.toByteArray(),
+                        Base64.DEFAULT
+                    ));
+
+                    response.put(infoObject);
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+
+            // Return the JSON array of data.
+            result.success(response.toString());
+            return;
+        }
+
     });
 
   }

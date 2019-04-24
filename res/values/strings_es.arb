@@ -1,4 +1,7 @@
 {
+  "$_language_name": "Español",
+  "$_language_name_english": "Spanish",
+
   "blog": "Blog",
   "tv_shows": "Programas De TV",
   "movies": "Peliculas",
@@ -74,9 +77,9 @@
 
   "make_appname_yours": "Haz $appName tuya",
   "appearance": "Apariencia",
-  "customise_the_theme_and_primary_colors": "Personalizar el tema y los colores primarios.",
+  "customize_the_theme_and_primary_colors": "Personalizar el tema y los colores primarios.",
   "launchpad": "Launchpad",
-  "customise_your_launchpad": "Personaliza tu launchpad.",
+  "customize_your_launchpad": "Personaliza tu launchpad.",
   "boost_your_experience": "MEJORE SU EXPERIENCIA",
   "extensions": "Extensiones",
   "manage_third_party_integrations": "Gestionar integraciones de terceros.",

@@ -7,14 +7,14 @@ import 'package:flutter_parallax/flutter_parallax.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_advanced.dart';
 import 'package:kamino/interface/settings/page_extensions.dart';
+import 'package:kamino/interface/settings/page_playback.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:kamino/main.dart';
-import 'package:kamino/ui/uielements.dart';
+import 'package:kamino/ui/elements.dart';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
 
-import 'package:kamino/interface/settings/page_launchpad.dart';
 import 'package:kamino/interface/settings/page_appearance.dart';
 import 'package:kamino/interface/settings/page_other.dart';
 
@@ -78,8 +78,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-
-    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
 
     return Scaffold(
         appBar: AppBar(
@@ -121,15 +120,15 @@ class _SettingsViewState extends State<SettingsView> {
                                   children: <Widget>[
 
                                     Container(
-                                        padding: EdgeInsets.only(bottom: 20),
-                                        child: Image.asset("assets/images/logo.png", width: 48, height: 48)
+                                        padding: EdgeInsets.only(bottom: 5),
+                                        child: Image.asset("assets/images/logo_foreground_lg.png", width: 64, height: 64)
                                     ),
 
                                     TitleText("$appName v${_packageInfo.version}", fontSize: 24, textColor: Colors.white),
 
                                     Container(
                                       padding: EdgeInsets.symmetric(vertical: 5),
-                                      child: Text("${appState.getVendorConfigs()[0].getName()} ${_getBuildType()} Build \u2022 ${_packageInfo.buildNumber}", style: TextStyle(
+                                      child: Text("${application.getPrimaryVendorConfig().getName()} ${_getBuildType()} Build \u2022 ${_packageInfo.buildNumber}", style: TextStyle(
                                           color: Colors.white
                                       )),
                                     ),
@@ -175,12 +174,10 @@ class _SettingsViewState extends State<SettingsView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(S.of(context).make_appname_yours(appName.toUpperCase()), style: TextStyle(
-                            fontFamily: 'GlacialIndifference',
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                            color: Theme.of(context).primaryTextTheme.display3.color,
-                          ))
+                          SubtitleText(
+                            S.of(context).make_appname_yours(appName.toUpperCase()),
+                            padding: EdgeInsets.zero,
+                          )
                         ],
                       )
                     ),
@@ -189,7 +186,7 @@ class _SettingsViewState extends State<SettingsView> {
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
                         title: TitleText(S.of(context).appearance),
-                        subtitle: Text(S.of(context).customise_the_theme_and_primary_colors),
+                        subtitle: Text(S.of(context).customize_the_theme_and_primary_colors),
                         leading: new Icon(Icons.style),
                         onTap: (){
                           Navigator.push(context, FadeRoute(
@@ -202,28 +199,40 @@ class _SettingsViewState extends State<SettingsView> {
                     Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
+                        title: TitleText(S.of(context).playback),
+                        subtitle: Text(S.of(context).change_content_playback_settings),
+                        leading: new Icon(Icons.play_circle_filled),
+                        onTap: (){
+                          Navigator.push(context, FadeRoute(
+                              builder: (context) => PlaybackSettingsPage(context)
+                          ));
+                        },
+                      ),
+                    ),
+
+                    /*Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: ListTile(
                         title: TitleText(S.of(context).launchpad),
-                        subtitle: Text(S.of(context).customise_your_launchpad),
-                        leading: new Icon(const IconData(0xe90B, fontFamily: 'apollotv-icons')),
+                        subtitle: Text(S.of(context).customize_your_launchpad),
+                        leading: new Icon(const IconData(0xe90F, fontFamily: 'apollotv-icons')),
                         onTap: (){
                           Navigator.push(context, FadeRoute(
                               builder: (context) => LaunchpadSettingsPage(context)
                           ));
                         },
                       ),
-                    ),
+                    ),*/
 
                     Container(
                         margin: EdgeInsets.only(top: 35, bottom: 5, left: 15, right: 15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(S.of(context).boost_your_experience, style: TextStyle(
-                              fontFamily: 'GlacialIndifference',
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                              color: Theme.of(context).primaryTextTheme.display3.color,
-                            ))
+                            SubtitleText(
+                              S.of(context).boost_your_experience,
+                              padding: EdgeInsets.zero,
+                            )
                           ],
                         )
                     ),
@@ -248,12 +257,10 @@ class _SettingsViewState extends State<SettingsView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(S.of(context).miscellaneous, style: TextStyle(
-                              fontFamily: 'GlacialIndifference',
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                              color: Theme.of(context).primaryTextTheme.display3.color,
-                            ))
+                            SubtitleText(
+                              S.of(context).miscellaneous,
+                              padding: EdgeInsets.zero,
+                            )
                           ],
                         )
                     ),

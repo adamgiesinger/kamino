@@ -1,4 +1,6 @@
-# Kamino 
+# Kamino
+
+[![Build Status](https://travis-ci.com/ApolloTVofficial/kamino.svg?branch=master)](https://travis-ci.com/ApolloTVofficial/kamino)
 
 The ApolloTV client for Android and iOS written in Flutter.
 

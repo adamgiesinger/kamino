@@ -1,4 +1,7 @@
 {
+  "$_language_name": "عربى",
+  "$_language_name_english": "Arabic",
+
   "blog": "مدونة",
   "tv_shows": "مسلسلات",
   "movies": "أفلام",
@@ -73,9 +76,9 @@
 
   "make_appname_yours": "خاص بك $appName إجعل",
   "appearance": "المظهر",
-  "customise_the_theme_and_primary_colors": ".عدل المظهر و الألوان الأساسية",
+  "customize_the_theme_and_primary_colors": ".عدل المظهر و الألوان الأساسية",
   "launchpad": "منصة الإطلاق",
-  "customise_your_launchpad": "عدل منصة إطلاقك.",
+  "customize_your_launchpad": "عدل منصة إطلاقك.",
   "boost_your_experience": "حسن تجربتك",
   "extensions": "إضافات",
   "manage_third_party_integrations": ".إدارة إضافات طرف ثالث",

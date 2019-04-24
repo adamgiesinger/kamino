@@ -7,8 +7,6 @@
 build/
 
 .flutter-plugins
-lib/generated/
-lib/generated/*
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
@@ -87,7 +85,8 @@ fabric.properties
 
 # Vendor Configuration
 lib/vendor/.git
-lib/vendor/dist/config/OfficialVendorConfiguration.dart
+lib/vendor/dist/*
+!lib/vendor/dist/ShimVendorConfiguration.dart
 lib/database_backup.zip
 
 # Android
@@ -95,3 +94,13 @@ android/key.properties
 
 # VSCode
 .vscode/*
+
+# Language Files
+# Commenting as doing otherwise means people without Flutter i18n Jetbrains
+# plugin are unable to build the project.
+# --------------
+# lib/generated/*
+
+# Ignoring build.gradle, so app can be more easily configured
+# for development builds immediately after downloading.
+android/app/build.gradle

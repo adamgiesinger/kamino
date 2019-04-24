@@ -35,11 +35,11 @@ class SlideLeftRoute<T> extends MaterialPageRoute<T> {
     }
 
     return new FadeTransition(
-        opacity: animation,
+      opacity: animation,
       child: SlideTransition(
           position: new Tween<Offset>(
-              begin: const Offset(1.0, 0.0),
-              end: Offset.zero
+            begin: const Offset(1.0, 0.0),
+            end: Offset.zero
           ).animate(animation),
           child: child
       )

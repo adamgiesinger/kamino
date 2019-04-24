@@ -14,6 +14,9 @@ dependencies:
   # Core dependencies
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
 
   rxdart: ^0.18.1
 
@@ -22,7 +25,7 @@ dependencies:
     path: "cplayer"
   auto_size_text: ^0.2.1
   http: ^0.12.0
-  package_info: ^0.3.2
+  package_info: ^0.3.2+1
   uni_links: ^0.1.3
   shared_preferences: ^0.4.3
   intl: ^0.15.7
@@ -33,7 +36,7 @@ dependencies:
   logging: ^0.11.3+2
   dbcrypt: ^1.0.0
   flutter_material_color_picker: ^0.0.5
-  url_launcher: ^4.0.2
+  url_launcher: ^4.1.0+1
   objectdb: ^1.0.5
   flutter_webview_plugin: ^0.3.0+2
   cached_network_image: ^0.5.1
@@ -42,15 +45,15 @@ dependencies:
   shimmer: ^0.0.6
   encrypt: ^1.0.0+1
   flutter_svg: ^0.10.3
-  simple_permissions: ^0.1.9
-  html: 0.13.3+3
+  html: ^0.13.3+3
   ntp: ^1.0.2
   device_info: ^0.4.0+1
-  # bubble_bottom_bar: ^1.0.0
-  #bubble_bottom_bar:
-  #  git:
-  #    url: "https://github.com/NBTX/bubble_bottom_bar"
-  #    ref: "master"
+  transparent_image: ^0.1.0
+  simple_moment: ^1.0.2
+  pool: ^1.4.0
+  dots_indicator: ^0.0.3
+  permission_handler: ^3.0.0
+  preload_page_view: ^0.1.4
 
 # Compile-only dependencies
 dev_dependencies:
@@ -69,6 +72,7 @@ flutter:
 
   assets:
     - assets/contributors.txt
+
     - assets/images/no_image_detail.jpg
     - assets/images/header.png
     - assets/images/header_text.png
@@ -76,9 +80,65 @@ flutter:
     - assets/images/logo.png
     - assets/images/logo_background.png
     - assets/images/logo_foreground.png
+    - assets/images/logo_foreground_lg.png
+
     - assets/icons/trakt.svg
     - assets/icons/realdebrid.svg
 
+    - assets/flags/arab_league.png
+    - assets/flags/texas.png
+    - assets/flags/hebrew.png
+    - assets/flags/de.png
+    - assets/flags/es.png
+    - assets/flags/fi.png
+    - assets/flags/fr.png
+    - assets/flags/gb.png
+    - assets/flags/hr.png
+    - assets/flags/it.png
+    - assets/flags/nl.png
+    - assets/flags/pl.png
+    - assets/flags/pt.png
+    - assets/flags/ro.png
+    - assets/flags/sv.png
+    - assets/flags/tr.png
+    - assets/flags/us.png
+
+    - assets/genre/movie/Action.svg
+    - assets/genre/movie/Adventure.svg
+    - assets/genre/movie/Animation.svg
+    - assets/genre/movie/Comedy.svg
+    - assets/genre/movie/Crime.svg
+    - assets/genre/movie/Documentary.svg
+    - assets/genre/movie/Drama.svg
+    - assets/genre/movie/Family.svg
+    - assets/genre/movie/Fantasy.svg
+    - assets/genre/movie/History.svg
+    - assets/genre/movie/Horror.svg
+    - assets/genre/movie/Music.svg
+    - assets/genre/movie/Mystery.svg
+    - assets/genre/movie/Romance.svg
+    - assets/genre/movie/Science Fiction.svg
+    - assets/genre/movie/TV Movie.svg
+    - assets/genre/movie/Thriller.svg
+    - assets/genre/movie/War.svg
+    - assets/genre/movie/Western.svg
+
+    - assets/genre/tv/Action & Adventure.svg
+    - assets/genre/tv/Animation.svg
+    - assets/genre/tv/Comedy.svg
+    - assets/genre/tv/Crime.svg
+    - assets/genre/tv/Documentary.svg
+    - assets/genre/tv/Drama.svg
+    - assets/genre/tv/Family.svg
+    - assets/genre/tv/Kids.svg
+    - assets/genre/tv/Mystery.svg
+    - assets/genre/tv/News.svg
+    - assets/genre/tv/Reality.svg
+    - assets/genre/tv/Sci-Fi & Fantasy.svg
+    - assets/genre/tv/Soap.svg
+    - assets/genre/tv/Talk.svg
+    - assets/genre/tv/War & Politics.svg
+    - assets/genre/tv/Western.svg
 
   fonts:
     - family: GlacialIndifference

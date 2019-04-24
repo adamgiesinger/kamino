@@ -1,24 +1,29 @@
 // Import flutter libraries
+import 'dart:async';
+import 'dart:io';
+
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/interface/genre/all_genres.dart';
+import 'package:kamino/interface/favorites.dart';
+import 'package:kamino/interface/intro/kamino_intro.dart';
+import 'package:kamino/interface/launchpad2/browse.dart';
+import 'package:kamino/interface/launchpad2/launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
-import 'package:kamino/interface/settings/settings_prefs.dart' as settingsPref;
+import 'package:kamino/interface/search/smart_search.dart';
 import 'package:kamino/skyspace/skyspace.dart';
+import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/interface.dart';
+import 'package:kamino/util/settings.dart';
+import 'package:kamino/vendor/dist/ShimVendorConfiguration.dart';
 import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 import 'package:kamino/vendor/struct/VendorConfiguration.dart';
+import 'package:kamino/vendor/struct/VendorService.dart';
 import 'package:logging/logging.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:kamino/interface/favorites.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/vendor/index.dart';
 
-// Import custom libraries / utils
-import 'animation/transition.dart';
-// Import pages
-import 'interface/launchpad.dart';
-// Import views
 import 'package:kamino/interface/settings/settings.dart';
 
 const appName = "ApolloTV";
@@ -31,7 +36,74 @@ class PlatformType {
   static const TV = 1;
 }
 
-void main(){
+class ErrorScaffold extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
+  }
+}
+
+Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = false}) async {
+  print(error.toString());
+  print(stacktrace);
+
+  try {
+    OverlayState overlay = KaminoApp.navigatorKey.currentState.overlay;
+    if(overlay == null || overlay.context == null || !shouldShowDialog) return;
+    BuildContext context = overlay.context;
+
+    if(Navigator.of(context).canPop()) Navigator.of(context).pop();
+
+    String _errorReference;
+    try {
+      _errorReference = stacktrace.toString().split("\n").firstWhere((line) => line.contains("kamino")).split("     ")[1];
+    }catch(_){}
+
+    if(_errorReference != null) showDialog(context: context, builder: (BuildContext context) {
+      return AlertDialog(
+        title: TitleText(S.of(context).an_error_occurred, fontSize: 26, textAlign: TextAlign.center),
+        content: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 0.4 * MediaQuery.of(context).size.height,
+          child: ListView(
+            children: <Widget>[
+              Text(S.of(context).take_screenshot_report_apollotv_discord, style: TextStyle(
+                  fontFamily: 'GlacialIndifference',
+                  fontSize: 18
+              )),
+              Container(child: Divider(), margin: EdgeInsets.symmetric(vertical: 10)),
+              Container(child: Text(error.toString() + "\n")),
+              RichText(
+                text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: "Reference: ", style: TextStyle(
+                          color: Theme.of(context).textTheme.body1.color
+                      )),
+                      TextSpan(text: _errorReference, style: TextStyle(fontFamily: 'monospace', color: Theme.of(context).textTheme.body1.color))
+                    ]
+                ),
+              )
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            textColor: Theme.of(context).textTheme.button.color,
+            child: Text("Open Discord"),
+            onPressed: () => Interface.launchURL("https://discord.gg/euyQRWs"),
+          ),
+          FlatButton(
+            textColor: Theme.of(context).textTheme.button.color,
+            child: Text("Dismiss"),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ],
+      );
+    });
+  }catch(_){}
+}
+
+void main() async {
   // Setup logger
   Logger.root.level = Level.OFF;
   Logger.root.onRecord.listen((record) {
@@ -39,16 +111,40 @@ void main(){
   });
   log = new Logger(appName);
 
-  // Get device type
+  /// Get device type and initialize [SettingsManager]
   () async {
-    return (await platform.invokeMethod('getDeviceType')) as int;
+    await SettingsManager.onAppInit();
+
+    if(Platform.isAndroid) {
+      return (await platform.invokeMethod('getDeviceType')) as int;
+    }
+    return PlatformType.GENERAL;
   }().then((platformType){
-    if(platformType == PlatformType.TV) return runApp(KaminoSkyspace());
-    runApp(KaminoApp());
+    FlutterError.onError = (FlutterErrorDetails details) async {
+      print("A Flutter exception was caught by the $appName internal error handler.");
+      await _reportError(details.exception, details.stack);
+    };
+
+    runZoned<Future<void>>((){
+      if(platformType == PlatformType.TV) {
+        // Start Kamino (TV)
+        runApp(KaminoSkyspace());
+        return;
+      }
+
+      // Start Kamino (mobile)
+      runApp(KaminoApp());
+    }, onError: (error, StackTrace stacktrace) async {
+      print("A Dart zone exception was caught by the $appName internal error handler.");
+      await _reportError(error, stacktrace, shouldShowDialog: true);
+    });
+
   });
 }
 
 class KaminoApp extends StatefulWidget {
+
+  static final navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   State<StatefulWidget> createState() => KaminoAppState();
@@ -56,6 +152,8 @@ class KaminoApp extends StatefulWidget {
 }
 
 class KaminoAppState extends State<KaminoApp> {
+
+  Locale _currentLocale;
 
   List<VendorConfiguration> _vendorConfigs;
   List<ThemeConfiguration> _themeConfigs;
@@ -78,11 +176,26 @@ class KaminoAppState extends State<KaminoApp> {
     _primaryColorOverride = null;
 
     _loadActiveTheme();
+    _loadLocale();
+  }
+
+  Future<void> setLocale(Locale locale) async {
+    await (Settings.locale = [locale.languageCode, locale.countryCode]);
+    await _loadLocale();
+  }
+
+  Future<void> _loadLocale() async {
+    if(!SettingsManager.hasKey("locale")) return;
+    var localePref = await Settings.locale;
+
+    setState(() {
+      _currentLocale = Locale(localePref[0], localePref[1]);
+    });
   }
 
   Future<void> _loadActiveTheme() async {
-    var theme = await settingsPref.getStringPref('activeTheme');
-    var primaryColorOverride = await settingsPref.getStringPref('primaryColorOverride');
+    var theme = await (Settings.activeTheme);
+    var primaryColorOverride = await (Settings.primaryColorOverride);
 
     setState(() {
       // If the restored theme setting pref is not null AND the theme exists,
@@ -92,7 +205,7 @@ class KaminoAppState extends State<KaminoApp> {
 
       if(primaryColorOverride != null)
         if(_primaryColorOverride.toString() != primaryColorOverride)
-          _primaryColorOverride = new Color(  int.parse(primaryColorOverride.split('(0x')[1].split(')')[0], radix: 16)  );
+          _primaryColorOverride = new Color(int.parse(primaryColorOverride.split('(0x')[1].split(')')[0], radix: 16));
 
       // Update SystemUI
       SystemChrome.setSystemUIOverlayStyle(
@@ -104,14 +217,95 @@ class KaminoAppState extends State<KaminoApp> {
     });
   }
 
+  Widget _getErrorWidget(FlutterErrorDetails error){
+    BuildContext context = KaminoApp.navigatorKey.currentState.overlay.context;
+
+    TextStyle _errorStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 14,
+      fontFamily: ApolloVendor.getThemeConfigs()[0].getThemeData().textTheme.body1.fontFamily,
+      decoration: TextDecoration.none,
+      fontWeight: FontWeight.normal
+    );
+
+    String _errorReference = "Unknown stack reference.";
+    try {
+      _errorReference = error.stack.toString().split("\n").firstWhere((line) => line.contains("kamino")).split("     ")[1];
+    }catch(_){}
+
+    return Container(
+      color: ApolloVendor.getThemeConfigs()[0].getThemeData().backgroundColor,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Image.asset("assets/images/logo.png", width: 64),
+
+          Container(
+            padding: EdgeInsets.only(top: 10),
+            child: Center(
+                child: Text(S.of(context).an_error_occurred, style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontFamily: 'GlacialIndifference',
+                    fontFamilyFallback: ['SF UI Display', 'Roboto'],
+                    decoration: TextDecoration.none,
+                    fontWeight: FontWeight.normal
+                ))
+            ),
+          ),
+
+          Container(
+            padding: EdgeInsets.only(top: 10),
+            child: Text(error.exceptionAsString(), style: _errorStyle),
+          ),
+
+          Container(child: Text("Library: ${error.library}", style: _errorStyle)),
+          Container(
+              margin: EdgeInsets.symmetric(horizontal: 30),
+              padding: EdgeInsets.only(top: 30),
+              child: Text("Reference: $_errorReference",
+              textAlign: TextAlign.center,
+              style: _errorStyle)
+          ),
+
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 30),
+            padding: EdgeInsets.only(top: 30),
+            child: Text(S.of(context).take_screenshot_report_apollotv_discord, style: _errorStyle.copyWith(fontSize: 18, fontFamily: 'GlacialIndifference'), textAlign: TextAlign.center),
+          ),
+
+          Container(
+            padding: EdgeInsets.only(top: 30),
+            child: FlatButton(
+              color: context != null ? Theme.of(context).primaryColor
+              : ApolloVendor.getThemeConfigs()[0].getThemeData().primaryColor,
+              child: Text("Open Discord", style: _errorStyle),
+              onPressed: () => Interface.launchURL("https://discord.gg/euyQRWs")
+            ),
+          ),
+        ],
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    ErrorWidget.builder = (FlutterErrorDetails error) => _getErrorWidget(error);
+
     return new MaterialApp(
-      localizationsDelegates: [S.delegate],
+      navigatorKey: KaminoApp.navigatorKey,
+      localizationsDelegates: [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
       supportedLocales: S.delegate.supportedLocales,
+      locale: _currentLocale != null ? _currentLocale : Locale('en'),
 
       title: appName,
-      home: Launchpad(),
+      home: KaminoAppHome(),
       theme: getActiveThemeData(),
 
       // Hide annoying debug banner
@@ -119,8 +313,23 @@ class KaminoAppState extends State<KaminoApp> {
     );
   }
 
-  List<VendorConfiguration> getVendorConfigs(){
-    return _vendorConfigs;
+  Future<VendorService> getPrimaryVendorService({ bool excludeShim = false }) async {
+    bool shimEnabled = await Settings.serverURLOverride != null &&
+      await Settings.serverKeyOverride != null;
+
+    if(!excludeShim && shimEnabled){
+      return ShimVendorConfiguration().getService();
+    }
+
+    return await getPrimaryVendorConfig().getService();
+  }
+
+  VendorConfiguration getPrimaryVendorConfig(){
+    return getAllVendorConfigs()[0];
+  }
+
+  List<VendorConfiguration> getAllVendorConfigs(){
+    return _vendorConfigs.toList(growable: false);
   }
 
   List<ThemeConfiguration> getThemeConfigs(){
@@ -159,7 +368,7 @@ class KaminoAppState extends State<KaminoApp> {
       );
 
       // Update preferences
-      settingsPref.savePref('activeTheme', activeTheme);
+      Settings.activeTheme = activeTheme;
     });
   }
 
@@ -172,20 +381,41 @@ class KaminoAppState extends State<KaminoApp> {
       _primaryColorOverride = color;
       setActiveTheme(getActiveTheme());
 
-      settingsPref.savePref('primaryColorOverride', color.toString());
+      Settings.primaryColorOverride = color.toString();
     });
   }
 
 }
 
-class Launchpad extends StatefulWidget {
+class KaminoAppHome extends StatefulWidget {
 
   @override
-  LaunchpadState createState() => LaunchpadState();
+  KaminoAppHomeState createState() => KaminoAppHomeState();
 
 }
 
-class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixin {
+class KaminoAppPage extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+    return null;
+  }
+
+  Widget buildHeader(BuildContext context){
+    return null;
+  }
+
+}
+
+class KaminoAppHomeState extends State<KaminoAppHome> {
+
+  final List<KaminoAppPage> _pages = [
+    Launchpad2(),
+    BrowseTVShowsPage(),
+    BrowseMoviesPage(),
+    FavoritesPage()
+  ];
+  int _activePage;
 
   Future<bool> _onWillPop() async {
     // Allow app close on back
@@ -194,137 +424,153 @@ class LaunchpadState extends State<Launchpad> with SingleTickerProviderStateMixi
 
   @override
   void initState() {
-    OTA.updateApp(context, true);
-    ApolloVendor.getLaunchpadConfiguration().initialize();
+    _activePage = 0;
+    
+    (() async {
+
+      // If the initial setup is not complete, show the setup guide.
+      if(!await Settings.initialSetupComplete){
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => KaminoIntro(then: () => {
+            OTA.updateApp(context, true)
+          })
+        ));
+      }else{
+        OTA.updateApp(context, true);
+      }
+
+    })();
+    
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
     return new WillPopScope(
       onWillPop: _onWillPop,
       child: new Scaffold(
-          backgroundColor: Theme.of(context).backgroundColor,
-          // backgroundColor: backgroundColor,
-          appBar: AppBar(
-            title: Image.asset(
-              appState.getActiveThemeData().brightness == Brightness.dark ?
-                "assets/images/header_text.png" : "assets/images/header_text_dark.png",
-              width: 125
-            ),
-
-            // MD2: make the color the same as the background.
-            backgroundColor: Theme.of(context).cardColor,
-            elevation: 5.0,
-              actions: <Widget>[
-              IconButton(
-                  icon: Icon(Icons.favorite),
-                  tooltip: "Favorites",
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => FavoritesPage()
-                    ));
-                  },
-              ),
+        resizeToAvoidBottomPadding: false,
+        backgroundColor: Theme.of(context).backgroundColor,
+        // backgroundColor: backgroundColor,
+        appBar: AppBar(
+          title: Row(
+            children: <Widget>[
+              _pages.elementAt(_activePage).buildHeader(context) != null
+                ? _pages.elementAt(_activePage).buildHeader(context)
+                : Interface.generateHeaderLogo(context)
             ],
-
-            // Center title
-            centerTitle: true
           ),
-          drawer: __buildAppDrawer(),
 
-          // Body content
-          body: LaunchpadController(),
-      )
-    );
-  }
+          //backgroundColor: Theme.of(context).backgroundColor,
+          //elevation: 0,
 
-  _openAllGenres(BuildContext context, String mediaType) {
+          backgroundColor: Theme.of(context).cardColor,
+          elevation: 6,
 
-    if (mediaType == "tv") {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AllGenres(contentType: mediaType)
-          )
-      );
-    } else if (mediaType == "movie"){
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => AllGenres(contentType: mediaType)
-          )
-      );
-    }
-  }
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.search),
+                tooltip: "Search",
+                onPressed: (){
+                  showSearch(context: context, delegate: SmartSearch());
+                },
+            ),
 
-  Widget __buildAppDrawer(){
-    return Drawer(
-      child: ListView(
+            PopupMenuButton<String>(
+              tooltip: "Options",
+              icon: Icon(Icons.more_vert),
+              onSelected: (String index){
+                switch(index){
+                  case 'discord': return Interface.launchURL("https://discord.gg/euyQRWs");
+                  case 'blog': return Interface.launchURL("https://medium.com/apolloblog");
+                  case 'privacy': return Interface.launchURL("https://apollotv.xyz/legal/privacy");
+                  case 'donate': return Interface.launchURL("https://apollotv.xyz/donate");
+                  case 'settings': return Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => SettingsView()
+                  ));
 
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-                child: null,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/header.png'),
-                        fit: BoxFit.fitHeight,
-                        alignment: Alignment.bottomCenter),
-                    color: const Color(0xFF000000)
-                )
-            ),
-            ListTile(
-              leading: const Icon(Icons.library_books),
-              title: Text(S.of(context).blog),
-              onTap: () => _launchURL("https://medium.com/apolloblog"),
-            ),
-            Divider(),
-            ListTile(
-              leading: const Icon(Icons.live_tv),
-              title: Text(S.of(context).tv_shows),
-              onTap: () => _openAllGenres(context, "tv"),
-            ),
-            ListTile(
-              leading: const Icon(Icons.local_movies),
-              title: Text(S.of(context).movies),
-              onTap: () => _openAllGenres(context, "movie"),
-            ),
-            Divider(),
-            ListTile(
-              leading: const Icon(Icons.gavel),
-              title: Text(S.of(context).legal),
-              onTap: () => _launchURL("https://apollotv.xyz/legal/privacy"),
-            ),
-            ListTile(
-              leading: const Icon(Icons.accessibility),
-              title: Text(S.of(context).donate),
-              onTap: () => _launchURL("https://apollotv.xyz/donate"),
-            ),
-            ListTile(
-              enabled: true,
-              leading: const Icon(Icons.settings),
-              title: Text(S.of(context).settings),
-              onTap: () {
-                Navigator.of(context).pop();
+                  default: Interface.showSnackbar("Invalid menu option. Option '$index' was not defined.", context: context);
+                }
+              },
+              itemBuilder: (BuildContext context){
+                return [
+                  PopupMenuItem<String>(
+                    value: 'discord',
+                    child: Container(child: Text("Discord"), padding: EdgeInsets.only(right: 50)),
+                  ),
 
-                Navigator.push(context, SlideRightRoute(
-                    builder: (context) => SettingsView()
-                ));
+                  PopupMenuItem<String>(
+                    value: 'blog',
+                    child: Container(child: Text("Blog"), padding: EdgeInsets.only(right: 50))
+                  ),
+
+                  PopupMenuItem<String>(
+                    value: 'privacy',
+                    child: Container(child: Text("Privacy"), padding: EdgeInsets.only(right: 50))
+                  ),
+
+                  PopupMenuItem<String>(
+                    value: 'donate',
+                    child: Container(child: Text("Donate"), padding: EdgeInsets.only(right: 50))
+                  ),
+
+                  PopupMenuItem<String>(
+                    value: 'settings',
+                    child: Container(child: Text("Settings"), padding: EdgeInsets.only(right: 50))
+                  )
+                ];
               }
             )
           ],
-        )
-    );
-  }
 
-  _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+          // Center title
+          centerTitle: false
+        ),
+
+          // Body content
+        body: _pages.elementAt(_activePage),
+
+        bottomNavigationBar: BottomNavigationBar(
+          elevation: 0,
+
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Theme.of(context).cardColor,
+          selectedItemColor: Theme.of(context).primaryColor,
+
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          selectedFontSize: 14,
+          unselectedFontSize: 14,
+
+          onTap: (index) => {
+            setState(() => _activePage = index)
+          },
+          currentIndex: _activePage,
+
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              title: Text("Home"),
+              icon: Icon(Icons.home)
+            ),
+
+            BottomNavigationBarItem(
+              title: Text("TV Shows"),
+              icon: Icon(Icons.live_tv)
+            ),
+
+            BottomNavigationBarItem(
+              title: Text("Movies"),
+              icon: Icon(Icons.local_movies)
+            ),
+
+            BottomNavigationBarItem(
+              title: Text("Favorites"),
+              icon: Icon(Icons.favorite)
+            ),
+          ]
+        ),
+      )
+    );
   }
 
 }

@@ -5,11 +5,11 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/ui/uielements.dart';
-import 'package:kamino/util/interface.dart';
+import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/interface.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:simple_permissions/simple_permissions.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OTAHelper {
   static const platform = const MethodChannel('xyz.apollotv.kamino/ota');
@@ -58,8 +58,9 @@ Future<Map> checkUpdate(BuildContext context, bool dismissSnackbar) async {
 updateApp(BuildContext context, bool dismissSnackbar) async {
   if(!Platform.isAndroid) return;
 
-  bool permissionStatus = await SimplePermissions.checkPermission(Permission.WriteExternalStorage);
-  if(!permissionStatus) permissionStatus = (await SimplePermissions.requestPermission(Permission.WriteExternalStorage)) == PermissionStatus.authorized;
+  bool permissionStatus = (await PermissionHandler().checkPermissionStatus(PermissionGroup.storage)) == PermissionStatus.granted;
+  if(!permissionStatus) permissionStatus = (await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage]
+      == PermissionStatus.granted;
   if(!permissionStatus && dismissSnackbar) return;
 
   if(permissionStatus) {
@@ -70,7 +71,11 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
     if (await downloadFile.exists()) await downloadFile.delete();
   }
 
-  Map data = await checkUpdate(context, dismissSnackbar);
+  // TODO: Show network connection error message.
+  Map data;
+  try {
+    data = await checkUpdate(context, dismissSnackbar);
+  }catch(_){ return; }
 
   //show update dialog
   if (data["url"] != null) {
@@ -92,13 +97,13 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: TitleText("Dismiss", textColor: Theme.of(context).primaryTextTheme.body1.color)
+                  child: TitleText(S.of(context).dismiss, textColor: Theme.of(context).primaryTextTheme.body1.color)
                 ),
               ),
               Center(
                 child: FlatButton(
                   onPressed: () => runInstallProcedure(context, data),
-                  child: TitleText("Install", textColor: Theme.of(context).primaryTextTheme.body1.color)
+                  child: TitleText(S.of(context).install, textColor: Theme.of(context).primaryTextTheme.body1.color)
                 ),
               )
             ],
@@ -107,7 +112,7 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
         });
   } else {
     if (dismissSnackbar == false) {
-      Interface.showSnackbar('You have the latest version.', context: context);
+      Interface.showSnackbar(S.of(context).up_to_date, context: context);
     }
   }
 }
@@ -116,8 +121,9 @@ runInstallProcedure (context, data) async {
   try {
     Navigator.of(context).pop();
 
-    bool permissionStatus = await SimplePermissions.checkPermission(Permission.WriteExternalStorage);
-    if(!permissionStatus) permissionStatus = (await SimplePermissions.requestPermission(Permission.WriteExternalStorage)) == PermissionStatus.authorized;
+    bool permissionStatus = (await PermissionHandler().checkPermissionStatus(PermissionGroup.storage)) == PermissionStatus.granted;
+    if(!permissionStatus) permissionStatus = (await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage]
+        == PermissionStatus.granted;
     if(!permissionStatus) throw new FileSystemException(S.of(context).permission_denied);
 
     final downloadDir = new Directory((await getExternalStorageDirectory()).path + "/.apollo");
