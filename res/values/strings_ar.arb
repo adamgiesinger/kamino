@@ -96,8 +96,8 @@
   "with_thanks": "...مع الشكر",
   "appname_was_made_possible_by_all_of_these_amazing_people": " :أصبح من الممكن بسبب كل هؤلاء الناس المذهلين $appName",
 
-  "source_autoplay": "Enable Source Autoplay",
-  "source_autoplay_description": "Automatically selects a source to play instead of showing a dialog containing the source list.",
+  "source_autoplay": "مكن التشغيل تلقائي للمصادر",
+  "source_autoplay_description": ".تختار مصدر تلقائيًا بدلاً من إظهار مربع حوار يحتوي على قائمة المصادر",
 
   "clear_search_history": "إمسح سجل البحث",
   "clear_search_history_description": ".يزيل إقتراحات البحث التي تستند علي عمليات البحث السابقة",
