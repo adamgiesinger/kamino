@@ -55,7 +55,7 @@ class SourceMetadata {
         isStreamable = json["streamable"] != null && json["streamable"]  == 1 ? true : false,
         isRD = true,
         provider = json["provider"] != null ? json["provider"] : "Unknown",
-        quality = "HQ",
+        quality = "",
         source = json["source"] != null ? json["source"] : "Unknown",
         contentLength = json["filesize"] != null ? json["filesize"] : "0",
         ping = 0;

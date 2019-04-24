@@ -351,6 +351,7 @@ class ClawsVendorService extends VendorService {
             SourceModel rdModel = new SourceModel.fromRDJSON(rdResult);
             rdModel.metadata.provider = event['provider'];
             rdModel.metadata.source = event['resolver'];
+            rdModel.metadata.quality = event['quality'];
             addSource(rdModel);
             break;
           ///
