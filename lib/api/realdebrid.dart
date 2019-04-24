@@ -14,6 +14,7 @@ class RealDebrid {
 
   static const REAL_DEBRID_OAUTH_ENDPOINT = "https://api.real-debrid.com/oauth/v2";
   static const REAL_DEBRID_API_ENDPOINT = "https://api.real-debrid.com/rest/1.0";
+  static const REAL_DEBRID_REFRESH_OFFSET = 300;
 
   // See https://api.real-debrid.com/#api_authentication
   // ('Authentication for applications' header)
@@ -52,7 +53,7 @@ class RealDebrid {
     if (result["access_token"] != null){
       List<String> _cred = [result["access_token"],
       result["refresh_token"],
-      DateTime.now().add(new Duration(seconds: result["expires_in"])).toString()];
+      DateTime.now().add(new Duration(seconds: result["expires_in"] - REAL_DEBRID_REFRESH_OFFSET)).toString()];
 
       Settings.rdCredentials = _cred;
       if(shouldShowSnackbar) Interface.showSnackbar(S.of(context).connected_real_debrid_account, context: context, backgroundColor: Colors.green);
@@ -130,11 +131,11 @@ class RealDebrid {
     List<String> _rdCred = [];
     List<String> _rdIDSecret = [];
 
-    ((Settings.rdCredentials) as Future).then((data) {
+    await ((Settings.rdCredentials) as Future).then((data) {
       _rdCred = data;
     });
 
-    ((Settings.rdClientInfo) as Future).then((data) {
+    await ((Settings.rdClientInfo) as Future).then((data) {
       _rdIDSecret = data;
     });
 
@@ -153,7 +154,7 @@ class RealDebrid {
       List<String> _cred = [
         result["access_token"],
         result["refresh_token"],
-        DateTime.now().add(new Duration(seconds: result["expires_in"])).toString()
+        DateTime.now().add(new Duration(seconds: result["expires_in"] - REAL_DEBRID_REFRESH_OFFSET)).toString()
       ];
 
       Settings.rdCredentials = _cred;
@@ -171,17 +172,6 @@ class RealDebrid {
       _rdCred = data;
     });
 
-    bool tokenCheck = DateTime.now().isBefore(DateTime.parse(_rdCred[2]));
-
-    if (!tokenCheck) {
-      //refresh the token
-      bool refreshSuccess = await _refreshToken();
-
-      if (refreshSuccess == false) {
-        return null;
-      }
-    }
-
     Map<String, String> userHeader = {'Authorization': 'Bearer ' + _rdCred[0]};
 
     http.Response _StreamLinkRes = await http
@@ -195,7 +185,20 @@ class RealDebrid {
     return null;
   }
 
+  static Future<bool> validateToken() async {
+    List<String> _rdCred = [];
 
+    await ((Settings.rdCredentials) as Future).then((data) {
+      _rdCred = data;
+    });
+
+    bool tokenCheck = DateTime.now().isBefore(DateTime.parse(_rdCred[2]));
+
+    if (!tokenCheck) {
+      //refresh the token
+      return await _refreshToken();
+    }
+  }
 }
 
 class RealDebridAuthenticator extends StatefulWidget {
