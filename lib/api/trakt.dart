@@ -31,7 +31,7 @@ class Trakt {
 
   static Future<Map<String, String>> _getAuthHeaders(BuildContext context) async {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-    TraktSettings traktCredentials = await getTraktSettings();
+    TraktCredentials traktCredentials = await getTraktSettings();
 
     return {
       HttpHeaders.authorizationHeader: 'Bearer ${traktCredentials.accessToken}',
@@ -43,9 +43,9 @@ class Trakt {
 
   ///
   /// This acts as a convenient way of getting [Settings.traktCredentials]
-  /// as a [TraktSettings] object.
+  /// as a [TraktCredentials] object.
   ///
-  static Future<TraktSettings> getTraktSettings() async {
+  static Future<TraktCredentials> getTraktSettings() async {
     return await Settings.traktCredentials;
   }
 
@@ -92,7 +92,7 @@ class Trakt {
     if(response.statusCode == 200){
 
       Map responsePayload = json.decode(response.body);
-      Settings.setTraktCredentials(new TraktSettings.named(
+      Settings.setTraktCredentials(new TraktCredentials.named(
           accessToken: responsePayload["access_token"],
           refreshToken: responsePayload["refresh_token"],
 
@@ -121,16 +121,16 @@ class Trakt {
   ///
   static Future<bool> deauthenticate(BuildContext context, { bool shouldShowSnackbar = false }) async {
     KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-    TraktSettings traktSettings = await getTraktSettings();
+    TraktCredentials traktCredentials = await getTraktSettings();
 
     http.Response response = await http.post(TRAKT_AUTH_REVOKE_TOKEN, body: {
-      'token': traktSettings.accessToken,
+      'token': traktCredentials.accessToken,
       'client_id': application.getPrimaryVendorConfig().getTraktCredentials().id,
       'client_secret': application.getPrimaryVendorConfig().getTraktCredentials().secret
     });
 
     if(response.statusCode == 200){
-      await Settings.setTraktCredentials(TraktSettings.unauthenticated());
+      await Settings.setTraktCredentials(TraktCredentials.unauthenticated());
       if(shouldShowSnackbar) Interface.showSnackbar(S.of(context).disconnected_trakt_account, context: context, backgroundColor: Colors.red);
 
       return true;

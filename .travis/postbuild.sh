@@ -13,6 +13,7 @@ fi
 
 WEBHOOK_DATA='{
   "username": "ApolloTV (Travis)",
+  "content": "@everyone A new build has completed",
   "embeds": [ {
     "color": '$EMBED_COLOR',
     "author": {
@@ -21,7 +22,7 @@ WEBHOOK_DATA='{
     },
     "title": "'"$COMMIT_SUBJECT"'",
     "url": "'"$URL"'",
-    "description": "@everyone A new build has completed: '"${COMMIT_MESSAGE//$'\n'/ }"\\n\\n"$CREDITS"'",
+    "description": "**Build Information**: '"${COMMIT_MESSAGE//$'\n'/ }"\\n\\n"$CREDITS"'",
     "fields": [
       {
         "name": "Commit",

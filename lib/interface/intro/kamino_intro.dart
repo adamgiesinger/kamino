@@ -35,7 +35,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
   Map<String, bool> _selectedCategories = {};
   bool _autoplaySourcesEnabled = false;
-  TraktSettings traktCredentials;
+  TraktCredentials traktCredentials;
 
   final Map<String, AsyncMemoizer> _categoryMemoizers = {};
   final _fadeInTween = Tween<double>(begin: 0, end: 1);
@@ -345,7 +345,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                 }else{
                                   await Trakt.deauthenticate(context);
                                   setState(() {
-                                    traktCredentials = TraktSettings.unauthenticated();
+                                    traktCredentials = TraktCredentials.unauthenticated();
                                   });
                                 }
                               },

@@ -3,7 +3,6 @@ import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
-import 'package:kamino/util/settings.dart';
 import 'package:kamino/interface/settings/page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,18 +15,17 @@ class ExtensionsSettingsPage extends SettingsPage {
 
 class ExtensionsSettingsPageState extends SettingsPageState {
 
-  TraktSettings traktSettings;
-  List<String> _rdCred;
+  bool traktAuthenticated = false;
+  bool rdAuthenticated = false;
 
   @override
   void initState(){
-    Settings.traktCredentials.then((data) => setState((){
-      traktSettings = data;
-    }));
-
-    ((Settings.rdCredentials) as Future).then((data) => setState((){
-      _rdCred = data;
-    }));
+    // Check if the services are authenticated.
+    (() async {
+      traktAuthenticated = await Trakt.isAuthenticated();
+      rdAuthenticated = await RealDebrid.isAuthenticated();
+      setState(() {});
+    })();
 
 
     super.initState();
@@ -35,8 +33,6 @@ class ExtensionsSettingsPageState extends SettingsPageState {
 
   @override
   Widget buildPage(BuildContext context) {
-    bool traktConnected = traktSettings != null && traktSettings.isValid();
-    bool rdConnected = _rdCred != null && _rdCred.length == 3;
 
     return ListView(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -60,18 +56,18 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).sync),
-                      onPressed: (traktConnected) ? (){
+                      onPressed: (traktAuthenticated) ? (){
                         Trakt.synchronize(context, silent: false);
                       } : null,
                     ),
-                    !traktConnected ?
+                    !traktAuthenticated ?
                       // Trakt account is not linked: show connect option
                       FlatButton(
                         textColor: Theme.of(context).primaryTextTheme.body1.color,
                         child: TitleText(S.of(context).connect),
                         onPressed: () async {
                           await Trakt.authenticate(context, shouldShowSnackbar: true);
-                          this.traktSettings = await Trakt.getTraktSettings();
+                          this.traktAuthenticated = await Trakt.isAuthenticated();
                           setState(() {});
                         },
                       ) :
@@ -81,9 +77,8 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       child: TitleText(S.of(context).disconnect),
                       onPressed: () async {
                         await Trakt.deauthenticate(context, shouldShowSnackbar: true);
-                        setState(() {
-                          traktSettings = TraktSettings.unauthenticated();
-                        });
+                        this.traktAuthenticated = await Trakt.isAuthenticated();
+                        setState(() {});
                       },
                     ),
                   ],
@@ -108,18 +103,22 @@ class ExtensionsSettingsPageState extends SettingsPageState {
               ButtonTheme.bar( // make buttons use the appropriate styles for cards
                 child: ButtonBar(
                   children: <Widget>[
-                    !rdConnected ? FlatButton(
+                    !rdAuthenticated ? FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).connect),
                       onPressed: () async {
-                        RealDebrid.authenticate(context, shouldShowSnackbar: true);
+                        await RealDebrid.authenticate(context, shouldShowSnackbar: true);
+                        this.rdAuthenticated = await RealDebrid.isAuthenticated();
+                        setState(() {});
                       },
                     ) :
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).disconnect),
                       onPressed: () async {
-                        RealDebrid.deauthenticate(context, shouldShowSnackbar: true);
+                        await RealDebrid.deauthenticate(context, shouldShowSnackbar: true);
+                        this.rdAuthenticated = await RealDebrid.isAuthenticated();
+                        setState(() {});
                       },
                     ),
                   ],

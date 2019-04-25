@@ -48,8 +48,8 @@
 
   "play_episode": "Play Episode",
   "play_movie": "Play Movie",
-  "similar_movies": "Similar Movies",
-  "similar_tv_shows": "Similar TV Shows",
+  "recommended_movies": "Recommended Movies",
+  "recommended_tv_shows": "Recommended TV Shows",
 
   "removed_from_favorites": "Removed from favorites",
   "added_to_favorites": "Added to favorites",
@@ -173,5 +173,11 @@
   "saving_content_information": "Saving content information...",
   "appname_was_unable_to_authenticate_with_real_debrid": "$appName was unable to authenticate with Real Debrid.",
   "connected_real_debrid_account": "Connected Real Debrid Account.",
-  "disconnected_real_debrid_account": "Disconnected Real Debrid Account."
+  "disconnected_real_debrid_account": "Disconnected Real Debrid Account.",
+  "real_debrid_authenticator": "Real Debrid Authenticator",
+
+  "real_debrid_n_sourcesOne": "Real Debrid ($n source)",
+  "real_debrid_n_sourcesOther": "Real Debrid ($n sources)",
+  "standard_n_sourcesOne": "Standard ($n sources)",
+  "standard_n_sourcesOther": "Standard ($n sources)"
 }

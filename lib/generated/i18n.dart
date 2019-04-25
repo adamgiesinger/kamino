@@ -105,6 +105,9 @@ class S implements WidgetsLocalizations {
   String get popularity => "Popularity";
   String get power_user_settings_for_rocket_scientists => "Power user settings for rocket scientists.";
   String get rd_description => "Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet.";
+  String get real_debrid_authenticator => "Real Debrid Authenticator";
+  String get recommended_movies => "Recommended Movies";
+  String get recommended_tv_shows => "Recommended TV Shows";
   String get released => "Released";
   String get reload => "Reload";
   String get removed_from_favorites => "Removed from favorites";
@@ -118,8 +121,6 @@ class S implements WidgetsLocalizations {
   String get settings => "Settings";
   String get show_less => "Show less...";
   String get show_more => "Show more...";
-  String get similar_movies => "Similar Movies";
-  String get similar_tv_shows => "Similar TV Shows";
   String get skip => "SKIP";
   String get sort => "Sort";
   String get source_autoplay => "Enable Source Autoplay";
@@ -175,6 +176,22 @@ class S implements WidgetsLocalizations {
         return "Choose $n category...";
       default:
         return "Choose $n categories...";
+    }
+  }
+  String real_debrid_n_sources(dynamic n) {
+    switch (n.toString()) {
+      case "1":
+        return "Real Debrid ($n source)";
+      default:
+        return "Real Debrid ($n sources)";
+    }
+  }
+  String standard_n_sources(dynamic n) {
+    switch (n.toString()) {
+      case "1":
+        return "Standard ($n sources)";
+      default:
+        return "Standard ($n sources)";
     }
   }
 }
@@ -335,8 +352,6 @@ class $de extends S {
   String get trakt_description => "Synchronisiert Playlists über mehrere Geräte, verfolgt was Sie schauen und mehr ...";
   @override
   String get tv_shows => "Serien";
-  @override
-  String get similar_movies => "Ähnliche Filme";
   @override
   String get trakt_renewal_failure_detailed => "Trakt Token konnte nicht aktualisiert werden. Bitte überprüfen Sie Ihre Zugangsdaten.";
   @override
@@ -560,8 +575,6 @@ class $fi extends S {
   @override
   String get tv_shows => "TV-sarjat";
   @override
-  String get similar_movies => "Samankaltaisia elokuvia";
-  @override
   String get trakt_renewal_failure_detailed => "Trakt-avaimen uusiminen epäonnistui. Tarkista tiedot.";
   @override
   String get show_more => "Näytä enemmän...";
@@ -781,8 +794,6 @@ class $sv extends S {
   @override
   String get tv_shows => "TV Program";
   @override
-  String get similar_movies => "Liknande Filmer";
-  @override
   String get trakt_renewal_failure_detailed => "Misslyckades med att f�rnya Trakt polletten. V�nligen kolla detaljerna.";
   @override
   String get show_more => "Visa mer...";
@@ -982,8 +993,6 @@ class $pt extends S {
   String get trakt_description => "Acompanhe automaticamente o que está a ver, sincronize playlists em dispositivos e muito mais...";
   @override
   String get tv_shows => "Séries";
-  @override
-  String get similar_movies => "Filmes Semelhantes";
   @override
   String get trakt_renewal_failure_detailed => "Falha a actualizar o Trakt. Por favor veja o seus detalhes.";
   @override
@@ -1189,8 +1198,6 @@ class $hr extends S {
   @override
   String get tv_shows => "Serije";
   @override
-  String get similar_movies => "Slični filmovi";
-  @override
   String get trakt_renewal_failure_detailed => "Osvježavanje Trakt tokena nije uspjelo. Molimo provjerite Vaše podatke.";
   @override
   String get show_more => "Prikaži više...";
@@ -1390,8 +1397,6 @@ class $it extends S {
   String get trakt_description => "Tieni traccia automaticamente di quello che stai guardando, sincronizza playlist sui dispositivi a altro ancora...";
   @override
   String get tv_shows => "TV Show";
-  @override
-  String get similar_movies => "Film Simili";
   @override
   String get trakt_renewal_failure_detailed => "Impossibile rinnovare il token Trakt. Per favore controlla i tuoi dati.";
   @override
@@ -1603,8 +1608,6 @@ class $fr extends S {
   @override
   String get tv_shows => "Séries";
   @override
-  String get similar_movies => "Films Similaires";
-  @override
   String get trakt_renewal_failure_detailed => "Echec de renouveler le jeton Trakt. S'il vous plaît vérifier vos informations.";
   @override
   String get show_more => "Montrer plus...";
@@ -1809,8 +1812,6 @@ class $es extends S {
   @override
   String get tv_shows => "Programas De TV";
   @override
-  String get similar_movies => "Películas similares";
-  @override
   String get trakt_renewal_failure_detailed => "No se pudo renovar el token de Trakt. Por favor, compruebe sus datos.";
   @override
   String get show_more => "Ver mas...";
@@ -2008,8 +2009,6 @@ class $ar extends S {
   String get trakt_description => " ...تتبع ما تشاهده تلقائياً و زامن قائمة تشغيلك عبر الأجهزة والمزيد";
   @override
   String get tv_shows => "مسلسلات";
-  @override
-  String get similar_movies => "أفلام مماثلة";
   @override
   String get trakt_renewal_failure_detailed => ".يرجي تأكيد معلوماتك .Trakt فشل تجديد رمز";
   @override
@@ -2211,8 +2210,6 @@ class $en_GB extends S {
   @override
   String get tv_shows => "TV Shows";
   @override
-  String get similar_movies => "Similar Movies";
-  @override
   String get trakt_renewal_failure_detailed => "Failed to renew Trakt token. Please check your details.";
   @override
   String get show_more => "Show more...";
@@ -2412,8 +2409,6 @@ class $pl extends S {
   String get trakt_description => "Automatycznie sledz to, co ogladasz, synchronizuj listy odtwarzania na roznych urzadzeniach i nie tylko...";
   @override
   String get tv_shows => "Programy telewizyjne";
-  @override
-  String get similar_movies => "Podobne Kino";
   @override
   String get trakt_renewal_failure_detailed => "Nie potrafia odnawiac Trakt znak. Sprawiac przyjemnosc sprawdzaja wasze szczegoly.";
   @override
@@ -2615,8 +2610,6 @@ class $he extends S {
   @override
   String get tv_shows => "סדרות";
   @override
-  String get similar_movies => "סרטים דומים";
-  @override
   String get trakt_renewal_failure_detailed => "רענון של אימות Trakt כשל. בצע/י בדיקה של פרטיך.";
   @override
   String get show_more => "עוד...";
@@ -2816,8 +2809,6 @@ class $ro extends S {
   String get trakt_description => "Urmăriți automat ceea ce vizionați, sincronizați playlisturile pe toate dispozitivele și multe altele...";
   @override
   String get tv_shows => "Seriale";
-  @override
-  String get similar_movies => "Filme similare";
   @override
   String get trakt_renewal_failure_detailed => "Refresh Trakt eșuat. Vă rugăm să verificați detaliile introduse.";
   @override
@@ -3019,8 +3010,6 @@ class $nl extends S {
   @override
   String get tv_shows => "TV Shows";
   @override
-  String get similar_movies => "Soortgelijke Films";
-  @override
   String get trakt_renewal_failure_detailed => "Trakt token verversen mislukt. Check alstublieft uw details.";
   @override
   String get show_more => "Laat meer zien...";
@@ -3220,8 +3209,6 @@ class $tr extends S {
   String get trakt_description => "Ýzlediklerinizi otomatik olarak kaydedin, cihazlar arasýnda çalma listelerini senkronize edin ve daha fazlasý...";
   @override
   String get tv_shows => "Diziler";
-  @override
-  String get similar_movies => "Benzer Filmler";
   @override
   String get trakt_renewal_failure_detailed => "Trakt belirteci yenilenemedi. Lütfen bilgilerinizi kontrol edin";
   @override

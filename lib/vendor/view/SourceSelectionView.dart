@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
@@ -29,13 +30,19 @@ class SourceSelectionView extends StatefulWidget {
 class SourceSelectionViewState extends State<SourceSelectionView> {
 
   List<SourceModel> sourceList = new List();
+  bool rdEnabled = false;
 
   String sortingMethod = 'ping';
   bool sortReversed = false;
 
+  bool rdExpanded = true;
+  bool generalExpanded = true;
+
   @override
   void initState() {
     (() async {
+      rdEnabled = await RealDebrid.isAuthenticated();
+
       List sortingSettings = await Settings.contentSortSettings;
 
       if(sortingSettings.length == 2) {
@@ -69,7 +76,10 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
       }
     });
 
-    _sortList();
+    List<SourceModel> _rdSources = rdEnabled ? sourceList.where((SourceModel model) => model.metadata.isRD)
+        .toList() : null;
+    List<SourceModel> _sources = rdEnabled ? sourceList.where((SourceModel model) => !model.metadata.isRD)
+        .toList() : sourceList;
 
     return WillPopScope(
       onWillPop: _handlePop,
@@ -109,19 +119,79 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
             ],
           ),
           body: Container(
-            child: ListView.builder(
-                itemCount: sourceList.length,
-                itemBuilder: (BuildContext ctx, int index) {
-                  var source = sourceList[index];
+            child: ListView(
+              primary: true,
+              children: <Widget>[
+                rdEnabled ? _buildSourceList(
+                  _rdSources,
+                  title: S.of(context).real_debrid_n_sources(_rdSources.length.toString()),
+                  sectionExpanded: rdExpanded,
+                  onToggleExpanded: () => setState(() => {
+                    rdExpanded = !rdExpanded
+                  })
+                ) : Container(),
+                _buildSourceList(
+                  _sources,
+                  title: rdEnabled
+                      ? S.of(context).standard_n_sources(_sources.length.toString())
+                      : null,
+                  sectionExpanded: generalExpanded,
+                  onToggleExpanded: () => setState(() => {
+                    generalExpanded = !generalExpanded
+                  })
+                )
+              ],
+            )
+          )
+      ),
+    );
+  }
 
-                  String qualityInfo; // until we sort out quality detection
-                  if (source.metadata.quality != null
-                      && source.metadata.quality
-                          .replaceAll(" ", "")
-                          .isNotEmpty)
-                    qualityInfo = source.metadata.quality;
+  _buildSourceList(List<SourceModel> sourceList, { String title, bool sectionExpanded = true, Function onToggleExpanded }){
+    sourceList = _sortList(sourceList);
 
-                  /*
+    return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: title != null
+            ? (sectionExpanded ? sourceList.length + 1 : 2)
+            : sourceList.length,
+        itemBuilder: (BuildContext ctx, int index) {
+
+          /* HEADER ROW */
+          if(title != null){
+            if(index == 0){
+              return GestureDetector(
+                onTap: onToggleExpanded != null ? onToggleExpanded : null,
+                child: Container(
+                    padding: EdgeInsets.only(left: 10, right: 15, top: 20, bottom: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        SubtitleText(title),
+                        Icon(sectionExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down)
+                      ],
+                    )
+                ),
+              );
+            }
+
+            if(!sectionExpanded) return Container();
+
+            index -= 1;
+          }
+          /* END: HEADER ROW */
+
+
+          var source = sourceList[index];
+
+          String qualityInfo; // until we sort out quality detection
+          if (source.metadata.quality != null
+              && source.metadata.quality.replaceAll(" ", "").isNotEmpty) {
+            qualityInfo = source.metadata.quality;
+          }
+
+          /*
                 if(source["metadata"]["extended"] != null){
                   var extendedMeta = source["metadata"]["extended"]["streams"][0];
                   var resolution = extendedMeta["coded_height"];
@@ -136,101 +206,99 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                 }
               */
 
-                  return Container(
-                    padding: EdgeInsets.all(5),
-                    child: Material(
-                      clipBehavior: Clip.antiAlias,
-                      borderRadius: BorderRadius.circular(5),
-                      color: Theme.of(context).cardColor,
-                      elevation: 2,
-                      child: IntrinsicHeight(
-                        child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
+          return Container(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Material(
+                clipBehavior: Clip.antiAlias,
+                borderRadius: BorderRadius.circular(5),
+                color: Theme.of(context).cardColor,
+                elevation: 2,
+                child: IntrinsicHeight(
+                    child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
 
-                              Container(
-                                width: 80,
-                                color: Color.fromRGBO(
+                          Container(
+                              width: 80,
+                              color: source.metadata.isRD ? Theme.of(context).primaryColor : Color.fromRGBO(
                                   Theme.of(context).cardColor.red + 10,
                                   Theme.of(context).cardColor.green + 10,
                                   Theme.of(context).cardColor.blue + 10,
                                   Theme.of(context).cardColor == const Color(0xFF000000) ? 0.0 : 1.0
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    Container(
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
                                       padding: EdgeInsets.symmetric(vertical: 5),
                                       width: 60,
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.white, width: 1.5),
-                                        borderRadius: BorderRadius.circular(5)
+                                          border: Border.all(color: Colors.white, width: 1.5),
+                                          borderRadius: BorderRadius.circular(5)
                                       ),
                                       child: TitleText(
                                         (qualityInfo != null ? qualityInfo : "ERROR"),
                                         textAlign: TextAlign.center,
                                       )
-                                    ),
+                                  ),
 
-                                    Container(
-                                        child: TitleText(
-                                            (
-                                                source.metadata.contentLength != null
-                                                    ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true)
-                                                    : ""
-                                            )
-                                        )
-                                    )
-                                  ],
-                                )
-                              ),
-
-                              Expanded(
-                                  child: ListTile(
-                                    enabled: true,
-                                    isThreeLine: true,
-
-                                    title: TitleText(
-                                        "${source.metadata.provider} (${source.metadata
-                                            .source}) • ${source.metadata.ping}ms"),
-                                    subtitle: Text(
-                                      source.file.data,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-
-                                    onTap: () async {
-                                      PlayerHelper.play(
-                                          context,
-                                          title: widget.title,
-                                          url: source.file.data,
-                                          mimeType: 'video/*'
-                                      );
-                                    },
-                                    onLongPress: () {
-                                      Clipboard.setData(
-                                          new ClipboardData(text: source.file.data));
-                                      Interface.showSnackbar(S
-                                          .of(context)
-                                          .url_copied, context: ctx);
-                                    },
+                                  Container(
+                                      child: TitleText(
+                                          (
+                                              source.metadata.contentLength != null
+                                                  ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true)
+                                                  : ""
+                                          )
+                                      )
                                   )
+                                ],
                               )
+                          ),
 
-                            ]
-                        )
-                      ),
+                          Expanded(
+                              child: ListTile(
+                                enabled: true,
+                                isThreeLine: true,
+
+                                title: TitleText(
+                                    "${source.metadata.provider} (${source.metadata
+                                        .source}) • ${source.metadata.ping}ms"),
+                                subtitle: Text(
+                                  source.file.data,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+
+                                onTap: () async {
+                                  PlayerHelper.play(
+                                      context,
+                                      title: widget.title,
+                                      url: source.file.data,
+                                      mimeType: 'video/*'
+                                  );
+                                },
+                                onLongPress: () {
+                                  Clipboard.setData(
+                                      new ClipboardData(text: source.file.data));
+                                  Interface.showSnackbar(S
+                                      .of(context)
+                                      .url_copied, context: ctx);
+                                },
+                              )
+                          )
+
+                        ]
                     )
-                  );
-                })
-          )
-      ),
-    );
+                ),
+              )
+          );
+        }
+      );
   }
 
-  _sortList() {
+  List<SourceModel> _sortList(List<SourceModel> sourceList) {
     /* By default, sorting is descending. (Ideally best to worst.)
      * Reversed, is descending. */
 
@@ -249,6 +317,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
     if(this.sortReversed) sourceList = sourceList.reversed.toList();
     if(mounted) setState(() {});
+
+    return sourceList;
   }
 
   _showSortingDialog(BuildContext context) async {
@@ -260,7 +330,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
       this.sortingMethod = sortingSettings[0];
       this.sortReversed = sortingSettings[1];
 
-      _sortList();
+      setState(() {});
+      //_sortList();
     }
   }
 

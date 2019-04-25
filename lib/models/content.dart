@@ -59,7 +59,7 @@ class ContentModel {
   final List crew;
 
   // Recommendations
-  final List<ContentModel> similar;
+  final List<ContentModel> recommendations;
 
   ContentModel({
     @required this.id,
@@ -81,7 +81,7 @@ class ContentModel {
     this.lastWatched,
     this.cast,
     this.crew,
-    this.similar,
+    this.recommendations,
     this.videos
   });
 }

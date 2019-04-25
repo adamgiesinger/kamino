@@ -71,7 +71,7 @@ class _ContentOverviewState extends State<ContentOverview> {
         context,
         widget.contentType,
         widget.contentId,
-        appendToResponse: "credits,videos,similar"
+        appendToResponse: "credits,videos,recommendations"
     );
 
     // Load trailer
@@ -278,7 +278,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                                             // Context-specific layout
                                             _generateLayout(widget.contentType, content),
 
-                                            _generateSimilarContentCards(context, content)
+                                            _generateRecommendedContentCards(context, content)
                                           ],
                                         )
                                     )
@@ -622,7 +622,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     );
   }
 
-  static Widget _generateSimilarContentCards(BuildContext context, ContentModel model){
+  static Widget _generateRecommendedContentCards(BuildContext context, ContentModel model){
     return Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 0),
         child: Padding(
@@ -630,24 +630,23 @@ class _ContentOverviewState extends State<ContentOverview> {
           child: Column(
               children: <Widget>[
 
-                /* Similar Movies */
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
                         title: SubtitleText(
                           model.contentType == ContentType.TV_SHOW
-                            ? S.of(context).similar_tv_shows
-                            : S.of(context).similar_movies
+                            ? S.of(context).recommended_tv_shows
+                            : S.of(context).recommended_movies
                         )
                     ),
 
                   SizedBox(
                     height: 200,
-                    child: model.similar == null ? Container() : ListView.builder(
+                    child: model.recommendations == null ? Container() : ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemCount: model.similar.length,
+                        itemCount: model.recommendations.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 5)
@@ -659,15 +658,15 @@ class _ContentOverviewState extends State<ContentOverview> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => ContentOverview(
-                                              contentId: model.similar[index].id,
+                                              contentId: model.recommendations[index].id,
                                               contentType: model.contentType
                                           ),
                                         )
                                     ),
                                     mediaType: getRawContentType(model.contentType),
-                                    name: model.similar[index].title,
-                                    background: model.similar[index].posterPath,
-                                    releaseDate: model.similar[index].releaseDate
+                                    name: model.recommendations[index].title,
+                                    background: model.recommendations[index].posterPath,
+                                    releaseDate: model.recommendations[index].releaseDate
                                 ),
                               )
                           );
@@ -676,7 +675,6 @@ class _ContentOverviewState extends State<ContentOverview> {
                     )
                   ],
                 )
-                /* ./Similar Movies */
 
               ]
           ),

@@ -31,9 +31,6 @@ class AdvancedSettingsPageState extends SettingsPageState {
   final _serverURLController = TextEditingController();
   final _serverKeyController = TextEditingController();
 
-  int _maxConcurrentRequests;
-  int _requestTimeout;
-
   @override
   void initState() {
     assert((){
@@ -42,9 +39,6 @@ class AdvancedSettingsPageState extends SettingsPageState {
     }());
 
     () async {
-      _maxConcurrentRequests = await Settings.maxConcurrentRequests;
-      _requestTimeout = await Settings.requestTimeout;
-
       _serverURLController.text = await Settings.serverURLOverride;
       _serverKeyController.text = await Settings.serverKeyOverride;
 
@@ -183,76 +177,6 @@ class AdvancedSettingsPageState extends SettingsPageState {
         ),
 
         SubtitleText("NETWORKING", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
-
-        /*Material(
-          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
-          child: ListTile(
-            isThreeLine: true,
-            leading: Icon(Icons.network_check),
-            title: TitleText("Maximum Concurrent Requests"),
-            subtitle: Text("Limits the number of concurrent network requests that can be made by the app."),
-            enabled: true,
-            trailing: DropdownButton<int>(
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'GlacialIndifference',
-                  fontSize: 16
-                ),
-                hint: Text(_maxConcurrentRequests.toString(), style: TextStyle(
-                  color: Colors.white
-                )),
-                // Max value for 'Maximum concurrent requests' -> 5
-                items: List<DropdownMenuItem<int>>.generate(5, (value){
-                  value += 1;
-                  return DropdownMenuItem<int>(
-                    child: Text(value.toString()),
-                    value: value
-                  );
-                }),
-                onChanged: (value){
-                  Settings.maxConcurrentRequests = value;
-                  setState(() {
-                    _maxConcurrentRequests = value;
-                  });
-                }
-            ),
-          ),
-        ),
-
-        Material(
-          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
-          child: ListTile(
-            isThreeLine: true,
-            leading: Icon(Icons.timer_off),
-            title: TitleText("Request Timeout Duration"),
-            subtitle: Text("The delay, in seconds, before which a network request will be timed out."),
-            enabled: true,
-            trailing: DropdownButton<int>(
-                style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'GlacialIndifference',
-                    fontSize: 16
-                ),
-                hint: Text(_requestTimeout.toString(), style: TextStyle(
-                    color: Colors.white
-                )),
-                // Generate 5 items (in this case - interval of 10)
-                items: List<DropdownMenuItem<int>>.generate(5, (value){
-                  value = (value + 1) * 10;
-                  return DropdownMenuItem<int>(
-                      child: Text(value.toString()),
-                      value: value
-                  );
-                }),
-                onChanged: (value){
-                  Settings.requestTimeout = value;
-                  setState(() {
-                    _requestTimeout = value;
-                  });
-                }
-            ),
-          ),
-        ),*/
 
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
