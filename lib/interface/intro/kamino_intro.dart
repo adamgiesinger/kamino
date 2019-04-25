@@ -6,11 +6,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_appearance.dart';
+import 'package:kamino/interface/settings/page_playback.dart';
 import 'package:kamino/main.dart';
+import 'package:kamino/models/content.dart';
 import 'package:kamino/models/list.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:kamino/ui/elements.dart';
@@ -34,8 +37,10 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
   KaminoAppState appState;
 
   Map<String, bool> _selectedCategories = {};
-  bool _autoplaySourcesEnabled = false;
-  TraktCredentials traktCredentials;
+
+  bool traktConnected;
+  bool rdConnected;
+  PlayerSettings playerSettings;
 
   final Map<String, AsyncMemoizer> _categoryMemoizers = {};
   final _fadeInTween = Tween<double>(begin: 0, end: 1);
@@ -56,18 +61,15 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
       (result) => setState(() => _selectedCategories = jsonDecode(result).cast<String, bool>())
     );
 
-    ((Settings.traktCredentials) as Future).then((data) => setState((){
-      traktCredentials = data;
-    }));
+    traktConnected = false;
+    rdConnected = false;
+    playerSettings = PlayerSettings.defaultPlayer();
 
-    // This is done for legacy reasons.
-    // We would upgrade the setting but we do intent to switch back
-    // to having autoplay enabled by default.
-    (Settings.manuallySelectSourcesEnabled as Future).then((data){
-      setState(() {
-        _autoplaySourcesEnabled = !data;
-      });
-    });
+    (() async {
+      traktConnected = await Trakt.isAuthenticated();
+      rdConnected = await RealDebrid.isAuthenticated();
+      playerSettings = await Settings.playerInfo;
+    })();
 
     // Initialize controller.
     _controller = PageController();
@@ -101,7 +103,6 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
   @override
   Widget build(BuildContext context){
     appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-    bool traktConnected = traktCredentials != null && traktCredentials.isValid();
 
     final _pages = <Page>[
       Page(
@@ -209,116 +210,14 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
       Page(
         child: Builder(builder: (_) => Expanded(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            width: MediaQuery.of(context).size.width,
-            child: ListView(
-              children: <Widget>[
-                TitleText(S.of(context).customize_appearance, fontSize: 32),
-                Text(S.of(context).customize_appearance_description(appName), style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
-
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20),
-                ),
-
-                Form(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Material(
-                        elevation: 3,
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).cardColor,
-                        child: ListTile(
-                          onTap: () => showThemeChoice(context, appState),
-                          leading: Icon(Icons.style),
-                          isThreeLine: true,
-                          title: TitleText(S.of(context).choose_a_theme),
-                          subtitle: Text(S.of(context).choose_a_theme_description),
-                        ),
-                      ),
-
-                      Container(margin: EdgeInsets.symmetric(vertical: 5)),
-
-                      Material(
-                        elevation: 3,
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).cardColor,
-                        child: ListTile(
-                          onTap: () => setPrimaryColor(context, appState),
-                          leading: CircleColor(
-                            circleSize: 32,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          isThreeLine: true,
-                          title: TitleText(S.of(context).whats_your_favorite_color),
-                          subtitle: Text(S.of(context).whats_your_favorite_color_description),
-                        ),
-                      ),
-
-                      Container(
-                        padding: EdgeInsets.only(top: 30, left: 15, right: 15),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            TitleText(
-                                S.of(context).which_do_you_prefer
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 5),
-                              child: Text(
-                                  S.of(context).layout_preferences_subtitle,
-                                  style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)
-                              ),
-                            ),
-                            ButtonBar(
-                              alignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                VerticalIconButton(
-                                  backgroundColor: _detailedLayoutType ? Theme.of(context).primaryColor : null,
-                                  onTap: () async {
-                                    await (Settings.detailedContentInfoEnabled = true);
-                                    _detailedLayoutType = await Settings.detailedContentInfoEnabled;
-                                    setState(() {});
-                                  },
-                                  title: TitleText(S.of(context).card_layout),
-                                  icon: Icon(Icons.view_agenda),
-
-                                ),
-                                VerticalIconButton(
-                                  backgroundColor: !_detailedLayoutType ? Theme.of(context).primaryColor : null,
-                                  onTap: () async {
-                                    await (Settings.detailedContentInfoEnabled = false);
-                                    _detailedLayoutType = await Settings.detailedContentInfoEnabled;
-                                    setState(() {});
-                                  },
-                                  title: TitleText(S.of(context).grid_layout),
-                                  icon: Icon(Icons.grid_on),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
-        )),
-      ),
-
-      Page(
-        child: Builder(builder: (_) => Expanded(
+          child: Scrollbar(
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(20).copyWith(bottom: 0),
               width: MediaQuery.of(context).size.width,
               child: ListView(
                 children: <Widget>[
-                  TitleText(S.of(context).general_settings, fontSize: 32),
-                  Text(S.of(context).general_settings_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+                  TitleText(S.of(context).customize_appearance, fontSize: 32),
+                  Text(S.of(context).customize_appearance_description(appName), style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 20),
@@ -333,36 +232,198 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).cardColor,
                           child: ListTile(
-                              onTap: () async {
-                                if(!traktConnected){
-                                  await Trakt.authenticate(context);
-                                  this.traktCredentials = await Trakt.getTraktSettings();
-                                  setState(() {});
+                            onTap: () => showThemeChoice(context, appState),
+                            leading: Icon(Icons.style),
+                            isThreeLine: true,
+                            title: TitleText(S.of(context).choose_a_theme),
+                            subtitle: Text(S.of(context).choose_a_theme_description),
+                          ),
+                        ),
 
-                                  if(await Trakt.isAuthenticated()){
-                                    Trakt.synchronize(context, silent: false);
-                                  }
-                                }else{
-                                  await Trakt.deauthenticate(context);
-                                  setState(() {
-                                    traktCredentials = TraktCredentials.unauthenticated();
-                                  });
-                                }
-                              },
-                              leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
-                              isThreeLine: true,
-                              title: TitleText(traktConnected ? S.of(context).disconnect_your_trakt_account : S.of(context).connect_your_trakt_account),
-                              subtitle: Text(S.of(context).appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(appName))
+                        Container(margin: EdgeInsets.symmetric(vertical: 5)),
+
+                        Material(
+                          elevation: 3,
+                          borderRadius: BorderRadius.circular(5),
+                          color: Theme.of(context).cardColor,
+                          child: ListTile(
+                            onTap: () => setPrimaryColor(context, appState),
+                            leading: CircleColor(
+                              circleSize: 32,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            isThreeLine: true,
+                            title: TitleText(S.of(context).whats_your_favorite_color),
+                            subtitle: Text(S.of(context).whats_your_favorite_color_description),
                           ),
                         ),
 
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 25),
+                          padding: EdgeInsets.only(top: 30, left: 15, right: 15),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              TitleText(
+                                  S.of(context).which_do_you_prefer
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                child: Text(
+                                    S.of(context).layout_preferences_subtitle,
+                                    style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)
+                                ),
+                              ),
+                              ButtonBar(
+                                alignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  VerticalIconButton(
+                                    backgroundColor: _detailedLayoutType ? Theme.of(context).primaryColor : null,
+                                    onTap: () async {
+                                      await ((Settings.detailedContentInfoEnabled = true) as Future);
+                                      _detailedLayoutType = await Settings.detailedContentInfoEnabled;
+                                      setState(() {});
+                                    },
+                                    title: TitleText(S.of(context).card_layout),
+                                    icon: Icon(Icons.view_agenda),
+
+                                  ),
+                                  VerticalIconButton(
+                                    backgroundColor: !_detailedLayoutType ? Theme.of(context).primaryColor : null,
+                                    onTap: () async {
+                                      await ((Settings.detailedContentInfoEnabled = false) as Future);
+                                      _detailedLayoutType = await Settings.detailedContentInfoEnabled;
+                                      setState(() {});
+                                    },
+                                    title: TitleText(S.of(context).grid_layout),
+                                    icon: Icon(Icons.grid_on),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         )
                       ],
                     ),
                   )
                 ],
+              ),
+            )
+          )
+        )),
+      ),
+
+      Page(
+        child: Builder(builder: (_) => Expanded(
+            child: Scrollbar(
+              child: Container(
+                padding: EdgeInsets.all(20).copyWith(bottom: 0),
+                width: MediaQuery.of(context).size.width,
+                child: ListView(
+                  children: <Widget>[
+                    TitleText(S.of(context).general_settings, fontSize: 32),
+                    Text(S.of(context).general_settings_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                    ),
+
+                    Material(
+                      elevation: 3,
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).cardColor,
+                      child: ListTile(
+                        onTap: () => PlaybackSettingsPage.showPlayerSelectDialog(context, onSelect: () async {
+                          playerSettings = await Settings.playerInfo;
+                          setState(() {});
+                        }),
+                        leading: Icon(Icons.play_circle_filled),
+                        isThreeLine: false,
+                        title: TitleText(S.of(context).choose_player),
+                        subtitle: Text(
+                            playerSettings.isValid() ? playerSettings.name : "${PlaybackSettingsPage.BUILT_IN_PLAYER_NAME} (${S.of(context).default_})"
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 30),
+                    ),
+
+                    TitleText(S.of(context).extensions, fontSize: 32),
+                    Text(S.of(context).extensions_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                    ),
+
+                    Form(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Material(
+                            elevation: 3,
+                            borderRadius: BorderRadius.circular(5),
+                            color: Theme.of(context).cardColor,
+                            child: ListTile(
+                                onTap: () async {
+                                  if(!traktConnected){
+                                    await Trakt.authenticate(context);
+
+                                    if(await Trakt.isAuthenticated()){
+                                      setState(() {});
+                                      Trakt.synchronize(context, silent: false);
+                                      appState.setState(() {});
+                                    }
+                                  }else{
+                                    await Trakt.deauthenticate(context);
+                                    setState(() {});
+                                    traktConnected = await Trakt.isAuthenticated();
+                                    appState.setState(() {});
+                                  }
+                                },
+                                leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
+                                isThreeLine: true,
+                                title: TitleText(traktConnected ? S.of(context).disconnect_your_trakt_account : S.of(context).connect_your_trakt_account),
+                                subtitle: Text(S.of(context).appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(appName))
+                            ),
+                          ),
+
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                          ),
+
+                          Material(
+                            elevation: 3,
+                            borderRadius: BorderRadius.circular(5),
+                            color: Theme.of(context).cardColor,
+                            child: ListTile(
+                                onTap: () async {
+                                  if(!rdConnected){
+                                    await RealDebrid.authenticate(context);
+                                    rdConnected = await RealDebrid.isAuthenticated();
+                                    setState(() {});
+                                  }else{
+                                    await RealDebrid.deauthenticate(context);
+                                    rdConnected = await RealDebrid.isAuthenticated();
+                                    setState(() {});
+                                  }
+                                },
+                                leading: SvgPicture.asset("assets/icons/realdebrid.svg", height: 36, width: 36, color: const Color(0xFF78BB6F)),
+                                isThreeLine: true,
+                                title: TitleText(traktConnected ? S.of(context).disconnect_your_realdebrid_account : S.of(context).connect_your_realdebrid_account),
+                                subtitle: Text("If you have a RealDebrid subscription, ApolloTV can use it to obtain high-speed download results.")
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                    )
+                  ],
+                ),
               ),
             )
         )),
@@ -373,113 +434,124 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
           return _selectedCategories.length >= 3;
         },
         child: Builder(builder: (_) => Expanded(
-            child: Container(
-              padding: EdgeInsets.all(20),
-              width: MediaQuery.of(context).size.width,
-              child: ListView(
-                children: <Widget>[
-                  TitleText(S.of(context).choose_n_categories((3 - _selectedCategories.length < 0 ? 0 : 3 - _selectedCategories.length).toString()), fontSize: 32),
-                  Text(S.of(context).choose_n_categories_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+            child: Scrollbar(
+              child: Container(
+                padding: EdgeInsets.all(20),
+                width: MediaQuery.of(context).size.width,
+                child: ListView(
+                  children: <Widget>[
+                    TitleText(S.of(context).choose_n_categories((3 - _selectedCategories.length < 0 ? 0 : 3 - _selectedCategories.length).toString()), fontSize: 32),
+                    Text(S.of(context).choose_n_categories_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 20),
-                  ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                    ),
 
-                  LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints constraints){
-                      double idealWidth = 200;
-                      double spacing = 10.0;
+                    LayoutBuilder(
+                      builder: (BuildContext context, BoxConstraints constraints){
+                        double idealWidth = 200;
+                        double spacing = 10.0;
 
-                      return GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: (constraints.maxWidth / idealWidth).round(),
-                          childAspectRatio: 2,
-                          mainAxisSpacing: spacing,
-                          crossAxisSpacing: spacing
-                        ),
-                        itemCount: TMDB.curatedTMDBLists.length,
-                        itemBuilder: (BuildContext context, int index){
-                          if(!_categoryMemoizers.containsKey(TMDB.curatedTMDBLists[index]))
-                            _categoryMemoizers[TMDB.curatedTMDBLists[index]] = new AsyncMemoizer();
+                        List<String> curatedTMDBLists = [];
+                        TMDB.curatedTMDBLists.forEach((ContentType type, List<String> typeCuratedLists){
+                          curatedTMDBLists.addAll(typeCuratedLists);
+                        });
 
-                          return FutureBuilder(
-                            future: _categoryMemoizers[TMDB.curatedTMDBLists[index]].runOnce(
-                                () => TMDB.getList(context, TMDB.curatedTMDBLists[index])
-                            ),
-                            builder: (BuildContext context, AsyncSnapshot snapshot){
-                              if(snapshot.hasError){
-                                print("Error loading list: ${TMDB.curatedTMDBLists[index]}");
-                                return Container();
-                              }
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: (constraints.maxWidth / idealWidth).round(),
+                              childAspectRatio: 2,
+                              mainAxisSpacing: spacing,
+                              crossAxisSpacing: spacing
+                          ),
+                          itemCount: curatedTMDBLists.length,
+                          itemBuilder: (BuildContext context, int index){
+                            if(!_categoryMemoizers.containsKey(curatedTMDBLists[index]))
+                              _categoryMemoizers[curatedTMDBLists[index]] = new AsyncMemoizer();
 
-                              switch(snapshot.connectionState){
-                                case ConnectionState.none:
-                                case ConnectionState.waiting:
-                                case ConnectionState.active:
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
+                            return FutureBuilder(
+                                future: _categoryMemoizers[curatedTMDBLists[index]].runOnce(
+                                        () => TMDB.getList(context, curatedTMDBLists[index])
+                                ),
+                                builder: (BuildContext context, AsyncSnapshot snapshot){
+                                  if(snapshot.hasError){
+                                    print("Error loading list: ${TMDB.curatedTMDBLists[index]}");
+                                    return Container();
+                                  }
 
-                                case ConnectionState.done:
-                                  ContentListModel list = snapshot.data;
+                                  switch(snapshot.connectionState){
+                                    case ConnectionState.none:
+                                    case ConnectionState.waiting:
+                                    case ConnectionState.active:
+                                      return Center(
+                                        child: CircularProgressIndicator(),
+                                      );
 
-                                  return Material(
-                                    type: MaterialType.card,
-                                    borderRadius: BorderRadius.circular(5),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: Stack(
-                                      fit: StackFit.expand,
-                                      alignment: Alignment.center,
-                                      children: <Widget>[
-                                        CachedNetworkImage(
-                                          imageUrl: TMDB.IMAGE_CDN_LOWRES + list.backdrop,
-                                          fit: BoxFit.cover,
-                                        ),
+                                    case ConnectionState.done:
+                                      ContentListModel list = snapshot.data;
 
-                                        Container(
-                                          color: const Color(0x7F000000),
-                                          child: Center(child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 5),
-                                            child: TitleText(
-                                              list.name,
-                                              fontSize: 21,
-                                              allowOverflow: true,
-                                              textAlign: TextAlign.center
+                                      return Material(
+                                        type: MaterialType.card,
+                                        borderRadius: BorderRadius.circular(5),
+                                        clipBehavior: Clip.antiAlias,
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          alignment: Alignment.center,
+                                          children: <Widget>[
+                                            CachedNetworkImage(
+                                              imageUrl: TMDB.IMAGE_CDN_LOWRES + list.backdrop,
+                                              fit: BoxFit.cover,
                                             ),
-                                          )),
+
+                                            Container(
+                                              color: const Color(0x7F000000),
+                                              child: Center(child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                                child: TitleText(
+                                                    list.name,
+                                                    fontSize: 21,
+                                                    allowOverflow: true,
+                                                    textAlign: TextAlign.center
+                                                ),
+                                              )),
+                                            ),
+
+                                            AnimatedOpacity(child: Container(
+                                              color: const Color(0x9F000000),
+                                              child: Center(
+                                                child: Icon(Icons.check),
+                                              ),
+                                            ), opacity: _selectedCategories.containsKey(list.id.toString()) ? 1 : 0,
+                                                duration: Duration(milliseconds: 300)),
+
+                                            Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                onTap: () => setState((){
+                                                  _selectedCategories.containsKey(list.id.toString())
+                                                      ? _selectedCategories.remove(list.id.toString())
+                                                      : _selectedCategories[list.id.toString()] = true;
+                                                }),
+                                              ),
+                                            )
+                                          ],
                                         ),
+                                      );
+                                  }
+                                }
+                            );
+                          },
+                        );
+                      },
+                    ),
 
-                                        AnimatedOpacity(child: Container(
-                                          color: const Color(0x9F000000),
-                                          child: Center(
-                                            child: Icon(Icons.check),
-                                          ),
-                                        ), opacity: _selectedCategories.containsKey(list.id.toString()) ? 1 : 0,
-                                            duration: Duration(milliseconds: 300)),
-
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () => setState((){
-                                              _selectedCategories.containsKey(list.id.toString())
-                                                  ? _selectedCategories.remove(list.id.toString())
-                                                  : _selectedCategories[list.id.toString()] = true;
-                                            }),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  );
-                              }
-                            }
-                          );
-                        },
-                      );
-                    },
-                  )
-                ],
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                    )
+                  ],
+                ),
               ),
             )
         )),

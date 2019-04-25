@@ -252,9 +252,9 @@ class _RealDebridAuthenticatorState extends State<RealDebridAuthenticator> {
             isAllowed ? FlatButton(
               child: Text(S.of(context).done.toUpperCase()),
               onPressed: () async {
-                if(this.context != null) Navigator.pop(
-                    this.context,
-                    await RealDebrid.getToken(widget.oauthData["device_code"])
+                if(mounted) Navigator.pop(
+                  this.context,
+                  await RealDebrid.getToken(widget.oauthData["device_code"])
                 );
               },
             ) : Container()

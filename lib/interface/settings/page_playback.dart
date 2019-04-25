@@ -17,6 +17,98 @@ class PlaybackSettingsPage extends SettingsPage {
     pageState: PlaybackSettingsPageState(),
   );
 
+  static showPlayerSelectDialog(BuildContext context, { Function onSelect }) async {
+    PackageInfo packageInfo;
+
+    Future<dynamic> _loadPlayerData = Future(() async {
+      packageInfo = await PackageInfo.fromPlatform();
+      return jsonDecode(await platform.invokeMethod('list'));
+    });
+
+    showDialog(
+        context: context,
+        builder: (_) {
+          return SimpleDialog(
+              title: TitleText("Select Player..."),
+              children: <Widget>[
+                Container(
+                    height: 250,
+                    width: 300,
+                    child: FutureBuilder(future: _loadPlayerData, builder: (_, AsyncSnapshot<dynamic> snapshot) {
+                      if(snapshot.connectionState != ConnectionState.done) {
+                        return Container(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor
+                            ),
+                          ),
+                        );
+                      }
+
+                      return Scrollbar(
+                        child: ListView.builder(itemBuilder: (BuildContext context, int index) {
+                          // Add entry for built in player
+                          if(index == 0){
+                            return ListTile(
+                              isThreeLine: true,
+                              title: TitleText('CPlayer (Default)'),
+                              subtitle: Text("ApolloTV built-in player.\nVersion ${packageInfo.version}"),
+                              leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(48),
+                                  child: Image(
+                                    image: AssetImage("assets/images/logo.png"),
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.center,
+                                    width: 48,
+                                    height: 48,
+                                  )
+                              ),
+                              enabled: true,
+                              onTap: () async {
+                                await Settings.setPlayerInfo(PlayerSettings.defaultPlayer());
+                                if(onSelect != null) await onSelect();
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          }
+
+                          index--;
+                          return ListTile(
+                            title: TitleText(snapshot.data[index]['name']),
+                            subtitle: Text("Version ${snapshot.data[index]['version']}"),
+                            leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(48),
+                                child: Image(
+                                  image: MemoryImage(
+                                      Base64Decoder().convert(snapshot.data[index]['icon'].replaceAll('\n', ''))
+                                  ),
+                                  fit: BoxFit.cover,
+                                  alignment: Alignment.center,
+                                  width: 48,
+                                  height: 48,
+                                )
+                            ),
+                            enabled: true,
+                            onTap: () async {
+                              await Settings.setPlayerInfo(new PlayerSettings([
+                                snapshot.data[index]['activity'],
+                                snapshot.data[index]['package'],
+                                snapshot.data[index]['name']
+                              ]));
+                              if(onSelect != null) await onSelect();
+                              Navigator.of(context).pop();
+                            },
+                          );
+                        }, itemCount: snapshot.data.length + 1, shrinkWrap: true),
+                      );
+                    })
+                )
+              ]
+          );
+        }
+    );
+  }
+
 }
 
 const platform = const MethodChannel('xyz.apollotv.kamino/playThirdParty');
@@ -44,12 +136,14 @@ class PlaybackSettingsPageState extends SettingsPageState {
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.play_circle_filled),
-            title: TitleText("Change Player"),
+            title: TitleText(S.of(context).change_player),
             subtitle: Text(
-              // CPlayer is hardcoded. Do not translate it.
-              playerSettings.isValid() ? playerSettings.name : "${PlaybackSettingsPage.BUILT_IN_PLAYER_NAME} (Default)"
+              playerSettings.isValid() ? playerSettings.name : "${PlaybackSettingsPage.BUILT_IN_PLAYER_NAME} (${S.of(context).default_})"
             ),
-            onTap: () => _showPlayerSelectDialog(context),
+            onTap: () => PlaybackSettingsPage.showPlayerSelectDialog(context, onSelect: () async {
+              playerSettings = await Settings.playerInfo;
+              setState(() {});
+            }),
           ),
         ),
 
@@ -77,104 +171,6 @@ class PlaybackSettingsPageState extends SettingsPageState {
           ),
         ),
       ]
-    );
-  }
-
-  _showPlayerSelectDialog(BuildContext context) async {
-    PackageInfo packageInfo;
-
-    Future<dynamic> _loadPlayerData = Future(() async {
-      packageInfo = await PackageInfo.fromPlatform();
-      return jsonDecode(await platform.invokeMethod('list'));
-    });
-
-    showDialog(
-        context: context,
-        builder: (_) {
-          return SimpleDialog(
-            title: TitleText("Select Player..."),
-            children: <Widget>[
-              Container(
-                  height: 250,
-                  width: 300,
-                  child: FutureBuilder(future: _loadPlayerData, builder: (_, AsyncSnapshot<dynamic> snapshot) {
-                    if(snapshot.connectionState != ConnectionState.done) {
-                      return Container(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).primaryColor
-                          ),
-                        ),
-                      );
-                    }
-
-                    return Scrollbar(
-                      child: ListView.builder(itemBuilder: (BuildContext context, int index) {
-                        // Add entry for built in player
-                        if(index == 0){
-                          return ListTile(
-                            isThreeLine: true,
-                            title: TitleText('CPlayer (Default)'),
-                            subtitle: Text("ApolloTV built-in player.\nVersion ${packageInfo.version}"),
-                            leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(48),
-                                child: Image(
-                                  image: AssetImage("assets/images/logo.png"),
-                                  fit: BoxFit.cover,
-                                  alignment: Alignment.center,
-                                  width: 48,
-                                  height: 48,
-                                )
-                            ),
-                            enabled: true,
-                            onTap: () async {
-                              setState(() {
-                                playerSettings = PlayerSettings.defaultPlayer();
-                              });
-                              await Settings.setPlayerInfo(playerSettings);
-
-                              Navigator.of(context).pop();
-                            },
-                          );
-                        }
-
-                        index--;
-                        return ListTile(
-                          title: TitleText(snapshot.data[index]['name']),
-                          subtitle: Text("Version ${snapshot.data[index]['version']}"),
-                          leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(48),
-                              child: Image(
-                                image: MemoryImage(
-                                    Base64Decoder().convert(snapshot.data[index]['icon'].replaceAll('\n', ''))
-                                ),
-                                fit: BoxFit.cover,
-                                alignment: Alignment.center,
-                                width: 48,
-                                height: 48,
-                              )
-                          ),
-                          enabled: true,
-                          onTap: () async {
-                            setState(() {
-                              playerSettings = new PlayerSettings([
-                                snapshot.data[index]['activity'],
-                                snapshot.data[index]['package'],
-                                snapshot.data[index]['name']
-                              ]);
-                            });
-
-                            await Settings.setPlayerInfo(playerSettings);
-                            Navigator.of(context).pop();
-                          },
-                        );
-                      }, itemCount: snapshot.data.length + 1, shrinkWrap: true),
-                    );
-                  })
-              )
-            ]
-          );
-        }
     );
   }
 

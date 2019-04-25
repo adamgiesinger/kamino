@@ -24,26 +24,35 @@ class TMDB {
 
   // These lists are curated by the ApolloTV team and you're welcome to use them.
   // Otherwise, you can replace them by supplying an array of TMDB list IDs.
-  static const List<String> curatedTMDBLists = [
-    // ApolloTV Top Picks
-    "107032",
-    // Netflix Top Picks
-    "105608",
-    // New HD releases
-    "105604",
-    // 2019 Awards Seasons
-    "105805",
-    // Reddit Top 250
-    "105619",
-    // Disney & Friends
-    "105547",
-    // Marvel Cinematic Universe
-    "105602",
-    // Marvel Comics
-    "105603",
-    // DC Comics
-    "105614",
-  ];
+  static const Map<ContentType, List<String>> curatedTMDBLists = {
+    ContentType.MIXED: [
+      // ApolloTV Top Picks
+      "107032",
+    ],
+
+    ContentType.TV_SHOW: [
+
+    ],
+
+    ContentType.MOVIE: [
+      // Netflix Top Picks
+      "105608",
+      // New HD releases
+      "105604",
+      // 2019 Awards Seasons
+      "105805",
+      // Reddit Top 250
+      "105619",
+      // Disney & Friends
+      "105547",
+      // Marvel Cinematic Universe
+      "105602",
+      // Marvel Comics
+      "105603",
+      // DC Comics
+      "105614",
+    ]
+  };
 
 
   static Future<dynamic> getList(BuildContext context, String id, { bool loadFully = false, bool raw = false }) async {

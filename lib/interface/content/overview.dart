@@ -708,12 +708,10 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   Widget _getFloatingActionButton(ContentType contentType, BuildContext context, ContentModel model){
     switch(contentType){
-      case ContentType.TV_SHOW:
-        return null;
       case ContentType.MOVIE:
         return MovieLayout.getFloatingActionButton(context, model);
+      default:
+        return null;
     }
-
-    return null;
   }
 }

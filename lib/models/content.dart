@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 /*  CONTENT TYPE DEFINITIONS  */
-enum ContentType { MOVIE, TV_SHOW }
+enum ContentType { MOVIE, TV_SHOW, MIXED }
 String getPrettyContentType(ContentType type){
   switch(type) {
     case ContentType.MOVIE:
       return "Movie";
     case ContentType.TV_SHOW:
       return "TV Show";
+    case ContentType.MIXED:
+      return "Mixed";
     default:
       return "Unknown";
   }
@@ -19,6 +21,8 @@ String getRawContentType(ContentType type){
       return "movie";
     case ContentType.TV_SHOW:
       return "tv";
+    case ContentType.MIXED:
+      return "mixed";
     default:
       return "unknown";
   }

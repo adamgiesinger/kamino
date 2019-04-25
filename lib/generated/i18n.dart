@@ -39,18 +39,21 @@ class S implements WidgetsLocalizations {
   String get cast_and_crew => "Cast & Crew";
   String get change_content_playback_settings => "Change content playback settings.";
   String get change_default_server => "Change Default Server";
+  String get change_player => "Change Player";
   String get change_theme => "Change Theme...";
   String get check_for_updates => "Check for Updates";
   String get checks_whether_sources_can_be_reached => "Checks whether sources can be reached.";
   String get choose_a_theme => "Choose a theme...";
   String get choose_a_theme_description => "Select a general theme! This is used primarily to decide the background color.";
   String get choose_n_categories_description => "Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!";
+  String get choose_player => "Choose player...";
   String get clear_search_history => "Clear Search History";
   String get clear_search_history_description => "Removes search suggestions based on past searches.";
   String get coming_soon => "Coming Soon";
   String get connect => "Connect";
+  String get connect_your_realdebrid_account => "Connect your Real-Debrid account";
   String get connect_your_trakt_account => "Connect your Trakt account";
-  String get connected_real_debrid_account => "Connected Real Debrid Account.";
+  String get connected_real_debrid_account => "Connected Real-Debrid Account.";
   String get connected_trakt_account => "Connected Trakt account.";
   String get create_profile => "Create Profile";
   String get customize_appearance => "Customize Appearance";
@@ -59,8 +62,9 @@ class S implements WidgetsLocalizations {
   String get default_ => "Default";
   String get descending => "Descending";
   String get disconnect => "Disconnect";
+  String get disconnect_your_realdebrid_account => "Disconnect your Real-Debrid account";
   String get disconnect_your_trakt_account => "Disconnect your Trakt account";
-  String get disconnected_real_debrid_account => "Disconnected Real Debrid Account.";
+  String get disconnected_real_debrid_account => "Disconnected Real-Debrid Account.";
   String get disconnected_trakt_account => "Disconnected Trakt account.";
   String get dismiss => "Dismiss";
   String get donate => "Donate";
@@ -70,6 +74,7 @@ class S implements WidgetsLocalizations {
   String get error_updating_app => "Error updating app...";
   String get experimental => "Experimental";
   String get extensions => "Extensions";
+  String get extensions_description => "If you use these any of these third party services, you can connect them to ApolloTV.";
   String get favorites => "Favorites";
   String get gathers_useful_information_for_debugging => "Gathers useful information for debugging.";
   String get general_application_settings => "General application settings.";
@@ -105,7 +110,7 @@ class S implements WidgetsLocalizations {
   String get popularity => "Popularity";
   String get power_user_settings_for_rocket_scientists => "Power user settings for rocket scientists.";
   String get rd_description => "Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet.";
-  String get real_debrid_authenticator => "Real Debrid Authenticator";
+  String get real_debrid_authenticator => "Real-Debrid Authenticator";
   String get recommended_movies => "Recommended Movies";
   String get recommended_tv_shows => "Recommended TV Shows";
   String get released => "Released";
@@ -156,7 +161,7 @@ class S implements WidgetsLocalizations {
   String appname_failed_to_connect_to_the_internet(String appName) => "$appName failed to connect to the internet. Please check your connection.";
   String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName has successfully authenticated with Trakt.tv!";
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName was made possible by all of these amazing people:";
-  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName was unable to authenticate with Real Debrid.";
+  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName was unable to authenticate with Real-Debrid.";
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName was unable to authenticate with Trakt.tv.";
   String by_x(String x) => "by $x";
   String customize_appearance_description(String appName) => "$appName is all about customization. Let's get started by choosing your favorite theme!";
@@ -181,9 +186,9 @@ class S implements WidgetsLocalizations {
   String real_debrid_n_sources(dynamic n) {
     switch (n.toString()) {
       case "1":
-        return "Real Debrid ($n source)";
+        return "Real-Debrid ($n source)";
       default:
-        return "Real Debrid ($n sources)";
+        return "Real-Debrid ($n sources)";
     }
   }
   String standard_n_sources(dynamic n) {

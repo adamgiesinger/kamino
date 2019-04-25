@@ -171,13 +171,19 @@
   "uploading_favorites": "Uploading favorites...",
   "downloading_trakt_data": "Downloading Trakt data...",
   "saving_content_information": "Saving content information...",
-  "appname_was_unable_to_authenticate_with_real_debrid": "$appName was unable to authenticate with Real Debrid.",
-  "connected_real_debrid_account": "Connected Real Debrid Account.",
-  "disconnected_real_debrid_account": "Disconnected Real Debrid Account.",
-  "real_debrid_authenticator": "Real Debrid Authenticator",
+  "appname_was_unable_to_authenticate_with_real_debrid": "$appName was unable to authenticate with Real-Debrid.",
+  "connected_real_debrid_account": "Connected Real-Debrid Account.",
+  "disconnected_real_debrid_account": "Disconnected Real-Debrid Account.",
+  "real_debrid_authenticator": "Real-Debrid Authenticator",
 
-  "real_debrid_n_sourcesOne": "Real Debrid ($n source)",
-  "real_debrid_n_sourcesOther": "Real Debrid ($n sources)",
+  "real_debrid_n_sourcesOne": "Real-Debrid ($n source)",
+  "real_debrid_n_sourcesOther": "Real-Debrid ($n sources)",
   "standard_n_sourcesOne": "Standard ($n sources)",
-  "standard_n_sourcesOther": "Standard ($n sources)"
+  "standard_n_sourcesOther": "Standard ($n sources)",
+  "disconnect_your_realdebrid_account": "Disconnect your Real-Debrid account",
+  "connect_your_realdebrid_account": "Connect your Real-Debrid account",
+
+  "extensions_description": "If you use these any of these third party services, you can connect them to ApolloTV.",
+  "choose_player": "Choose player...",
+  "change_player": "Change Player"
 }
