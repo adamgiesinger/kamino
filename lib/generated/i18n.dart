@@ -74,7 +74,6 @@ class S implements WidgetsLocalizations {
   String get error_updating_app => "Error updating app...";
   String get experimental => "Experimental";
   String get extensions => "Extensions";
-  String get extensions_description => "If you use these any of these third party services, you can connect them to ApolloTV.";
   String get favorites => "Favorites";
   String get gathers_useful_information_for_debugging => "Gathers useful information for debugging.";
   String get general_application_settings => "General application settings.";
@@ -165,6 +164,7 @@ class S implements WidgetsLocalizations {
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName was unable to authenticate with Trakt.tv.";
   String by_x(String x) => "by $x";
   String customize_appearance_description(String appName) => "$appName is all about customization. Let's get started by choosing your favorite theme!";
+  String extensions_description(String appName) => "If you use these any of these third party services, you can connect them to $appName.";
   String general_error(String error) => "An error occurred ($error)\nPlease report this error.";
   String make_appname_yours(String appName) => "MAKE $appName YOURS";
   String n_episodes(String n) => "$n episodes";

@@ -162,7 +162,7 @@ class _GenreSearchState extends State<GenreSearch>{
         controller: controller,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: (constraints.maxWidth / idealWidth).round(),
-          childAspectRatio: 0.76,
+          childAspectRatio: 0.67,
           mainAxisSpacing: spacing,
           crossAxisSpacing: spacing,
         ),

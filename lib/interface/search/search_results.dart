@@ -191,7 +191,7 @@ class _SearchResultViewState extends State<SearchResultView> {
           controller: controller,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: (constraints.maxWidth / idealWidth).round(),
-            childAspectRatio: 0.76,
+            childAspectRatio: 0.67,
             mainAxisSpacing: spacing,
             crossAxisSpacing: spacing,
           ),

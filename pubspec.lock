@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.8"
+    version: "2.1.0"
   auto_size_text:
     dependency: "direct main"
     description:
@@ -71,6 +71,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.14.11"
+  connectivity:
+    dependency: transitive
+    description:
+      name: connectivity
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.3+1"
   convert:
     dependency: transitive
     description:
@@ -276,7 +283,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.7"
+    version: "0.15.8"
   js:
     dependency: transitive
     description:
@@ -297,7 +304,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.3+1"
+    version: "0.12.5"
   meta:
     dependency: transitive
     description:
@@ -423,7 +430,7 @@ packages:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   rxdart:
     dependency: "direct main"
     description:
@@ -514,7 +521,7 @@ packages:
       name: stream_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.8"
+    version: "2.0.0"
   stream_transform:
     dependency: transitive
     description:
@@ -549,7 +556,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.4"
   transparent_image:
     dependency: "direct main"
     description:
@@ -609,10 +616,12 @@ packages:
   video_player:
     dependency: transitive
     description:
-      name: video_player
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.0"
+      path: "packages/video_player"
+      ref: master
+      resolved-ref: "76165dd45053756126e4db63347412912ffed926"
+      url: "git://github.com/flutter/plugins.git"
+    source: git
+    version: "0.10.0+7"
   w_common:
     dependency: transitive
     description:
@@ -650,4 +659,4 @@ packages:
     version: "2.1.15"
 sdks:
   dart: ">=2.2.0 <3.0.0"
-  flutter: ">=0.7.3 <2.0.0"
+  flutter: ">=1.2.0 <2.0.0"

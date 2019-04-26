@@ -351,7 +351,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                     ),
 
                     TitleText(S.of(context).extensions, fontSize: 32),
-                    Text(S.of(context).extensions_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+                    Text(S.of(context).extensions_description(appName), style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 20),

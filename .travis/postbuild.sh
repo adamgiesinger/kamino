@@ -13,7 +13,7 @@ fi
 
 WEBHOOK_DATA='{
   "username": "ApolloTV (Travis)",
-  "content": "@everyone A new build has completed",
+  "content": "@BuildNotify A new build has completed",
   "embeds": [ {
     "color": '$EMBED_COLOR',
     "author": {
