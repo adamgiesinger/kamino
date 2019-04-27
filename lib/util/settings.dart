@@ -27,12 +27,17 @@ class SettingsManager {
 
   static Future<void> onAppInit() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if(await _checkNeedsWipe(sharedPreferences)) await sharedPreferences.clear();
+    if(await _checkNeedsWipe(sharedPreferences)) sharedPreferences.clear();
 
     PackageInfo info = await PackageInfo.fromPlatform();
     await sharedPreferences.setInt("__kaminoVersion", int.parse(info.buildNumber));
 
     _wasInitialized = true;
+  }
+
+  static Future<void> eraseAllSettings() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.clear();
   }
 
   static bool hasKey(String key){

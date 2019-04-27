@@ -28,29 +28,54 @@ class TMDB {
     ContentType.MIXED: [
       // ApolloTV Top Picks
       "107032",
+      // Editor's Choice
+      "109986",
     ],
 
     ContentType.TV_SHOW: [
-
+      // Awards Season
+      "105806",
+      // DC Comics
+      "108237",
+      // Marvel Cinematic Universe
+      "105804",
+      // Marvel Comics
+      "108281",
+      // Netflix Exclusives
+      "105648",
+      // Other Exclusives
+      "109260",
     ],
 
     ContentType.MOVIE: [
-      // Netflix Top Picks
-      "105608",
-      // New HD releases
-      "105604",
-      // 2019 Awards Seasons
+      // Awards Season 2019
       "105805",
-      // Reddit Top 250
-      "105619",
-      // Disney & Friends
-      "105547",
-      // Marvel Cinematic Universe
-      "105602",
-      // Marvel Comics
-      "105603",
+      // Christmas
+      "107836",
       // DC Comics
       "105614",
+      // DC Extended Universe
+      "105613",
+      // Disney & Friends
+      "105547",
+      // Halloween
+      "110126",
+      // James Bond
+      "107927",
+      // Marvel Cinematic Universe
+      "105602",
+      // Marvel Comics:
+      "105603",
+      // Netflix Exlusives
+      "105608",
+      // Other Exclusives
+      "105611",
+      // Star Trek
+      "107930",
+      // Star Wars
+      "107926",
+      // Wizarding World
+      "107925",
     ]
   };
 

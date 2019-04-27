@@ -266,6 +266,21 @@ class AdvancedSettingsPageState extends SettingsPageState {
           ),
         ),
 
+        Material(
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
+          child: ListTile(
+            leading: Icon(Icons.layers_clear),
+            title: TitleText("Wipe Settings"),
+            subtitle: Text("Clears all application settings."),
+            enabled: true,
+            onTap: () async {
+              Interface.showLoadingDialog(context, title: "Clearing settings...");
+              await SettingsManager.eraseAllSettings();
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+
         _showDebugItems ? Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(

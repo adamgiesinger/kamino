@@ -26,7 +26,8 @@ class Launchpad2 extends KaminoAppPage {
 
 class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMixin<Launchpad2> {
 
-  AsyncMemoizer _memoizer = new AsyncMemoizer();
+  AsyncMemoizer _launchpadMemoizer = new AsyncMemoizer();
+  AsyncMemoizer _traktMemoizer = new AsyncMemoizer();
 
   EditorsChoice _editorsChoice;
   List<ContentModel> _topPicksList = List();
@@ -34,7 +35,7 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
 
   Future<void> load() async {
     // Randomly select a choice from the Editor's Choice list.
-    var editorsChoiceComments = jsonDecode((await TMDB.getList(context, "109986", loadFully: false, raw: true)))['comments'] as Map;
+    var editorsChoiceComments = jsonDecode((await TMDB.getList(context, "109986", raw: true)))['comments'] as Map;
     List<ContentModel> editorsChoiceList = (await TMDB.getList(context, "109986", loadFully: true)).content;
 
     var selectedChoice = (editorsChoiceList[Random().nextInt(editorsChoiceList.length)]);
@@ -47,10 +48,7 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
     );
 
     _topPicksList = (await TMDB.getList(context, "107032")).content;
-
-    if(await Trakt.isAuthenticated()) {
-      _continueWatchingList = await Trakt.getWatchHistory(context);
-    }
+    _loadTrakt();
     
     updateKeepAlive();
   }
@@ -60,19 +58,30 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
     super.initState();
   }
 
+  Future<void> _loadTrakt() async {
+    if(await Trakt.isAuthenticated()) {
+      await _traktMemoizer.runOnce(() async {
+        _continueWatchingList = await Trakt.getWatchHistory(context);
+        if(mounted) setState((){});
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
+    _loadTrakt();
+
     return FutureBuilder(
-      future: _memoizer.runOnce(load),
+      future: _launchpadMemoizer.runOnce(load),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.connectionState == ConnectionState.none || snapshot.hasError){
           if(snapshot.error is SocketException
             || snapshot.error is HttpException) return OfflineMixin(
             reloadAction: () async {
-              _memoizer = new AsyncMemoizer();
-              await _memoizer.runOnce(load).catchError((error){});
+              _launchpadMemoizer = new AsyncMemoizer();
+              await _launchpadMemoizer.runOnce(load).catchError((error){});
               setState(() {});
             },
           );

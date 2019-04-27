@@ -25,6 +25,7 @@ class S implements WidgetsLocalizations {
   String get added_to_favorites => "Added to favorites";
   String get advanced => "Advanced";
   String get air_date => "Air date";
+  String get all_genres => "All Genres";
   String get an_error_occurred => "An error occurred.";
   String get app_tagline => "The streaming app built, for the community, by the community.";
   String get appearance => "Appearance";
@@ -56,6 +57,7 @@ class S implements WidgetsLocalizations {
   String get connected_real_debrid_account => "Connected Real-Debrid Account.";
   String get connected_trakt_account => "Connected Trakt account.";
   String get create_profile => "Create Profile";
+  String get curated => "Curated";
   String get customize_appearance => "Customize Appearance";
   String get customize_the_theme_and_primary_colors => "Customize the theme and primary colors.";
   String get customize_your_launchpad => "Customize your launchpad.";

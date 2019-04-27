@@ -280,7 +280,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                   VerticalIconButton(
                                     backgroundColor: _detailedLayoutType ? Theme.of(context).primaryColor : null,
                                     onTap: () async {
-                                      await ((Settings.detailedContentInfoEnabled = true) as Future);
+                                      await (Settings.detailedContentInfoEnabled = true);
                                       _detailedLayoutType = await Settings.detailedContentInfoEnabled;
                                       setState(() {});
                                     },
@@ -291,7 +291,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                   VerticalIconButton(
                                     backgroundColor: !_detailedLayoutType ? Theme.of(context).primaryColor : null,
                                     onTap: () async {
-                                      await ((Settings.detailedContentInfoEnabled = false) as Future);
+                                      await (Settings.detailedContentInfoEnabled = false);
                                       _detailedLayoutType = await Settings.detailedContentInfoEnabled;
                                       setState(() {});
                                     },
@@ -368,16 +368,13 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                             child: ListTile(
                                 onTap: () async {
                                   if(!traktConnected){
-                                    await Trakt.authenticate(context);
-
-                                    if(await Trakt.isAuthenticated()){
-                                      setState(() {});
+                                    if(await Trakt.authenticate(context)){
                                       Trakt.synchronize(context, silent: false);
+                                      traktConnected = await Trakt.isAuthenticated();
                                       appState.setState(() {});
                                     }
                                   }else{
                                     await Trakt.deauthenticate(context);
-                                    setState(() {});
                                     traktConnected = await Trakt.isAuthenticated();
                                     appState.setState(() {});
                                   }
@@ -411,7 +408,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                 },
                                 leading: SvgPicture.asset("assets/icons/realdebrid.svg", height: 36, width: 36, color: const Color(0xFF78BB6F)),
                                 isThreeLine: true,
-                                title: TitleText(traktConnected ? S.of(context).disconnect_your_realdebrid_account : S.of(context).connect_your_realdebrid_account),
+                                title: TitleText(rdConnected ? S.of(context).disconnect_your_realdebrid_account : S.of(context).connect_your_realdebrid_account),
                                 subtitle: Text("If you have a RealDebrid subscription, ApolloTV can use it to obtain high-speed download results.")
                             ),
                           )
@@ -477,7 +474,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                 ),
                                 builder: (BuildContext context, AsyncSnapshot snapshot){
                                   if(snapshot.hasError){
-                                    print("Error loading list: ${TMDB.curatedTMDBLists[index]}");
+                                    print("Error loading list: ${curatedTMDBLists[index]}");
                                     return Container();
                                   }
 

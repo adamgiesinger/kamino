@@ -185,5 +185,7 @@
 
   "extensions_description": "If you use these any of these third party services, you can connect them to $appName.",
   "choose_player": "Choose player...",
-  "change_player": "Change Player"
+  "change_player": "Change Player",
+  "all_genres": "All Genres",
+  "curated": "Curated"
 }
