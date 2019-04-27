@@ -349,10 +349,14 @@ class ClawsVendorService extends VendorService {
           case 'RDScrape':
             var rdResult = await RealDebrid.unrestrictLink(event['target']);
             SourceModel rdModel = new SourceModel.fromRDJSON(rdResult);
-            rdModel.metadata.provider = event['provider'];
-            rdModel.metadata.source = event['resolver'];
-            rdModel.metadata.quality = event['quality'];
-            addSource(rdModel);
+            var splitParts = rdModel.file.data.split('.');
+            var fileExtension =  splitParts[splitParts.length - 1].toLowerCase();
+            if (fileExtension == 'mkv' || fileExtension == 'mp4' || fileExtension == 'avi') {
+              rdModel.metadata.provider = event['provider'];
+              rdModel.metadata.source = event['resolver'];
+              rdModel.metadata.quality = event['quality'];
+              addSource(rdModel);
+            }
             break;
           ///
           /// Once Claws has found a result from a source, it is sent to the
