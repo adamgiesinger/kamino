@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/models/movie.dart';
+import 'package:kamino/models/tv_show.dart';
 
 /*  CONTENT TYPE DEFINITIONS  */
 enum ContentType { MOVIE, TV_SHOW, MIXED }
@@ -41,7 +43,7 @@ ContentType getContentTypeFromRawType(String raw){
   }
 }
 
-class ContentModel {
+abstract class ContentModel {
   final int id;
   final String imdbId;
   final ContentType contentType;
@@ -101,6 +103,13 @@ class ContentModel {
     this.recommendations,
     this.videos
   });
+
+  Map toStoredMap();
+  static ContentModel fromStoredMap(Map map){
+    if(map['contentType'] == getRawContentType(ContentType.MOVIE)) return MovieContentModel.fromStoredMap(map);
+    if(map['contentType'] == getRawContentType(ContentType.TV_SHOW)) return TVShowContentModel.fromStoredMap(map);
+    return null;
+  }
 }
 
 class LocalizedTitleModel {

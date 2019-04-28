@@ -7,6 +7,7 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/models/list.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/tv_show.dart';
+import 'package:kamino/util/database_helper.dart';
 
 class TMDB {
 
@@ -45,6 +46,8 @@ class TMDB {
       "105648",
       // Other Exclusives
       "109260",
+      // Top Picks
+      "107032"
     ],
 
     ContentType.MOVIE: [
@@ -78,13 +81,21 @@ class TMDB {
       "107930",
       // Star Wars
       "107926",
+      // Top Picks
+      "110599",
       // Wizarding World
       "107925",
     ]
   };
 
 
-  static Future<dynamic> getList(BuildContext context, String id, { bool loadFully = false, bool raw = false }) async {
+  static Future<dynamic> getList(BuildContext context, int id, { bool loadFully = false, bool raw = false, bool useCache = false }) async {
+    if(useCache){
+      if(await DatabaseHelper.playlistInCache(id)){
+        return await DatabaseHelper.getCachedPlaylist(id);
+      }
+    }
+
     var rawContentResponse = (await http.get("https://api.themoviedb.org/4/list/$id${getDefaultArguments(context)}", headers: {
     'Content-Type': 'application/json;charset=utf-8'
     })).body;
@@ -92,7 +103,7 @@ class TMDB {
     if(raw) return rawContentResponse;
     ContentListModel listModel = ContentListModel.fromJSON(Convert.jsonDecode(rawContentResponse));
 
-    if(!listModel.fullyLoaded && loadFully){
+    if(!listModel.fullyLoaded && loadFully && listModel.totalPages > 1){
       List<ContentModel> fullContentList = new List();
 
       // (TMDB starts at index of 1 *sigh*)
@@ -114,8 +125,12 @@ class TMDB {
 
       // Finally, update the ContentListModel's content item.
       listModel.content = fullContentList;
+      listModel.fullyLoaded = true;
     }
 
+    if(useCache){
+      DatabaseHelper.cachePlaylist(listModel);
+    }
     return listModel;
   }
 

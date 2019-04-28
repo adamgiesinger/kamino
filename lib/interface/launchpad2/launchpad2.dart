@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:async/async.dart';
@@ -9,12 +10,14 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
+import 'package:kamino/models/list.dart';
 import 'package:kamino/partials/carousel.dart';
 import 'package:kamino/partials/carousel_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/database_helper.dart';
+import 'package:kamino/util/settings.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class Launchpad2 extends KaminoAppPage {
@@ -33,11 +36,24 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
   List<ContentModel> _topPicksList = List();
   List<ContentModel> _continueWatchingList;
 
+  bool _watchlistsLoaded;
+  List<ContentListModel> _watchlists;
+
   Future<void> load() async {
     await DatabaseHelper.refreshEditorsChoice(context);
     _editorsChoice = await DatabaseHelper.selectRandomEditorsChoice();
 
-    _topPicksList = (await TMDB.getList(context, "107032")).content;
+    _topPicksList = (await TMDB.getList(context, 105604, loadFully: true, useCache: true)).content;
+
+    _watchlistsLoaded = false;
+    (() async {
+      _watchlists = new List();
+      for(String watchlist in (jsonDecode((await Settings.homepageCategories)) as Map).keys.toList()){
+        _watchlists.add(await TMDB.getList(context, int.parse(watchlist), loadFully: true, useCache: true));
+      }
+      _watchlistsLoaded = true;
+    })();
+
     _loadTrakt();
     
     updateKeepAlive();
@@ -248,6 +264,81 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
                           )
                         ],
                       )
+                  ),
+
+                  !_watchlistsLoaded ? Container() : ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _watchlists.length,
+                    itemBuilder: (BuildContext context, int index){
+                      ContentListModel watchlist = _watchlists[index];
+
+                      return Container(
+                        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 25),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                SubtitleText(watchlist.name),
+                                MaterialButton(
+                                    highlightColor: Theme.of(context).accentTextTheme.body1.color.withOpacity(0.3),
+                                    minWidth: 0,
+                                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                                    child: Text("See All", style: TextStyle(color: Theme.of(context).primaryTextTheme.body1.color)),
+                                    onPressed: () => {}
+                                )
+                              ],
+                            ),
+
+                            /* Widget content */
+                            Padding(
+                              padding: EdgeInsets.only(top: 5, bottom: 5),
+                              child: Container(
+                                  height: 150,
+                                  child: ListView.builder(
+                                      shrinkWrap: false,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: watchlist.content.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        ContentModel content = watchlist.content[index];
+
+                                        return Container(
+                                          margin: EdgeInsets.symmetric(horizontal: 5),
+                                          child: InkWell(
+                                            onTap: (){
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => ContentOverview(
+                                                          contentId: content.id,
+                                                          contentType: content.contentType
+                                                      )
+                                                  )
+                                              );
+                                            },
+                                            onLongPress: (){},
+                                            child: Container(
+                                              width: 100.5,
+                                              child: new ContentPoster(
+                                                  name: content.title,
+                                                  background: content.posterPath,
+                                                  mediaType: getRawContentType(content.contentType),
+                                                  releaseDate: content.releaseDate
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                  )
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }
                   )
 
                 ]),

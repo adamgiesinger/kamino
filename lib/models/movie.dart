@@ -91,4 +91,44 @@ class MovieContentModel extends ContentModel {
       runtime: json["runtime"] != null ? json["runtime"].toDouble() : null
     );
   }
+
+  @override
+  Map toStoredMap() {
+    return {
+      "id": id,
+      "imdbId": imdbId,
+      "title": title,
+      "contentType": getRawContentType(ContentType.MOVIE),
+      "overview": overview,
+      "releaseDate": releaseDate,
+      "homepage": homepage,
+      "genres": genres,
+      "rating": rating,
+      "backdropPath": backdropPath,
+      "posterPath": posterPath,
+      "voteCount": voteCount,
+      "originalTitle": originalTitle,
+      "originalCountry": originalCountry,
+      "runtime": runtime
+    };
+  }
+
+  static MovieContentModel fromStoredMap(Map map) {
+    return MovieContentModel(
+        id: map['id'],
+        imdbId: map['imdbId'],
+        title: map['title'],
+        overview: map['overview'],
+        releaseDate: map['releaseDate'],
+        homepage: map['homepage'],
+        genres: map['genres'],
+        rating: map['rating'],
+        backdropPath: map['backdropPath'],
+        posterPath: map['posterPath'],
+        voteCount: map['voteCount'],
+        originalTitle: map['originalTitle'],
+        originalCountry: map['originalCountry'],
+        runtime: map['runtime']
+    );
+  }
 }

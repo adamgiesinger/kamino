@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_parallax/flutter_parallax.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page_advanced.dart';
+import 'package:kamino/interface/settings/page_credits.dart';
 import 'package:kamino/interface/settings/page_extensions.dart';
 import 'package:kamino/interface/settings/page_playback.dart';
 import 'package:package_info/package_info.dart';
@@ -34,8 +34,6 @@ class SettingsView extends StatefulWidget {
 }
 
 class _SettingsViewState extends State<SettingsView> {
-
-  List<String> _contributors;
   
   PackageInfo _packageInfo = new PackageInfo(
       appName: 'Unknown',
@@ -47,7 +45,6 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   void initState() {
     _fetchPackageInfo();
-    //_fetchContributors();
 
     super.initState();
   }
@@ -56,21 +53,6 @@ class _SettingsViewState extends State<SettingsView> {
     final PackageInfo info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;
-    });
-  }
-
-  Future<Null> _fetchContributors() async {
-    String content = await rootBundle.loadString("assets/contributors.txt");
-    List<String> contributors = new List();
-
-    for(String entry in content.split("\n")){
-      if(entry != "") {
-        contributors.add(entry);
-      }
-    }
-
-    setState(() {
-      _contributors = contributors;
     });
   }
 
@@ -293,101 +275,42 @@ class _SettingsViewState extends State<SettingsView> {
                           ));
                         },
                       ),
-                    )
+                    ),
 
                     // It's okay to remove this, but we'd appreciate it if you
                     // keep it. <3
-                    //__buildContributorCard()
+                    Container(
+                        margin: EdgeInsets.only(top: 35, bottom: 5, left: 15, right: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SubtitleText(
+                              S.of(context).information,
+                              padding: EdgeInsets.zero,
+                            )
+                          ],
+                        )
+                    ),
+                    
+                    Material(
+                      color: Theme.of(context).backgroundColor,
+                      child: ListTile(
+                        title: TitleText("Credits"),
+                        subtitle: Text("This app is brought to you with \u2764 by these awesome people!"),
+                        leading: new Icon(Icons.people),
+                        enabled: true,
+                        isThreeLine: true,
+                        onTap: (){
+                          Navigator.push(context, FadeRoute(
+                              builder: (context) => CreditsSettingsPage(context)
+                          ));
+                        },
+                      ),
+                    )
                   ]
               )
           );
         })
-    );
-  }
-
-  Widget __buildContributorCard(){
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: Card(
-        elevation: 10.0,
-        color: Theme.of(context).cardColor,
-        child: new Container(
-            child: new Column(
-              children: <Widget>[
-                new Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 10),
-                    child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Icon(Icons.accessibility),
-                          new TitleText(
-                            "  " + S.of(context).with_thanks,
-                            fontSize: 24,
-                          )
-                        ]
-                    )
-                ),
-
-                new Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: new Text(
-                        S.of(context).appname_was_made_possible_by_all_of_these_amazing_people(appName),
-                        style: new TextStyle(
-                            fontFamily: 'GlacialIndifference',
-                            fontSize: 16
-                        )
-                    )
-                ),
-
-                new Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20, bottom: 40, top: 10),
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: (
-                        _contributors != null ?
-                        _contributors.map((entry) {
-                          if(entry.startsWith("##")){
-                            // TITLE entry.
-                            return new Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  new Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: TitleText(
-                                          '${entry.replaceFirst("## ", "")}',
-                                          textAlign: TextAlign.center,
-                                          fontSize: 24
-                                      )
-                                  )
-                                ]
-                            );
-                          }else{
-                            // User entry
-                            return new Row(
-                                children: <Widget>[
-                                  Text(
-                                    entry,
-                                    textAlign: TextAlign.left,
-                                  )
-                                ]
-                            );
-                          }
-                        }).toList()
-                            : <Widget>[
-                          new CircularProgressIndicator(
-                              valueColor: new AlwaysStoppedAnimation(
-                                  Theme.of(context).primaryColor
-                              )
-                          )
-                        ]
-                    ),
-                  ),
-                )
-              ],
-            )
-        ),
-      ),
     );
   }
 

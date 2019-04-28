@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/models/content.dart';
+import 'package:kamino/models/list.dart';
 import 'package:objectdb/objectdb.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
@@ -38,6 +39,44 @@ class DatabaseHelper {
     database.close();
   }
 
+  // LIST CACHE //
+  static Future<void> cachePlaylist(ContentListModel list) async {
+    ObjectDB database = await openDatabase();
+    await database.insert({
+      "docType": "cachedPlaylist",
+      "timestamp": new DateTime.now().millisecondsSinceEpoch,
+      "data": list.toMap()
+    });
+    database.close();
+  }
+
+  static Future<ContentListModel> getCachedPlaylist(int listId) async {
+    ObjectDB database = await openDatabase();
+    List<Map> data = await database.find({
+      "docType": "cachedPlaylist",
+      "data.id": listId
+    });
+
+    if(data.length < 1) return null;
+    ContentListModel cachedList = ContentListModel.fromJSON(data[0]['data']);
+    database.close();
+    return cachedList;
+  }
+
+  static Future<bool> playlistInCache(int listId) async {
+    // Check if database needs to be updated
+    ObjectDB database = await openDatabase();
+    bool inCache = (await database.find({
+      "docType": "cachedPlaylist",
+      "data.id": listId,
+      Op.gte: {
+        "timestamp": new DateTime.now().subtract(Duration(days: 1)).millisecondsSinceEpoch
+      }
+    })).length > 0;
+    database.close();
+    return inCache;
+  }
+
   // EDITOR'S CHOICE //
   static Future<void> refreshEditorsChoice(BuildContext context, { bool force = false }) async {
     // Check if database needs to be updated
@@ -52,8 +91,8 @@ class DatabaseHelper {
     if(canAvoidCheck) return;
 
     // Fetch comments and content data from TMDB.
-    var editorsChoiceComments = jsonDecode((await TMDB.getList(context, "109986", raw: true)))['comments'] as Map;
-    List<ContentModel> editorsChoiceContentList = (await TMDB.getList(context, "109986", loadFully: true)).content;
+    var editorsChoiceComments = jsonDecode((await TMDB.getList(context, 109986, raw: true)))['comments'] as Map;
+    List<ContentModel> editorsChoiceContentList = (await TMDB.getList(context, 109986, loadFully: true)).content;
 
     // Map the data to EditorsChoice objects.
     List<EditorsChoice> editorsChoice = new List();

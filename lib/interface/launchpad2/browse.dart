@@ -17,7 +17,7 @@ import 'package:shimmer/shimmer.dart';
 
 class BrowsePageState extends State<StatefulWidget> {
 
-  Map<String, AsyncMemoizer> _curatedMemoizers = new Map();
+  Map<int, AsyncMemoizer> _curatedMemoizers = new Map();
 
   final List genreList;
   final ContentType type;
@@ -51,7 +51,7 @@ class BrowsePageState extends State<StatefulWidget> {
                 ),
                 itemCount: TMDB.curatedTMDBLists[type].length,
                 itemBuilder: (BuildContext context, int index){
-                  String listID = TMDB.curatedTMDBLists[type][index];
+                  int listID = int.parse(TMDB.curatedTMDBLists[type][index]);
                   if(_curatedMemoizers[listID] == null)
                     _curatedMemoizers[listID] = new AsyncMemoizer();
 

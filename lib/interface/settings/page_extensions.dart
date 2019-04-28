@@ -59,12 +59,13 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).sync),
                       onPressed: (traktAuthenticated) ? () async {
-                        Interface.showLoadingDialog(context, title: S.of(context).syncing, canCancel: true);
-                        //Trakt.synchronize(context, silent: false);
-                        KaminoAppDelegateProxy state = context.ancestorStateOfType(const TypeMatcher<KaminoAppDelegateProxy>());
-                        Trakt.syncWatchHistory(state.context);
+                        //Interface.showLoadingDialog(context, title: S.of(context).syncing, canCancel: true);
 
-                        Navigator.of(context).pop();
+                        Trakt.synchronize(context, silent: false);
+                        //KaminoAppDelegateProxy state = context.ancestorStateOfType(const TypeMatcher<KaminoAppDelegateProxy>());
+                        //Trakt.syncWatchHistory(state.context);
+
+                        //Navigator.of(context).pop();
                       } : null,
                     ),
                     !traktAuthenticated ?

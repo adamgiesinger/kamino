@@ -39,12 +39,32 @@ class ContentListModel {
       description: json["description"],
       creatorName: json["created_by"]["name"],
       public: json["public"],
-      content: (json["results"] as List).map((entry) => entry["media_type"] == "movie"
-          ? MovieContentModel.fromJSON(entry)
-          : TVShowContentModel.fromJSON(entry)).toList(),
+      content: json["stored"] == null
+          ? ((json["results"] as List).map((entry) => entry["media_type"] == "movie"
+            ? MovieContentModel.fromJSON(entry)
+            : TVShowContentModel.fromJSON(entry)).toList()
+            )
+          : ((json["stored"] as List).map((entry) => ContentModel.fromStoredMap(entry))).toList(),
       totalPages: json["total_pages"],
-      fullyLoaded: json["total_pages"] <= 1 ? true : false
+      fullyLoaded: json["fully_loaded"] != null ? json["fully_loaded"] : false
     );
+  }
+
+  Map toMap(){
+    return {
+      "id": id,
+      "name": name,
+      "backdrop_path": backdrop,
+      "poster_path": poster,
+      "description": description,
+      "created_by": {
+        "name": creatorName
+      },
+      "public": public,
+      "stored": content.map((ContentModel model) => model.toStoredMap()).toList(),
+      "total_pages": totalPages,
+      "fullyLoaded": fullyLoaded
+    };
   }
 
 }

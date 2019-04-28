@@ -73,6 +73,7 @@ class S implements WidgetsLocalizations {
   String get continue_watching => "Continue Watching";
   String get core => "CORE";
   String get create_profile => "Create Profile";
+  String get credits => "Credits";
   String get curated => "Curated";
   String get customize_appearance => "Customize Appearance";
   String get customize_the_theme_and_primary_colors => "Customize the theme and primary colors.";
@@ -109,6 +110,7 @@ class S implements WidgetsLocalizations {
   String get get_device_information => "Get Device Information";
   String get grid_layout => "Grid Layout";
   String get if_this_problem_persists_please_contact_a_member_of_staff => "If this problem persists, please contact a member of staff on Discord.";
+  String get information => "Information";
   String get install => "Install";
   String get is_your_connection_too_slow => "Is your connection too slow?";
   String get it_seems_this_copy_of_the_app_is_out_of => "It seems this copy of the app is out of date...";

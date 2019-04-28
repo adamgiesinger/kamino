@@ -71,7 +71,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/contributors.txt
+    - assets/contributors.json
 
     - assets/images/no_image_detail.jpg
     - assets/images/header.png

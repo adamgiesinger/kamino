@@ -28,8 +28,8 @@ class TVShowContentModel extends ContentModel {
     String backdropPath,
     String posterPath,
     int voteCount,
-    double progress,
-    String lastWatched,
+    //double progress,
+    //String lastWatched,
     List cast,
     List crew,
     List<TVShowContentModel> recommendations,
@@ -56,8 +56,6 @@ class TVShowContentModel extends ContentModel {
     backdropPath: backdropPath,
     posterPath: posterPath,
     voteCount: voteCount,
-    progress: progress,
-    lastWatched: lastWatched,
     cast: cast,
     crew: crew,
     recommendations: recommendations,
@@ -109,6 +107,48 @@ class TVShowContentModel extends ContentModel {
       networks: json["networks"],
       status: json["status"],
       popularity: json["popularity"],
+    );
+  }
+
+  @override
+  Map toStoredMap() {
+    return {
+      "id": id,
+      "imdbId": imdbId,
+      "title": title,
+      "contentType": getRawContentType(ContentType.TV_SHOW),
+      "overview": overview,
+      "releaseDate": releaseDate,
+      "homepage": homepage,
+      "genres": genres,
+      "rating": rating,
+      "backdropPath": backdropPath,
+      "posterPath": posterPath,
+      "voteCount": voteCount,
+      "originalTitle": originalTitle,
+      "originalCountry": originalCountry,
+      "status": status,
+      "popularity": popularity
+    };
+  }
+
+  static TVShowContentModel fromStoredMap(Map map) {
+    return TVShowContentModel(
+      id: map['id'],
+      imdbId: map['imdbId'],
+      title: map['title'],
+      overview: map['overview'],
+      releaseDate: map['releaseDate'],
+      homepage: map['homepage'],
+      genres: map['genres'],
+      rating: map['rating'],
+      backdropPath: map['backdropPath'],
+      posterPath: map['posterPath'],
+      voteCount: map['voteCount'],
+      originalTitle: map['originalTitle'],
+      originalCountry: map['originalCountry'],
+      status: map['status'],
+      popularity: map['popularity']
     );
   }
 

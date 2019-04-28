@@ -254,5 +254,7 @@
   "name": "Name",
   "sorts_alphabetically_by_name": "Sorts alphabetically by name.",
   "file_size": "File Size",
-  "sorts_by_the_size_of_the_file": "Sorts by the size of the file."
+  "sorts_by_the_size_of_the_file": "Sorts by the size of the file.",
+  "credits": "Credits",
+  "information": "Information"
 }
