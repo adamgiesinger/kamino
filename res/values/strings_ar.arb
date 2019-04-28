@@ -156,7 +156,7 @@
   "disconnect_your_trakt_account": "الخاص بك Trakt إقطع الإتصال بحساب",
   "connect_your_trakt_account": " الخاص بكTrakt إتصل بحساب",
   "appname_can_synchronise_your_watch_history_and_favorites_from_trakttv": " ...Trakt.tv مزامنة سجل المشاهدة والمفضلات الخاصة بك من $appNameيمكن لـ",
-  "youre_offline": "You're offline...",
+  "youre_offline": "...أنت غير متصل بالإنترنت",
   "appname_failed_to_connect_to_the_internet": "$appName failed to connect to the internet. Please check your connection.",
   "playback": "Playback",
   "change_content_playback_settings": "Change content playback settings.",
