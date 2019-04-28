@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/interface/settings/page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kamino/ui/interface.dart';
 
 class ExtensionsSettingsPage extends SettingsPage {
   ExtensionsSettingsPage(BuildContext context) : super(
@@ -47,7 +49,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
               ListTile(
                 isThreeLine: true,
                 leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
-                title: Text('Trakt.tv'),
+                title: Text(S.of(context).trakttv),
                 subtitle: Text(S.of(context).trakt_description),
               ),
               ButtonTheme.bar( // make buttons use the appropriate styles for cards
@@ -56,8 +58,13 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                     FlatButton(
                       textColor: Theme.of(context).primaryTextTheme.body1.color,
                       child: TitleText(S.of(context).sync),
-                      onPressed: (traktAuthenticated) ? (){
-                        Trakt.synchronize(context, silent: false);
+                      onPressed: (traktAuthenticated) ? () async {
+                        Interface.showLoadingDialog(context, title: S.of(context).syncing, canCancel: true);
+                        //Trakt.synchronize(context, silent: false);
+                        KaminoAppDelegateProxy state = context.ancestorStateOfType(const TypeMatcher<KaminoAppDelegateProxy>());
+                        Trakt.syncWatchHistory(state.context);
+
+                        Navigator.of(context).pop();
                       } : null,
                     ),
                     !traktAuthenticated ?
@@ -97,7 +104,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
               ListTile(
                 isThreeLine: true,
                 leading: SvgPicture.asset("assets/icons/realdebrid.svg", height: 36, width: 36, color: const Color(0xFF78BB6F)),
-                title: Text('Real-Debrid'),
+                title: Text(S.of(context).realdebrid),
                 subtitle: Text(S.of(context).rd_description),
               ),
               ButtonTheme.bar( // make buttons use the appropriate styles for cards

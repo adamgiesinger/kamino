@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -27,13 +29,222 @@ class DatabaseHelper {
     print("Opening database...");
     ObjectDB database = await openDatabase();
     print("Dumping contents...");
-    print((await database.find({})).toString());
+    debugPrint((await database.find({})).toString(), wrapWidth: 100);
   }
 
   static Future<void> wipe() async {
     ObjectDB database = await openDatabase();
     await database.remove({});
+    database.close();
+  }
+
+  // EDITOR'S CHOICE //
+  static Future<void> refreshEditorsChoice(BuildContext context, { bool force = false }) async {
+    // Check if database needs to be updated
+    ObjectDB database = await openDatabase();
+    bool canAvoidCheck = (await database.find({
+      "docType": "editorsChoice",
+      Op.gte: {
+        // If older than 24 hours, we should get Editor's Choice again.
+        "timestamp": new DateTime.now().subtract(Duration(days: 1)).millisecondsSinceEpoch
+      }
+    })).length > 0;
+    if(canAvoidCheck) return;
+
+    // Fetch comments and content data from TMDB.
+    var editorsChoiceComments = jsonDecode((await TMDB.getList(context, "109986", raw: true)))['comments'] as Map;
+    List<ContentModel> editorsChoiceContentList = (await TMDB.getList(context, "109986", loadFully: true)).content;
+
+    // Map the data to EditorsChoice objects.
+    List<EditorsChoice> editorsChoice = new List();
+    for(ContentModel editorsChoiceContent in editorsChoiceContentList){
+      editorsChoice.add(new EditorsChoice(
+          id: editorsChoiceContent.id,
+          title: editorsChoiceContent.title,
+          poster: editorsChoiceContent.posterPath,
+          type: editorsChoiceContent.contentType,
+          comment: editorsChoiceComments['${getRawContentType(editorsChoiceContent.contentType)}:${editorsChoiceContent.id}']
+      ));
+    }
+
+    // Map the EditorsChoice objects to documents.
+    List<Map> editorsChoiceDocuments = editorsChoice.map(
+      (EditorsChoice choice) => choice.toMap()
+    ).toList();
+
+    // Write data to database.
+    await database.insert({
+      "docType": "editorsChoice",
+      "data": editorsChoiceDocuments,
+      "timestamp": new DateTime.now().millisecondsSinceEpoch
+    });
+    database.close();
+
+  }
+
+  static Future<EditorsChoice> selectRandomEditorsChoice() async {
+    ObjectDB database = await openDatabase();
+    List<Map> results = await database.find({
+      "docType": "editorsChoice"
+    });
+    if(results.length < 1) return null;
+
+    List editorsChoiceDocuments = results[0]["data"];
+
+    // Randomly select a choice from the Editor's Choice list.
+    Map selectedChoice = editorsChoiceDocuments[Random().nextInt(editorsChoiceDocuments.length)];
+    return EditorsChoice.fromJSON(selectedChoice);
+  }
+
+  static Future<EditorsChoice> selectEditorsChoice(int tmdbID) async {
+    ObjectDB database = await openDatabase();
+
+    List<Map> results = await database.find({
+      "docType": "editorsChoice"
+    });
+    if(results.length < 1) return null;
+
+    Map editorsChoice;
+    for(Map result in results[0]["data"]){
+      if(result['id'] == tmdbID) editorsChoice = result;
+    }
+
+    if(editorsChoice == null) return null;
+    return EditorsChoice.fromJSON(editorsChoice);
+  }
+
+  // WATCH HISTORY //
+  static Future<void> setWatchProgressById(BuildContext context, ContentType type, int tmdbID, {
+    @required int millisecondsWatched,
+    @required int totalMilliseconds,
+    int season,
+    int episode,
+    bool isFinished,
+    DateTime lastUpdated,
+  }) async {
+
+    //TODO: do not get TMDB data if already have it
+    await setWatchProgress(
+      await TMDB.getContentInfo(context, type, tmdbID),
+      millisecondsWatched: millisecondsWatched,
+      totalMilliseconds: totalMilliseconds,
+      season: season,
+      episode: episode,
+      isFinished: isFinished,
+      lastUpdated: lastUpdated
+    );
+  }
+
+  static Future<void> setWatchProgress(ContentModel model, {
+    @required int millisecondsWatched,
+    @required int totalMilliseconds,
+    int season,
+    int episode,
+    bool isFinished,
+    DateTime lastUpdated,
+  }) async {
+    if(isFinished == null)
+      isFinished = (millisecondsWatched / 1000).floor()
+                      == (totalMilliseconds / 1000).floor();
+
+    ObjectDB database = await openDatabase();
+
+    if(model.contentType == ContentType.TV_SHOW){
+      if(season == null) throw new Exception("Season must not be null.");
+      if(episode == null) throw new Exception("Episode must not be null.");
+
+      // If TV show exists in database.
+      List<Map> results = await database.find({
+        "docType": "watchProgress",
+        "type": getRawContentType(model.contentType),
+        "id": model.id
+      });
+
+      if(results.length > 0){
+        await database.update({
+          "docType": "watchProgress",
+          "type": getRawContentType(model.contentType),
+          "id": model.id
+        }, {
+          "seasons": {
+            season.toString(): {
+              episode.toString(): {
+                "watched": millisecondsWatched,
+                "total": totalMilliseconds
+              }
+            }
+          }
+        });
+
+        await database.close();
+        return;
+      }
+    }
+
+    await database.insert({
+      "docType": "watchProgress",
+
+      "id": model.id,
+      "type": getRawContentType(model.contentType),
+
+      "content": {
+        "imdbId": model.imdbId,
+        "title": model.title,
+        "poster": model.posterPath,
+        "backdrop": model.backdropPath
+      },
+
+      "progress": model.contentType == ContentType.TV_SHOW
+          ? {
+        "seasons": {
+          season.toString(): {
+            episode.toString(): {
+              "lastUpdated": lastUpdated != null ? lastUpdated.toString() : new DateTime.now().toString(),
+              "watched": millisecondsWatched,
+              "total": totalMilliseconds,
+              "isFinished": isFinished
+            }
+          }
+        }
+      } : {
+        "lastUpdated": lastUpdated != null ? lastUpdated.toString() : new DateTime.now().toString(),
+        "watched": millisecondsWatched,
+        "total": totalMilliseconds,
+        "isFinished": isFinished
+      }
+    });
+
     await database.close();
+  }
+
+  static Future<WatchProgressWrapper> getWatchProgress(ContentModel model, {
+    int season,
+    int episode
+  }) async {
+    ObjectDB database = await openDatabase();
+
+    Map filter = {
+      "docType": "watchProgress",
+      "id": model.id,
+      "type": getRawContentType(model.contentType)
+    };
+    filter.addAll(model.contentType == ContentType.TV_SHOW ? {
+      "progress.seasons.$season.$episode": true
+    } : {});
+
+    List<Map> watchData = await database.find(filter);
+    database.close();
+
+    if(watchData.length < 1) return null;
+    return WatchProgressWrapper.fromJSON(watchData[0]);
+  }
+
+  static Future<void> clearAllWatchProgress() async {
+    ObjectDB database = await openDatabase();
+    await database.remove({
+      "docType": "watchProgress"
+    });
+    database.close();
   }
 
   // FAVORITES //
@@ -197,6 +408,131 @@ class FavoriteDocument {
       "year": year,
       "saved_on": savedOn.toString()
     };
+  }
+
+}
+
+
+class EditorsChoice {
+
+  int id;
+  ContentType type;
+  String title;
+  String comment;
+  String poster;
+
+  EditorsChoice({
+    @required this.id,
+    @required this.type,
+    @required this.title,
+    @required this.comment,
+    @required this.poster
+  });
+
+  EditorsChoice.fromJSON(Map data){
+    this.id = data['id'];
+    this.type = getContentTypeFromRawType(data['type']);
+    this.title = data['title'];
+    this.comment = data['comment'];
+    this.poster = data['poster'];
+  }
+
+  Map<String, dynamic> toMap(){
+    return {
+      "id": id,
+      "type": getRawContentType(type),
+      "title": title,
+      "comment": comment,
+      "poster": poster
+    };
+  }
+
+}
+
+class WatchProgress {
+  DateTime lastUpdated;
+  int watched;
+  int total;
+  bool isFinished;
+
+  WatchProgress({
+    this.lastUpdated,
+    this.watched,
+    this.total,
+    this.isFinished
+  });
+
+  WatchProgress.fromJSON(Map json) :
+      lastUpdated = DateTime.parse(json['lastUpdated']),
+      watched = json['watched'],
+      total = json['total'],
+      isFinished = json['isFinished'];
+}
+
+class EpisodeWatchProgress {
+
+  Map<int, WatchProgress> episodes;
+
+  EpisodeWatchProgress.fromJSON(Map json){
+    episodes = json.map((episode, watchProgress) => MapEntry(
+      episode,
+      WatchProgress.fromJSON(watchProgress)
+    ));
+  }
+
+}
+
+class SeasonWatchProgress {
+
+  Map<int, EpisodeWatchProgress> seasons;
+
+  SeasonWatchProgress.fromJSON(Map json){
+    seasons = json.map((season, seasonData) => MapEntry(
+      season,
+      seasonData = EpisodeWatchProgress.fromJSON(seasonData)
+    ));
+  }
+
+}
+
+class WatchProgressWrapper {
+
+  String id;
+  ContentType type;
+
+  String imdbId;
+  String title;
+  String poster;
+  String backdrop;
+
+  WatchProgress _otherWatchProgress;
+  SeasonWatchProgress _seasonWatchProgress;
+
+  dynamic get watchProgress {
+    if(type == ContentType.TV_SHOW) return _seasonWatchProgress;
+    return _otherWatchProgress;
+  }
+
+  set watchProgress(watchProgress){
+    if(type == ContentType.TV_SHOW)  _seasonWatchProgress = watchProgress;
+    _otherWatchProgress = watchProgress;
+  }
+
+  WatchProgressWrapper.fromJSON(Map json){
+
+    id = json['id'];
+    type = getContentTypeFromRawType(json['type']);
+
+    imdbId = json['content']['imdbId'];
+    title = json['content']['title'];
+    poster = json['content']['poster'];
+    backdrop = json['content']['backdrop'];
+
+    if(type == ContentType.TV_SHOW){
+      watchProgress = SeasonWatchProgress.fromJSON(json['progress']['seasons']);
+    }else{
+      watchProgress = WatchProgress.fromJSON(json['progress']);
+    }
   }
 
 }

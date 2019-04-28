@@ -23,11 +23,13 @@ class Trakt {
 
    */
 
-  static const String TRAKT_AUTH_GET_TOKEN = "https://api.trakt.tv/oauth/token";
-  static const String TRAKT_AUTH_REVOKE_TOKEN = "https://api.trakt.tv/oauth/revoke";
+  static const String TRAKT_API_ENDPOINT = "https://api.trakt.tv";
 
-  static const String TRAKT_SYNC_HISTORY = "https://api.trakt.tv/sync/history";
-  static const String TRAKT_SYNC_COLLECTION = "https://api.trakt.tv/sync/collection";
+  static const String TRAKT_AUTH_GET_TOKEN = "$TRAKT_API_ENDPOINT/oauth/token";
+  static const String TRAKT_AUTH_REVOKE_TOKEN = "$TRAKT_API_ENDPOINT/oauth/revoke";
+
+  static const String TRAKT_SYNC_HISTORY = "$TRAKT_API_ENDPOINT/sync/history";
+  static const String TRAKT_SYNC_COLLECTION = "$TRAKT_API_ENDPOINT/sync/collection";
 
   static Future<Map<String, String>> _getAuthHeaders(BuildContext context) async {
     KaminoAppState appState = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
@@ -296,9 +298,72 @@ class Trakt {
     );
   }
 
+  static Future<void> syncWatchHistory(BuildContext context) async {
+    // Generate Trakt authentication headers.
+    var headers = await _getAuthHeaders(context);
+
+    // Make GET request to history endpoint.
+    var responseRaw = await http.get("$TRAKT_SYNC_HISTORY?page=1&limit=1000", headers: headers);
+    List<dynamic> response = jsonDecode(responseRaw.body);
+
+    for(Map<String, dynamic> entry in response) {
+      String type = entry["type"];
+      
+      // TODO: Add support for non-tmdb based data.
+      int contentId = entry[type]["ids"]["tmdb"];
+      if(contentId == null) continue;
+
+      switch(type){
+        case "episode":
+          String slug = entry["show"]["ids"]["slug"];
+          int season = entry["episode"]["season"];
+          int episode = entry["episode"]["number"];
+
+          int totalDuration = Duration(minutes: jsonDecode(
+              (await http.get("$TRAKT_API_ENDPOINT/shows/$slug/seasons/$season/episodes/$episode/?extended=full", headers: headers)).body
+          )["runtime"]).inMilliseconds;
+
+          DatabaseHelper.setWatchProgressById(
+            context,
+            ContentType.TV_SHOW,
+            contentId,
+            season: season,
+            episode: episode,
+            millisecondsWatched: totalDuration,
+            totalMilliseconds: totalDuration,
+            isFinished: true,
+            lastUpdated: DateTime.parse(entry["watched_at"])
+          );
+
+          break;
+        case "movie":
+          String slug = entry["movie"]["ids"]["slug"];
+          int totalDuration = Duration(minutes: jsonDecode((await http.get("$TRAKT_API_ENDPOINT/movies/$slug?extended=full", headers: headers)).body)["runtime"]).inMilliseconds;
+
+          DatabaseHelper.setWatchProgress(
+            await TMDB.getContentInfo(context, ContentType.MOVIE, contentId),
+            millisecondsWatched: totalDuration,
+            totalMilliseconds: totalDuration,
+            isFinished: true,
+            lastUpdated: DateTime.parse(entry["watched_at"])
+          );
+
+          break;
+        default:
+          continue;
+      }
+    }
+
+  }
+
+  static Future<void> syncPlaybackHistory(BuildContext context) async {
+    
+  }
+
   ///
   /// This gets a user's Trakt watch history.
   ///
+  @Deprecated("This is no longer used. You should instead syncWatchHistory.")
   static Future<List<ContentModel>> getWatchHistory(BuildContext context, { bool includeComplete = false }) async {
     List<ContentModel> progressData = [];
 
@@ -327,7 +392,8 @@ class Trakt {
       return progressData;
     }catch(ex){
       print(ex);
-      throw new Exception("An error occurred whilst connecting to Trakt.tv.");
+      return null;
+      //throw new Exception("An error occurred whilst connecting to Trakt.tv.");
     }
   }
 

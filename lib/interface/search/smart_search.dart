@@ -6,6 +6,7 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/search/search_results.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/ui/elements.dart';
@@ -212,7 +213,7 @@ class SmartSearch extends SearchDelegate<String> {
                   if(snapshot.error is SocketException
                       || snapshot.error is HttpException) return OfflineMixin();
 
-                  return ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading search results.");
+                  return ErrorLoadingMixin(errorMessage: S.of(context).error_loading_search);
 
                 } else if (snapshot.hasData) {
                   return _simplifiedSuggestions(snapshot);

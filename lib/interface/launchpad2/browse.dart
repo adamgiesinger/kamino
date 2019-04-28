@@ -69,14 +69,14 @@ class BrowsePageState extends State<StatefulWidget> {
                             alignment: Alignment.center,
                             children: <Widget>[
                               !snapshot.hasData && !snapshot.hasError ? Shimmer.fromColors(
-                                baseColor: const Color(0x1F000000),
-                                highlightColor: const Color(0x3FFFFFFF),
+                                baseColor: const Color(0x8F000000),
+                                highlightColor: const Color(0x4F000000),
                                 child: Container(color: const Color(0x8F000000)),
                               ) : Container(),
 
                               snapshot.hasData ? CachedNetworkImage(
                                 imageUrl: TMDB.IMAGE_CDN_LOWRES + list.backdrop,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.cover
                               ) : Container(),
 
                               snapshot.hasData || snapshot.hasError ? Container(

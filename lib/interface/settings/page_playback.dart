@@ -29,7 +29,7 @@ class PlaybackSettingsPage extends SettingsPage {
         context: context,
         builder: (_) {
           return SimpleDialog(
-              title: TitleText("Select Player..."),
+              title: TitleText(S.of(context).select_player),
               children: <Widget>[
                 Container(
                     height: 250,
@@ -52,7 +52,7 @@ class PlaybackSettingsPage extends SettingsPage {
                             return ListTile(
                               isThreeLine: true,
                               title: TitleText('CPlayer (Default)'),
-                              subtitle: Text("ApolloTV built-in player.\nVersion ${packageInfo.version}"),
+                              subtitle: Text(S.of(context).apollotv_builtin_player + "\n" + S.of(context).version_x(packageInfo.version)),
                               leading: ClipRRect(
                                   borderRadius: BorderRadius.circular(48),
                                   child: Image(
@@ -75,7 +75,7 @@ class PlaybackSettingsPage extends SettingsPage {
                           index--;
                           return ListTile(
                             title: TitleText(snapshot.data[index]['name']),
-                            subtitle: Text("Version ${snapshot.data[index]['version']}"),
+                            subtitle: Text(S.of(context).version_x(snapshot.data[index]['version'])),
                             leading: ClipRRect(
                                 borderRadius: BorderRadius.circular(48),
                                 child: Image(
@@ -151,13 +151,13 @@ class PlaybackSettingsPageState extends SettingsPageState {
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.cast),
-            title: TitleText("Cast Settings"),
-            subtitle: Text("Coming Soon"),
+            title: TitleText(S.of(context).cast_settings),
+            subtitle: Text(S.of(context).coming_soon),
             onTap: (){
               showDialog(context: context, builder: (BuildContext context){
                 return AlertDialog(
-                  title: TitleText("Not yet implemented..."),
-                  content: Text("This feature has not yet been implemented."),
+                  title: TitleText(S.of(context).not_yet_implemented),
+                  content: Text(S.of(context).this_feature_has_not_yet_been_implemented),
                   actions: <Widget>[
                     FlatButton(
                       onPressed: () => Navigator.of(context).pop(),

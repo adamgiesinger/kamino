@@ -28,6 +28,19 @@ String getRawContentType(ContentType type){
   }
 }
 
+ContentType getContentTypeFromRawType(String raw){
+  switch(raw){
+    case "movie":
+      return ContentType.MOVIE;
+    case "tv":
+      return ContentType.TV_SHOW;
+    case "mixed":
+      return ContentType.MIXED;
+    default:
+      return null;
+  }
+}
+
 class ContentModel {
   final int id;
   final String imdbId;

@@ -60,7 +60,10 @@ class Interface {
     );
   }
 
-  static Future<void> showSimpleSuccessDialog(BuildContext context, {String title = "Success!", String message = "Action completed successfully.", FlatButton alternativeAction}) async {
+  static Future<void> showSimpleSuccessDialog(BuildContext context, {String title, String message, FlatButton alternativeAction}) async {
+    if(title == null) title = S.of(context).success;
+    if(message == null) message = S.of(context).action_completed_successfully;
+    
     Interface.showAlert(
         context: context,
         title: TitleText(title), // Title
@@ -84,7 +87,10 @@ class Interface {
     );
   }
 
-  static Future<void> showSimpleErrorDialog(BuildContext context, {String title = "An error occurred", String reason = "Unable to determine reason...", FlatButton alternativeAction}) async {
+  static Future<void> showSimpleErrorDialog(BuildContext context, {String title, String reason, FlatButton alternativeAction}) async {
+    if(title == null) title = S.of(context).an_error_occurred;
+    if(reason == null) reason = S.of(context).unable_to_determine_reason;
+    
     Interface.showAlert(
         context: context,
         title: TitleText(title), // Title
@@ -101,7 +107,7 @@ class Interface {
             onPressed: (){
               Navigator.of(context).pop();
             },
-            child: Text("Close"),
+            child: Text(S.of(context).close),
             textColor: Theme.of(context).primaryColor,
           )
         ]
@@ -201,7 +207,7 @@ class Interface {
             return false;
           },
           child: AlertDialog(
-              title: TitleText('Connecting...'),
+              title: TitleText(S.of(context).connecting),
               content: SingleChildScrollView(
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
@@ -214,7 +220,7 @@ class Interface {
                           ),
                         )
                     ),
-                    Center(child: Text("Please wait..."))
+                    Center(child: Text(S.of(context).please_wait))
                   ],
                 ),
               ),
@@ -224,7 +230,7 @@ class Interface {
                 onPressed: (){
                   if(onPop != null) onPop();
                 },
-                child: Text("Cancel"),
+                child: Text(S.of(context).cancel),
                 textColor: Theme.of(context).primaryColor,
               )
             ],
@@ -233,7 +239,9 @@ class Interface {
     );
   }
 
-  static void showLoadingDialog(BuildContext context, { String title = "Loading...", bool canCancel = false, Function onCancel }){
+  static void showLoadingDialog(BuildContext context, { String title, bool canCancel = false, Function onCancel }){
+    if(title == null) title = S.of(context).loading;
+
     showDialog(
       barrierDismissible: canCancel,
       context: context,
@@ -257,7 +265,7 @@ class Interface {
                       ),
                     )
                 ),
-                Center(child: Text("Please wait..."))
+                Center(child: Text(S.of(context).please_wait))
               ],
             ),
           ),
@@ -268,7 +276,7 @@ class Interface {
                 if(onCancel != null) onCancel();
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: Text(S.of(context).cancel),
               textColor: Theme.of(context).primaryColor,
             )
           ] : [],

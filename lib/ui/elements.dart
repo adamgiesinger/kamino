@@ -265,11 +265,13 @@ class ErrorLoadingMixin extends StatelessWidget {
   final String errorMessage;
 
   ErrorLoadingMixin({
-    this.errorMessage = "An error occurred whilst loading this page."
+    this.errorMessage
   });
 
   @override
   Widget build(BuildContext context) {
+    if(errorMessage == null) S.of(context).an_error_occurred_whilst_loading_this_page;
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
@@ -280,7 +282,7 @@ class ErrorLoadingMixin extends StatelessWidget {
             children: <Widget>[
               Icon(Icons.error, size: 48, color: Colors.grey),
               Container(padding: EdgeInsets.symmetric(vertical: 10)),
-              TitleText("An error occurred.", fontSize: 24),
+              TitleText(S.of(context).an_error_occurred, fontSize: 24),
               Container(padding: EdgeInsets.symmetric(vertical: 3)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 50),

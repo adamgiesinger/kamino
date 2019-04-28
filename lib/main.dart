@@ -142,6 +142,23 @@ void main() async {
   });
 }
 
+class KaminoAppDelegateProxyRenderer extends StatefulWidget {
+
+  final Widget child;
+  KaminoAppDelegateProxyRenderer({ @required this.child });
+
+  @override
+  State<StatefulWidget> createState() => KaminoAppDelegateProxy();
+
+}
+
+class KaminoAppDelegateProxy extends State<KaminoAppDelegateProxyRenderer> {
+
+  @override
+  Widget build(BuildContext context) => widget.child;
+
+}
+
 class KaminoApp extends StatefulWidget {
 
   static final navigatorKey = GlobalKey<NavigatorState>();
@@ -294,7 +311,7 @@ class KaminoAppState extends State<KaminoApp> {
   Widget build(BuildContext context) {
     ErrorWidget.builder = (FlutterErrorDetails error) => _getErrorWidget(error);
 
-    return new MaterialApp(
+    return new KaminoAppDelegateProxyRenderer(child: MaterialApp(
       navigatorKey: KaminoApp.navigatorKey,
       localizationsDelegates: [
         S.delegate,
@@ -310,7 +327,7 @@ class KaminoAppState extends State<KaminoApp> {
 
       // Hide annoying debug banner
       debugShowCheckedModeBanner: false
-    );
+    ));
   }
 
   Future<VendorService> getPrimaryVendorService({ bool excludeShim = false }) async {

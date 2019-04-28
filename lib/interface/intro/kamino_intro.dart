@@ -409,7 +409,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                 leading: SvgPicture.asset("assets/icons/realdebrid.svg", height: 36, width: 36, color: const Color(0xFF78BB6F)),
                                 isThreeLine: true,
                                 title: TitleText(rdConnected ? S.of(context).disconnect_your_realdebrid_account : S.of(context).connect_your_realdebrid_account),
-                                subtitle: Text("If you have a RealDebrid subscription, ApolloTV can use it to obtain high-speed download results.")
+                                subtitle: Text(S.of(context).realdebrid_service_info)
                             ),
                           )
                         ],

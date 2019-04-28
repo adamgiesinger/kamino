@@ -395,7 +395,7 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   petitparser:
     dependency: transitive
     description:
@@ -618,7 +618,7 @@ packages:
     description:
       path: "packages/video_player"
       ref: master
-      resolved-ref: "76165dd45053756126e4db63347412912ffed926"
+      resolved-ref: a5cf69bb1d33458f484e8d76a04d3e221dcd361e
       url: "git://github.com/flutter/plugins.git"
     source: git
     version: "0.10.0+7"

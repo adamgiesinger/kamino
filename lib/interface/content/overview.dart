@@ -273,6 +273,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                                               child: _generateGenreChipsRow(context, content),
                                             ),
                                             _generateSynopsisSection(content),
+                                            _generateEditorsChoice(),
                                             _generateCastAndCrewInfo(),
 
                                             // Context-specific layout
@@ -518,7 +519,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                 // e.g: 'This TV Show has no synopsis available.'
                 S.of(context).this_x_has_no_synopsis_available(getPrettyContentType(widget.contentType)),
 
-              maxLines: 3,
+              maxLines: 5,
               revealLabel: S.of(context).show_more,
               concealLabel: S.of(context).show_less,
               color: const Color(0xFFBCBCBC)
@@ -622,7 +623,48 @@ class _ContentOverviewState extends State<ContentOverview> {
     );
   }
 
+  Widget _generateEditorsChoice(){
+    return FutureBuilder(
+      future: DatabaseHelper.selectEditorsChoice(widget.contentId),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(snapshot.hasError || !snapshot.hasData || snapshot.data == null)
+          return Container();
+
+        EditorsChoice editorsChoice = snapshot.data;
+        return Container(
+          margin: EdgeInsets.all(20).copyWith(bottom: 0),
+          child: Card(
+            elevation: 5,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15).copyWith(bottom: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 2),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Icon(Icons.stars, size: 14, color: Theme.of(context).primaryTextTheme.display3.color),
+                        SubtitleText(S.of(context).editors_choice)
+                      ],
+                    ),
+                  ),
+                  Text(editorsChoice.comment)
+                ]
+              ),
+            ),
+          )
+        );
+      },
+    );
+  }
+
   static Widget _generateRecommendedContentCards(BuildContext context, ContentModel model){
+    if(model.recommendations == null || model.recommendations.length < 1)
+      return Container();
+
     return Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 0),
         child: Padding(
@@ -643,7 +685,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
                   SizedBox(
                     height: 200,
-                    child: model.recommendations == null ? Container() : ListView.builder(
+                    child: ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         itemCount: model.recommendations.length,

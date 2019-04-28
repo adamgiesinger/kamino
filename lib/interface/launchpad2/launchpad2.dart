@@ -1,12 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/api/trakt.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
@@ -15,6 +14,7 @@ import 'package:kamino/partials/carousel_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/util/database_helper.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class Launchpad2 extends KaminoAppPage {
@@ -34,18 +34,8 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
   List<ContentModel> _continueWatchingList;
 
   Future<void> load() async {
-    // Randomly select a choice from the Editor's Choice list.
-    var editorsChoiceComments = jsonDecode((await TMDB.getList(context, "109986", raw: true)))['comments'] as Map;
-    List<ContentModel> editorsChoiceList = (await TMDB.getList(context, "109986", loadFully: true)).content;
-
-    var selectedChoice = (editorsChoiceList[Random().nextInt(editorsChoiceList.length)]);
-    _editorsChoice = new EditorsChoice(
-      id: selectedChoice.id,
-      title: selectedChoice.title,
-      poster: selectedChoice.posterPath,
-      type: selectedChoice.contentType,
-      comment: editorsChoiceComments['${getRawContentType(selectedChoice.contentType)}:${selectedChoice.id}']
-    );
+    await DatabaseHelper.refreshEditorsChoice(context);
+    _editorsChoice = await DatabaseHelper.selectRandomEditorsChoice();
 
     _topPicksList = (await TMDB.getList(context, "107032")).content;
     _loadTrakt();
@@ -86,7 +76,9 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
             },
           );
 
-          return ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading your launchpad.");
+          print(snapshot.error);
+          print((snapshot.error as Error).stackTrace);
+          return ErrorLoadingMixin(errorMessage: S.of(context).error_loading_launchpad);
         }
 
         switch(snapshot.connectionState){
@@ -138,71 +130,12 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
                     ),
                   ),
 
-                  SubtitleText("Editor's Choice", padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10).copyWith(bottom: 0)),
-                  Container(
-                      height: 200,
-                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            child: Card(
-                              child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
-                                return Container(
-                                  margin: EdgeInsets.only(left: 107),
-                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      TitleText(
-                                          _editorsChoice.title,
-                                          fontSize: 24
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 10, right: 5),
-                                        child: Text(
-                                          _editorsChoice.comment,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 5,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                );
-                              })
-                            ),
-                          ),
-
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            bottom: 0,
-                            width: 107,
-                            child: ContentPoster(
-                              elevation: 4,
-                              onTap: () => Interface.openOverview(context, _editorsChoice.id, _editorsChoice.type),
-                              background: _editorsChoice.poster,
-                              showGradient: false,
-                            ),
-                          )
-                        ],
-                      )
-                  ),
-
                   _continueWatchingList != null ? Container(
                     padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("CONTINUE WATCHING", style: TextStyle(
-                          fontFamily: 'GlacialIndifference',
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
-                          color: Theme.of(context).primaryTextTheme.display3.color,
-                        )),
+                        SubtitleText(S.of(context).continue_watching),
 
                         Container(
                           padding: EdgeInsets.symmetric(vertical: 10),
@@ -261,6 +194,62 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
                     ),
                   ) : Container(),
 
+                  _editorsChoice == null
+                      ? Container()
+                      : SubtitleText(S.of(context).editors_choice, padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10).copyWith(bottom: 0)),
+                  _editorsChoice == null ? Container() : Container(
+                      height: 200,
+                      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: Card(
+                              child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+                                return Container(
+                                  margin: EdgeInsets.only(left: 107),
+                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      TitleText(
+                                          _editorsChoice.title,
+                                          fontSize: 24
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10, right: 5),
+                                        child: Text(
+                                          _editorsChoice.comment,
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 5,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              })
+                            ),
+                          ),
+
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            bottom: 0,
+                            width: 107,
+                            child: ContentPoster(
+                              elevation: 4,
+                              onTap: () => Interface.openOverview(context, _editorsChoice.id, _editorsChoice.type),
+                              background: _editorsChoice.poster,
+                              showGradient: false,
+                            ),
+                          )
+                        ],
+                      )
+                  )
+
                 ]),
               )
             ],
@@ -272,23 +261,5 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
 
   @override
   bool get wantKeepAlive => true;
-
-}
-
-class EditorsChoice {
-
-  int id;
-  ContentType type;
-  String title;
-  String comment;
-  String poster;
-
-  EditorsChoice({
-    @required this.id,
-    @required this.type,
-    @required this.title,
-    @required this.comment,
-    @required this.poster
-  });
 
 }

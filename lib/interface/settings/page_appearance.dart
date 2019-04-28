@@ -86,7 +86,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
                       _detailedContentInfoEnabled = await Settings.detailedContentInfoEnabled;
                       setState(() {});
                     },
-                    title: TitleText("Card Layout"),
+                    title: TitleText(S.of(context).card_layout),
                     icon: Icon(Icons.view_agenda),
 
                   ),
@@ -97,7 +97,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
                       _detailedContentInfoEnabled = await Settings.detailedContentInfoEnabled;
                       setState(() {});
                     },
-                    title: TitleText("Grid Layout"),
+                    title: TitleText(S.of(context).grid_layout),
                     icon: Icon(Icons.grid_on),
                   )
                 ],

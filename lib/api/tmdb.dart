@@ -68,8 +68,12 @@ class TMDB {
       "105603",
       // Netflix Exlusives
       "105608",
+      // New HD releases
+      "105604",
       // Other Exclusives
       "105611",
+      // Romantic Comedies
+      "109896",
       // Star Trek
       "107930",
       // Star Wars
