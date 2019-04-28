@@ -48,12 +48,12 @@ class CarouselCardState extends State<CarouselCard> with AutomaticKeepAliveClien
                 direction: AxisDirection.right,
                 mainAxisExtent: height,
                 child: CachedNetworkImage(
-                  imageUrl: TMDB.IMAGE_CDN + widget.model.backdropPath,
+                  imageUrl: widget.model.backdropPath != null ? TMDB.IMAGE_CDN + widget.model.backdropPath : "",
                   fit: BoxFit.cover,
                   placeholder: Container(color: Colors.black, width: width, height: height),
                   height: height,
                   width: width + 100,
-                  errorWidget: new Icon(Icons.error, size: 30.0)
+                  errorWidget: Center(child: Icon(Icons.error, size: 30.0))
                 )
               // height: 220.0,
               // fit: BoxFit.cover,
