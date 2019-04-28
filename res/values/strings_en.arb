@@ -244,5 +244,15 @@
   "is_your_connection_too_slow": "Is your connection too slow?",
   "unable_to_connect_to_server": "Unable to connect to server.",
   "the_appname_server_is_currently_offline_for_server_upgrades": "The $appName server is currently offline for server upgrades.",
-  "please_check_the_announcements_channel_in_our_discord_server_for": "Please check the #announcements channel in our Discord server for more information."
+  "please_check_the_announcements_channel_in_our_discord_server_for": "Please check the #announcements channel in our Discord server for more information.",
+  "n_sources": "$n sources",
+  "sort_by": "Sort By...",
+  "ping": "Ping",
+  "sorts_by_the_time_the_server_took_to_respond": "Sorts by the time the server took to respond.",
+  "quality": "Quality",
+  "sorts_by_source_quality": "Sorts by source quality.",
+  "name": "Name",
+  "sorts_alphabetically_by_name": "Sorts alphabetically by name.",
+  "file_size": "File Size",
+  "sorts_by_the_size_of_the_file": "Sorts by the size of the file."
 }

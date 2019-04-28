@@ -92,7 +92,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                 .of(context)
                 .backgroundColor,
             title: TitleText(
-                "${widget.title} \u2022 ${sourceList.length} sources"
+                "${widget.title} \u2022 " + S.of(context).n_sources(sourceList.length.toString())
             ),
             centerTitle: true,
             bottom: PreferredSize(
@@ -239,7 +239,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                                           borderRadius: BorderRadius.circular(5)
                                       ),
                                       child: TitleText(
-                                        (qualityInfo != null ? qualityInfo : "ERROR"),
+                                        (qualityInfo != null ? qualityInfo : "-"),
                                         textAlign: TextAlign.center,
                                       )
                                   ),
@@ -382,7 +382,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
   Widget build(BuildContext context) {
     return SimpleDialog(
       contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10).copyWith(top: 20),
-      title: TitleText("Sort By..."),
+      title: TitleText(S.of(context).sort_by),
       children: <Widget>[
 
         Column(
@@ -390,8 +390,8 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
             RadioListTile(
               isThreeLine: true,
               secondary: Icon(Icons.network_check),
-              title: Text('Ping'),
-              subtitle: Text('Sorts by the time the server took to respond.'),
+              title: Text(S.of(context).ping),
+              subtitle: Text(S.of(context).sorts_by_the_time_the_server_took_to_respond),
               value: 'ping',
               groupValue: sortingMethod,
               onChanged: (value){
@@ -405,8 +405,8 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
 
             RadioListTile(
               secondary: Icon(Icons.high_quality),
-              title: Text('Quality'),
-              subtitle: Text('Sorts by source quality.'),
+              title: Text(S.of(context).quality),
+              subtitle: Text(S.of(context).sorts_by_source_quality),
               value: 'quality',
               groupValue: sortingMethod,
               onChanged: (value){
@@ -420,8 +420,8 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
 
             RadioListTile(
               secondary: Icon(Icons.sort_by_alpha),
-              title: Text('Name'),
-              subtitle: Text('Sorts alphabetically by name.'),
+              title: Text(S.of(context).name),
+              subtitle: Text(S.of(context).sorts_alphabetically_by_name),
               value: 'name',
               groupValue: sortingMethod,
               onChanged: (value){
@@ -436,8 +436,8 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
             RadioListTile(
               isThreeLine: true,
               secondary: Icon(Icons.import_export),
-              title: Text('File Size'),
-              subtitle: Text('Sorts by the size of the file.'),
+              title: Text(S.of(context).file_size),
+              subtitle: Text(S.of(context).sorts_by_the_size_of_the_file),
               value: 'fileSize',
               groupValue: sortingMethod,
               onChanged: (value){
@@ -464,7 +464,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                     setState(() {});
                   },
                   icon: Icon(Icons.keyboard_arrow_up),
-                  label: TitleText("Ascending")
+                  label: TitleText(S.of(context).ascending)
               ),
               FlatButton.icon(
                   color: sortReversed ? Theme.of(context).primaryColor : null,
@@ -473,7 +473,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                     setState(() {});
                   },
                   icon: Icon(Icons.keyboard_arrow_down),
-                  label: TitleText("Descending")
+                  label: TitleText(S.of(context).descending)
               )
             ],
           ),
@@ -490,7 +490,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                 onPressed: (){
                   Navigator.of(context).pop();
                 },
-                child: Text("Cancel"),
+                child: Text(S.of(context).cancel),
                 textColor: Theme.of(context).primaryColor,
               ),
 
@@ -505,7 +505,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                   })();
                   Navigator.of(context).pop([sortingMethod, sortReversed]);
                 },
-                child: Text("Done"),
+                child: Text(S.of(context).done),
                 textColor: Theme.of(context).primaryColor,
               )
             ],

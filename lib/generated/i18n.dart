@@ -101,6 +101,7 @@ class S implements WidgetsLocalizations {
   String get experimental => "Experimental";
   String get extensions => "Extensions";
   String get favorites => "Favorites";
+  String get file_size => "File Size";
   String get gathers_useful_information_for_debugging => "Gathers useful information for debugging.";
   String get general_application_settings => "General application settings.";
   String get general_settings => "General Settings";
@@ -122,6 +123,7 @@ class S implements WidgetsLocalizations {
   String get manually_override_the_default_content_server => "Manually override the default content server.";
   String get miscellaneous => "MISCELLANEOUS";
   String get movies => "Movies";
+  String get name => "Name";
   String get networking => "NETWORKING";
   String get next => "NEXT";
   String get no_favorites_description => "You can add an item to favorites by tapping the heart on the top right of a content overview page.";
@@ -134,6 +136,7 @@ class S implements WidgetsLocalizations {
   String get order => "ORDER";
   String get other_ => "Other";
   String get permission_denied => "Permission denied.";
+  String get ping => "Ping";
   String get play_episode => "Play Episode";
   String get play_movie => "Play Movie";
   String get playback => "Playback";
@@ -141,6 +144,7 @@ class S implements WidgetsLocalizations {
   String get please_wait => "Please wait...";
   String get popularity => "Popularity";
   String get power_user_settings_for_rocket_scientists => "Power user settings for rocket scientists.";
+  String get quality => "Quality";
   String get rd_description => "Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet.";
   String get real_debrid_authenticator => "Real-Debrid Authenticator";
   String get realdebrid => "Real-Debrid";
@@ -167,6 +171,11 @@ class S implements WidgetsLocalizations {
   String get show_more => "Show more...";
   String get skip => "SKIP";
   String get sort => "Sort";
+  String get sort_by => "Sort By...";
+  String get sorts_alphabetically_by_name => "Sorts alphabetically by name.";
+  String get sorts_by_source_quality => "Sorts by source quality.";
+  String get sorts_by_the_size_of_the_file => "Sorts by the size of the file.";
+  String get sorts_by_the_time_the_server_took_to_respond => "Sorts by the time the server took to respond.";
   String get source_autoplay => "Enable Source Autoplay";
   String get source_autoplay_description => "Automatically selects a source to play instead of showing a dialog containing the source list.";
   String get success => "Success!";
@@ -226,6 +235,7 @@ class S implements WidgetsLocalizations {
   String make_appname_yours(String appName) => "MAKE $appName YOURS";
   String n_episodes(String n) => "$n episodes";
   String n_ratings(String n) => "$n ratings";
+  String n_sources(String n) => "$n sources";
   String seasons_n(String n) => "Seasons ($n)";
   String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "The $appName server is currently offline for server upgrades.";
   String this_x_has_no_synopsis_available(String x) => "This $x has no synopsis available.";
