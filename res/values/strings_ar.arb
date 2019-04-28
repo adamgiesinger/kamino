@@ -139,7 +139,7 @@
   "customize_appearance_description": "!يهتم برأيك في المظهر. لنبدأ بإختيار المظهر المفضلة لك $appName",
   "choose_n_categoriesOther": "...$n إختار فئات",
   "choose_n_categoriesOne": "...$n category إختار فئات",
-  "choose_n_categories_description": "Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!",
+  "choose_n_categories_description": "!أخيرًا, لنعدل محتواك. إختار ثلاث فئات على الأقل وإحصل على إقتراحات للمحتوى الذي تستمتع به",
 
   "choose_n_categoriesZero": "Awesome!",
   "experimental": "Experimental",
