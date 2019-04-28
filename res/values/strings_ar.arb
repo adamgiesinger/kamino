@@ -130,15 +130,15 @@
   "an_error_occurred": ".لقد حدث خطأ",
   "cast_and_crew": "طاقم العمل",
 
-  "welcome_to_appname": "Welcome to $appName",
-  "app_tagline": "The streaming app built, for the community, by the community.",
-  "lets_go": "LET'S GO",
+  "welcome_to_appname": "$appName أهلا بك إلي",
+  "app_tagline": ".تطبيق المشاهدة المصمم من قبل المجتمع للمجتمع",
+  "lets_go": "هيا بنا",
 
-  "create_profile": "Create Profile",
-  "customize_appearance": "Customize Appearance",
-  "customize_appearance_description": "$appName is all about customization. Let's get started by choosing your favorite theme!",
-  "choose_n_categoriesOther": "Choose $n categories...",
-  "choose_n_categoriesOne": "Choose $n category...",
+  "create_profile": "إنشاء ملف الشخصي",
+  "customize_appearance": "عدل المظهر",
+  "customize_appearance_description": "!يهتم برأيك في المظهر. لنبدأ بإختيار المظهر المفضلة لك $appName",
+  "choose_n_categoriesOther": "...$n إختار فئات",
+  "choose_n_categoriesOne": "...$n category إختار فئات",
   "choose_n_categories_description": "Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!",
 
   "choose_n_categoriesZero": "Awesome!",
