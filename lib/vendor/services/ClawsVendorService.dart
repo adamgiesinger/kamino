@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/movie.dart';
@@ -67,18 +68,18 @@ class ClawsVendorService extends VendorService {
 
       this.setStatus(context, VendorServiceStatus.IDLE);
       Interface.showSimpleErrorDialog(context,
-          title: "Unable to connect...",
-          reason: "The request timed out.\n\n(Is your connection too slow?)");
+          title: S.of(context).unable_to_connect,
+          reason: S.of(context).the_request_timed_out + "\n\n(" + S.of(context).is_your_connection_too_slow + ")");
       return false;
     } catch (ex) {
       this.setStatus(context, VendorServiceStatus.IDLE);
       print("Exception whilst determining Claws status: $ex");
 
       Interface.showSimpleErrorDialog(context,
-          title: "Unable to connect...",
+          title: S.of(context).unable_to_connect,
           reason: isOfficial
-              ? "The $appName server is currently offline for server upgrades.\nPlease check the #announcements channel in our Discord server for more information."
-              : "Unable to connect to server.");
+              ? S.of(context).the_appname_server_is_currently_offline_for_server_upgrades(appName) + "\n" + S.of(context).please_check_the_announcements_channel_in_our_discord_server_for
+              : S.of(context).unable_to_connect_to_server);
       return false;
     }
   }
@@ -114,9 +115,9 @@ class ClawsVendorService extends VendorService {
       if (clawsClientHash == null) {
         this.setStatus(context, VendorServiceStatus.IDLE);
         Interface.showSimpleErrorDialog(context,
-            title: "Unable to connect...",
+            title: S.of(context).unable_to_connect,
             reason:
-                "Authentication timed out. Please try again.\n\nIf this problem persists, please contact a member of staff on Discord.");
+                S.of(context).authentication_timed_out_please_try_again + "\n\n" + S.of(context).if_this_problem_persists_please_contact_a_member_of_staff);
         return false;
       }
 
@@ -133,9 +134,10 @@ class ClawsVendorService extends VendorService {
       if (response == null || response.statusCode != 200) {
         this.setStatus(context, VendorServiceStatus.IDLE);
         Interface.showSimpleErrorDialog(context,
-            title: "Authentication failed...",
+            title: S.of(context).authentication_failed,
             reason:
-                "The server could not verify the app's integrity. (Is your copy of the app out of date?)");
+                S.of(context).it_seems_this_copy_of_the_app_is_out_of + "\n\n(" + S.of(context).the_server_failed_to_verify_the_apps_integrity + ")"
+        );
         return false;
       }
 
@@ -156,7 +158,7 @@ class ClawsVendorService extends VendorService {
 
       this.setStatus(context, VendorServiceStatus.IDLE);
       Interface.showSimpleErrorDialog(context,
-          title: "Unable to connect...", reason: tokenResponse["message"]);
+          title: S.of(context).unable_to_connect, reason: tokenResponse["message"]);
       return false;
     }
   }
@@ -245,7 +247,7 @@ class ClawsVendorService extends VendorService {
     } catch (ex) {
       this.setStatus(context, VendorServiceStatus.IDLE);
       Interface.showSimpleErrorDialog(context,
-          title: "Scraping failed...", reason: "The socket connection failed.");
+          title: S.of(context).scraping_failed, reason: S.of(context).the_socket_connection_failed);
       print(ex.toString());
       return;
     }
@@ -253,9 +255,9 @@ class ClawsVendorService extends VendorService {
     if (_webSocket == null) {
       this.setStatus(context, VendorServiceStatus.IDLE);
       Interface.showSimpleErrorDialog(context,
-          title: "Scraping failed...",
+          title: S.of(context).scraping_failed,
           reason:
-              "The socket connection timed out. (Is your connection to slow?)");
+              S.of(context).the_socket_connection_timed_out + " (" + S.of(context).is_your_connection_too_slow + ")");
       return;
     }
 
@@ -349,9 +351,14 @@ class ClawsVendorService extends VendorService {
           case 'RDScrape':
             var rdResult = await RealDebrid.unrestrictLink(event['target']);
             SourceModel rdModel = new SourceModel.fromRDJSON(rdResult);
-            rdModel.metadata.provider = event['provider'];
-            rdModel.metadata.source = event['resolver'];
-            addSource(rdModel);
+            var splitParts = rdModel.file.data.split('.');
+            var fileExtension =  splitParts[splitParts.length - 1].toLowerCase();
+            if (fileExtension == 'mkv' || fileExtension == 'mp4' || fileExtension == 'avi') {
+              rdModel.metadata.provider = event['provider'];
+              rdModel.metadata.source = event['resolver'];
+              rdModel.metadata.quality = event['quality'];
+              addSource(rdModel);
+            }
             break;
           ///
           /// Once Claws has found a result from a source, it is sent to the
@@ -488,10 +495,10 @@ class ClawsVendorService extends VendorService {
     }, onError: (error) {
       this.setStatus(context, VendorServiceStatus.IDLE);
       Interface.showSimpleErrorDialog(context,
-          title: "Scraping failed...",
-          reason: "An error occurred whilst communicating with Claws.");
+          title: S.of(context).scraping_failed,
+          reason: S.of(context).an_error_occurred_whilst_communicating_with_claws);
       print(
-          "An error occurred whilst communicating with Claws... (${error.toString()})");
+          S.of(context).an_error_occurred_whilst_communicating_with_claws_detailed(error.toString()));
       return;
     });
 

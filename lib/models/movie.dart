@@ -24,7 +24,7 @@ class MovieContentModel extends ContentModel {
     int voteCount,
     List cast,
     List crew,
-    List<MovieContentModel> similar,
+    List<MovieContentModel> recommendations,
     List videos,
 
     // Movie parameters
@@ -45,7 +45,7 @@ class MovieContentModel extends ContentModel {
     voteCount: voteCount,
     cast: cast,
     crew: crew,
-    similar: similar,
+    recommendations: recommendations,
     videos: videos,
     originalTitle: originalTitle,
     originalCountry: originalCountry
@@ -54,8 +54,8 @@ class MovieContentModel extends ContentModel {
   static MovieContentModel fromJSON(Map json){
     Map credits = json['credits'] != null ? json['credits'] : {'cast': null, 'crew': null};
     List videos = json['videos'] != null ? json['videos']['results'] : null;
-    List<MovieContentModel> similar = json['similar'] != null
-      ? (json['similar']['results'] as List).map(
+    List<MovieContentModel> recommendations = json['recommendations'] != null
+      ? (json['recommendations']['results'] as List).map(
           (element) => MovieContentModel.fromJSON(element)
         ).toList()
       : null;
@@ -80,7 +80,7 @@ class MovieContentModel extends ContentModel {
       voteCount: json.containsKey("vote_count") ? json["vote_count"] : 0,
       cast: credits['cast'] != null ? (credits['cast'] as List).map((entry) => CastMemberModel.fromJSON(entry)).toList() : null,
       crew: credits['crew'] != null ? (credits['crew'] as List).map((entry) => CrewMemberModel.fromJSON(entry)).toList() : null,
-      similar: similar,
+      recommendations: recommendations,
       videos: videos,
       alternativeTitles: alternativeTitles,
       originalCountry: json['production_countries'] != null && json['production_countries'].length > 0

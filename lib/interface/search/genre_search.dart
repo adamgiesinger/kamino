@@ -7,16 +7,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/partials/content_card.dart';
-import 'package:kamino/util/database_helper.dart' as databaseHelper;
 import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/util/genre.dart' as genre;
 import 'package:kamino/partials/content_poster.dart';
-import 'package:kamino/partials/result_card.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 
 class GenreSearch extends StatefulWidget{
-
 
   final String contentType, genreName;
   final int genreID;
@@ -162,7 +159,7 @@ class _GenreSearchState extends State<GenreSearch>{
         controller: controller,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: (constraints.maxWidth / idealWidth).round(),
-          childAspectRatio: 0.76,
+          childAspectRatio: 0.67,
           mainAxisSpacing: spacing,
           crossAxisSpacing: spacing,
         ),

@@ -34,9 +34,9 @@ class RealDebrid {
     // authentication manually, but let's show a dialog to be safe.
     if (data["user_code"] == null) {
       Interface.showSimpleErrorDialog(
-          context,
-          title: S.of(context).authentication_unsuccessful,
-          reason: S.of(context).appname_was_unable_to_authenticate_with_real_debrid(appName)
+        context,
+        title: S.of(context).authentication_unsuccessful,
+        reason: S.of(context).appname_was_unable_to_authenticate_with_real_debrid(appName)
       );
 
       return false;
@@ -50,12 +50,14 @@ class RealDebrid {
       )
     );
 
-    if (result["access_token"] != null){
-      List<String> _cred = [result["access_token"],
-      result["refresh_token"],
-      DateTime.now().add(new Duration(seconds: result["expires_in"] - REAL_DEBRID_REFRESH_OFFSET)).toString()];
+    if (result != null && result["access_token"] != null){
+      RealDebridCredentials rdCredentials = new RealDebridCredentials.named(
+        accessToken: result["access_token"],
+        refreshToken: result["refresh_token"],
+        expiryDate: DateTime.now().add(new Duration(seconds: result["expires_in"] - REAL_DEBRID_REFRESH_OFFSET)).toString()
+      );
 
-      Settings.rdCredentials = _cred;
+      await Settings.setRdCredentials(rdCredentials);
       if(shouldShowSnackbar) Interface.showSnackbar(S.of(context).connected_real_debrid_account, context: context, backgroundColor: Colors.green);
       return true;
     }
@@ -64,7 +66,7 @@ class RealDebrid {
         context,
         title: S.of(context).authentication_unsuccessful,
         reason: S.of(context).appname_was_unable_to_authenticate_with_real_debrid(appName) +
-          "\n\nError ${response.statusCode.toString()}"
+            (result != null && response.statusCode != 200 ? "\n\nError ${response.statusCode.toString()}" : "")
     );
     return false;
   }
@@ -73,7 +75,7 @@ class RealDebrid {
   /// This method removes the user's credentials.
   ///
   static Future<void> deauthenticate(BuildContext context, { bool shouldShowSnackbar = false }) async {
-    Settings.rdCredentials = [];
+    await Settings.setRdCredentials(RealDebridCredentials.unauthenticated());
     if(shouldShowSnackbar) Interface.showSnackbar(S.of(context).disconnected_real_debrid_account, context: context, backgroundColor: Colors.red);
   }
 
@@ -82,8 +84,8 @@ class RealDebrid {
   /// RD API.
   ///
   static Future<bool> isAuthenticated() async {
-    var _rdCred = await Settings.rdCredentials;
-    return _rdCred != null && _rdCred.length == 3;
+    RealDebridCredentials rdCredentials = await Settings.rdCredentials;
+    return rdCredentials != null && rdCredentials.isValid();
   }
 
   static Future<Map> _getSecret(String device_code) async {
@@ -94,9 +96,8 @@ class RealDebrid {
 
     Map data = json.decode(res.body);
 
-    List<String> _rdClientInfo = [data["client_id"], data["client_secret"]];
-
-    Settings.rdClientInfo = _rdClientInfo;
+    List<String> rdClientInfo = [data["client_id"], data["client_secret"]];
+    Settings.$_rdClientInfo = rdClientInfo;
 
     return data;
   }
@@ -128,22 +129,14 @@ class RealDebrid {
     String url = REAL_DEBRID_OAUTH_ENDPOINT + "/token";
 
     //get rd credentials
-    List<String> _rdCred = [];
-    List<String> _rdIDSecret = [];
-
-    await ((Settings.rdCredentials) as Future).then((data) {
-      _rdCred = data;
-    });
-
-    await ((Settings.rdClientInfo) as Future).then((data) {
-      _rdIDSecret = data;
-    });
+    RealDebridCredentials rdCredentials = await Settings.rdCredentials;
+    List<String> rdClientInfo = await Settings.$_rdClientInfo;
 
     Map body = {
-      "client_id": _rdIDSecret[0],
       "grant_type": "http://oauth.net/grant_type/device/1.0",
-      "client_secret": _rdIDSecret[1],
-      "code": _rdCred[1]
+      "client_id": rdClientInfo[0],
+      "client_secret": rdClientInfo[1],
+      "code": rdCredentials.refreshToken
     };
 
     http.Response res = await http.post(url, body: body);
@@ -151,13 +144,12 @@ class RealDebrid {
     if (res.statusCode == 200) {
       Map result = json.decode(res.body);
 
-      List<String> _cred = [
-        result["access_token"],
-        result["refresh_token"],
-        DateTime.now().add(new Duration(seconds: result["expires_in"] - REAL_DEBRID_REFRESH_OFFSET)).toString()
-      ];
-
-      Settings.rdCredentials = _cred;
+      RealDebridCredentials credentials = new RealDebridCredentials.named(
+        accessToken: result["access_token"],
+        refreshToken: result["refresh_token"],
+        expiryDate: DateTime.now().add(new Duration(seconds: result["expires_in"] - REAL_DEBRID_REFRESH_OFFSET)).toString()
+      );
+      await Settings.setRdCredentials(credentials);
 
       return true;
     }
@@ -166,13 +158,8 @@ class RealDebrid {
   }
 
   static Future<Map<String, dynamic>> unrestrictLink(String link) async {
-    List<String> _rdCred = [];
-
-    await ((Settings.rdCredentials) as Future).then((data) {
-      _rdCred = data;
-    });
-
-    Map<String, String> userHeader = {'Authorization': 'Bearer ' + _rdCred[0]};
+    RealDebridCredentials rdCredentials = await Settings.rdCredentials;
+    Map<String, String> userHeader = {'Authorization': 'Bearer ' + rdCredentials.accessToken};
 
     http.Response _StreamLinkRes = await http
         .post(REAL_DEBRID_API_ENDPOINT + "/unrestrict/link", headers: userHeader, body: {"link": link});
@@ -185,17 +172,11 @@ class RealDebrid {
     return null;
   }
 
-  static Future<bool> validateToken() async {
-    List<String> _rdCred = [];
-
-    await ((Settings.rdCredentials) as Future).then((data) {
-      _rdCred = data;
-    });
-
-    bool tokenCheck = DateTime.now().isBefore(DateTime.parse(_rdCred[2]));
+  static Future<void> validateToken() async {
+    RealDebridCredentials rdCredentials = await Settings.rdCredentials;
+    bool tokenCheck = DateTime.now().isBefore(DateTime.parse(rdCredentials.expiryDate));
 
     if (!tokenCheck) {
-      //refresh the token
       return await _refreshToken();
     }
   }
@@ -215,7 +196,10 @@ class RealDebridAuthenticator extends StatefulWidget {
 class _RealDebridAuthenticatorState extends State<RealDebridAuthenticator> {
 
   final flutterWebviewPlugin = new FlutterWebviewPlugin();
-  String _targetUrl;
+  StreamSubscription<String> _onUrlChanged;
+
+  String targetUrl;
+  bool isAllowed = false;
 
   @override
   void initState() {
@@ -223,8 +207,20 @@ class _RealDebridAuthenticatorState extends State<RealDebridAuthenticator> {
 
     _prepare().then((String target) {
         if(mounted) setState(() {
-          _targetUrl = target;
+          targetUrl = target;
         });
+    });
+
+    // Listen for done via URL change.
+    _onUrlChanged = flutterWebviewPlugin.onUrlChanged.listen((String url) async {
+      // Execute a simple script to 'disarm' the Real-Debrid link
+      await flutterWebviewPlugin.evalJavascript(
+        "document.querySelectorAll(\"a[href='/']\").forEach((element) => element.onclick = (e) => e.preventDefault());"
+      );
+
+      // Check if the application has been authorized (so done state can be set).
+      this.isAllowed = await flutterWebviewPlugin.evalJavascript('document.body.innerHTML.indexOf("Application allowed") !== -1') == "true";
+      if(mounted) setState(() {});
     });
 
     super.initState();
@@ -234,28 +230,40 @@ class _RealDebridAuthenticatorState extends State<RealDebridAuthenticator> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(
+        if(this.context != null) Navigator.pop(
             this.context,
             await RealDebrid.getToken(widget.oauthData["device_code"])
         );
         return false;
       },
-      child: _targetUrl != null ? WebviewScaffold(
-        url: _targetUrl,
+      child: targetUrl != null ? WebviewScaffold(
+        url: targetUrl,
         userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
             "(KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
         clearCache: true,
         clearCookies: true,
         appBar: AppBar(
-          title: TitleText("Real Debrid Authenticator"),
+          leading: isAllowed ? Container() : null,
+          title: TitleText(S.of(context).real_debrid_authenticator),
           centerTitle: true,
           elevation: 8.0,
           backgroundColor: Theme.of(context).cardColor,
+          actions: <Widget>[
+            isAllowed ? FlatButton(
+              child: Text(S.of(context).done.toUpperCase()),
+              onPressed: () async {
+                if(mounted) Navigator.pop(
+                  this.context,
+                  await RealDebrid.getToken(widget.oauthData["device_code"])
+                );
+              },
+            ) : Container()
+          ],
         ),
       ) : Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
-          title: TitleText("Real Debrid Authenticator"),
+          title: TitleText(S.of(context).real_debrid_authenticator),
           centerTitle: true,
           elevation: 8.0,
           backgroundColor: Theme.of(context).cardColor,

@@ -13,6 +13,7 @@ fi
 
 WEBHOOK_DATA='{
   "username": "ApolloTV (Travis)",
+  "content": "@BuildNotify A new build has completed",
   "embeds": [ {
     "color": '$EMBED_COLOR',
     "author": {
@@ -21,7 +22,7 @@ WEBHOOK_DATA='{
     },
     "title": "'"$COMMIT_SUBJECT"'",
     "url": "'"$URL"'",
-    "description": "@everyone A new build has completed: '"${COMMIT_MESSAGE//$'\n'/ }"\\n\\n"$CREDITS"'",
+    "description": "**Build Information**: '"${COMMIT_MESSAGE//$'\n'/ }"\\n\\n"$CREDITS"'",
     "fields": [
       {
         "name": "Commit",
@@ -35,7 +36,7 @@ WEBHOOK_DATA='{
       },
       {
         "name": "Files",
-        "value": "'"[WeTransfer]($BUILD_OUTPUT_URL)"'"
+        "value": "'"[Download APK]($BUILD_OUTPUT_URL)"'"
       }
     ],
     "timestamp": "'"$TIMESTAMP"'"

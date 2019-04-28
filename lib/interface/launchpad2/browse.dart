@@ -10,12 +10,14 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/search/genre_search.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
+import 'package:kamino/models/list.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/genre.dart';
+import 'package:shimmer/shimmer.dart';
 
 class BrowsePageState extends State<StatefulWidget> {
 
-  Map<int, AsyncMemoizer> _genreMemoizers = new Map();
+  Map<String, AsyncMemoizer> _curatedMemoizers = new Map();
 
   final List genreList;
   final ContentType type;
@@ -31,6 +33,87 @@ class BrowsePageState extends State<StatefulWidget> {
       width: MediaQuery.of(context).size.width,
       child: ListView(
         children: <Widget>[
+          SubtitleText(S.of(context).curated.toUpperCase(), padding: EdgeInsets.symmetric(horizontal: 15).copyWith(top: 20)),
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints){
+              double idealWidth = 200;
+              double spacing = 10.0;
+
+              return GridView.builder(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: (constraints.maxWidth / idealWidth).round(),
+                  childAspectRatio: 2,
+                  mainAxisSpacing: spacing,
+                  crossAxisSpacing: spacing,
+                ),
+                itemCount: TMDB.curatedTMDBLists[type].length,
+                itemBuilder: (BuildContext context, int index){
+                  String listID = TMDB.curatedTMDBLists[type][index];
+                  if(_curatedMemoizers[listID] == null)
+                    _curatedMemoizers[listID] = new AsyncMemoizer();
+
+                  return FutureBuilder(
+                    future: _curatedMemoizers[listID].runOnce(() => TMDB.getList(context, listID)),
+                    builder: (BuildContext context, AsyncSnapshot snapshot){
+                      ContentListModel list = snapshot.data;
+
+                      return Material(
+                          type: MaterialType.card,
+                          borderRadius: BorderRadius.circular(5),
+                          clipBehavior: Clip.antiAlias,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              !snapshot.hasData && !snapshot.hasError ? Shimmer.fromColors(
+                                baseColor: const Color(0x8F000000),
+                                highlightColor: const Color(0x4F000000),
+                                child: Container(color: const Color(0x8F000000)),
+                              ) : Container(),
+
+                              snapshot.hasData ? CachedNetworkImage(
+                                imageUrl: TMDB.IMAGE_CDN_LOWRES + list.backdrop,
+                                fit: BoxFit.cover
+                              ) : Container(),
+
+                              snapshot.hasData || snapshot.hasError ? Container(
+                                color: const Color(0x8F000000),
+                                child: Center(child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 30
+                                    ),
+                                    child: snapshot.hasError
+                                      ? Icon(Icons.error)
+                                      : TitleText(
+                                          list.name,
+                                          allowOverflow: true,
+                                          fontSize: 24,
+                                          textAlign: TextAlign.center,
+                                        )
+                                )),
+                              ) : Container(),
+
+                              snapshot.hasData ? Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => {},
+                                ),
+                              ) : Container()
+                            ],
+                          )
+                      );
+                    }
+                  );
+                },
+              );
+            },
+          ),
+
+          // ALL GENRES
+          SubtitleText(S.of(context).all_genres.toUpperCase(), padding: EdgeInsets.symmetric(horizontal: 15).copyWith(top: 20)),
           LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints){
               double idealWidth = 200;
@@ -54,10 +137,6 @@ class BrowsePageState extends State<StatefulWidget> {
                       type,
                       genreId
                   );
-
-                  if(_genreMemoizers[genreId] == null)
-                    _genreMemoizers[genreId] = new AsyncMemoizer();
-                  AsyncMemoizer memoizer = _genreMemoizers[genreId];
 
                   return Material(
                     type: MaterialType.card,

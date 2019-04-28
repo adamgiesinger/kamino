@@ -31,9 +31,6 @@ class AdvancedSettingsPageState extends SettingsPageState {
   final _serverURLController = TextEditingController();
   final _serverKeyController = TextEditingController();
 
-  int _maxConcurrentRequests;
-  int _requestTimeout;
-
   @override
   void initState() {
     assert((){
@@ -42,9 +39,6 @@ class AdvancedSettingsPageState extends SettingsPageState {
     }());
 
     () async {
-      _maxConcurrentRequests = await Settings.maxConcurrentRequests;
-      _requestTimeout = await Settings.requestTimeout;
-
       _serverURLController.text = await Settings.serverURLOverride;
       _serverKeyController.text = await Settings.serverKeyOverride;
 
@@ -61,7 +55,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
       shrinkWrap: widget.isPartial ? true : false,
       children: <Widget>[
 
-        SubtitleText("CORE", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+        SubtitleText(S.of(context).core, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
 
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
@@ -84,7 +78,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
                         children: <Widget>[
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 10),
-                            child: Text("Be careful! This option could break the app if you don't know what you're doing."),
+                            child: Text(S.of(context).be_careful_this_option_could_break_the_app_if_you),
                           ),
 
                           Container(
@@ -93,13 +87,13 @@ class AdvancedSettingsPageState extends SettingsPageState {
                               validator: (String arg){
                                 const String serverURLRegex = r"^(http|https):\/\/(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])(:[0-9]+)?\/$";
                                 bool isValid = new RegExp(serverURLRegex, caseSensitive: false).hasMatch(arg);
-                                if(!isValid && arg.length > 0) return "The URL must be valid and include a trailing /.";
+                                if(!isValid && arg.length > 0) return S.of(context).the_url_must_be_valid_and_include_a_trailing_;
                               },
                               controller: _serverURLController,
                               keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.public),
-                                labelText: "Server URL"
+                                labelText: S.of(context).server_url
                               ),
                             ),
                           ),
@@ -109,14 +103,14 @@ class AdvancedSettingsPageState extends SettingsPageState {
                             child: TextFormField(
                               validator: (String arg){
                                 if(arg.length != 32 && arg.length > 0)
-                                  return "The key must be 32 characters in length.";
+                                  return S.of(context).the_key_must_be_32_characters_in_length;
                               },
                               maxLength: 32,
                               maxLengthEnforced: true,
                               controller: _serverKeyController,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.vpn_key),
-                                labelText: "Server Key"
+                                labelText: S.of(context).server_key
                               ),
                             ),
                           )
@@ -169,8 +163,8 @@ class AdvancedSettingsPageState extends SettingsPageState {
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.phonelink_setup),
-            title: TitleText("Run Initial Setup Procedure"),
-            subtitle: Text("Begins the initial setup procedure that is displayed when the app is opened for the first time."),
+            title: TitleText(S.of(context).run_initial_setup_procedure),
+            subtitle: Text(S.of(context).begins_the_initial_setup_procedure_that_is_displayed_when_the),
             enabled: true,
             isThreeLine: true,
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -182,77 +176,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
           ),
         ),
 
-        SubtitleText("NETWORKING", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
-
-        /*Material(
-          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
-          child: ListTile(
-            isThreeLine: true,
-            leading: Icon(Icons.network_check),
-            title: TitleText("Maximum Concurrent Requests"),
-            subtitle: Text("Limits the number of concurrent network requests that can be made by the app."),
-            enabled: true,
-            trailing: DropdownButton<int>(
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'GlacialIndifference',
-                  fontSize: 16
-                ),
-                hint: Text(_maxConcurrentRequests.toString(), style: TextStyle(
-                  color: Colors.white
-                )),
-                // Max value for 'Maximum concurrent requests' -> 5
-                items: List<DropdownMenuItem<int>>.generate(5, (value){
-                  value += 1;
-                  return DropdownMenuItem<int>(
-                    child: Text(value.toString()),
-                    value: value
-                  );
-                }),
-                onChanged: (value){
-                  Settings.maxConcurrentRequests = value;
-                  setState(() {
-                    _maxConcurrentRequests = value;
-                  });
-                }
-            ),
-          ),
-        ),
-
-        Material(
-          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
-          child: ListTile(
-            isThreeLine: true,
-            leading: Icon(Icons.timer_off),
-            title: TitleText("Request Timeout Duration"),
-            subtitle: Text("The delay, in seconds, before which a network request will be timed out."),
-            enabled: true,
-            trailing: DropdownButton<int>(
-                style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'GlacialIndifference',
-                    fontSize: 16
-                ),
-                hint: Text(_requestTimeout.toString(), style: TextStyle(
-                    color: Colors.white
-                )),
-                // Generate 5 items (in this case - interval of 10)
-                items: List<DropdownMenuItem<int>>.generate(5, (value){
-                  value = (value + 1) * 10;
-                  return DropdownMenuItem<int>(
-                      child: Text(value.toString()),
-                      value: value
-                  );
-                }),
-                onChanged: (value){
-                  Settings.requestTimeout = value;
-                  setState(() {
-                    _requestTimeout = value;
-                  });
-                }
-            ),
-          ),
-        ),*/
+        SubtitleText(S.of(context).networking, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
 
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
@@ -264,8 +188,8 @@ class AdvancedSettingsPageState extends SettingsPageState {
             onTap: (){
               showDialog(context: context, builder: (BuildContext context){
                 return AlertDialog(
-                  title: TitleText("Not yet implemented..."),
-                  content: Text("This feature has not yet been implemented."),
+                  title: TitleText(S.of(context).not_yet_implemented),
+                  content: Text(S.of(context).this_feature_has_not_yet_been_implemented),
                   actions: <Widget>[
                     FlatButton(
                       onPressed: () => Navigator.of(context).pop(),
@@ -279,7 +203,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
           ),
         ),
 
-        SubtitleText("DIAGNOSTICS", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+        SubtitleText(S.of(context).diagnostics, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
 
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
@@ -331,12 +255,27 @@ class AdvancedSettingsPageState extends SettingsPageState {
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.delete_forever),
-            title: TitleText("Wipe Database"),
-            subtitle: Text("Clears the application database."),
+            title: TitleText(S.of(context).wipe_database),
+            subtitle: Text(S.of(context).clears_the_application_database),
             enabled: true,
             onTap: () async {
-              Interface.showLoadingDialog(context, title: "Wiping database...");
+              Interface.showLoadingDialog(context, title: S.of(context).wiping_database);
               await DatabaseHelper.wipe();
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+
+        Material(
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
+          child: ListTile(
+            leading: Icon(Icons.layers_clear),
+            title: TitleText(S.of(context).wipe_settings),
+            subtitle: Text(S.of(context).clears_all_application_settings),
+            enabled: true,
+            onTap: () async {
+              Interface.showLoadingDialog(context, title: S.of(context).clearing_settings);
+              await SettingsManager.eraseAllSettings();
               Navigator.of(context).pop();
             },
           ),
@@ -346,8 +285,8 @@ class AdvancedSettingsPageState extends SettingsPageState {
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.sd_storage),
-            title: TitleText("Dump Preferences"),
-            subtitle: Text("(Debug only) Logs the application preferences in the console."),
+            title: TitleText(S.of(context).dump_preferences),
+            subtitle: Text(S.of(context).debug_only_logs_the_application_preferences_in_the_console),
             enabled: true,
             onTap: () => SettingsManager.dumpFromStorage(),
           ),
@@ -357,8 +296,8 @@ class AdvancedSettingsPageState extends SettingsPageState {
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.storage),
-            title: TitleText("Dump Database"),
-            subtitle: Text("(Debug only) Logs the application database in the console."),
+            title: TitleText(S.of(context).dump_database),
+            subtitle: Text(S.of(context).debug_only_logs_the_application_database_in_the_console),
             enabled: true,
             onTap: () => DatabaseHelper.dump(),
           ),

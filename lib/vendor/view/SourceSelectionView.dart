@@ -1,6 +1,6 @@
-import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
@@ -30,13 +30,19 @@ class SourceSelectionView extends StatefulWidget {
 class SourceSelectionViewState extends State<SourceSelectionView> {
 
   List<SourceModel> sourceList = new List();
+  bool rdEnabled = false;
 
   String sortingMethod = 'ping';
   bool sortReversed = false;
 
+  bool rdExpanded = true;
+  bool generalExpanded = true;
+
   @override
   void initState() {
     (() async {
+      rdEnabled = await RealDebrid.isAuthenticated();
+
       List sortingSettings = await Settings.contentSortSettings;
 
       if(sortingSettings.length == 2) {
@@ -70,7 +76,10 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
       }
     });
 
-    _sortList();
+    List<SourceModel> _rdSources = rdEnabled ? sourceList.where((SourceModel model) => model.metadata.isRD)
+        .toList() : null;
+    List<SourceModel> _sources = rdEnabled ? sourceList.where((SourceModel model) => !model.metadata.isRD)
+        .toList() : sourceList;
 
     return WillPopScope(
       onWillPop: _handlePop,
@@ -83,7 +92,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                 .of(context)
                 .backgroundColor,
             title: TitleText(
-                "${widget.title} \u2022 ${sourceList.length} sources"
+                "${widget.title} \u2022 " + S.of(context).n_sources(sourceList.length.toString())
             ),
             centerTitle: true,
             bottom: PreferredSize(
@@ -110,77 +119,186 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
             ],
           ),
           body: Container(
-              child: ListView.builder(
-                  itemCount: sourceList.length,
-                  itemBuilder: (BuildContext ctx, int index) {
-                    var source = sourceList[index];
-
-                    String qualityInfo; // until we sort out quality detection
-                    if (source.metadata.quality != null
-                        && source.metadata.quality
-                            .replaceAll(" ", "")
-                            .isNotEmpty)
-                      qualityInfo = source.metadata.quality;
-
-                    /*
-                  if(source["metadata"]["extended"] != null){
-                    var extendedMeta = source["metadata"]["extended"]["streams"][0];
-                    var resolution = extendedMeta["coded_height"];
-
-                    if(resolution < 360) qualityInfo = "[LQ]";
-                    if(resolution >= 360) qualityInfo = "[SD]";
-                    if(resolution > 720) qualityInfo = "[HD]";
-                    if(resolution > 1080) qualityInfo = "[FHD]";
-                    if(resolution > 2160) qualityInfo = "[4K]";
-
-                    qualityInfo += " [" + extendedMeta["codec_name"].toUpperCase() + "]";
-                  }
-                */
-
-                    return Material(
-                      color: Theme
-                          .of(context)
-                          .backgroundColor,
-                      child: ListTile(
-                        enabled: true,
-                        isThreeLine: true,
-
-                        title: TitleText(
-                            (qualityInfo != null ? qualityInfo + " • " : "") +
-                                (source.metadata.contentLength != null ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true) + " • " : "") +
-                                "${source.metadata.provider} (${source.metadata
-                                    .source}) • ${source.metadata.ping}ms"),
-                        subtitle: Text(
-                          source.file.data,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        leading: Icon(Icons.insert_drive_file),
-
-                        onTap: () async {
-                          PlayerHelper.play(
-                            context,
-                            title: widget.title,
-                            url: source.file.data,
-                            mimeType: 'video/*'
-                          );
-                        },
-                        onLongPress: () {
-                          Clipboard.setData(
-                              new ClipboardData(text: source.file.data));
-                          Interface.showSnackbar(S
-                              .of(context)
-                              .url_copied, context: ctx);
-                        },
-                      ),
-                    );
+            child: ListView(
+              primary: true,
+              children: <Widget>[
+                rdEnabled ? _buildSourceList(
+                  _rdSources,
+                  title: S.of(context).real_debrid_n_sources(_rdSources.length.toString()),
+                  sectionExpanded: rdExpanded,
+                  onToggleExpanded: () => setState(() => {
+                    rdExpanded = !rdExpanded
                   })
+                ) : Container(),
+                _buildSourceList(
+                  _sources,
+                  title: rdEnabled
+                      ? S.of(context).standard_n_sources(_sources.length.toString())
+                      : null,
+                  sectionExpanded: generalExpanded,
+                  onToggleExpanded: () => setState(() => {
+                    generalExpanded = !generalExpanded
+                  })
+                )
+              ],
+            )
           )
       ),
     );
   }
 
-  _sortList() {
+  _buildSourceList(List<SourceModel> sourceList, { String title, bool sectionExpanded = true, Function onToggleExpanded }){
+    sourceList = _sortList(sourceList);
+
+    return ListView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: title != null
+            ? (sectionExpanded ? sourceList.length + 1 : 2)
+            : sourceList.length,
+        itemBuilder: (BuildContext ctx, int index) {
+
+          /* HEADER ROW */
+          if(title != null){
+            if(index == 0){
+              return GestureDetector(
+                onTap: onToggleExpanded != null ? onToggleExpanded : null,
+                child: Container(
+                    padding: EdgeInsets.only(left: 10, right: 15, top: 20, bottom: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        SubtitleText(title),
+                        Icon(sectionExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down)
+                      ],
+                    )
+                ),
+              );
+            }
+
+            if(!sectionExpanded) return Container();
+
+            index -= 1;
+          }
+          /* END: HEADER ROW */
+
+
+          var source = sourceList[index];
+
+          String qualityInfo; // until we sort out quality detection
+          if (source.metadata.quality != null
+              && source.metadata.quality.replaceAll(" ", "").isNotEmpty) {
+            qualityInfo = source.metadata.quality;
+          }
+
+          /*
+                if(source["metadata"]["extended"] != null){
+                  var extendedMeta = source["metadata"]["extended"]["streams"][0];
+                  var resolution = extendedMeta["coded_height"];
+
+                  if(resolution < 360) qualityInfo = "[LQ]";
+                  if(resolution >= 360) qualityInfo = "[SD]";
+                  if(resolution > 720) qualityInfo = "[HD]";
+                  if(resolution > 1080) qualityInfo = "[FHD]";
+                  if(resolution > 2160) qualityInfo = "[4K]";
+
+                  qualityInfo += " [" + extendedMeta["codec_name"].toUpperCase() + "]";
+                }
+              */
+
+          return Container(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Material(
+                clipBehavior: Clip.antiAlias,
+                borderRadius: BorderRadius.circular(5),
+                color: Theme.of(context).cardColor,
+                elevation: 2,
+                child: IntrinsicHeight(
+                    child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+
+                          Container(
+                              width: 80,
+                              color: source.metadata.isRD ? Theme.of(context).primaryColor : Color.fromRGBO(
+                                  Theme.of(context).cardColor.red + 10,
+                                  Theme.of(context).cardColor.green + 10,
+                                  Theme.of(context).cardColor.blue + 10,
+                                  Theme.of(context).cardColor == const Color(0xFF000000) ? 0.0 : 1.0
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                      padding: EdgeInsets.symmetric(vertical: 5),
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(color: Colors.white, width: 1.5),
+                                          borderRadius: BorderRadius.circular(5)
+                                      ),
+                                      child: TitleText(
+                                        (qualityInfo != null ? qualityInfo : "-"),
+                                        textAlign: TextAlign.center,
+                                      )
+                                  ),
+
+                                  Container(
+                                      child: TitleText(
+                                          (
+                                              source.metadata.contentLength != null
+                                                  ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true)
+                                                  : ""
+                                          )
+                                      )
+                                  )
+                                ],
+                              )
+                          ),
+
+                          Expanded(
+                              child: ListTile(
+                                enabled: true,
+                                isThreeLine: true,
+
+                                title: TitleText(
+                                    "${source.metadata.provider} (${source.metadata
+                                        .source}) • ${source.metadata.ping}ms"),
+                                subtitle: Text(
+                                  source.file.data,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+
+                                onTap: () async {
+                                  PlayerHelper.play(
+                                      context,
+                                      title: widget.title,
+                                      url: source.file.data,
+                                      mimeType: 'video/*'
+                                  );
+                                },
+                                onLongPress: () {
+                                  Clipboard.setData(
+                                      new ClipboardData(text: source.file.data));
+                                  Interface.showSnackbar(S
+                                      .of(context)
+                                      .url_copied, context: ctx);
+                                },
+                              )
+                          )
+
+                        ]
+                    )
+                ),
+              )
+          );
+        }
+      );
+  }
+
+  List<SourceModel> _sortList(List<SourceModel> sourceList) {
     /* By default, sorting is descending. (Ideally best to worst.)
      * Reversed, is descending. */
 
@@ -199,6 +317,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
     if(this.sortReversed) sourceList = sourceList.reversed.toList();
     if(mounted) setState(() {});
+
+    return sourceList;
   }
 
   _showSortingDialog(BuildContext context) async {
@@ -210,7 +330,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
       this.sortingMethod = sortingSettings[0];
       this.sortReversed = sortingSettings[1];
 
-      _sortList();
+      setState(() {});
+      //_sortList();
     }
   }
 
@@ -261,7 +382,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
   Widget build(BuildContext context) {
     return SimpleDialog(
       contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 10).copyWith(top: 20),
-      title: TitleText("Sort By..."),
+      title: TitleText(S.of(context).sort_by),
       children: <Widget>[
 
         Column(
@@ -269,8 +390,8 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
             RadioListTile(
               isThreeLine: true,
               secondary: Icon(Icons.network_check),
-              title: Text('Ping'),
-              subtitle: Text('Sorts by the time the server took to respond.'),
+              title: Text(S.of(context).ping),
+              subtitle: Text(S.of(context).sorts_by_the_time_the_server_took_to_respond),
               value: 'ping',
               groupValue: sortingMethod,
               onChanged: (value){
@@ -284,8 +405,8 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
 
             RadioListTile(
               secondary: Icon(Icons.high_quality),
-              title: Text('Quality'),
-              subtitle: Text('Sorts by source quality.'),
+              title: Text(S.of(context).quality),
+              subtitle: Text(S.of(context).sorts_by_source_quality),
               value: 'quality',
               groupValue: sortingMethod,
               onChanged: (value){
@@ -299,8 +420,8 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
 
             RadioListTile(
               secondary: Icon(Icons.sort_by_alpha),
-              title: Text('Name'),
-              subtitle: Text('Sorts alphabetically by name.'),
+              title: Text(S.of(context).name),
+              subtitle: Text(S.of(context).sorts_alphabetically_by_name),
               value: 'name',
               groupValue: sortingMethod,
               onChanged: (value){
@@ -315,8 +436,8 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
             RadioListTile(
               isThreeLine: true,
               secondary: Icon(Icons.import_export),
-              title: Text('File Size'),
-              subtitle: Text('Sorts by the size of the file.'),
+              title: Text(S.of(context).file_size),
+              subtitle: Text(S.of(context).sorts_by_the_size_of_the_file),
               value: 'fileSize',
               groupValue: sortingMethod,
               onChanged: (value){
@@ -343,7 +464,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                     setState(() {});
                   },
                   icon: Icon(Icons.keyboard_arrow_up),
-                  label: TitleText("Ascending")
+                  label: TitleText(S.of(context).ascending)
               ),
               FlatButton.icon(
                   color: sortReversed ? Theme.of(context).primaryColor : null,
@@ -352,7 +473,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                     setState(() {});
                   },
                   icon: Icon(Icons.keyboard_arrow_down),
-                  label: TitleText("Descending")
+                  label: TitleText(S.of(context).descending)
               )
             ],
           ),
@@ -369,7 +490,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                 onPressed: (){
                   Navigator.of(context).pop();
                 },
-                child: Text("Cancel"),
+                child: Text(S.of(context).cancel),
                 textColor: Theme.of(context).primaryColor,
               ),
 
@@ -384,7 +505,7 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                   })();
                   Navigator.of(context).pop([sortingMethod, sortReversed]);
                 },
-                child: Text("Done"),
+                child: Text(S.of(context).done),
                 textColor: Theme.of(context).primaryColor,
               )
             ],

@@ -27,12 +27,17 @@ class SettingsManager {
 
   static Future<void> onAppInit() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if(await _checkNeedsWipe(sharedPreferences)) await sharedPreferences.clear();
+    if(await _checkNeedsWipe(sharedPreferences)) sharedPreferences.clear();
 
     PackageInfo info = await PackageInfo.fromPlatform();
     await sharedPreferences.setInt("__kaminoVersion", int.parse(info.buildNumber));
 
     _wasInitialized = true;
+  }
+
+  static Future<void> eraseAllSettings() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.clear();
   }
 
   static bool hasKey(String key){
@@ -68,54 +73,55 @@ class _Settings {
   /// - bool
   /// - List<String>
   static const Map<String, $> _settingDefinitions = {
-    "initialSetupComplete": $(type: bool, defaultValue: false),
 
+    /// USER MODIFIABLE SETTINGS ///
+
+    // Initial setup and homepage
+    "initialSetupComplete": $(type: bool, defaultValue: false),
+    "locale": $(type: List, defaultValue: <String>["en", ""]),
+    "homepageCategories": $(type: String, defaultValue: "{}"),
+
+    // Appearance
     "activeTheme": $(type: String),
     "primaryColorOverride": $(type: String),
-
-    "manuallySelectSourcesEnabled": $(type: bool, defaultValue: true),
+    // (Layout Settings -> detailedContentInfoEnabled=true means Card View, false means Grid View)
     "detailedContentInfoEnabled": $(type: bool, defaultValue: true),
-    "locale": $(type: List, defaultValue: <String>["en", ""]),
 
+    // Playback
+    /// (Refer to [PlayerSettings] object.)
+    "playerInfo": $(type: List, defaultValue: <String>[]),
+
+    // Extensions
+    /// (Refer to [TraktCredentials] object.)
+    "traktCredentials": $(type: List, defaultValue: <String>[]),
+    /// (Refer to [RealDebridCredentials] object.)
+    "rdCredentials": $(type: List, defaultValue: <String>[]),
+
+    // Other
+    // (Manually Select Sources)
+    "manuallySelectSourcesEnabled": $(type: bool, defaultValue: true),
     "serverURLOverride": $(type: String),
     "serverKeyOverride": $(type: String),
 
-    ///
-    ///   ----------------------------------
-    ///   Trakt Credentials Array Structure:
-    ///   ----------------------------------
-    ///   0 - access token
-    ///   1 - refresh token
-    ///   2 - expiry date
-    ///
-    "traktCredentials": $(type: List, defaultValue: <String>[]),
+    // Source Selection View
+    // (The sorting method to use.)
+    "contentSortSettings": $(type: List, defaultValue: <String>[]),
 
-    ///
-    ///   ----------------------------------
-    ///   RealDebrid Credentials Array Structure:
-    ///   ----------------------------------
-    ///   0 - access token
-    ///   1 - refresh token
-    ///   2 - expiry date
-    ///
+    /// INTERNAL APPLICATION SETTINGS ///
 
-    "rdCredentials": $(type: List, defaultValue: <String>[]),
-    "rdClientInfo": $(type: List, defaultValue: <String>[]),
-
-    // TODO: Remove old launchpad code.
-    "launchpadItems": $(type: String),
-    "homepageCategories": $(type: String, defaultValue: "{}"),
-
+    // Claws Authentication
     "clawsToken": $(type: String),
     "clawsTokenSetTime": $(type: double),
 
-    "maxConcurrentRequests": $(type: int, defaultValue: 5),
-    "requestTimeout": $(type: int, defaultValue: 10),
-
-    "contentSortSettings": $(type: List, defaultValue: <String>[]),
-
-    // This is the third party player that should be used.
-    "playerInfo": $(type: List, defaultValue: <String>[]),
+    ///
+    /// PRIVATE SETTINGS KEYS
+    ///
+    /// These are for settings keys that are and will always be
+    /// used exclusively in one file, a good example of this is
+    /// [Settings.$_rdClientInfo] which simply holds a client ID
+    /// and secret for renewing RD credentials.
+    ///
+    "\$_rdClientInfo": $(type: List, defaultValue: <String>[]),
   };
 
   Future<PlayerSettings> get playerInfo async {
@@ -126,12 +132,20 @@ class _Settings {
     return await this.noSuchMethod(Invocation.setter(Symbol('playerInfo='), info.asList()));
   }
 
-  Future<TraktSettings> get traktCredentials async {
-    return TraktSettings(await this.noSuchMethod(Invocation.getter(Symbol('traktCredentials'))));
+  Future<TraktCredentials> get traktCredentials async {
+    return TraktCredentials(await this.noSuchMethod(Invocation.getter(Symbol('traktCredentials'))));
   }
 
-  Future<void> setTraktCredentials(TraktSettings credentials) async {
+  Future<void> setTraktCredentials(TraktCredentials credentials) async {
     return await this.noSuchMethod(Invocation.setter(Symbol('traktCredentials='), credentials.asList()));
+  }
+
+  Future<RealDebridCredentials> get rdCredentials async {
+    return RealDebridCredentials(await this.noSuchMethod(Invocation.getter(Symbol('rdCredentials'))));
+  }
+
+  Future<void> setRdCredentials(RealDebridCredentials credentials) async {
+    return await this.noSuchMethod(Invocation.setter(Symbol('rdCredentials='), credentials.asList()));
   }
 
   noSuchMethod(Invocation invocation) {
@@ -217,26 +231,76 @@ class PlayerSettings {
 
 }
 
-class TraktSettings {
+class TraktCredentials {
+
+  ///
+  ///   ----------------------------------
+  ///   Trakt Credentials Array Structure:
+  ///   ----------------------------------
+  ///   0 - access token
+  ///   1 - refresh token
+  ///   2 - expiry date
+  ///
 
   String accessToken;
   String refreshToken;
   String expiryDate;
 
-  TraktSettings(List<String> data){
+  TraktCredentials(List<String> data){
     this.accessToken = data.length > 0 ? data[0] : null;
     this.refreshToken = data.length > 1 ? data[1] : null;
     this.expiryDate = data.length > 2 ? data[2] : null;
   }
 
-  TraktSettings.named({
+  TraktCredentials.named({
     @required this.accessToken,
     @required this.refreshToken,
     @required this.expiryDate
   });
 
-  static TraktSettings unauthenticated(){
-    return new TraktSettings([]);
+  static TraktCredentials unauthenticated(){
+    return new TraktCredentials([]);
+  }
+
+  List<String> asList(){
+    return [accessToken, refreshToken, expiryDate];
+  }
+
+  bool isValid(){
+    return accessToken != null && refreshToken != null && expiryDate != null;
+  }
+
+}
+
+class RealDebridCredentials {
+
+  ///
+  ///   ----------------------------------
+  ///   RealDebrid Credentials Array Structure:
+  ///   ----------------------------------
+  ///   0 - access token
+  ///   1 - refresh token
+  ///   2 - expiry date
+  ///
+
+  String accessToken;
+  String refreshToken;
+  String expiryDate;
+
+  RealDebridCredentials(List<String> data){
+    this.accessToken = data.length > 0 ? data[0] : null;
+    this.refreshToken = data.length > 1 ? data[1] : null;
+    this.expiryDate = data.length > 2 ? data[2] : null;
+  }
+
+  RealDebridCredentials.named({
+    @required this.accessToken,
+    @required this.refreshToken,
+    @required this.expiryDate
+  });
+
+  static RealDebridCredentials unauthenticated(){
+    return new RealDebridCredentials([]);
   }
 
   List<String> asList(){

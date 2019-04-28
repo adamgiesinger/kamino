@@ -71,7 +71,7 @@ class _ContentOverviewState extends State<ContentOverview> {
         context,
         widget.contentType,
         widget.contentId,
-        appendToResponse: "credits,videos,similar"
+        appendToResponse: "credits,videos,recommendations"
     );
 
     // Load trailer
@@ -273,12 +273,13 @@ class _ContentOverviewState extends State<ContentOverview> {
                                               child: _generateGenreChipsRow(context, content),
                                             ),
                                             _generateSynopsisSection(content),
+                                            _generateEditorsChoice(),
                                             _generateCastAndCrewInfo(),
 
                                             // Context-specific layout
                                             _generateLayout(widget.contentType, content),
 
-                                            _generateSimilarContentCards(context, content)
+                                            _generateRecommendedContentCards(context, content)
                                           ],
                                         )
                                     )
@@ -518,7 +519,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                 // e.g: 'This TV Show has no synopsis available.'
                 S.of(context).this_x_has_no_synopsis_available(getPrettyContentType(widget.contentType)),
 
-              maxLines: 3,
+              maxLines: 5,
               revealLabel: S.of(context).show_more,
               concealLabel: S.of(context).show_less,
               color: const Color(0xFFBCBCBC)
@@ -622,7 +623,48 @@ class _ContentOverviewState extends State<ContentOverview> {
     );
   }
 
-  static Widget _generateSimilarContentCards(BuildContext context, ContentModel model){
+  Widget _generateEditorsChoice(){
+    return FutureBuilder(
+      future: DatabaseHelper.selectEditorsChoice(widget.contentId),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(snapshot.hasError || !snapshot.hasData || snapshot.data == null)
+          return Container();
+
+        EditorsChoice editorsChoice = snapshot.data;
+        return Container(
+          margin: EdgeInsets.all(20).copyWith(bottom: 0),
+          child: Card(
+            elevation: 5,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15).copyWith(bottom: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 2),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Icon(Icons.stars, size: 14, color: Theme.of(context).primaryTextTheme.display3.color),
+                        SubtitleText(S.of(context).editors_choice)
+                      ],
+                    ),
+                  ),
+                  Text(editorsChoice.comment)
+                ]
+              ),
+            ),
+          )
+        );
+      },
+    );
+  }
+
+  static Widget _generateRecommendedContentCards(BuildContext context, ContentModel model){
+    if(model.recommendations == null || model.recommendations.length < 1)
+      return Container();
+
     return Padding(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 0),
         child: Padding(
@@ -630,24 +672,23 @@ class _ContentOverviewState extends State<ContentOverview> {
           child: Column(
               children: <Widget>[
 
-                /* Similar Movies */
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
                         title: SubtitleText(
                           model.contentType == ContentType.TV_SHOW
-                            ? S.of(context).similar_tv_shows
-                            : S.of(context).similar_movies
+                            ? S.of(context).recommended_tv_shows
+                            : S.of(context).recommended_movies
                         )
                     ),
 
                   SizedBox(
                     height: 200,
-                    child: model.similar == null ? Container() : ListView.builder(
+                    child: ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemCount: model.similar.length,
+                        itemCount: model.recommendations.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 5)
@@ -659,15 +700,15 @@ class _ContentOverviewState extends State<ContentOverview> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => ContentOverview(
-                                              contentId: model.similar[index].id,
+                                              contentId: model.recommendations[index].id,
                                               contentType: model.contentType
                                           ),
                                         )
                                     ),
                                     mediaType: getRawContentType(model.contentType),
-                                    name: model.similar[index].title,
-                                    background: model.similar[index].posterPath,
-                                    releaseDate: model.similar[index].releaseDate
+                                    name: model.recommendations[index].title,
+                                    background: model.recommendations[index].posterPath,
+                                    releaseDate: model.recommendations[index].releaseDate
                                 ),
                               )
                           );
@@ -676,7 +717,6 @@ class _ContentOverviewState extends State<ContentOverview> {
                     )
                   ],
                 )
-                /* ./Similar Movies */
 
               ]
           ),
@@ -710,12 +750,10 @@ class _ContentOverviewState extends State<ContentOverview> {
   ///
   Widget _getFloatingActionButton(ContentType contentType, BuildContext context, ContentModel model){
     switch(contentType){
-      case ContentType.TV_SHOW:
-        return null;
       case ContentType.MOVIE:
         return MovieLayout.getFloatingActionButton(context, model);
+      default:
+        return null;
     }
-
-    return null;
   }
 }

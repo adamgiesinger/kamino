@@ -24,17 +24,15 @@ class TVShowContentModel extends ContentModel {
     String homepage,
     List genres,
     List reviews,
-    List recommendations,
     double rating,
     String backdropPath,
     String posterPath,
     int voteCount,
-    double voteAverage,
     double progress,
     String lastWatched,
     List cast,
     List crew,
-    List<TVShowContentModel> similar,
+    List<TVShowContentModel> recommendations,
     List videos,
 
     // TV Show parameters
@@ -62,7 +60,7 @@ class TVShowContentModel extends ContentModel {
     lastWatched: lastWatched,
     cast: cast,
     crew: crew,
-    similar: similar,
+    recommendations: recommendations,
     videos: videos,
     originalTitle: originalTitle,
     originalCountry: originalCountry
@@ -71,8 +69,8 @@ class TVShowContentModel extends ContentModel {
   static TVShowContentModel fromJSON(Map json){
     Map credits = json['credits'] != null ? json['credits'] : {'cast': null, 'crew': null};
     List videos = json['videos'] != null ? json['videos']['results'] : null;
-    List<TVShowContentModel> similar = json['similar'] != null
-        ? (json['similar']['results'] as List).map(
+    List<TVShowContentModel> recommendations = json['recommendations'] != null
+        ? (json['recommendations']['results'] as List).map(
             (element) => TVShowContentModel.fromJSON(element)
     ).toList()
         : null;
@@ -91,13 +89,13 @@ class TVShowContentModel extends ContentModel {
       releaseDate: json["first_air_date"],
       homepage: json["homepage"],
       genres: json["genres"],
-      rating: json["vote_average"] != null ? json["vote_average"] : -1,
+      rating: json["vote_average"] != null ? json["vote_average"].toDouble() : -1.0,
       backdropPath: json["backdrop_path"],
       posterPath: json["poster_path"],
       voteCount: json["vote_count"] != null ? json["vote_count"] : 0,
       cast: credits['cast'] != null ? (credits['cast'] as List).map((entry) => CastMemberModel.fromJSON(entry)).toList() : null,
       crew: credits['crew'] != null ? (credits['crew'] as List).map((entry) => CrewMemberModel.fromJSON(entry)).toList() : null,
-      similar: similar,
+      recommendations: recommendations,
       videos: videos,
       alternativeTitles: alternativeTitles,
       originalCountry: json['origin_country'] != null && json['origin_country'].length > 0

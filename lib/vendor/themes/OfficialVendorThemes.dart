@@ -5,7 +5,7 @@ import 'package:kamino/vendor/struct/ThemeConfiguration.dart';
 class OfficialVendorTheme {
 
   static final _DarkVendorTheme dark = _DarkVendorTheme();
-  static final _LightVendorTheme light = _LightVendorTheme();
+  //static final _LightVendorTheme light = _LightVendorTheme();
   static final _BlackVendorTheme black = _BlackVendorTheme();
 
 }
@@ -66,6 +66,7 @@ class _DarkVendorTheme extends ThemeConfiguration {
 
 }
 
+/*
 class _LightVendorTheme extends ThemeConfiguration {
 
   static const _primaryColor = const Color(0xFFA279FB);
@@ -123,6 +124,7 @@ class _LightVendorTheme extends ThemeConfiguration {
   }
 
 }
+*/
 
 class _BlackVendorTheme extends ThemeConfiguration {
 

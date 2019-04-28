@@ -175,7 +175,7 @@ class SkyspaceState extends State<Skyspace> {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 10),
-                  child: Text("Apollo Skyspace is still under development. Please check back later."),
+                  child: Text("Apollo Skyspace is still under development.\nWe will announce it on our social pages when it's ready."),
                 )
               ],
             )

@@ -21,63 +21,97 @@ class S implements WidgetsLocalizations {
 
   String get $_language_name => "English";
   String get $_language_name_english => "English";
+  String get action_completed_successfully => "Action completed successfully.";
   String get action_unsuccessful => "Action unsuccessful.";
   String get added_to_favorites => "Added to favorites";
   String get advanced => "Advanced";
   String get air_date => "Air date";
+  String get all_genres => "All Genres";
   String get an_error_occurred => "An error occurred.";
+  String get an_error_occurred_whilst_communicating_with_claws => "An error occurred whilst communicating with Claws.";
+  String get an_error_occurred_whilst_loading_this_page => "An error occurred whilst loading this page.";
+  String get apollotv_builtin_player => "ApolloTV built-in player.";
   String get app_tagline => "The streaming app built, for the community, by the community.";
   String get appearance => "Appearance";
   String get ascending => "Ascending";
+  String get authentication_failed => "Authentication failed...";
   String get authentication_successful => "Authentication Successful";
+  String get authentication_timed_out_please_try_again => "Authentication timed out. Please try again.";
   String get authentication_unsuccessful => "Authentication Unsuccessful";
   String get back => "BACK";
+  String get be_careful_this_option_could_break_the_app_if_you => "Be careful! This option could break the app if you don't know what you're doing.";
+  String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "Begins the initial setup procedure that is displayed when the app is opened for the first time.";
   String get blog => "Blog";
   String get boost_your_experience => "BOOST YOUR EXPERIENCE";
   String get cancel => "Cancel";
   String get card_layout => "Card Layout";
   String get cast_and_crew => "Cast & Crew";
+  String get cast_settings => "Cast Settings";
   String get change_content_playback_settings => "Change content playback settings.";
   String get change_default_server => "Change Default Server";
+  String get change_player => "Change Player";
   String get change_theme => "Change Theme...";
   String get check_for_updates => "Check for Updates";
   String get checks_whether_sources_can_be_reached => "Checks whether sources can be reached.";
   String get choose_a_theme => "Choose a theme...";
   String get choose_a_theme_description => "Select a general theme! This is used primarily to decide the background color.";
   String get choose_n_categories_description => "Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!";
+  String get choose_player => "Choose player...";
   String get clear_search_history => "Clear Search History";
   String get clear_search_history_description => "Removes search suggestions based on past searches.";
+  String get clearing_settings => "Clearing settings...";
+  String get clears_all_application_settings => "Clears all application settings.";
+  String get clears_the_application_database => "Clears the application database.";
+  String get close => "Close";
   String get coming_soon => "Coming Soon";
   String get connect => "Connect";
+  String get connect_your_realdebrid_account => "Connect your Real-Debrid account";
   String get connect_your_trakt_account => "Connect your Trakt account";
-  String get connected_real_debrid_account => "Connected Real Debrid Account.";
+  String get connected_real_debrid_account => "Connected Real-Debrid Account.";
   String get connected_trakt_account => "Connected Trakt account.";
+  String get connecting => "Connecting...";
+  String get continue_watching => "Continue Watching";
+  String get core => "CORE";
   String get create_profile => "Create Profile";
+  String get curated => "Curated";
   String get customize_appearance => "Customize Appearance";
   String get customize_the_theme_and_primary_colors => "Customize the theme and primary colors.";
   String get customize_your_launchpad => "Customize your launchpad.";
+  String get debug_only_logs_the_application_database_in_the_console => "(Debug only) Logs the application database in the console.";
+  String get debug_only_logs_the_application_preferences_in_the_console => "(Debug only) Logs the application preferences in the console.";
   String get default_ => "Default";
   String get descending => "Descending";
+  String get diagnostics => "DIAGNOSTICS";
   String get disconnect => "Disconnect";
+  String get disconnect_your_realdebrid_account => "Disconnect your Real-Debrid account";
   String get disconnect_your_trakt_account => "Disconnect your Trakt account";
-  String get disconnected_real_debrid_account => "Disconnected Real Debrid Account.";
+  String get disconnected_real_debrid_account => "Disconnected Real-Debrid Account.";
   String get disconnected_trakt_account => "Disconnected Trakt account.";
   String get dismiss => "Dismiss";
   String get donate => "Donate";
   String get done => "Done";
   String get downloading_trakt_data => "Downloading Trakt data...";
   String get downloading_update_file => "Downloading update file...";
+  String get dump_database => "Dump Database";
+  String get dump_preferences => "Dump Preferences";
+  String get editors_choice => "Editor's Choice";
+  String get error_loading_launchpad => "Well this is awkward... An error occurred whilst loading your launchpad.";
+  String get error_loading_search => "Well this is awkward... An error occurred whilst loading search results.";
   String get error_updating_app => "Error updating app...";
   String get experimental => "Experimental";
   String get extensions => "Extensions";
   String get favorites => "Favorites";
+  String get file_size => "File Size";
   String get gathers_useful_information_for_debugging => "Gathers useful information for debugging.";
   String get general_application_settings => "General application settings.";
   String get general_settings => "General Settings";
   String get general_settings_description => "Here's some commonly used settings options that you might want to take a look at.";
   String get get_device_information => "Get Device Information";
   String get grid_layout => "Grid Layout";
+  String get if_this_problem_persists_please_contact_a_member_of_staff => "If this problem persists, please contact a member of staff on Discord.";
   String get install => "Install";
+  String get is_your_connection_too_slow => "Is your connection too slow?";
+  String get it_seems_this_copy_of_the_app_is_out_of => "It seems this copy of the app is out of date...";
   String get language_settings => "Language Settings";
   String get launchpad => "Launchpad";
   String get layout_preferences_subtitle => "Card layouts are more detailed, however grid layouts can fit more items.";
@@ -89,52 +123,85 @@ class S implements WidgetsLocalizations {
   String get manually_override_the_default_content_server => "Manually override the default content server.";
   String get miscellaneous => "MISCELLANEOUS";
   String get movies => "Movies";
+  String get name => "Name";
+  String get networking => "NETWORKING";
   String get next => "NEXT";
   String get no_favorites_description => "You can add an item to favorites by tapping the heart on the top right of a content overview page.";
   String get no_favorites_header => "No favorites here!";
   String get no_results_found => "No results found.";
+  String get not_yet_implemented => "Not yet implemented...";
   String get okay => "Okay";
   String get one_episode => "1 episode";
   String get ongoing => "Ongoing";
   String get order => "ORDER";
   String get other_ => "Other";
   String get permission_denied => "Permission denied.";
+  String get ping => "Ping";
   String get play_episode => "Play Episode";
   String get play_movie => "Play Movie";
   String get playback => "Playback";
+  String get please_check_the_announcements_channel_in_our_discord_server_for => "Please check the #announcements channel in our Discord server for more information.";
+  String get please_wait => "Please wait...";
   String get popularity => "Popularity";
   String get power_user_settings_for_rocket_scientists => "Power user settings for rocket scientists.";
+  String get quality => "Quality";
   String get rd_description => "Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet.";
+  String get real_debrid_authenticator => "Real-Debrid Authenticator";
+  String get realdebrid => "Real-Debrid";
+  String get realdebrid_service_info => "If you have a RealDebrid subscription, ApolloTV can use it to obtain high-speed download results.";
+  String get recommended_movies => "Recommended Movies";
+  String get recommended_tv_shows => "Recommended TV Shows";
   String get released => "Released";
   String get reload => "Reload";
   String get removed_from_favorites => "Removed from favorites";
   String get restore_defaults => "Restore Defaults";
   String get run_connectivity_test => "Run Connectivity Test";
+  String get run_initial_setup_procedure => "Run Initial Setup Procedure";
   String get saving_content_information => "Saving content information...";
+  String get scraping_failed => "Scraping failed...";
   String get search_history_cleared => "Search history cleared.";
   String get search_tv_shows_and_movies => "Search TV shows and movies...";
   String get select_language => "Select Language...";
+  String get select_player => "Select Player...";
+  String get server_key => "Server Key";
+  String get server_url => "Server URL";
   String get set_primary_color => "Set Primary Color...";
   String get settings => "Settings";
   String get show_less => "Show less...";
   String get show_more => "Show more...";
-  String get similar_movies => "Similar Movies";
-  String get similar_tv_shows => "Similar TV Shows";
   String get skip => "SKIP";
   String get sort => "Sort";
+  String get sort_by => "Sort By...";
+  String get sorts_alphabetically_by_name => "Sorts alphabetically by name.";
+  String get sorts_by_source_quality => "Sorts by source quality.";
+  String get sorts_by_the_size_of_the_file => "Sorts by the size of the file.";
+  String get sorts_by_the_time_the_server_took_to_respond => "Sorts by the time the server took to respond.";
   String get source_autoplay => "Enable Source Autoplay";
   String get source_autoplay_description => "Automatically selects a source to play instead of showing a dialog containing the source list.";
+  String get success => "Success!";
   String get successfully_refreshed_trakt_token => "Successfully refreshed Trakt token.";
   String get sync => "Sync";
+  String get syncing => "Syncing...";
   String get synopsis => "Synopsis";
   String get take_screenshot_report_apollotv_discord => "Please take a screenshot of this message and contact a member of staff in the ApolloTV Discord server.";
   String get the_default_configuration_has_been_restored => "The default configuration has been restored.";
+  String get the_key_must_be_32_characters_in_length => "The key must be 32 characters in length.";
+  String get the_request_timed_out => "The request timed out.";
+  String get the_server_failed_to_verify_the_apps_integrity => "The server failed to verify the app's integrity.";
+  String get the_socket_connection_failed => "The socket connection failed.";
+  String get the_socket_connection_timed_out => "The socket connection timed out.";
+  String get the_url_must_be_valid_and_include_a_trailing_ => "The URL must be valid and include a trailing /.";
+  String get this_feature_has_not_yet_been_implemented => "This feature has not yet been implemented.";
   String get trakt_authenticator => "Trakt Authenticator";
   String get trakt_description => "Automatically track what you're watching, synchronise playlists across devices and more...";
   String get trakt_favorites_sync_detailed => "Please wait while we synchronize your favorites with Trakt. This dialog will close automatically when synchronization is complete.";
   String get trakt_renewal_failure_detailed => "Failed to renew Trakt token. Please check your details.";
   String get trakt_synchronization => "Trakt Synchronization...";
+  String get trakttv => "Trakt.tv";
   String get tv_shows => "TV Shows";
+  String get unable_to_connect => "Unable to connect...";
+  String get unable_to_connect_to_server => "Unable to connect to server.";
+  String get unable_to_determine_reason => "Unable to determine reason...";
   String get unknown => "Unknown";
   String get up_to_date => "Up to date. Check back in 1 - 3 weeks.";
   String get update_failed_please_try_again_later => "Update failed. Please try again later.";
@@ -146,26 +213,34 @@ class S implements WidgetsLocalizations {
   String get whats_your_favorite_color => "What's your favorite color?";
   String get whats_your_favorite_color_description => "Tap to set the accent color; it's used to give a splash of color to buttons, icons, etc...";
   String get which_do_you_prefer => "Which do you prefer?";
+  String get wipe_database => "Wipe Database";
+  String get wipe_settings => "Wipe Settings";
+  String get wiping_database => "Wiping database...";
   String get with_thanks => "With thanks...";
   String get year => "Year";
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)";
   String get youre_offline => "You're offline...";
+  String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "An error occurred whilst communicating with Claws. ($error)";
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "An error occurred whilst deauthenticating with Trakt.tv. ($errorCode)";
   String appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(String appName) => "$appName can synchronise your watch history and favorites from Trakt.tv...";
   String appname_failed_to_connect_to_the_internet(String appName) => "$appName failed to connect to the internet. Please check your connection.";
   String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName has successfully authenticated with Trakt.tv!";
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName was made possible by all of these amazing people:";
-  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName was unable to authenticate with Real Debrid.";
+  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName was unable to authenticate with Real-Debrid.";
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName was unable to authenticate with Trakt.tv.";
   String by_x(String x) => "by $x";
   String customize_appearance_description(String appName) => "$appName is all about customization. Let's get started by choosing your favorite theme!";
+  String extensions_description(String appName) => "If you use these any of these third party services, you can connect them to $appName.";
   String general_error(String error) => "An error occurred ($error)\nPlease report this error.";
   String make_appname_yours(String appName) => "MAKE $appName YOURS";
   String n_episodes(String n) => "$n episodes";
   String n_ratings(String n) => "$n ratings";
+  String n_sources(String n) => "$n sources";
   String seasons_n(String n) => "Seasons ($n)";
+  String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "The $appName server is currently offline for server upgrades.";
   String this_x_has_no_synopsis_available(String x) => "This $x has no synopsis available.";
   String unknown_x(String x) => "Unknown $x";
+  String version_x(String version) => "Version $version";
   String welcome_to_appname(String appName) => "Welcome to $appName";
   String choose_n_categories(dynamic n) {
     switch (n.toString()) {
@@ -175,6 +250,22 @@ class S implements WidgetsLocalizations {
         return "Choose $n category...";
       default:
         return "Choose $n categories...";
+    }
+  }
+  String real_debrid_n_sources(dynamic n) {
+    switch (n.toString()) {
+      case "1":
+        return "Real-Debrid ($n source)";
+      default:
+        return "Real-Debrid ($n sources)";
+    }
+  }
+  String standard_n_sources(dynamic n) {
+    switch (n.toString()) {
+      case "1":
+        return "Standard ($n sources)";
+      default:
+        return "Standard ($n sources)";
     }
   }
 }
@@ -335,8 +426,6 @@ class $de extends S {
   String get trakt_description => "Synchronisiert Playlists über mehrere Geräte, verfolgt was Sie schauen und mehr ...";
   @override
   String get tv_shows => "Serien";
-  @override
-  String get similar_movies => "Ähnliche Filme";
   @override
   String get trakt_renewal_failure_detailed => "Trakt Token konnte nicht aktualisiert werden. Bitte überprüfen Sie Ihre Zugangsdaten.";
   @override
@@ -560,8 +649,6 @@ class $fi extends S {
   @override
   String get tv_shows => "TV-sarjat";
   @override
-  String get similar_movies => "Samankaltaisia elokuvia";
-  @override
   String get trakt_renewal_failure_detailed => "Trakt-avaimen uusiminen epäonnistui. Tarkista tiedot.";
   @override
   String get show_more => "Näytä enemmän...";
@@ -781,8 +868,6 @@ class $sv extends S {
   @override
   String get tv_shows => "TV Program";
   @override
-  String get similar_movies => "Liknande Filmer";
-  @override
   String get trakt_renewal_failure_detailed => "Misslyckades med att f�rnya Trakt polletten. V�nligen kolla detaljerna.";
   @override
   String get show_more => "Visa mer...";
@@ -982,8 +1067,6 @@ class $pt extends S {
   String get trakt_description => "Acompanhe automaticamente o que está a ver, sincronize playlists em dispositivos e muito mais...";
   @override
   String get tv_shows => "Séries";
-  @override
-  String get similar_movies => "Filmes Semelhantes";
   @override
   String get trakt_renewal_failure_detailed => "Falha a actualizar o Trakt. Por favor veja o seus detalhes.";
   @override
@@ -1189,8 +1272,6 @@ class $hr extends S {
   @override
   String get tv_shows => "Serije";
   @override
-  String get similar_movies => "Slični filmovi";
-  @override
   String get trakt_renewal_failure_detailed => "Osvježavanje Trakt tokena nije uspjelo. Molimo provjerite Vaše podatke.";
   @override
   String get show_more => "Prikaži više...";
@@ -1390,8 +1471,6 @@ class $it extends S {
   String get trakt_description => "Tieni traccia automaticamente di quello che stai guardando, sincronizza playlist sui dispositivi a altro ancora...";
   @override
   String get tv_shows => "TV Show";
-  @override
-  String get similar_movies => "Film Simili";
   @override
   String get trakt_renewal_failure_detailed => "Impossibile rinnovare il token Trakt. Per favore controlla i tuoi dati.";
   @override
@@ -1603,8 +1682,6 @@ class $fr extends S {
   @override
   String get tv_shows => "Séries";
   @override
-  String get similar_movies => "Films Similaires";
-  @override
   String get trakt_renewal_failure_detailed => "Echec de renouveler le jeton Trakt. S'il vous plaît vérifier vos informations.";
   @override
   String get show_more => "Montrer plus...";
@@ -1809,8 +1886,6 @@ class $es extends S {
   @override
   String get tv_shows => "Programas De TV";
   @override
-  String get similar_movies => "Películas similares";
-  @override
   String get trakt_renewal_failure_detailed => "No se pudo renovar el token de Trakt. Por favor, compruebe sus datos.";
   @override
   String get show_more => "Ver mas...";
@@ -2008,8 +2083,6 @@ class $ar extends S {
   String get trakt_description => " ...تتبع ما تشاهده تلقائياً و زامن قائمة تشغيلك عبر الأجهزة والمزيد";
   @override
   String get tv_shows => "مسلسلات";
-  @override
-  String get similar_movies => "أفلام مماثلة";
   @override
   String get trakt_renewal_failure_detailed => ".يرجي تأكيد معلوماتك .Trakt فشل تجديد رمز";
   @override
@@ -2211,8 +2284,6 @@ class $en_GB extends S {
   @override
   String get tv_shows => "TV Shows";
   @override
-  String get similar_movies => "Similar Movies";
-  @override
   String get trakt_renewal_failure_detailed => "Failed to renew Trakt token. Please check your details.";
   @override
   String get show_more => "Show more...";
@@ -2412,8 +2483,6 @@ class $pl extends S {
   String get trakt_description => "Automatycznie sledz to, co ogladasz, synchronizuj listy odtwarzania na roznych urzadzeniach i nie tylko...";
   @override
   String get tv_shows => "Programy telewizyjne";
-  @override
-  String get similar_movies => "Podobne Kino";
   @override
   String get trakt_renewal_failure_detailed => "Nie potrafia odnawiac Trakt znak. Sprawiac przyjemnosc sprawdzaja wasze szczegoly.";
   @override
@@ -2615,8 +2684,6 @@ class $he extends S {
   @override
   String get tv_shows => "סדרות";
   @override
-  String get similar_movies => "סרטים דומים";
-  @override
   String get trakt_renewal_failure_detailed => "רענון של אימות Trakt כשל. בצע/י בדיקה של פרטיך.";
   @override
   String get show_more => "עוד...";
@@ -2816,8 +2883,6 @@ class $ro extends S {
   String get trakt_description => "Urmăriți automat ceea ce vizionați, sincronizați playlisturile pe toate dispozitivele și multe altele...";
   @override
   String get tv_shows => "Seriale";
-  @override
-  String get similar_movies => "Filme similare";
   @override
   String get trakt_renewal_failure_detailed => "Refresh Trakt eșuat. Vă rugăm să verificați detaliile introduse.";
   @override
@@ -3019,8 +3084,6 @@ class $nl extends S {
   @override
   String get tv_shows => "TV Shows";
   @override
-  String get similar_movies => "Soortgelijke Films";
-  @override
   String get trakt_renewal_failure_detailed => "Trakt token verversen mislukt. Check alstublieft uw details.";
   @override
   String get show_more => "Laat meer zien...";
@@ -3220,8 +3283,6 @@ class $tr extends S {
   String get trakt_description => "Ýzlediklerinizi otomatik olarak kaydedin, cihazlar arasýnda çalma listelerini senkronize edin ve daha fazlasý...";
   @override
   String get tv_shows => "Diziler";
-  @override
-  String get similar_movies => "Benzer Filmler";
   @override
   String get trakt_renewal_failure_detailed => "Trakt belirteci yenilenemedi. Lütfen bilgilerinizi kontrol edin";
   @override

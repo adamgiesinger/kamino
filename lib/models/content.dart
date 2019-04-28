@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 /*  CONTENT TYPE DEFINITIONS  */
-enum ContentType { MOVIE, TV_SHOW }
+enum ContentType { MOVIE, TV_SHOW, MIXED }
 String getPrettyContentType(ContentType type){
   switch(type) {
     case ContentType.MOVIE:
       return "Movie";
     case ContentType.TV_SHOW:
       return "TV Show";
+    case ContentType.MIXED:
+      return "Mixed";
     default:
       return "Unknown";
   }
@@ -19,8 +21,23 @@ String getRawContentType(ContentType type){
       return "movie";
     case ContentType.TV_SHOW:
       return "tv";
+    case ContentType.MIXED:
+      return "mixed";
     default:
       return "unknown";
+  }
+}
+
+ContentType getContentTypeFromRawType(String raw){
+  switch(raw){
+    case "movie":
+      return ContentType.MOVIE;
+    case "tv":
+      return ContentType.TV_SHOW;
+    case "mixed":
+      return ContentType.MIXED;
+    default:
+      return null;
   }
 }
 
@@ -59,7 +76,7 @@ class ContentModel {
   final List crew;
 
   // Recommendations
-  final List<ContentModel> similar;
+  final List<ContentModel> recommendations;
 
   ContentModel({
     @required this.id,
@@ -81,7 +98,7 @@ class ContentModel {
     this.lastWatched,
     this.cast,
     this.crew,
-    this.similar,
+    this.recommendations,
     this.videos
   });
 }
