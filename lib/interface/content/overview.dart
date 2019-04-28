@@ -7,6 +7,7 @@ import 'package:flutter_rating/flutter_rating.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/crew.dart';
 
@@ -273,6 +274,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                                               child: _generateGenreChipsRow(context, content),
                                             ),
                                             _generateSynopsisSection(content),
+                                            _generateButtonSection(content),
                                             _generateEditorsChoice(),
                                             _generateCastAndCrewInfo(),
 
@@ -393,30 +395,6 @@ class _ContentOverviewState extends State<ContentOverview> {
           !hasLongTitle ?
           BottomGradient(color: Theme.of(context).backgroundColor)
               : BottomGradient(offset: 1, finalStop: 0, color: Theme.of(context).backgroundColor),
-
-          _trailer != null ? Center(child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white,
-                width: 1.5
-              ),
-              shape: BoxShape.circle
-            ),
-            child: Material(
-              color: const Color(0x1F000000),
-              clipBehavior: Clip.antiAlias,
-              shape: CircleBorder(),
-              child: InkWell(
-                onTap: (){
-                  Interface.launchURL("https://www.youtube.com/watch?v=$_trailer");
-                },
-                child: Padding(child: Icon(
-                  Icons.play_arrow,
-                  size: 36,
-                ), padding: EdgeInsets.all(4)),
-              ),
-            ),
-          )) : Container()
         ],
       ),
     );
@@ -499,6 +477,54 @@ class _ContentOverviewState extends State<ContentOverview> {
     );
   }
 
+  Widget _generateButtonSection(ContentModel model){
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20).copyWith(top: 25),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          (widget.contentType == ContentType.MOVIE) ? Expanded(child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: FlatButton.icon(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5)
+              ),
+              color: Theme.of(context).primaryColor,
+              icon: Icon(Icons.play_arrow),
+              label: Text(S.of(context).play_movie),
+              onPressed: () async {
+                KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+                (await application.getPrimaryVendorService()).playMovie(
+                  model,
+                  context
+                );
+              },
+            ),
+          )) : Container(),
+
+          Expanded(child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: FlatButton.icon(
+              highlightColor: Theme.of(context).primaryColor.withOpacity(0.2),
+              padding: EdgeInsets.symmetric(vertical: 10),
+              shape: RoundedRectangleBorder(
+                side: widget.contentType == ContentType.MOVIE ? BorderSide(color: Theme.of(context).primaryColor, width: 2) : BorderSide(),
+                borderRadius: BorderRadius.circular(5)
+              ),
+              color: widget.contentType == ContentType.MOVIE ? null : Theme.of(context).primaryColor,
+              icon: Icon(Icons.video_library, size: 18),
+              label: Text(S.of(context).play_trailer),
+              onPressed: (){
+                Interface.launchURL("https://www.youtube.com/watch?v=$_trailer");
+              },
+            ),
+          ))
+        ],
+      ),
+    );
+  }
+
   ///
   /// This function generates the Synopsis Card.
   ///
@@ -555,7 +581,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     castAndCrew.removeWhere((entry) => castAndCrew.firstWhere((_e) => _e.name == entry.name) != entry);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16).copyWith(top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

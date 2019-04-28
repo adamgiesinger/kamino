@@ -15,7 +15,9 @@ class MovieLayout {
   /// This should be used to add a play FAB, for example.
   ///
   static Widget getFloatingActionButton(BuildContext context, MovieContentModel movie){
-    return Padding(
+    return null;
+
+    /*return Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: new Row(
             children: <Widget>[
@@ -47,7 +49,7 @@ class MovieLayout {
               )
             ]
         )
-    );
+    );*/
   }
 
 }

@@ -141,6 +141,7 @@ class S implements WidgetsLocalizations {
   String get ping => "Ping";
   String get play_episode => "Play Episode";
   String get play_movie => "Play Movie";
+  String get play_trailer => "Play Trailer";
   String get playback => "Playback";
   String get please_check_the_announcements_channel_in_our_discord_server_for => "Please check the #announcements channel in our Discord server for more information.";
   String get please_wait => "Please wait...";
