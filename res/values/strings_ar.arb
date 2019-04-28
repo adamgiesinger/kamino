@@ -157,9 +157,9 @@
   "connect_your_trakt_account": " الخاص بكTrakt إتصل بحساب",
   "appname_can_synchronise_your_watch_history_and_favorites_from_trakttv": " ...Trakt.tv مزامنة سجل المشاهدة والمفضلات الخاصة بك من $appNameيمكن لـ",
   "youre_offline": "...أنت غير متصل بالإنترنت",
-  "appname_failed_to_connect_to_the_internet": "$appName failed to connect to the internet. Please check your connection.",
-  "playback": "Playback",
-  "change_content_playback_settings": "Change content playback settings.",
+  "appname_failed_to_connect_to_the_internet": ".فشل في الاتصال بالإنترنت. يرجى التحقق من إتصالك $appName",
+  "playback": "التشغيل",
+  "change_content_playback_settings": ".تغيير إعدادات تشغيل المحتوى",
 
   "up_to_date": "Up to date. Check back in 1 - 3 weeks.",
   "no_favorites_header": "No favorites here!",
