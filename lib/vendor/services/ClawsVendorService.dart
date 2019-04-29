@@ -517,9 +517,14 @@ class ClawsVendorService extends VendorService {
   ///////////////////////////////
 
   Future<int> getNTPTime() async {
-    var ntpResponse = await
-      Convert.jsonDecode((await get(server + "api/v1/ntp")).body);
-    return ntpResponse['now'];
+    var response = await get(server + "api/v1/ntp").timeout(Duration(seconds: 10), onTimeout: () => null);
+    if(response != null) {
+      var responseData = await
+      Convert.jsonDecode((response).body);
+      return responseData['now'];
+    }else{
+      return new DateTime.now().millisecondsSinceEpoch;
+    }
   }
 
   Future<String> _generateClawsHash(String clawsClientKey, int now) async {

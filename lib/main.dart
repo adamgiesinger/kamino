@@ -126,11 +126,11 @@ void main() async {
     };
 
     runZoned<Future<void>>((){
-      if(platformType == PlatformType.TV) {
+      /*if(platformType == PlatformType.TV) {
         // Start Kamino (TV)
         runApp(KaminoSkyspace());
         return;
-      }
+      }*/
 
       // Start Kamino (mobile)
       runApp(KaminoApp());
@@ -449,8 +449,8 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
       if(!await Settings.initialSetupComplete){
         Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) => KaminoIntro(then: () async {
-            await OTA.updateApp(context, true);
             setState(() {});
+            OTA.updateApp(context, true);
           })
         ));
       }else{

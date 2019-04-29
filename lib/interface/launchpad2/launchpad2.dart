@@ -29,11 +29,10 @@ class Launchpad2 extends KaminoAppPage {
 
 }
 
-class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMixin<Launchpad2> {
+class Launchpad2State extends State<Launchpad2> {
 
   AsyncMemoizer _launchpadMemoizer = new AsyncMemoizer();
   AsyncMemoizer _traktMemoizer = new AsyncMemoizer();
-  AsyncMemoizer _watchListMemoizer = new AsyncMemoizer();
 
   EditorsChoice _editorsChoice;
   List<ContentModel> _topPicksList = List();
@@ -47,8 +46,6 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
 
     await DatabaseHelper.refreshEditorsChoice(context);
     _editorsChoice = await DatabaseHelper.selectRandomEditorsChoice();
-    
-    updateKeepAlive();
   }
 
   @override
@@ -95,8 +92,6 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     _loadTrakt();
     _loadWatchLists();
 

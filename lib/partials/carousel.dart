@@ -259,7 +259,7 @@ class _CarouselSliderState extends State<CarouselSlider> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     return getWrapper(PreloadPageView.builder(
-      preloadPagesCount: 3,
+      preloadPagesCount: 2,
       onPageChanged: (int index) {
         currentPage = _getRealIndex(index, widget.realPage, widget.items.length);
         if (widget.onPageChanged != null) widget.onPageChanged(currentPage);

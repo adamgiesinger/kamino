@@ -71,6 +71,13 @@
 			"color": "#f1c40f"
 		}
 	],
+	"bleakneonblack": [
+		{
+			"name": "bleakneonblack",
+			"image": "https://cdn.discordapp.com/avatars/491450154440720385/7d42d1920b15300c068a476199258890.png?size=2048",
+			"color": "#b3c100"
+		}
+	],
 	"Translator": [
 		{
 			"name": "Captain Meliodas (T: AR)",
@@ -217,6 +224,11 @@
 			"color": "#457f9c"
 		},
 		{
+			"name": "chrispy3",
+			"image": "https://discordapp.com/assets/1cbd08c76f8af6dddce02c5138971129.png",
+			"color": "#457f9c"
+		},
+		{
 			"name": "1izardo",
 			"image": "https://cdn.discordapp.com/avatars/214835073973747713/054532045e5f41c10a3b50088d15ccb3.png?size=2048",
 			"color": "#457f9c"
@@ -244,6 +256,11 @@
 		{
 			"name": "Graz67",
 			"image": "https://discordapp.com/assets/1cbd08c76f8af6dddce02c5138971129.png",
+			"color": "#457f9c"
+		},
+		{
+			"name": "hagjie",
+			"image": "https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png",
 			"color": "#457f9c"
 		},
 		{

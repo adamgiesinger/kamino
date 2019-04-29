@@ -37,7 +37,7 @@ class ContentListModel {
       backdrop: json["backdrop_path"],
       poster: json["poster_path"],
       description: json["description"],
-      creatorName: json["created_by"]["name"],
+      creatorName: json["created_by"] != null ? json["created_by"]["name"] : null,
       public: json["public"],
       content: json["stored"] == null
           ? ((json["results"] as List).map((entry) => entry["media_type"] == "movie"

@@ -19,8 +19,12 @@ class TMDB {
   /// You will need to define the API key in your vendor configuration file.
   /// Check our documentation for more information.
   static String getDefaultArguments(BuildContext context) {
-    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-    if(application != null) return "?api_key=${application.getPrimaryVendorConfig().getTMDBKey()}&language=en-US";
+    try {
+      KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+      if(application != null) return "?api_key=${application.getPrimaryVendorConfig().getTMDBKey()}&language=en-US";
+    }catch(ex) {
+    }
+
     return "";
   }
 
@@ -115,11 +119,14 @@ class TMDB {
         // Cast the results into a list.
         List sublistContent = Convert.jsonDecode(sublistContentResponse)["results"];
 
-        // Map the list items to ContentModels and add all the items to fullContentList.
-        fullContentList.addAll(sublistContent.map((contentItem) => contentItem['media_type'] == 'movie'
-          ? MovieContentModel.fromJSON(contentItem)
-          : TVShowContentModel.fromJSON(contentItem)
-        ).toList());
+        if(sublistContent != null) {
+          // Map the list items to ContentModels and add all the items to fullContentList.
+          fullContentList.addAll(sublistContent.map((contentItem) =>
+          contentItem['media_type'] == 'movie'
+              ? MovieContentModel.fromJSON(contentItem)
+              : TVShowContentModel.fromJSON(contentItem)
+          ).toList());
+        }
       }
 
       // Finally, update the ContentListModel's content item.

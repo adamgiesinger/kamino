@@ -165,9 +165,9 @@ class Interface {
                       if(iconFile == "en") iconFile = "us";
                       // ./Flag corrections
 
-                      Future<S> _loadLocaleData = S.delegate.load(currentLocale);
+                      Future _loadLocaleData = S.delegate.load(currentLocale);
 
-                      return FutureBuilder(future: _loadLocaleData, builder: (_, AsyncSnapshot<S> snapshot) {
+                      return FutureBuilder(future: _loadLocaleData, builder: (_, AsyncSnapshot snapshot) {
                         return ListTile(
                           title: TitleText(snapshot.data.$_language_name),
                           subtitle: Text(snapshot.data.$_language_name_english),
