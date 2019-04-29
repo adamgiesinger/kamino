@@ -632,7 +632,7 @@ class _ContentOverviewState extends State<ContentOverview> {
 
                           // Character or job
                           Text(
-                            castAndCrew[index].role,
+                            castAndCrew[index].role.contains(" / ") ? castAndCrew[index].role.split(" / ")[0] : castAndCrew[index].role,
                             style: TextStyle(
                                 color: Colors.white54
                             ),
