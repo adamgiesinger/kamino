@@ -183,9 +183,9 @@
   "disconnect_your_realdebrid_account": "Verbreek de verbinding met uw Real-Debrid account",
   "connect_your_realdebrid_account": "Verbind uw Real-Debrid account",
 
-  "extensions_description": "Als u één van deze services van derde partijen gebruikt, kunt u die verbinden met ApolloTV.",
+  "extensions_description": "Als u één van deze services van derde partijen gebruikt, kunt u die verbinden met $appName.",
   "choose_player": "Kies speler...",
-  "change_player": "Verander speler"
+  "change_player": "Verander speler",
   "all_genres": "Alle Gernes",		
   "curated": "Gecureerd",		
   "editors_choice": "Keuze van de Redactie",		

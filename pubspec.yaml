@@ -8,7 +8,7 @@ description: The ApolloTV app for iOS and Android.
 #  I => Minor (xx)
 #  R => Release (xx)
 #  T => Type (0 => Prerelease, 1 => Beta, 2 => Release Candidate, 3 => Stable)
-version: 1.4.0+104001
+version: 1.4.0+104002
 
 dependencies:
   # Core dependencies

@@ -76,6 +76,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                         onPressed: () async {
                           await Trakt.authenticate(context, shouldShowSnackbar: true);
                           this.traktAuthenticated = await Trakt.isAuthenticated();
+                          Trakt.synchronize(context, silent: false);
                           setState(() {});
                         },
                       ) :

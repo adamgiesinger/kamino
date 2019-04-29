@@ -20,18 +20,17 @@ class TMDB {
   /// Check our documentation for more information.
   static String getDefaultArguments(BuildContext context) {
     KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-    return "?api_key=${application.getPrimaryVendorConfig().getTMDBKey()}&language=en-US";
+    if(application != null) return "?api_key=${application.getPrimaryVendorConfig().getTMDBKey()}&language=en-US";
+    return "";
   }
 
   // These lists are curated by the ApolloTV team and you're welcome to use them.
   // Otherwise, you can replace them by supplying an array of TMDB list IDs.
   static const Map<ContentType, List<String>> curatedTMDBLists = {
-    ContentType.MIXED: [
-      // ApolloTV Top Picks
-      "107032",
+    /*ContentType.MIXED: [
       // Editor's Choice
       "109986",
-    ],
+    ],*/
 
     ContentType.TV_SHOW: [
       // Awards Season
@@ -46,7 +45,7 @@ class TMDB {
       "105648",
       // Other Exclusives
       "109260",
-      // Top Picks
+      // TV Top Picks
       "107032"
     ],
 
@@ -81,7 +80,7 @@ class TMDB {
       "107930",
       // Star Wars
       "107926",
-      // Top Picks
+      // Movie Top Picks
       "110599",
       // Wizarding World
       "107925",

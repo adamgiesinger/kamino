@@ -13,20 +13,20 @@ import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 
-class GenreSearch extends StatefulWidget{
+class CuratedSearch extends StatefulWidget{
 
-  final String contentType, genreName;
-  final int genreID;
+  final String contentType, listName;
+  final int listID;
 
-  GenreSearch(
-      {Key key, @required this.contentType, @required this.genreID,
-        @required this.genreName}) : super(key: key);
+  CuratedSearch(
+      {Key key, @required this.contentType, @required this.listID,
+        @required this.listName}) : super(key: key);
 
   @override
-  _GenreSearchState createState() => new _GenreSearchState();
+  _CuratedSearchState createState() => new _CuratedSearchState();
 }
 
-class _GenreSearchState extends State<GenreSearch>{
+class _CuratedSearchState extends State<CuratedSearch>{
 
   int _currentPages = 1;
   ScrollController controller;
@@ -44,7 +44,7 @@ class _GenreSearchState extends State<GenreSearch>{
     controller = new ScrollController()..addListener(_scrollListener);
 
     String _contentType = widget.contentType;
-    String _genreID = widget.genreID.toString();
+    String _genreID = widget.listID.toString();
 
     DatabaseHelper.getAllFavoriteIds().then((data){
       _favIDs = data;
@@ -59,16 +59,14 @@ class _GenreSearchState extends State<GenreSearch>{
   }
 
   //get data from the api
-  Future<List<DiscoverModel>> _getContent(_contentType, _genreID) async {
+  Future<List<DiscoverModel>> _getContent(contentType, listID) async {
 
     List<DiscoverModel> _data = [];
     Map _temp;
 
-    String url = "${TMDB.ROOT_URL}/discover/$_contentType"
-        "${TMDB.getDefaultArguments(context)}&"
-        "sort_by=popularity.desc&include_adult=false"
-        "&include_video=false&"
-        "page=${_currentPages.toString()}&with_genres=$_genreID";
+    String url = "https://api.themoviedb.org/4/list/$listID${TMDB.getDefaultArguments(context)}&"
+        /*"sort_by=popularity.desc"*/ "&include_adult=false"
+        "&include_video=false&page=${_currentPages.toString()}";
 
     http.Response _res = await http.get(url);
     _temp = jsonDecode(_res.body);
@@ -79,7 +77,7 @@ class _GenreSearchState extends State<GenreSearch>{
 
       for(int x = 0; x < resultsCount; x++) {
         _data.add(DiscoverModel.fromJSON(
-            _temp["results"][x], totalPages, _contentType));
+            _temp["results"][x], totalPages, contentType));
       }
     }
 
@@ -121,7 +119,7 @@ class _GenreSearchState extends State<GenreSearch>{
         child: Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
           appBar: new AppBar(
-            title: Text(widget.genreName, style: _glacialFont,),
+            title: Text(widget.listName, style: _glacialFont,),
             centerTitle: true,
             backgroundColor: Theme.of(context).backgroundColor,
             elevation: 5.0,
@@ -230,7 +228,7 @@ class _GenreSearchState extends State<GenreSearch>{
         //load the next page
         _currentPages = _currentPages + 1;
 
-        _getContent(widget.contentType, widget.genreID).then((data){
+        _getContent(widget.contentType, widget.listID).then((data){
 
           if(mounted) setState(() {
             _results = _results + data;

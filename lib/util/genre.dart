@@ -78,11 +78,11 @@ class Genre {
       "name": "Science Fiction",
       "banner": "/10csMIye4Vmr5lJpx3cdmMN8FOT.jpg"
     },
-    {
+    /*{
       "id": 10770,
       "name": "TV Movie",
       "banner": "/oAsnQc9jAlAxknnd7YBjWLEhkzm.jpg"
-    },
+    },*/
     {
       "id": 53,
       "name": "Thriller",

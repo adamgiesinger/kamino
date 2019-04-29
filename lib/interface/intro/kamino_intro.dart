@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:async/async.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
@@ -451,7 +452,9 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
                         List<String> curatedTMDBLists = [];
                         TMDB.curatedTMDBLists.forEach((ContentType type, List<String> typeCuratedLists){
-                          curatedTMDBLists.addAll(typeCuratedLists);
+                          typeCuratedLists.forEach((String entry){
+                            curatedTMDBLists.add("$entry|${getPrettyContentType(type, plural: true)}");
+                          });
                         });
 
                         return GridView.builder(
@@ -470,7 +473,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
                             return FutureBuilder(
                                 future: _categoryMemoizers[curatedTMDBLists[index]].runOnce(
-                                        () => TMDB.getList(context, int.parse(curatedTMDBLists[index]))
+                                        () async => { "list": await TMDB.getList(context, int.parse(curatedTMDBLists[index].split("|")[0])), "type": curatedTMDBLists[index].split("|")[1] }
                                 ),
                                 builder: (BuildContext context, AsyncSnapshot snapshot){
                                   if(snapshot.hasError){
@@ -487,7 +490,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                       );
 
                                     case ConnectionState.done:
-                                      ContentListModel list = snapshot.data;
+                                      ContentListModel list = snapshot.data['list'];
+                                      String type = snapshot.data['type'];
 
                                       return Material(
                                         type: MaterialType.card,
@@ -506,11 +510,23 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                               color: const Color(0x7F000000),
                                               child: Center(child: Padding(
                                                 padding: EdgeInsets.symmetric(horizontal: 5),
-                                                child: TitleText(
-                                                    list.name,
-                                                    fontSize: 21,
-                                                    allowOverflow: true,
-                                                    textAlign: TextAlign.center
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    AutoSizeText(
+                                                      list.name,
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontFamily: 'GlacialIndifference'
+                                                      ),
+                                                      softWrap: true,
+                                                      maxLines: 1,
+                                                      maxFontSize: 18,
+                                                      textAlign: TextAlign.center,
+                                                    ),
+
+                                                    Text(type)
+                                                  ],
                                                 ),
                                               )),
                                             ),

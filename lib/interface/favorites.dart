@@ -28,7 +28,7 @@ class FavoritesPageState extends State<FavoritesPage>
 
   _getFavorites() async {
     favorites = await DatabaseHelper.getAllFavorites();
-    setState(() {});
+    if(mounted) setState(() {});
   }
 
   @override

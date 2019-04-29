@@ -14,6 +14,8 @@ import 'package:kamino/models/list.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/util/genre.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:kamino/interface/search/curated_search.dart';
 
 class BrowsePageState extends State<StatefulWidget> {
 
@@ -87,11 +89,13 @@ class BrowsePageState extends State<StatefulWidget> {
                                     ),
                                     child: snapshot.hasError
                                       ? Icon(Icons.error)
-                                      : TitleText(
+                                      : AutoSizeText(
                                           list.name,
-                                          allowOverflow: true,
-                                          fontSize: 24,
+                                          softWrap: true,
+                                          maxLines: 2,
                                           textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 18, color: Colors.white, fontFamily: 'GlacialIndifference'),
+                                          maxFontSize: 18,
                                         )
                                 )),
                               ) : Container(),
@@ -99,7 +103,13 @@ class BrowsePageState extends State<StatefulWidget> {
                               snapshot.hasData ? Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  onTap: () => {},
+                                  onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (BuildContext context) => CuratedSearch(
+                                          listName: list.name,
+                                          listID: list.id,
+                                          contentType: getRawContentType(list.content[0].contentType)
+                                      ))
+                                  ),
                                 ),
                               ) : Container()
                             ],

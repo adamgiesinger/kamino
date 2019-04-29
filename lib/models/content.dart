@@ -4,11 +4,13 @@ import 'package:kamino/models/tv_show.dart';
 
 /*  CONTENT TYPE DEFINITIONS  */
 enum ContentType { MOVIE, TV_SHOW, MIXED }
-String getPrettyContentType(ContentType type){
+String getPrettyContentType(ContentType type, { bool plural = false }){
   switch(type) {
     case ContentType.MOVIE:
+      if(plural) return "Movies";
       return "Movie";
     case ContentType.TV_SHOW:
+      if(plural) return "TV Shows";
       return "TV Show";
     case ContentType.MIXED:
       return "Mixed";

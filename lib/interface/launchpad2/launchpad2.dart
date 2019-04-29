@@ -3,11 +3,13 @@ import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/content/overview.dart';
+import 'package:kamino/interface/search/curated_search.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/list.dart';
@@ -31,6 +33,7 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
 
   AsyncMemoizer _launchpadMemoizer = new AsyncMemoizer();
   AsyncMemoizer _traktMemoizer = new AsyncMemoizer();
+  AsyncMemoizer _watchListMemoizer = new AsyncMemoizer();
 
   EditorsChoice _editorsChoice;
   List<ContentModel> _topPicksList = List();
@@ -40,36 +43,53 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
   List<ContentListModel> _watchlists;
 
   Future<void> load() async {
-    await DatabaseHelper.refreshEditorsChoice(context);
-    _editorsChoice = await DatabaseHelper.selectRandomEditorsChoice();
-
     _topPicksList = (await TMDB.getList(context, 105604, loadFully: true, useCache: true)).content;
 
-    _watchlistsLoaded = false;
-    (() async {
-      _watchlists = new List();
-      for(String watchlist in (jsonDecode((await Settings.homepageCategories)) as Map).keys.toList()){
-        _watchlists.add(await TMDB.getList(context, int.parse(watchlist), loadFully: true, useCache: true));
-      }
-      _watchlistsLoaded = true;
-    })();
-
-    _loadTrakt();
+    await DatabaseHelper.refreshEditorsChoice(context);
+    _editorsChoice = await DatabaseHelper.selectRandomEditorsChoice();
     
     updateKeepAlive();
   }
 
   @override
   void initState() {
+    _watchlistsLoaded = false;
+
+    _loadTrakt();
+    _loadWatchLists();
+
     super.initState();
   }
 
   Future<void> _loadTrakt() async {
     if(await Trakt.isAuthenticated()) {
-      await _traktMemoizer.runOnce(() async {
-        _continueWatchingList = await Trakt.getWatchHistory(context);
-        if(mounted) setState((){});
+      await _traktMemoizer.runOnce(() => Trakt.getWatchHistory(context)).then((continueWatchingList){
+        if(_continueWatchingList == null){
+          _continueWatchingList = continueWatchingList;
+          if(mounted) setState((){});
+        }
       });
+    }
+  }
+
+  Future<void> _loadWatchLists() async {
+    List<String> watchlists = (jsonDecode((await Settings.homepageCategories)) as Map).keys.toList();
+
+    if(!_watchlistsLoaded ||
+        !ListEquality().equals(_watchlists.map((ContentListModel list) => list.id.toString()).toList(), watchlists)){
+      (() async {
+        //_watchlists = await _watchListMemoizer.runOnce(() async {
+        List<ContentListModel> _loadedWatchlists = new List();
+        for(String watchlist in watchlists){
+          _loadedWatchlists.add(await TMDB.getList(context, int.parse(watchlist), loadFully: true, useCache: true));
+        }
+        //});
+
+        if(mounted) setState(() {
+          _watchlists = _loadedWatchlists;
+          _watchlistsLoaded = true;
+        });
+      })();
     }
   }
 
@@ -78,6 +98,7 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
     super.build(context);
 
     _loadTrakt();
+    _loadWatchLists();
 
     return FutureBuilder(
       future: _launchpadMemoizer.runOnce(load),
@@ -287,8 +308,14 @@ class Launchpad2State extends State<Launchpad2> with AutomaticKeepAliveClientMix
                                     highlightColor: Theme.of(context).accentTextTheme.body1.color.withOpacity(0.3),
                                     minWidth: 0,
                                     padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                                    child: Text("See All", style: TextStyle(color: Theme.of(context).primaryTextTheme.body1.color)),
-                                    onPressed: () => {}
+                                    child: Text(S.of(context).see_all, style: TextStyle(color: Theme.of(context).primaryTextTheme.body1.color)),
+                                    onPressed: () => Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (BuildContext context) => CuratedSearch(
+                                          listName: watchlist.name,
+                                          listID: watchlist.id,
+                                          contentType: getRawContentType(watchlist.content[0].contentType)
+                                        ))
+                                    )
                                 )
                               ],
                             ),
