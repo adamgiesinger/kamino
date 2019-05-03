@@ -170,8 +170,9 @@ class ClawsVendorService extends VendorService {
     String title = movie.title;
     String releaseDate = movie.releaseDate;
 
-    var year =
-        new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
+    var year = '';
+    if (releaseDate != null && releaseDate != "")
+        year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate));
 
     String clawsToken = _token;
     String webSocketServer = server
@@ -200,8 +201,9 @@ class ClawsVendorService extends VendorService {
     String title = show.title;
     String releaseDate = show.releaseDate;
 
-    var year =
-        new DateFormat.y("en_US").format(DateTime.parse(releaseDate) ?? '');
+    var year = '';
+    if (releaseDate != null && releaseDate != "")
+      year = new DateFormat.y("en_US").format(DateTime.parse(releaseDate));
     var displayTitle =
         "$title \u2022 S${seasonNumber.toString().padLeft(2, '0')} E${episodeNumber.toString().padLeft(2, '0')}";
 
