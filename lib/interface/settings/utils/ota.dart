@@ -111,7 +111,7 @@ updateApp(BuildContext context, bool dismissSnackbar) async {
           );
         });
   } else {
-    if (dismissSnackbar == false) {
+    if (dismissSnackbar == false && context != null) {
       Interface.showSnackbar(S.of(context).up_to_date, context: context);
     }
   }
