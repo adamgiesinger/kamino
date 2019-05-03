@@ -40,9 +40,9 @@ class ContentListModel {
       creatorName: json["created_by"] != null ? json["created_by"]["name"] : null,
       public: json["public"],
       content: json["stored"] == null
-          ? ((json["results"] as List).map((entry) => entry["media_type"] == "movie"
+          ? (json["results"] != null ? (json["results"] as List).map((entry) => entry["media_type"] == "movie"
             ? MovieContentModel.fromJSON(entry)
-            : TVShowContentModel.fromJSON(entry)).toList()
+            : TVShowContentModel.fromJSON(entry)).toList() : null
             )
           : ((json["stored"] as List).map((entry) => ContentModel.fromStoredMap(entry))).toList(),
       totalPages: json["total_pages"],
