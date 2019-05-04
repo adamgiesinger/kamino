@@ -11,8 +11,8 @@
 
   "url_copied": "Link gekopieerd!",
   "okay": "Okay",
-  "show_more": "Laat meer zien...",
-  "show_less": "Laat minder zien...",
+  "show_more": "Meer informatie...",
+  "show_less": "Minder informatie...",
   "loading": "Laden...",
   "unknown": "Onbekend",
   "unknown_x": "Onbekend $x",
@@ -64,7 +64,7 @@
   "n_episodes": "$n afleveringen",
 
   "released": "Uitgebracht",
-  "ongoing": "Lopende",
+  "ongoing": "Lopend",
   "year": "Jaar",
 
   "popularity": "Populairiteit",
@@ -187,19 +187,19 @@
   "choose_player": "Kies speler...",
   "change_player": "Verander speler",
   "all_genres": "Alle Genres",		
-  "curated": "Gecureerd",		
+  "curated": "Samengestelde",		
   "editors_choice": "Keuze van de Redactie",		
   "continue_watching": "Verder gaan met kijken",		
   "realdebrid_service_info": "Als u een abonnement heeft bij RealDebrid, kan ApolloTV deze gebruiken om snelle download resultaten te laten zien.",		
-  "error_loading_launchpad": "Dit is ongemakkelijk... Een fout is opgetreden terwijl we uw launchpad aan het laden waren.",		
-  "error_loading_search": "Dit is ongemakkelijk... Een fout is opgetreden terwijl we de zoekresultaten aan het laden waren.",		
+  "error_loading_launchpad": "Dit is ongemakkelijk... Er is een fout opgetreden tijdens het laden van uw launchpad.",		
+  "error_loading_search": "Dit is ongemakkelijk... Er is een fout opgetreden bij het laden van zoekresultaten.",		
   "be_careful_this_option_could_break_the_app_if_you": "Wees voorzichtig! Deze optie kan de app breken als u niet weet wat u aan het doen bent.",		
   "the_url_must_be_valid_and_include_a_trailing_": "De link moet geldig zijn en een / op het einde bevatten.",		
   "server_url": "Server Link",		
   "the_key_must_be_32_characters_in_length": "De sleutel moet 32 karakters in lengte zijn.",		
   "server_key": "Server Sleutel",		
   "run_initial_setup_procedure": "Voer Initiële Instellingsprocedure Uit",		
-  "begins_the_initial_setup_procedure_that_is_displayed_when_the": "Begint de initiële instellingsprocedure die wordt weergeven wanneer de app voor de eerste keer wordt geopend.",		
+  "begins_the_initial_setup_procedure_that_is_displayed_when_the": "Begint de initiële instellingsprocedure die werdt weergeven wanneer de app voor de eerste keer werdt geopend.",		
   "networking": "NETWERKEN",		
   "core": "KERN",		
   "not_yet_implemented": "Nog niet geïmplementeerd...",		
@@ -238,7 +238,7 @@
   "scraping_failed": "Scraping mislukt...",		
   "the_socket_connection_failed": "De socket connectie is mislukt.",		
   "the_socket_connection_timed_out": "De socket connectie timed out.",		
-  "an_error_occurred_whilst_communicating_with_claws": "Er is een fout opgetreden toudens het communiceren met Claws.",		
+  "an_error_occurred_whilst_communicating_with_claws": "Er is een fout opgetreden tijdens het communiceren met Claws.",		
   "an_error_occurred_whilst_communicating_with_claws_detailed": "Er is een fout opgetreden tijdens het communiceren met Claws. ($error)",		
   "the_request_timed_out": "Het verzoek is verlopen.",		
   "is_your_connection_too_slow": "Is uw connectie te traag?",		
@@ -254,5 +254,9 @@
   "name": "Naam",		
   "sorts_alphabetically_by_name": "Sorteert alfabetisch p[ naam.",		
   "file_size": "Bestand grote",		
-  "sorts_by_the_size_of_the_file": "Sorteert op de grote van het bestand."		
+  "sorts_by_the_size_of_the_file": "Sorteert op de grote van het bestand."
+  "credits": "Credits",
+  "information": "Informatie",
+  "play_trailer": "Speel trailer",
+  "see_all": "Alles zien"  
 }
