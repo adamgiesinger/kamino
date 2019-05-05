@@ -78,7 +78,7 @@ class Launchpad2State extends State<Launchpad2> {
         //_watchlists = await _watchListMemoizer.runOnce(() async {
         List<ContentListModel> _loadedWatchlists = new List();
         for(String watchlist in watchlists){
-          _loadedWatchlists.add(await TMDB.getList(context, int.parse(watchlist), loadFully: true, useCache: true));
+          _loadedWatchlists.add(await TMDB.getList(context, int.parse(watchlist), loadFully: false, useCache: true));
         }
         //});
 

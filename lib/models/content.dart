@@ -107,6 +107,7 @@ abstract class ContentModel {
   });
 
   Map toStoredMap();
+
   static ContentModel fromStoredMap(Map map){
     if(map['contentType'] == getRawContentType(ContentType.MOVIE)) return MovieContentModel.fromStoredMap(map);
     if(map['contentType'] == getRawContentType(ContentType.TV_SHOW)) return TVShowContentModel.fromStoredMap(map);
