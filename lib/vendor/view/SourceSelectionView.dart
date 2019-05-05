@@ -123,8 +123,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                   _rdSources,
                   title: S.of(context).real_debrid_n_sources(_rdSources.length.toString()),
                   sectionExpanded: rdExpanded,
-                  onToggleExpanded: () => setState(() => {
-                    rdExpanded = !rdExpanded
+                  onToggleExpanded: () => setState((){
+                    rdExpanded = !rdExpanded;
                   })
                 ) : Container(),
                 _buildSourceList(
@@ -133,8 +133,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                       ? S.of(context).standard_n_sources(_sources.length.toString())
                       : null,
                   sectionExpanded: generalExpanded,
-                  onToggleExpanded: () => setState(() => {
-                    generalExpanded = !generalExpanded
+                  onToggleExpanded: () => setState((){
+                    generalExpanded = !generalExpanded;
                   })
                 )
               ],

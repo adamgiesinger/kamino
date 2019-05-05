@@ -61,7 +61,7 @@ class ContentListModel {
         "name": creatorName
       },
       "public": public,
-      "stored": content.map((ContentModel model) => model.toStoredMap()).toList(),
+      "stored": content != null ? content.map((ContentModel model) => model.toStoredMap()).toList() : [],
       "total_pages": totalPages,
       "fullyLoaded": fullyLoaded
     };
