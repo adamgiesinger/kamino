@@ -139,7 +139,7 @@
 
   "create_profile": "Profil erstellen",
   "customize_appearance": "Aussehen anpassen",
-  "customize_appearance_description": "Wählen Sie Ihre Lieblingstheme aus!",
+  "customize_appearance_description": "Wählen Sie Ihre Lieblingstheme aus zum $appName!",
   "choose_n_categoriesOther": "Wählen Sie $n Kategorien...",
   "choose_n_categoriesOne": "Wählen Sie $n Kategorie...",
   "choose_n_categories_description": "Um die Empfehlungen für dich anzupassen, wähle mindestens drei Kategorien aus, welche dir gefallen.",

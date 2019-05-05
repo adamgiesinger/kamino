@@ -106,7 +106,7 @@ class TVShowContentModel extends ContentModel {
       seasons: json["seasons"],
       networks: json["networks"],
       status: json["status"],
-      popularity: json["popularity"],
+      popularity: json["popularity"].toDouble(),
     );
   }
 

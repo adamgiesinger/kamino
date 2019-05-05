@@ -85,7 +85,7 @@ class _Settings {
     "activeTheme": $(type: String),
     "primaryColorOverride": $(type: String),
     // (Layout Settings -> detailedContentInfoEnabled=true means Card View, false means Grid View)
-    "detailedContentInfoEnabled": $(type: bool, defaultValue: true),
+    "detailedContentInfoEnabled": $(type: bool, defaultValue: false),
 
     // Playback
     /// (Refer to [PlayerSettings] object.)
