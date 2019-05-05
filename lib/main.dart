@@ -560,8 +560,8 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
           selectedFontSize: 14,
           unselectedFontSize: 14,
 
-          onTap: (index) => {
-            setState(() => _activePage = index)
+          onTap: (index){
+            setState(() => _activePage = index);
           },
           currentIndex: _activePage,
 

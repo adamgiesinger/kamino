@@ -95,7 +95,9 @@ class TMDB {
   static Future<dynamic> getList(BuildContext context, int id, { bool loadFully = false, bool raw = false, bool useCache = false }) async {
     if(useCache){
       if(await DatabaseHelper.playlistInCache(id)){
-        return await DatabaseHelper.getCachedPlaylist(id);
+        // If the list is empty, MISS the cache.
+        ContentListModel listModel = await DatabaseHelper.getCachedPlaylist(id);
+        if(listModel.content.length > 0) return listModel;
       }
     }
 

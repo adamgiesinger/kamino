@@ -58,6 +58,7 @@ class Launchpad2State extends State<Launchpad2> {
     super.initState();
   }
 
+
   Future<void> _loadTrakt() async {
     if(await Trakt.isAuthenticated()) {
       await _traktMemoizer.runOnce(() => Trakt.getWatchHistory(context)).then((continueWatchingList){
