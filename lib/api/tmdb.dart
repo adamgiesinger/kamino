@@ -106,7 +106,7 @@ class TMDB {
     if(raw) return rawContentResponse;
     ContentListModel listModel = ContentListModel.fromJSON(Convert.jsonDecode(rawContentResponse));
 
-    if(!listModel.fullyLoaded && loadFully && listModel.totalPages > 1){
+    if(!listModel.fullyLoaded && loadFully && listModel.totalPages != null && listModel.totalPages > 1){
       List<ContentModel> fullContentList = new List();
 
       // (TMDB starts at index of 1 *sigh*)
