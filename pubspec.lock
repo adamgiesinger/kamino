@@ -528,7 +528,7 @@ packages:
       name: stream_transform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.17"
+    version: "0.0.19"
   string_scanner:
     dependency: transitive
     description:
@@ -618,10 +618,10 @@ packages:
     description:
       path: "packages/video_player"
       ref: master
-      resolved-ref: a5cf69bb1d33458f484e8d76a04d3e221dcd361e
+      resolved-ref: "1b3413a2a01ace10ed340d5bbd336f8c11790e26"
       url: "git://github.com/flutter/plugins.git"
     source: git
-    version: "0.10.0+7"
+    version: "0.10.0+8"
   w_common:
     dependency: transitive
     description:

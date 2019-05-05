@@ -1,6 +1,7 @@
 import 'package:cplayer/cplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 
@@ -18,11 +19,12 @@ class PlayerHelper {
       Navigator.push(
           context,
           MaterialPageRoute(builder: (context) =>
-              CPlayer(
+            CPlayer(
                   title: title,
                   url: url,
                   mimeType: mimeType
-              ))
+              )
+          )
       );
     }else{
       // Launch external player
@@ -61,6 +63,8 @@ class PlayerHelper {
     // Show external player dialog
     MethodChannel playerChannel = const MethodChannel('xyz.apollotv.kamino/playThirdParty');
     await playerChannel.invokeMethod('selectAndPlay', <String, dynamic>{
+      'copyToClipboardLabel': S.of(context).copy_to_clipboard,
+      'chooseLabel': S.of(context).choose_player,
       'videoTitle': title,
       'videoURL': url,
       'mimeType': mimeType

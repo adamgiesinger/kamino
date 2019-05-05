@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert' as Convert;
 import 'dart:io';
 import 'dart:math';
@@ -189,7 +190,19 @@ class ClawsVendorService extends VendorService {
     });
 
     if(!await authenticate(context)) return;
-    _beginProcessing(context, endpointURL, data, movie, displayTitle: title);
+    runZoned<Future<void>>(
+      () => _beginProcessing(
+        context,
+        endpointURL,
+        data,
+        movie,
+        displayTitle: title
+      ),
+      onError: (error, StackTrace stacktrace){
+        print("Error whilst searching TV show: ${error.toString()}");
+        print(stacktrace.toString());
+      }
+    );
   }
 
   @override
@@ -223,8 +236,19 @@ class ClawsVendorService extends VendorService {
     });
 
     if (!await authenticate(context)) return;
-    _beginProcessing(context, endpointURL, data, show,
-        displayTitle: displayTitle);
+    runZoned<Future<void>>(
+      () => _beginProcessing(
+        context,
+        endpointURL,
+        data,
+        show,
+        displayTitle: displayTitle
+      ),
+      onError: (error, StackTrace stacktrace){
+        print("Error whilst searching TV show: ${error.toString()}");
+        print(stacktrace.toString());
+      }
+    );
   }
 
   ///

@@ -95,7 +95,7 @@ abstract class VendorService {
   /// Triggers all update events, when the status is updated, as well as
   /// handling any necessary actions when the state is changed.
   ///
-  void setStatus(BuildContext context, VendorServiceStatus status, { String title }) async {
+  Future<void> setStatus(BuildContext context, VendorServiceStatus status, { String title }) async {
     VendorServiceStatus oldStatus = this.status;
 
     if(oldStatus == status) return;
@@ -104,6 +104,7 @@ abstract class VendorService {
     switch(status){
       case VendorServiceStatus.IDLE:
         if(oldStatus == VendorServiceStatus.DONE){
+          Navigator.of(context).pop();
           break;
         }
 

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
-import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/filesize.dart';
 import 'package:kamino/util/player.dart';
 import 'package:kamino/util/settings.dart';
@@ -60,8 +58,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
   }
 
   Future<bool> _handlePop() async {
-    widget.service.setStatus(context, VendorServiceStatus.IDLE);
-    Navigator.of(context).pop();
+    await widget.service.setStatus(context, VendorServiceStatus.IDLE);
     return false;
   }
 
@@ -280,11 +277,17 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                                   );
                                 },
                                 onLongPress: () {
-                                  Clipboard.setData(
+                                  /*Clipboard.setData(
                                       new ClipboardData(text: source.file.data));
                                   Interface.showSnackbar(S
                                       .of(context)
-                                      .url_copied, context: ctx);
+                                      .url_copied, context: ctx);*/
+                                  PlayerHelper.choosePlayer(
+                                    context,
+                                    title: widget.title,
+                                    url: source.file.data,
+                                    mimeType: 'video/*'
+                                  );
                                 },
                               )
                           )

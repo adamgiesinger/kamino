@@ -258,5 +258,6 @@
   "credits": "Credits",
   "information": "Information",
   "play_trailer": "Play Trailer",
-  "see_all": "See All"
+  "see_all": "See All",
+  "copy_to_clipboard": "Copy to Clipboard"
 }

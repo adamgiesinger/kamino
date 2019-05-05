@@ -3,6 +3,7 @@ package xyz.apollotv.kamino;
 import android.app.UiModeManager;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -21,11 +22,13 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
+import xyz.apollotv.kamino.share.ClipboardShareActivity;
 
 public class MainActivity extends FlutterActivity {
 
@@ -110,26 +113,59 @@ public class MainActivity extends FlutterActivity {
 
         if(methodCall.method.equals("selectAndPlay")) {
             try {
+                String copyToClipboardLabel = methodCall.argument("copyToClipboardLabel");
+                String chooserLabel = methodCall.argument("chooserLabel");
                 String videoTitle = methodCall.argument("videoTitle");
                 String videoURL = methodCall.argument("videoURL");
                 String mimeType = methodCall.argument("mimeType");
 
+                List<LabeledIntent> labelledIntents = new ArrayList<>();
+                PackageManager packageManager = getPackageManager();
+
                 Intent playIntent = new Intent(Intent.ACTION_VIEW);
                 playIntent.setDataAndTypeAndNormalize(Uri.parse(videoURL), mimeType);
                 playIntent.putExtra("title", videoTitle);
+                playIntent.putExtra("url", videoURL);
 
-                List<ResolveInfo> activities = getPackageManager().queryIntentActivities(
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(
                         playIntent, 0
                 );
-                boolean isIntentSafe = activities.size() > 0;
 
-                if(isIntentSafe){
-                    startActivity(playIntent);
-                    result.success(null);
+                /*boolean isIntentSafe = activities.size() > 0;
+                if(!isIntentSafe) {
+                    result.error(getPackageName(), "Error whilst playing. Intent wasn't safe to use.", "unsafeIntent");
                     return;
+                }*/
+
+                // Add the 'copy to clipboard' action
+                Intent copyToClipboard = new Intent(this, ClipboardShareActivity.class);
+                copyToClipboard.putExtra("url", videoURL);
+                LabeledIntent copyToClipboardIntent = new LabeledIntent(copyToClipboard, getPackageName(), copyToClipboardLabel, 0);
+                labelledIntents.add(copyToClipboardIntent);
+
+                // Add the resolved activities.
+                for(ResolveInfo activity : activities){
+                    Intent activityIntent = (Intent) playIntent.clone();
+                    activityIntent.setComponent(new ComponentName(
+                            activity.activityInfo.packageName,
+                            activity.activityInfo.name
+                    ));
+
+                    labelledIntents.add(new LabeledIntent(
+                        activityIntent,
+                        activity.activityInfo.packageName,
+                        activity.loadLabel(packageManager),
+                        activity.icon
+                    ));
                 }
 
-                result.error(getPackageName(), "Error whilst playing. Intent wasn't safe to use.", "unsafeIntent");
+                Intent chooserIntent = Intent.createChooser(playIntent, chooserLabel);
+                LabeledIntent[] chooserOptions = labelledIntents.toArray( new LabeledIntent[labelledIntents.size()] );
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, chooserOptions);
+                startActivity(chooserIntent);
+
+                result.success(null);
+                return;
 
             }catch(Exception ex){
                 ex.printStackTrace();
@@ -143,7 +179,8 @@ public class MainActivity extends FlutterActivity {
 
             // Create a video view intent.
             Intent playIntent = new Intent(Intent.ACTION_VIEW);
-            playIntent.setDataAndType(null, "video/*");
+            // Parse an example URL.
+            playIntent.setDataAndTypeAndNormalize(Uri.parse("https://apollotv.xyz/v.mp4"), "video/*");
 
             // Get a list of activities that support the intent.
             List<ResolveInfo> activities = getPackageManager().queryIntentActivities(playIntent, 0);

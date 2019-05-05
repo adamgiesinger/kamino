@@ -73,6 +73,7 @@ class S implements WidgetsLocalizations {
   String get connected_trakt_account => "Connected Trakt account.";
   String get connecting => "Connecting...";
   String get continue_watching => "Continue Watching";
+  String get copy_to_clipboard => "Copy to Clipboard";
   String get core => "CORE";
   String get create_profile => "Create Profile";
   String get credits => "Credits";

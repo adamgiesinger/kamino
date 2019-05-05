@@ -5,7 +5,6 @@ rvm:
 
 env:
   global:
-    - JOB_NAME="Kamino (Android)"
     - ANDROID_SDK_ROOT=/opt/android
 
 jdk: oraclejdk8
@@ -22,9 +21,11 @@ addons:
       - fonts-droid
       - curl
 
-before_script:
+before_install:
   # Execute ApolloTV prebuild webhook.
   - ./.travis/prebuild.sh $WEBHOOK_URL
+
+before_script:
   # Setup gradle.
   - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
   - unzip -qq gradle-3.5-bin.zip
