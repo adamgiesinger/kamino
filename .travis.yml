@@ -53,6 +53,7 @@ before_script:
   - ./.travis/generateVendorConfig.sh $TMDB_KEY $TRAKT_ID $TRAKT_SECRET $CLAWS_URL_BETA $CLAWS_KEY_BETA $VENDOR_NAME > `pwd`/lib/vendor/dist/OfficialVendorConfiguration.dart
 
 script:
+  - flutter doctor -v
   # Run Flutter build
   - ./flutter/bin/flutter build apk
 
