@@ -11,7 +11,7 @@ description: The ApolloTV app for iOS and Android.
 version: 1.4.2+104023
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   # Core dependencies

@@ -20,6 +20,7 @@ import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/util/settings.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:simple_moment/simple_moment.dart';
 
 class Launchpad2 extends KaminoAppPage {
@@ -35,17 +36,27 @@ class Launchpad2State extends State<Launchpad2> {
   AsyncMemoizer _traktMemoizer = new AsyncMemoizer();
 
   EditorsChoice _editorsChoice;
-  List<ContentModel> _topPicksList = List();
+  List<ContentModel> _topPicksList;
   List<ContentModel> _continueWatchingList;
 
   bool _watchlistsLoaded;
   List<ContentListModel> _watchlists;
 
   Future<void> load() async {
-    _topPicksList = (await TMDB.getList(context, 105604, loadFully: true, useCache: true)).content;
+    TMDB.getList(context, 105604, loadFully: false, useCache: true).then<ContentListModel>((list){
+      if(mounted) setState(() => _topPicksList = list.content);
+    });
 
-    await DatabaseHelper.refreshEditorsChoice(context);
-    _editorsChoice = await DatabaseHelper.selectRandomEditorsChoice();
+    // Load editor's choice without preventing homepage from being displayed.
+    DatabaseHelper.refreshEditorsChoice(context).then((_) {
+      if (mounted) DatabaseHelper.selectRandomEditorsChoice().then(
+        (EditorsChoice editorsChoice){
+          if(mounted) setState(() =>
+            _editorsChoice = editorsChoice
+          );
+        }
+      );
+    });
   }
 
   @override
@@ -79,6 +90,7 @@ class Launchpad2State extends State<Launchpad2> {
         //_watchlists = await _watchListMemoizer.runOnce(() async {
         List<ContentListModel> _loadedWatchlists = new List();
         for(String watchlist in watchlists){
+          if(!mounted) break;
           _loadedWatchlists.add(await TMDB.getList(context, int.parse(watchlist), loadFully: false, useCache: true));
         }
         //});
@@ -147,7 +159,7 @@ class Launchpad2State extends State<Launchpad2> {
                               pauseAutoPlayOnTouch: Duration(seconds: 1),
                               enlargeCenterPage: true,
                               height: 200,
-                              items: List.generate(_topPicksList.length, (int index){
+                              items: _topPicksList != null ? List.generate(_topPicksList.length, (int index){
                                 return Builder(builder: (BuildContext context){
                                   var content = _topPicksList[index];
 
@@ -157,6 +169,22 @@ class Launchpad2State extends State<Launchpad2> {
                                     padding: EdgeInsets.symmetric(vertical: 10),
                                   );
                                 });
+                              }) : List.generate(3, (int index){
+                                return Container(
+                                  child: Material(
+                                    type: MaterialType.card,
+                                    elevation: 2,
+                                    clipBehavior: Clip.antiAlias,
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Shimmer.fromColors(
+                                      baseColor: const Color(0x8F000000),
+                                      highlightColor: const Color(0x4F000000),
+                                      child: Container(color: const Color(0x8F000000)),
+                                    ),
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5),
+                                  padding: EdgeInsets.symmetric(vertical: 10),
+                                );
                               })
                           )
                       ),
@@ -283,7 +311,12 @@ class Launchpad2State extends State<Launchpad2> {
                       )
                   ),
 
-                  !_watchlistsLoaded ? Container() : ListView.builder(
+                  !_watchlistsLoaded ? Container(
+                    margin: EdgeInsets.symmetric(vertical: 30),
+                    child: Center(
+                      child: CircularProgressIndicator()
+                    )
+                  ) : ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: _watchlists.length,

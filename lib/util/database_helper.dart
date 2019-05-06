@@ -434,7 +434,9 @@ class FavoriteDocument {
     name = model.title,
     contentType = model.contentType,
     imageUrl = model.posterPath,
-    year = model.releaseDate != null ? DateFormat.y("en_US").format(DateTime.parse(model.releaseDate)) : "",
+    year = model.releaseDate != null && model.releaseDate != ""
+        ? DateFormat.y("en_US").format(DateTime.tryParse(model.releaseDate) ?? "1970-01-01")
+        : "",
     savedOn = DateTime.now().toUtc();
 
   Map toMap(){
