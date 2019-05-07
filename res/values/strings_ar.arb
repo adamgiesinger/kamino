@@ -122,7 +122,7 @@
   "gathers_useful_information_for_debugging": ".إجمع معلومات مفيدة لمعالجة الأخطاء",
   "link_copied_to_clipboard": ".تم نسخ الرابط إلى الحافظة",
   "the_default_configuration_has_been_restored": ".تمت إستعادة الضبط الإفتراضي",
-  "restore_defaults": "إستعد الضبط الإفتراضي"
+  "restore_defaults": "إستعد الضبط الإفتراضي",
 
   "select_language": "...إختار اللغة",
   "language_settings": "إعدادات اللغة",
@@ -155,7 +155,7 @@
   "grid_layout": "تخطيط الشبكة",
   "disconnect_your_trakt_account": "الخاص بك Trakt إقطع الإتصال بحساب",
   "connect_your_trakt_account": " الخاص بكTrakt إتصل بحساب",
-  "appname_can_synchronise_your_watch_history_and_favorites_from_trakttv": " ...Trakt.tv مزامنة سجل المشاهدة والمفضلات الخاصة بك من $appNameيمكن لـ",
+  "appname_can_synchronise_your_watch_history_and_favorites_from_trakttv": " ...Trakt.tv مزامنة سجل المشاهدة والمفضلات الخاصة بك من $appName يمكن لـ",
   "youre_offline": "...أنت غير متصل بالإنترنت",
   "appname_failed_to_connect_to_the_internet": ".فشل في الاتصال بالإنترنت. يرجى التحقق من إتصالك $appName",
   "playback": "التشغيل",

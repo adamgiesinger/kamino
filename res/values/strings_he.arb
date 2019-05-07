@@ -40,7 +40,6 @@
   "appname_was_unable_to_authenticate_with_trakttv": "$appName כשל עם האימות של Trakt.tv.",
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": "הנך יכול/ה ללחוץ על 'סנכרן' על מנת לסנכרן את מועדפי הTrakt עם מועדפי הApolloTV שלך.\n\n(אינטגרציית Trakt עדיין מוגבלת בגלל שהיא עדיין בשלבי פיתוח.)",
   "disconnected_trakt_account": "משתמש Trakt נותק.",
-  "disconnected_trakt_account": "Disconnected Trakt account.",
   "trakt_synchronization": "סנכרון Trakt...",
   "trakt_favorites_sync_detailed": "נא המתן בזמן שאנחנו מסנכרנים את המועדפים שלך עם Trakt. החלון יסגר באופן אוטומטי שהפעולה תסתיים.",
 
@@ -122,7 +121,7 @@
   "gathers_useful_information_for_debugging": "אוסף מידע חיוני בשביל תיקון תקלות.",
   "link_copied_to_clipboard": "קישור הועתק.",
   "the_default_configuration_has_been_restored": "תצורת ברירת המחדל שוחזרה.",
-  "restore_defaults": "שחזר לתצורת ברירת המחדל"
+  "restore_defaults": "שחזר לתצורת ברירת המחדל",
 
   "select_language": "בחר שפה...",
   "language_settings": "הגדרות שפה",
@@ -193,7 +192,7 @@
   "realdebrid_service_info": "אם ברשותך מנוי של Real-Debrid, ApolloTV יכול להשתמש בו כדי להשיג תוכן במהירות גבוהה יותר.",
   "error_loading_launchpad": "זה מביך! אירעה שגיאה בזמן הטעינה.",
   "error_loading_search": "אירעה שגיאה בעת טעינת תוצאות החיפוש.",
-  "be_careful_this_option_could_break_the_app_if_you": "אזהרה! אפשרות זו יכולה לשבש את היישום אם את\ה לא יודע\ת מה את\ה עושה.",
+  "be_careful_this_option_could_break_the_app_if_you": "אזהרה! אפשרות זו יכולה לשבש את היישום אם אתה לא יודעת מה אתה עושה.",
   "the_url_must_be_valid_and_include_a_trailing_": "הקישור חייב להיות חוקי ושיכלול '/'",
   "server_url": "כתובת השרת",
   "the_key_must_be_32_characters_in_length": "המפתח חייב להיות באורך 32 תווים.",
@@ -258,6 +257,6 @@
   "credits": "קרדיטים",
   "information": "מידע",
   "play_trailer": "טריילר",
-  "see_all": "הצג הכל"
+  "see_all": "הצג הכל",
   "copy_to_clipboard": "העתק"
 }

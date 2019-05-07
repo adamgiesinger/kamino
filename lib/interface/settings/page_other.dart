@@ -41,7 +41,7 @@ class OtherSettingsPageState extends SettingsPageState {
       physics: widget.isPartial ? NeverScrollableScrollPhysics() : null,
       shrinkWrap: widget.isPartial ? true : false,
       children: <Widget>[
-        Material(
+        /*Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: SwitchListTile(
             isThreeLine: true,
@@ -80,7 +80,7 @@ class OtherSettingsPageState extends SettingsPageState {
               }
             },
           ),
-        ),
+        ),*/
 
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
