@@ -37,7 +37,7 @@
   "trakt_authenticator": "Trakt-todennus",
   "successfully_refreshed_trakt_token": "Trakt-avain päivitetty.",
   "trakt_renewal_failure_detailed": "Trakt-avaimen uusiminen epäonnistui. Tarkista tiedot.",
-  "appname_was_unable_to_authenticate_with_trakttv": "Sovelluksen $appName Trakt-todennus ei onnistunut.",
+  "appname_was_unable_to_authenticate_with_trakttv": "$appName:n Trakt-todennus ei onnistunut.",
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": "Voit nyt painaa 'Synkronoi' synkronoidaksesi Trakt-suosikit ApolloTV-suosikkien kanssa.\n\n(Trakt-yhteensopivuus on rajoittunut ja sitä kehitetään yhä.)",
   "connected_trakt_account": "Trakt-tili yhdistetty.",
   "disconnected_trakt_account": "Trakt-tilin yhteys katkaistu.",
@@ -171,7 +171,7 @@
   "uploading_favorites": "Lähetetään suosikkeja...",
   "downloading_trakt_data": "Ladataan tietoja Trakt:sta...",
   "saving_content_information": "Tallennetaan sisältötietoja...",
-  "appname_was_unable_to_authenticate_with_real_debrid": "Sovelluksen $appName Real-Debrid-todentaminen epäonnistui.",
+  "appname_was_unable_to_authenticate_with_real_debrid": "$appName:n Real-Debrid-todentaminen epäonnistui.",
   "connected_real_debrid_account": "Yhdistetty Real-Debrid-tiliin.",
   "disconnected_real_debrid_account": "Katkaistu yhteys Real-Debrid-tiliin.",
   "real_debrid_authenticator": "Real-Debrid-todentaja",
@@ -258,5 +258,6 @@
   "credits": "Kiitokset",
   "information": "Tietoa",
   "play_trailer": "Toista traileri",
-  "see_all": "Näytä kaikki"
+  "see_all": "Näytä kaikki",
+  "copy_to_clipboard": "Kopioi leikepöydälle"
 }

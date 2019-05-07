@@ -14,7 +14,10 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
       return child;
     }
 
-    return new FadeTransition(opacity: animation, child: child);
+    return new FadeTransition(
+        opacity: animation,
+        child: child
+    );
 
   }
 

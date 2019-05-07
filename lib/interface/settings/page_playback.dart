@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -132,7 +133,7 @@ class PlaybackSettingsPageState extends SettingsPageState {
       physics: widget.isPartial ? NeverScrollableScrollPhysics() : null,
       shrinkWrap: widget.isPartial ? true : false,
       children: <Widget>[
-        Material(
+        (Platform.isAndroid) ? Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.play_circle_filled),
@@ -145,7 +146,7 @@ class PlaybackSettingsPageState extends SettingsPageState {
               setState(() {});
             }),
           ),
-        ),
+        ) : Container(),
 
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,

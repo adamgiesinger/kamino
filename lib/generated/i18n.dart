@@ -917,6 +917,8 @@ class fi extends S {
   @override
   String get name => "Nimi";
   @override
+  String get copy_to_clipboard => "Kopioi leikepöydälle";
+  @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Jos tämä ongelma toistuu, ole yhteydessä sovelluskehittäjiin Discordissa.";
   @override
   String get next => "SEURAAVA";
@@ -1219,13 +1221,13 @@ class fi extends S {
   @override
   String n_episodes(String n) => "$n jaksoa";
   @override
-  String appname_was_unable_to_authenticate_with_trakttv(String appName) => "Sovelluksen $appName Trakt-todennus ei onnistunut.";
+  String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName:n Trakt-todennus ei onnistunut.";
   @override
   String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "Tapahtui virhe yhteydessä Clawsiin. ($error)";
   @override
   String customize_appearance_description(String appName) => "$appName rakastaa mukautuvuutta. Aloitetaan valitsemalla lempiteemasi!";
   @override
-  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "Sovelluksen $appName Real-Debrid-todentaminen epäonnistui.";
+  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName:n Real-Debrid-todentaminen epäonnistui.";
   @override
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "Tapahtui virhe Trakt-todennuksen purun yhyteydessä. ($errorCode)";
   @override
@@ -1265,6 +1267,489 @@ class ru extends S {
    @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  @override
+  String get cancel => "Отмена";
+  @override
+  String get take_screenshot_report_apollotv_discord => "Сделайте снимок экрана этого сообщения и свяжитесь с сотрудником сервера ApolloTV Discord.";
+  @override
+  String get year => "Год";
+  @override
+  String get an_error_occurred_whilst_communicating_with_claws => "Во время общения с Клоусами возникла ошибка.";
+  @override
+  String get authentication_timed_out_please_try_again => "Время аутентификации истекло. Пожалуйста, попробуйте еще раз.";
+  @override
+  String get disconnected_trakt_account => "Отключен счет Trakt.";
+  @override
+  String get manage_third_party_integrations => "Управление интеграцией сторонних производителей.";
+  @override
+  String get play_movie => "Играть в кино";
+  @override
+  String get ongoing => "Текущий";
+  @override
+  String get not_yet_implemented => "Ещё не реализован....";
+  @override
+  String get wiping_database => "Стирая базу данных....";
+  @override
+  String get set_primary_color => "Установить основной цвет...";
+  @override
+  String get playback => "Воспроизведение";
+  @override
+  String get released => "Выпущен";
+  @override
+  String get recommended_movies => "Рекомендуемые фильмы";
+  @override
+  String get create_profile => "Создать профиль";
+  @override
+  String get no_favorites_description => "Добавить элемент в избранное можно, коснувшись сердца в правом верхнем углу страницы обзора содержимого.";
+  @override
+  String get url_copied => "Ссылка скопирована!";
+  @override
+  String get debug_only_logs_the_application_preferences_in_the_console => "(Только отладка) Ведет журнал настроек приложения в консоли.";
+  @override
+  String get quality => "Качество";
+  @override
+  String get extensions => "Расширения";
+  @override
+  String get general_application_settings => "Общие настройки приложения.";
+  @override
+  String get see_all => "Смотреть все";
+  @override
+  String get is_your_connection_too_slow => "Ваше соединение слишком медленное?";
+  @override
+  String get an_error_occurred => "Произошла ошибка.";
+  @override
+  String get miscellaneous => "МИКЕЛЛАНЕОУС";
+  @override
+  String get source_autoplay_description => "Автоматически выбирает источник для воспроизведения вместо отображения диалога, содержащего список источников.";
+  @override
+  String get grid_layout => "Схема расположения сеток";
+  @override
+  String get server_key => "Ключ сервера";
+  @override
+  String get connect_your_trakt_account => "Подключение учетной записи Trakt";
+  @override
+  String get with_thanks => "Спасибо";
+  @override
+  String get connected_trakt_account => "Подключен счет Trakt.";
+  @override
+  String get popularity => "Популярность";
+  @override
+  String get default_ => "стандартный";
+  @override
+  String get be_careful_this_option_could_break_the_app_if_you => "Осторожно! Эта опция может взломать приложение, если вы не знаете, что делаете.";
+  @override
+  String get close => "Близко";
+  @override
+  String get connect => "устанавливать связь";
+  @override
+  String get whats_your_favorite_color_description => "Нажмите, чтобы задать цвет акцента; он используется для придания всплеска цвета кнопкам, значкам и т.д.....";
+  @override
+  String get select_language => "Выберите Язык...";
+  @override
+  String get saving_content_information => "Сохранение информации о содержании...";
+  @override
+  String get error_loading_search => "Ну, это неловко... При загрузке результатов поиска возникла ошибка.";
+  @override
+  String get unable_to_determine_reason => "Невозможно определить причину....";
+  @override
+  String get clear_search_history => "Очистить историю поиска";
+  @override
+  String get clearing_settings => "Очищаю настройки....";
+  @override
+  String get diagnostics => "ДИАГНОСТИКА";
+  @override
+  String get error_loading_launchpad => "Ну, это неловко... Произошла ошибка при загрузке вашей стартовой площадки.";
+  @override
+  String get cast_and_crew => "Литые и экипаж";
+  @override
+  String get up_to_date => "Современный. Проверьте через 1-3 недели.";
+  @override
+  String get information => "Информация";
+  @override
+  String get play_trailer => "Играть в трейлер";
+  @override
+  String get general_settings => "Общие настройки";
+  @override
+  String get boost_your_experience => "ПОВЫСИТЬ СВОЙ ОПЫТ";
+  @override
+  String get removed_from_favorites => "Удален из избранного";
+  @override
+  String get change_theme => "Смени тему...";
+  @override
+  String get the_server_failed_to_verify_the_apps_integrity => "Сервер не смог проверить целостность приложения.";
+  @override
+  String get disconnect_your_realdebrid_account => "Отключите ваш Real-Debrid аккаунт";
+  @override
+  String get the_default_configuration_has_been_restored => "Восстановлена конфигурация по умолчанию.";
+  @override
+  String get disconnected_real_debrid_account => "Отсоединённый Real Debrid отзыв.";
+  @override
+  String get legal => "Юридический";
+  @override
+  String get donate => "жертвовать";
+  @override
+  String get an_error_occurred_whilst_loading_this_page => "При загрузке этой страницы возникла ошибка.";
+  @override
+  String get authentication_successful => "Аутентификация Успешно";
+  @override
+  String get customize_your_launchpad => "Настройте ваш пусковой блокнот.";
+  @override
+  String get the_url_must_be_valid_and_include_a_trailing_ => "URL-адрес должен быть действительным и содержать символ /.";
+  @override
+  String get editors_choice => "Выбор редактора";
+  @override
+  String get sync => "Синхронизация";
+  @override
+  String get downloading_trakt_data => "Загрузка Trakt данных....";
+  @override
+  String get other_ => "Другое";
+  @override
+  String get clears_all_application_settings => "Удаляет все настройки приложения.";
+  @override
+  String get success => "Успех!";
+  @override
+  String get name => "Имя";
+  @override
+  String get if_this_problem_persists_please_contact_a_member_of_staff => "Если эта проблема сохраняется, пожалуйста, свяжитесь с сотрудником отдела Разногласий.";
+  @override
+  String get next => "стандартный";
+  @override
+  String get cast_settings => "Литые настройки";
+  @override
+  String get card_layout => "Макет карты";
+  @override
+  String get back => "обратно";
+  @override
+  String get trakt_renewal_failure_detailed => "Не удалось обновить токен Trakt. Пожалуйста, проверьте свои данные.";
+  @override
+  String get lets_go => "Пошли";
+  @override
+  String get run_initial_setup_procedure => "Выполнение процедуры первоначальной настройки";
+  @override
+  String get it_seems_this_copy_of_the_app_is_out_of => "Кажется, эта копия приложения устарела....";
+  @override
+  String get get_device_information => "Получить информацию об устройстве";
+  @override
+  String get choose_n_categories_description => "Наконец, давайте адаптируем ваш контент, выберем как минимум 3 категории и получим предложения по контенту, который вам понравится!";
+  @override
+  String get real_debrid_authenticator => "Real Debrid Аутентификатор";
+  @override
+  String get error_updating_app => "Ошибка обновления приложения....";
+  @override
+  String get clear_search_history_description => "Удаляет предложения по поиску, основанные на предыдущих поисках.";
+  @override
+  String get customize_appearance => "Настройка внешнего вида";
+  @override
+  String get gathers_useful_information_for_debugging => "Собирает полезную информацию для отладки.";
+  @override
+  String get layout_preferences_subtitle => "Макеты карт являются более подробными, однако макеты сетки могут вместить больше элементов.";
+  @override
+  String get scraping_failed => "Скребок провалился....";
+  @override
+  String get downloading_update_file => "Загрузка файла обновления....";
+  @override
+  String get unable_to_connect_to_server => "Невозможно подключиться к серверу.";
+  @override
+  String get no_favorites_header => "Здесь нет любимчиков!";
+  @override
+  String get whats_your_favorite_color => "Какой твой любимый цвет?";
+  @override
+  String get disconnect_your_trakt_account => "Отключите ваш Trakt-аккаунт";
+  @override
+  String get disconnect => "Отключить";
+  @override
+  String get manually_override_the_default_content_server => "Вручную переопределить сервер содержимого по умолчанию.";
+  @override
+  String get realdebrid => "Real-Debrid";
+  @override
+  String get advanced => "Расширенный";
+  @override
+  String get all_genres => "Все жанры";
+  @override
+  String get experimental => "экспериментальный";
+  @override
+  String get movies => "Фильмы";
+  @override
+  String get coming_soon => "Скоро будет";
+  @override
+  String get play_episode => "Воспроизведение эпизода";
+  @override
+  String get select_player => "Выберите Игрок...";
+  @override
+  String get show_less => "Покажи меньше...";
+  @override
+  String get search_history_cleared => "История поиска очищена.";
+  @override
+  String get choose_a_theme_description => "Выберите общую тему! Используется в первую очередь для выбора цвета фона.";
+  @override
+  String get choose_player => "Выберите игрока...";
+  @override
+  String get successfully_refreshed_trakt_token => "Успешно обновленный маркер Trakt.";
+  @override
+  String get one_episode => "один эпизод";
+  @override
+  String get order => "ПРЕДПРЕЖДЕНИЕ";
+  @override
+  String get okay => "подходящий";
+  @override
+  String get dismiss => "закройте ";
+  @override
+  String get loading => "Загрузка...";
+  @override
+  String get air_date => "Дата выхода в эфир";
+  @override
+  String get install => "установка";
+  @override
+  String get action_completed_successfully => "Действие успешно завершено.";
+  @override
+  String get change_content_playback_settings => "Изменение настроек воспроизведения содержимого.";
+  @override
+  String get please_check_the_announcements_channel_in_our_discord_server_for => "Пожалуйста, проверьте канал #announcements на нашем сервере для получения дополнительной информации.";
+  @override
+  String get please_wait => "Пожалуйста, подождите...";
+  @override
+  String get clears_the_application_database => "Очищает базу данных приложения.";
+  @override
+  String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "Теперь вы можете нажать 'Sync', чтобы синхронизировать избранное Trakt с избранным ApolloTV.\n\n(Интеграция Trakt ограничена, поскольку он еще находится в разработке).";
+  @override
+  String get syncing => "Синхронизация...";
+  @override
+  String get youre_offline => "Ты вне сети....";
+  @override
+  String get ping => "Пинг";
+  @override
+  String get update_failed_storage_permission_denied => "Обновление не прошло успешно. Хранение запрещено.";
+  @override
+  String get skip => "пропуск";
+  @override
+  String get change_player => "Изменить игрока";
+  @override
+  String get customize_the_theme_and_primary_colors => "Настройка темы и основных цветов.";
+  @override
+  String get authentication_failed => "Аутентификация не прошла...";
+  @override
+  String get this_feature_has_not_yet_been_implemented => "Эта функция еще не реализована.";
+  @override
+  String get unknown => "Неизвестный";
+  @override
+  String get source_autoplay => "Включить автоигру с исходным кодом";
+  @override
+  String get authentication_unsuccessful => "Аутентификация Неудачная аутентификация";
+  @override
+  String get trakt_favorites_sync_detailed => "Пожалуйста, подождите, пока мы синхронизируем ваши избранные с Trakt. Этот диалог закроется автоматически после завершения синхронизации.";
+  @override
+  String get recommended_tv_shows => "Рекомендуемые ТВ-шоу";
+  @override
+  String get change_default_server => "Изменить сервер по умолчанию";
+  @override
+  String get general_settings_description => "Ниже приведены некоторые часто используемые опции настройки, на которые вы, возможно, захотите взглянуть.";
+  @override
+  String get realdebrid_service_info => "Если у вас есть подписка RealDebrid, ApolloTV может использовать ее для получения результатов высокоскоростной загрузки.";
+  @override
+  String get server_url => "URL-адрес сервера";
+  @override
+  String get run_connectivity_test => "Тест на работоспособность соединения";
+  @override
+  String get search_tv_shows_and_movies => "Поиск телепередач и фильмов...";
+  @override
+  String get continue_watching => "Продолжить Смотреть";
+  @override
+  String get synopsis => "Краткий обзор";
+  @override
+  String get ascending => "Возвышающийся";
+  @override
+  String get power_user_settings_for_rocket_scientists => "Настройки опытных пользователей для ракетологов.";
+  @override
+  String get file_size => "Размер файла";
+  @override
+  String get app_tagline => "Потоковое приложение, созданное для сообщества сообществом.";
+  @override
+  String get debug_only_logs_the_application_database_in_the_console => "(Только отладка) Ведет журнал базы данных приложения в консоли.";
+  @override
+  String get appearance => "Внешний вид";
+  @override
+  String get sorts_by_the_size_of_the_file => "Сортировка по размеру файла.";
+  @override
+  String get curated => "Курируемый";
+  @override
+  String get connected_real_debrid_account => "Подключен Real Debrid отзыв.";
+  @override
+  String get apollotv_builtin_player => "Встроенный плеер ApolloTV.";
+  @override
+  String get the_socket_connection_failed => "Сбой соединения разъема.";
+  @override
+  String get rd_description => "Real-Debrid - это неограниченный загрузчик, позволяющий быстро загружать файлы, размещенные в Интернете.";
+  @override
+  String get connecting => "Подключение...";
+  @override
+  String get dump_database => "База данных по свалкам";
+  @override
+  String get networking => "СЕТЬ";
+  @override
+  String get $_language_name_english => "Russian";
+  @override
+  String get blog => "Блог";
+  @override
+  String get descending => "Понижение";
+  @override
+  String get sorts_by_source_quality => "Сортировка по качеству источника.";
+  @override
+  String get updating => "Обновление...";
+  @override
+  String get uploading_favorites => "Загрузка любимых....";
+  @override
+  String get added_to_favorites => "Добавлено в избранное";
+  @override
+  String get check_for_updates => "Проверьте наличие обновлений";
+  @override
+  String get settings => "параметры";
+  @override
+  String get language_settings => "Настройки языка";
+  @override
+  String get which_do_you_prefer => "Что ты предпочитаешь?";
+  @override
+  String get $_language_name => "русский";
+  @override
+  String get permission_denied => "Разрешение отклонено.";
+  @override
+  String get dump_preferences => "Предпочтения по сбросу отходов";
+  @override
+  String get trakt_authenticator => "Trakt Аутентификатор";
+  @override
+  String get wipe_database => "База данных салфеток";
+  @override
+  String get trakttv => "Trakt.tv";
+  @override
+  String get sort => "Сортировать";
+  @override
+  String get sorts_by_the_time_the_server_took_to_respond => "Сортировка по времени ответа сервера.";
+  @override
+  String get done => "готовый";
+  @override
+  String get wipe_settings => "Настройки салфеток";
+  @override
+  String get core => "ОБЪЯВЛЕНИЕ";
+  @override
+  String get the_key_must_be_32_characters_in_length => "Длина ключа должна составлять 32 символа.";
+  @override
+  String get link_copied_to_clipboard => "Ссылка скопирована в буфер обмена.";
+  @override
+  String get unable_to_connect => "Невозможно установить связь....";
+  @override
+  String get favorites => "Избранное";
+  @override
+  String get checks_whether_sources_can_be_reached => "Проверяет, можно ли получить доступ к источникам.";
+  @override
+  String get launchpad => "Запусковая площадка";
+  @override
+  String get restore_defaults => "Восстановление значений по умолчанию";
+  @override
+  String get connect_your_realdebrid_account => "Подключите ваш Real-Debrid аккаунт";
+  @override
+  String get sort_by => "Сортировать по...";
+  @override
+  String get action_unsuccessful => "Действие провалилось.";
+  @override
+  String get trakt_description => "Автоматическое отслеживание того, что вы смотрите, синхронизация списков воспроизведения между устройствами и многое другое....";
+  @override
+  String get sorts_alphabetically_by_name => "Сортировка по имени в алфавитном порядке.";
+  @override
+  String get tv_shows => "ТВ-шоу";
+  @override
+  String get reload => "Перезагрузка";
+  @override
+  String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "Начинается процедура первоначальной настройки, которая отображается при первом открытии приложения.";
+  @override
+  String get credits => "Кредиты";
+  @override
+  String get the_request_timed_out => "Запрос закончился.";
+  @override
+  String get show_more => "Покажи еще...";
+  @override
+  String get update_failed_please_try_again_later => "Обновление не прошло успешно. Пожалуйста, попробуйте еще раз позже.";
+  @override
+  String get no_results_found => "Результаты не найдены.";
+  @override
+  String get choose_a_theme => "Выберите тему...";
+  @override
+  String get trakt_synchronization => "Трект Синхронизация....";
+  @override
+  String get vote_average => "Среднее число голосов";
+  @override
+  String get the_socket_connection_timed_out => "Сбой соединения разъема.";
+  @override
+  String appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(String appName) => "$appName может синхронизировать историю Ваших часов и избранное с Trakt.tv....";
+  @override
+  String appname_failed_to_connect_to_the_internet(String appName) => "$appName не подключился к интернету. Пожалуйста, проверьте подключение.";
+  @override
+  String extensions_description(String appName) => "Если вы используете любой из этих сторонних сервисов, вы можете подключить их к $appName.";
+  @override
+  String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "Сервер $appName в настоящее время отключен от сети для обновления сервера.";
+  @override
+  String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName успешно прошла аутентификацию на Trakt.tv!";
+  @override
+  String welcome_to_appname(String appName) => "Добро пожаловать в $appName";
+  @override
+  String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName стало возможным благодаря всем этим удивительным людям:";
+  @override
+  String by_x(String x) => "на $x";
+  @override
+  String make_appname_yours(String appName) => "сделай $appName своим.";
+  @override
+  String version_x(String version) => "Версия $version";
+  @override
+  String general_error(String error) => "Произошла ошибка ($error)\n Сообщите об этой ошибке.";
+  @override
+  String n_ratings(String n) => "рейтинги $n";
+  @override
+  String this_x_has_no_synopsis_available(String x) => "У этого $x нет резюме.";
+  @override
+  String seasons_n(String n) => "Сезоны года ($n)";
+  @override
+  String unknown_x(String x) => "Неизвестный $x";
+  @override
+  String n_sources(String n) => "$n источники";
+  @override
+  String n_episodes(String n) => "$n эпизоды";
+  @override
+  String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName не смог аутентифицироваться на Trakt.tv.";
+  @override
+  String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "Во время общения с Клоусами возникла ошибка. ($error)";
+  @override
+  String customize_appearance_description(String appName) => "$appName - это все о настройке. Давайте начнем с выбора вашей любимой темы!";
+  @override
+  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName не смог аутентифицироваться с Real Debrid.";
+  @override
+  String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "Во время аутентификации на Trakt.tv возникла ошибка. ($errorCode)";
+  @override
+  String real_debrid_n_sources(String n) {
+    switch (n) {
+      case "1":
+        return "Real Debrid ($n source)";
+      default:
+        return "Real Debrid ($n sources)";
+    }
+  }
+  @override
+  String standard_n_sources(String n) {
+    switch (n) {
+      case "1":
+        return "Стандарт ($n sources)";
+      default:
+        return "Стандарт ($n sources)";
+    }
+  }
+  @override
+  String choose_n_categories(String n) {
+    switch (n) {
+      case "0":
+        return "Потрясающий!";
+      case "1":
+        return "Выберите категорию $n...";
+      default:
+        return "Выберите категории $n...";
+    }
+  }
 }
 
 class sv extends S {
@@ -2901,6 +3386,489 @@ class zh extends S {
    @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  @override
+  String get cancel => "取消";
+  @override
+  String get take_screenshot_report_apollotv_discord => "请截取此消息的屏幕截图并联系ApolloTV Discord服务器中的工作人员.";
+  @override
+  String get year => "年";
+  @override
+  String get an_error_occurred_whilst_communicating_with_claws => "与Claws通信时发生错误.";
+  @override
+  String get authentication_timed_out_please_try_again => "身份验证超时.请再试一次.";
+  @override
+  String get disconnected_trakt_account => "已断开连接的Trakt帐户.";
+  @override
+  String get manage_third_party_integrations => "管理第三方集成.";
+  @override
+  String get play_movie => "播放电影";
+  @override
+  String get ongoing => "不断的";
+  @override
+  String get not_yet_implemented => "尚未实现...";
+  @override
+  String get wiping_database => "擦除数据库...";
+  @override
+  String get set_primary_color => "设置主要颜色...";
+  @override
+  String get playback => "回放";
+  @override
+  String get released => "发布";
+  @override
+  String get recommended_movies => "推荐电影";
+  @override
+  String get create_profile => "创建个人资料";
+  @override
+  String get no_favorites_description => "您可以通过点按内容概述页面右上角的内容将项目添加到收藏夹.";
+  @override
+  String get url_copied => "网址已复制！";
+  @override
+  String get debug_only_logs_the_application_preferences_in_the_console => "（仅限调试）在控制台中记录应用程序首选项.";
+  @override
+  String get quality => "质量";
+  @override
+  String get extensions => "扩展";
+  @override
+  String get general_application_settings => "一般应用设置.";
+  @override
+  String get see_all => "查看全部";
+  @override
+  String get is_your_connection_too_slow => "你的连接太慢了吗?";
+  @override
+  String get an_error_occurred => "发生错误.";
+  @override
+  String get miscellaneous => "杂";
+  @override
+  String get source_autoplay_description => "自动选择要播放的源，而不是显示包含源列表的对话框.";
+  @override
+  String get grid_layout => "网格布局";
+  @override
+  String get server_key => "服务器密钥";
+  @override
+  String get connect_your_trakt_account => "连接您的Trakt帐户";
+  @override
+  String get with_thanks => "谢谢...";
+  @override
+  String get connected_trakt_account => "连接Trakt帐户.";
+  @override
+  String get popularity => "声望";
+  @override
+  String get default_ => "默认";
+  @override
+  String get be_careful_this_option_could_break_the_app_if_you => "小心！如果您不知道自己在做什么，此选项可能会破坏应用程序.";
+  @override
+  String get close => "关";
+  @override
+  String get connect => "连接";
+  @override
+  String get whats_your_favorite_color_description => "点击以设置强调色;它曾用于给按钮，图标等带来一抹亮色...";
+  @override
+  String get select_language => "选择语言...";
+  @override
+  String get saving_content_information => "保存内容信息...";
+  @override
+  String get error_loading_search => "嗯这很尴尬...加载搜索结果时出错.";
+  @override
+  String get unable_to_determine_reason => "无法确定原因...";
+  @override
+  String get clear_search_history => "清除搜索历史记录";
+  @override
+  String get clearing_settings => "清除设置...";
+  @override
+  String get diagnostics => "诊断";
+  @override
+  String get error_loading_launchpad => "这很尴尬...加载启动板时出错.";
+  @override
+  String get cast_and_crew => "演员和船员";
+  @override
+  String get up_to_date => "最新.请在一到三周内回来查看.";
+  @override
+  String get information => "信息";
+  @override
+  String get play_trailer => "播放预告片";
+  @override
+  String get general_settings => "常规设置";
+  @override
+  String get boost_your_experience => "提升您的经验";
+  @override
+  String get removed_from_favorites => "已删除收藏夹";
+  @override
+  String get change_theme => "改变主题...";
+  @override
+  String get the_server_failed_to_verify_the_apps_integrity => "服务器无法验证应用程序的完整性.";
+  @override
+  String get disconnect_your_realdebrid_account => "断开Real-debrid帐户";
+  @override
+  String get the_default_configuration_has_been_restored => "默认配置已恢复.";
+  @override
+  String get disconnected_real_debrid_account => "断开Real-Debrid账户.";
+  @override
+  String get legal => "法律";
+  @override
+  String get donate => "捐";
+  @override
+  String get an_error_occurred_whilst_loading_this_page => "加载此页面时出错.";
+  @override
+  String get authentication_successful => "验证成功";
+  @override
+  String get customize_your_launchpad => "自定义您的启动板.";
+  @override
+  String get the_url_must_be_valid_and_include_a_trailing_ => "URL必须有效并包含尾随/.";
+  @override
+  String get editors_choice => "编辑选择";
+  @override
+  String get sync => "同步";
+  @override
+  String get downloading_trakt_data => "正在下载Trakt数据...";
+  @override
+  String get other_ => "其他";
+  @override
+  String get clears_all_application_settings => "清除所有应用程序设置.";
+  @override
+  String get success => "成功！";
+  @override
+  String get name => "名称";
+  @override
+  String get if_this_problem_persists_please_contact_a_member_of_staff => "如果此问题仍然存在，请联系Discord的工作人员.";
+  @override
+  String get next => "下一个";
+  @override
+  String get cast_settings => "投射设置";
+  @override
+  String get card_layout => "卡布局";
+  @override
+  String get back => "背部";
+  @override
+  String get trakt_renewal_failure_detailed => "无法续订Trakt令牌.请检查您的详细信息.";
+  @override
+  String get lets_go => "我们走吧";
+  @override
+  String get run_initial_setup_procedure => "运行初始设置过程";
+  @override
+  String get it_seems_this_copy_of_the_app_is_out_of => "这个应用程序的副本似乎已经过时了...";
+  @override
+  String get get_device_information => "获取设备信息";
+  @override
+  String get choose_n_categories_description => "最后，让我们自定义您的内容;至少选择三个类别，并获得您喜欢的内容的建议！";
+  @override
+  String get real_debrid_authenticator => "Real-debrid身份验证器";
+  @override
+  String get error_updating_app => "更新应用时出错...";
+  @override
+  String get clear_search_history_description => "根据过去的搜索删除搜索建议.";
+  @override
+  String get customize_appearance => "自定义外观";
+  @override
+  String get gathers_useful_information_for_debugging => "收集有用的调试信息.";
+  @override
+  String get layout_preferences_subtitle => "卡片布局更加详细，但网格布局可以容纳更多项目.";
+  @override
+  String get scraping_failed => "刮痧失败了...";
+  @override
+  String get downloading_update_file => "下载更新文件...";
+  @override
+  String get unable_to_connect_to_server => "无法连接到服务器.";
+  @override
+  String get no_favorites_header => "这里没有收藏！";
+  @override
+  String get whats_your_favorite_color => "你最喜欢的颜色是什么？";
+  @override
+  String get disconnect_your_trakt_account => "断开您的Trakt帐户";
+  @override
+  String get disconnect => "断开";
+  @override
+  String get manually_override_the_default_content_server => "手动覆盖默认内容服务器.";
+  @override
+  String get realdebrid => "Real-Debrid";
+  @override
+  String get advanced => "先进";
+  @override
+  String get all_genres => "所有类型";
+  @override
+  String get experimental => "试验";
+  @override
+  String get movies => "电影";
+  @override
+  String get coming_soon => "即将推出";
+  @override
+  String get play_episode => "播放剧集";
+  @override
+  String get select_player => "选择播放器...";
+  @override
+  String get show_less => "显示较少...";
+  @override
+  String get search_history_cleared => "搜索历史已清除.";
+  @override
+  String get choose_a_theme_description => "选择一般主题！这主要用于决定背景颜色.";
+  @override
+  String get choose_player => "选择玩家...";
+  @override
+  String get successfully_refreshed_trakt_token => "成功刷新Trakt令牌.";
+  @override
+  String get one_episode => "一集";
+  @override
+  String get order => "订购";
+  @override
+  String get okay => "好的";
+  @override
+  String get dismiss => "解雇";
+  @override
+  String get loading => "装载...";
+  @override
+  String get air_date => "航空日期";
+  @override
+  String get install => "安装";
+  @override
+  String get action_completed_successfully => "行动成功完成.";
+  @override
+  String get change_content_playback_settings => "更改内容播放设置.";
+  @override
+  String get please_check_the_announcements_channel_in_our_discord_server_for => "有关详细信息，请查看我们的Discord服务器中的#announcements频道.";
+  @override
+  String get please_wait => "请耐心等待...";
+  @override
+  String get clears_the_application_database => "清除应用程序数据库.";
+  @override
+  String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "您现在可以点击“同步”以将您的Trakt收藏夹与您的ApolloTV收藏夹同步。\n\n（Trakt集成受限，因为它仍在开发中.)";
+  @override
+  String get syncing => "同步...";
+  @override
+  String get youre_offline => "你离线了...";
+  @override
+  String get ping => "平";
+  @override
+  String get update_failed_storage_permission_denied => "更新失败.存储权限被拒绝.";
+  @override
+  String get skip => "跳过";
+  @override
+  String get change_player => "更改播放机";
+  @override
+  String get customize_the_theme_and_primary_colors => "自定义主题和主要颜色.";
+  @override
+  String get authentication_failed => "验证失败...";
+  @override
+  String get this_feature_has_not_yet_been_implemented => "此功能尚未实施.";
+  @override
+  String get unknown => "未知";
+  @override
+  String get source_autoplay => "启用源自动播放";
+  @override
+  String get authentication_unsuccessful => "身份验证失败";
+  @override
+  String get trakt_favorites_sync_detailed => "请等待我们将您的收藏与Trakt同步.同步完成后，此对话框将自动关闭.";
+  @override
+  String get recommended_tv_shows => "推荐电视节目";
+  @override
+  String get change_default_server => "更改默认服务器";
+  @override
+  String get general_settings_description => "以下是您可能想要查看的一些常用设置选项.";
+  @override
+  String get realdebrid_service_info => "如果您有Real Debrid订阅，ApolloTV可以使用它来获得高速下载结果.";
+  @override
+  String get server_url => "服务器URL";
+  @override
+  String get run_connectivity_test => "运行连通性测试";
+  @override
+  String get search_tv_shows_and_movies => "搜索电视节目和电影..​​.";
+  @override
+  String get continue_watching => "继续观看";
+  @override
+  String get synopsis => "概要";
+  @override
+  String get ascending => "小到大";
+  @override
+  String get power_user_settings_for_rocket_scientists => "火箭科学家的高级用户设置.";
+  @override
+  String get file_size => "文件大小";
+  @override
+  String get app_tagline => "流媒体应用程序由社区为社区构建.";
+  @override
+  String get debug_only_logs_the_application_database_in_the_console => "（仅限调试）在控制台中记录应用程序数据库.";
+  @override
+  String get appearance => "出现";
+  @override
+  String get sorts_by_the_size_of_the_file => "按文件大小排序.";
+  @override
+  String get curated => "已策划";
+  @override
+  String get connected_real_debrid_account => "已连接Real-Debrid账户.";
+  @override
+  String get apollotv_builtin_player => "ApolloTV内置播放器.";
+  @override
+  String get the_socket_connection_failed => "套接字连接失败.";
+  @override
+  String get rd_description => "Real-Debrid是一个不受限制的下载器，允许您快速下载托管在Internet上的文件.";
+  @override
+  String get connecting => "连...";
+  @override
+  String get dump_database => "转储数据库";
+  @override
+  String get networking => "联网";
+  @override
+  String get $_language_name_english => "Chinese";
+  @override
+  String get blog => "博客";
+  @override
+  String get descending => "大到小";
+  @override
+  String get sorts_by_source_quality => "按来源质量排序.";
+  @override
+  String get updating => "更新...";
+  @override
+  String get uploading_favorites => "正在上传收藏夹...";
+  @override
+  String get added_to_favorites => "添加到收藏夹";
+  @override
+  String get check_for_updates => "检查更新";
+  @override
+  String get settings => "设置";
+  @override
+  String get language_settings => "语言设定";
+  @override
+  String get which_do_you_prefer => "你喜欢哪个？";
+  @override
+  String get $_language_name => "中文";
+  @override
+  String get permission_denied => "权限被拒绝.";
+  @override
+  String get dump_preferences => "转储首选项";
+  @override
+  String get trakt_authenticator => "Trakt身份验证";
+  @override
+  String get wipe_database => "擦除数据库";
+  @override
+  String get trakttv => "Trakt.tv";
+  @override
+  String get sort => "分类";
+  @override
+  String get sorts_by_the_time_the_server_took_to_respond => "在服务器响应时进行排序.";
+  @override
+  String get done => "完成";
+  @override
+  String get wipe_settings => "擦除设置";
+  @override
+  String get core => "核心";
+  @override
+  String get the_key_must_be_32_characters_in_length => "密钥长度必须为32个字符.";
+  @override
+  String get link_copied_to_clipboard => "链接复制到剪贴板.";
+  @override
+  String get unable_to_connect => "无法连接...";
+  @override
+  String get favorites => "最爱";
+  @override
+  String get checks_whether_sources_can_be_reached => "检查是否可以到达来源.";
+  @override
+  String get launchpad => "发射台";
+  @override
+  String get restore_defaults => "恢复默认值";
+  @override
+  String get connect_your_realdebrid_account => "连接您的Real-debrid帐户";
+  @override
+  String get sort_by => "排序方式...";
+  @override
+  String get action_unsuccessful => "行动不成功.";
+  @override
+  String get trakt_description => "自动跟踪您正在观看的内容，跨设备同步播放列表等...";
+  @override
+  String get sorts_alphabetically_by_name => "按名称按字母顺序排序.";
+  @override
+  String get tv_shows => "电视节目";
+  @override
+  String get reload => "刷新";
+  @override
+  String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "开始第一次打开应用程序时显示的初始设置过程.";
+  @override
+  String get credits => "学分";
+  @override
+  String get the_request_timed_out => "请求超时.";
+  @override
+  String get show_more => "显示更多...";
+  @override
+  String get update_failed_please_try_again_later => "更新失败.请稍后再试.";
+  @override
+  String get no_results_found => "未找到结果.";
+  @override
+  String get choose_a_theme => "选择一个主题...";
+  @override
+  String get trakt_synchronization => "Trakt同步...";
+  @override
+  String get vote_average => "投票平均";
+  @override
+  String get the_socket_connection_timed_out => "套接字连接超时.";
+  @override
+  String appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(String appName) => "$appName可以从Trakt.tv同步您的观看历史记录和收藏夹...";
+  @override
+  String appname_failed_to_connect_to_the_internet(String appName) => "$appName无法连接到互联网.请检查您的连接.";
+  @override
+  String extensions_description(String appName) => "如果您使用这些第三方服务中的任何一个,则可以将它们连接到$appName.";
+  @override
+  String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "$appName服务器当前处于脱机状态以进行服务器升级.";
+  @override
+  String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName已成功通过Trakt.tv进行身份验证！";
+  @override
+  String welcome_to_appname(String appName) => "欢迎使用$appName";
+  @override
+  String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName是由所有这些了不起的人成为可能的:";
+  @override
+  String by_x(String x) => "创作者是$x";
+  @override
+  String make_appname_yours(String appName) => "个性化$appName";
+  @override
+  String version_x(String version) => "版本$version";
+  @override
+  String general_error(String error) => "发生错误 ($error)\n请报告此错误.";
+  @override
+  String n_ratings(String n) => "$n 评级";
+  @override
+  String this_x_has_no_synopsis_available(String x) => "这个$x没有概要.";
+  @override
+  String seasons_n(String n) => "四季 ($n)";
+  @override
+  String unknown_x(String x) => "未知$x";
+  @override
+  String n_sources(String n) => "$n 来源";
+  @override
+  String n_episodes(String n) => "$n剧集";
+  @override
+  String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName无法使用Trakt.tv进行身份验证.";
+  @override
+  String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "与Claws通信时发生错误. ($error)";
+  @override
+  String customize_appearance_description(String appName) => "$appName就是自定义.让我们开始选择你最喜欢的主题吧！";
+  @override
+  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName无法通过Real-Debrid进行身份验证.";
+  @override
+  String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "使用Trakt.tv取消验证时发生错误. ($errorCode).";
+  @override
+  String real_debrid_n_sources(String n) {
+    switch (n) {
+      case "1":
+        return "Real-Debrid ($n source)";
+      default:
+        return "Real-Debrid ($n sources)";
+    }
+  }
+  @override
+  String standard_n_sources(String n) {
+    switch (n) {
+      case "1":
+        return "标准 ($n sources)";
+      default:
+        return "标准 ($n sources)";
+    }
+  }
+  @override
+  String choose_n_categories(String n) {
+    switch (n) {
+      case "0":
+        return "真棒!";
+      case "1":
+        return "选择$n类别...";
+      default:
+        return "选择$n类别...";
+    }
+  }
 }
 
 class ar extends S {
@@ -3117,198 +4085,6 @@ class pl extends S {
    @override
   TextDirection get textDirection => TextDirection.ltr;
 
-  @override
-  String get cancel => "Anuluj";
-  @override
-  String get disconnect => "Odlaczyc";
-  @override
-  String get manually_override_the_default_content_server => "Reczne zastapienie domyslnego serwera tresci.";
-  @override
-  String get year => "Rok";
-  @override
-  String get advanced => "Zaawansowane";
-  @override
-  String get disconnected_trakt_account => "Rozlaczany Trakt rachunek.";
-  @override
-  String get manage_third_party_integrations => "Zarzadzaj integracjami stron trzecich.";
-  @override
-  String get movies => "Kino";
-  @override
-  String get coming_soon => "Wkrotce";
-  @override
-  String get play_episode => "Graja Epizod";
-  @override
-  String get play_movie => "Graja Film";
-  @override
-  String get show_less => "Pokaz mniej...";
-  @override
-  String get search_history_cleared => "Historia wyszukiwania zostala wyczyszczona.";
-  @override
-  String get ongoing => "Trwajacy";
-  @override
-  String get set_primary_color => "Ustaw kolor podstawowy...";
-  @override
-  String get successfully_refreshed_trakt_token => "Pomyslnie odswiezany Trakt znak.";
-  @override
-  String get one_episode => "1 Epizod";
-  @override
-  String get released => "Wypuszczany";
-  @override
-  String get order => "PORZADKOWAC";
-  @override
-  String get okay => "Zgoda!";
-  @override
-  String get dismiss => "Odwolac";
-  @override
-  String get loading => "Ladowanie...";
-  @override
-  String get url_copied => "URL skopiowany!";
-  @override
-  String get air_date => "Powietrzna data";
-  @override
-  String get extensions => "Przedluzenie";
-  @override
-  String get general_application_settings => "Ustawienia ogolne aplikacji.";
-  @override
-  String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "Wy teraz mozecie pukac 'Synchronizuj' synchronizowac wasz Trakt ulubiency z waszym ApolloTV ulubiency.\n\n(Trakt integracja jest ograniczana jak jest wciaz w rozwoju.) ";
-  @override
-  String get miscellaneous => "RozNICA";
-  @override
-  String get update_failed_storage_permission_denied => "Aktualizacja nieudana. Odmowa dostepu do pamieci masowej.";
-  @override
-  String get customize_the_theme_and_primary_colors => "Nastrajac temat i kolory glowne.";
-  @override
-  String get unknown => "Nieznany";
-  @override
-  String get authentication_unsuccessful => "Uwierzytelnianie nie powiodlo sie";
-  @override
-  String get trakt_favorites_sync_detailed => "Sprawiac przyjemnosc czekaja podczas gdy synchronizujemy waszych ulubiencow z Trakt. Ten *dialog* bedzie zamykac automatycznie kiedy synchronizacja jest skonczona.";
-  @override
-  String get change_default_server => "Zmien domyslny serwer";
-  @override
-  String get with_thanks => "Z podziekowaniami...";
-  @override
-  String get popularity => "Popularnosc";
-  @override
-  String get default_ => "Domyslna";
-  @override
-  String get run_connectivity_test => "Uruchom test lacznosci";
-  @override
-  String get connect => "Polaczyc";
-  @override
-  String get search_tv_shows_and_movies => "Poszukiwawcza telewizja pokazuje i kino...";
-  @override
-  String get synopsis => "Streszczenie";
-  @override
-  String get ascending => "Podniesienie";
-  @override
-  String get power_user_settings_for_rocket_scientists => "Ustawienia uzytkownika dla naukowcow rakiet zasilania.";
-  @override
-  String get clear_search_history => "Wyczysc historie wyszukiwania";
-  @override
-  String get appearance => "Widok";
-  @override
-  String get rd_description => "Real-Debrid to nieograniczony downloader, ktory pozwala szybko pobierac pliki hostowane w Internecie.";
-  @override
-  String get boost_your_experience => "WYSTRZEL SWOJE DOZNANIA";
-  @override
-  String get $_language_name_english => "Polish";
-  @override
-  String get blog => "Blog";
-  @override
-  String get descending => "Znizenie sie";
-  @override
-  String get removed_from_favorites => "Przesuwany od ulubiencow";
-  @override
-  String get change_theme => "Zmien motyw...";
-  @override
-  String get updating => "Aktualizacja...";
-  @override
-  String get the_default_configuration_has_been_restored => "Domyslna konfiguracja zostala przywrocona.";
-  @override
-  String get legal => "Prawny";
-  @override
-  String get donate => "Podarowac";
-  @override
-  String get added_to_favorites => "Dodawany do ulubiencow";
-  @override
-  String get check_for_updates => "Sprawdzenie dla Udoskonalen";
-  @override
-  String get settings => "Ustawienia";
-  @override
-  String get authentication_successful => "Uwierzytelnianie powiodlo sie";
-  @override
-  String get customize_your_launchpad => "Dostosuj swoja Wyrzutnie";
-  @override
-  String get $_language_name => "Polskie";
-  @override
-  String get permission_denied => "Odmowa uprawnien.";
-  @override
-  String get trakt_authenticator => "Trakt Authenticator";
-  @override
-  String get sort => "gatunkowac";
-  @override
-  String get sync => "Synchronizuj";
-  @override
-  String get done => "Gotowe";
-  @override
-  String get other_ => "Inny";
-  @override
-  String get link_copied_to_clipboard => "Link skopiowany do schowka.";
-  @override
-  String get favorites => "Ulubiency";
-  @override
-  String get checks_whether_sources_can_be_reached => "Sprawdza, czy mozna osiagnac zrodla.";
-  @override
-  String get launchpad => "Wyrzutnia";
-  @override
-  String get restore_defaults => "Przywroc domyslne";
-  @override
-  String get trakt_description => "Automatycznie sledz to, co ogladasz, synchronizuj listy odtwarzania na roznych urzadzeniach i nie tylko...";
-  @override
-  String get tv_shows => "Programy telewizyjne";
-  @override
-  String get trakt_renewal_failure_detailed => "Nie potrafia odnawiac Trakt znak. Sprawiac przyjemnosc sprawdzaja wasze szczegoly.";
-  @override
-  String get show_more => "Pokaz wiecej...";
-  @override
-  String get update_failed_please_try_again_later => "Aktualizacja nieudana. Sprobuj ponownie pozniej.";
-  @override
-  String get no_results_found => "Nie znaleziono wynikow.";
-  @override
-  String get get_device_information => "Uzyskaj informacje o urzadzeniu";
-  @override
-  String get trakt_synchronization => "Trakt Synchronizacja...";
-  @override
-  String get error_updating_app => "Podczas aktualizowania aplikacji wystapil blad...";
-  @override
-  String get clear_search_history_description => "Usuwa sugestie wyszukiwania na podstawie wczesniejszych wyszukiwan.";
-  @override
-  String get vote_average => "Glosuja Osiagac przecietnie";
-  @override
-  String get gathers_useful_information_for_debugging => "Zbiera przydatne informacje do debugowania.";
-  @override
-  String get downloading_update_file => "Pobieranie pliku aktualizacji...";
-  @override
-  String general_error(String error) => "Blad trafial sie ($error)\nSprawiac przyjemnosc powiadamiaja ten blad.";
-  @override
-  String n_ratings(String n) => "$n Oceny";
-  @override
-  String this_x_has_no_synopsis_available(String x) => "Ten $x Nie ma zadnego Streszczenie Dostepny.";
-  @override
-  String seasons_n(String n) => "Okresy  ($n)";
-  @override
-  String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName bylo mozliwe dzieki wszystkim tym niesamowitym ludziom:";
-  @override
-  String unknown_x(String x) => "Nieznany $x";
-  @override
-  String n_episodes(String n) => "$n Epizody";
-  @override
-  String by_x(String x) => "Przez $x";
-  @override
-  String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName Byl niezdolny uwierzytelniac z Trakt.tv.";
-  @override
-  String make_appname_yours(String appName) => "WYRABIAJa $appName WASZ";
 }
 
 class he extends S {
@@ -3317,198 +4093,6 @@ class he extends S {
    @override
   TextDirection get textDirection => TextDirection.rtl;
 
-  @override
-  String get cancel => "ביטול";
-  @override
-  String get disconnect => "התנתק";
-  @override
-  String get manually_override_the_default_content_server => "העבר ידנית את שרת התוכן המוגדר כברירת מחדל.";
-  @override
-  String get year => "שנה";
-  @override
-  String get advanced => "מתקדם";
-  @override
-  String get disconnected_trakt_account => "משתמש Trakt נותק.";
-  @override
-  String get manage_third_party_integrations => "נהל שילובים של צד שלישי.";
-  @override
-  String get movies => "סרטים";
-  @override
-  String get coming_soon => "בקרוב";
-  @override
-  String get play_episode => "נגן פרק";
-  @override
-  String get play_movie => "נגן סרט";
-  @override
-  String get show_less => "פחות...";
-  @override
-  String get search_history_cleared => "היסטוריית חיפוש נוקתה.";
-  @override
-  String get ongoing => "מתמשך";
-  @override
-  String get set_primary_color => "שנה צבע ראשוני...";
-  @override
-  String get successfully_refreshed_trakt_token => "רענון של אימות Trakt בוצע בהצלחה";
-  @override
-  String get one_episode => "פרק 1";
-  @override
-  String get released => "שוחרר";
-  @override
-  String get order => "סדר";
-  @override
-  String get okay => "אישור";
-  @override
-  String get dismiss => "הסתר";
-  @override
-  String get loading => "טוען...";
-  @override
-  String get url_copied => "קישור הועתק!";
-  @override
-  String get air_date => "תאריך שידור";
-  @override
-  String get extensions => "תוספות";
-  @override
-  String get general_application_settings => "הגדרות אפליקציה בסיסיות.";
-  @override
-  String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "הנך יכול/ה ללחוץ על 'סנכרן' על מנת לסנכרן את מועדפי הTrakt עם מועדפי הApolloTV שלך.\n\n(אינטגרציית Trakt עדיין מוגבלת בגלל שהיא עדיין בשלבי פיתוח.)";
-  @override
-  String get miscellaneous => "שונות";
-  @override
-  String get update_failed_storage_permission_denied => "עדכון נכשל. אישור לשטח אחסון נדחה.";
-  @override
-  String get customize_the_theme_and_primary_colors => "התאם אישית את ערכת הנושא שלך.";
-  @override
-  String get unknown => "לא ידוע";
-  @override
-  String get authentication_unsuccessful => "האימות נכשל";
-  @override
-  String get trakt_favorites_sync_detailed => "נא המתן בזמן שאנחנו מסנכרנים את המועדפים שלך עם Trakt. החלון יסגר באופן אוטומטי שהפעולה תסתיים.";
-  @override
-  String get change_default_server => "שנה שרת ברירת המחדל";
-  @override
-  String get with_thanks => "עם תודות...";
-  @override
-  String get popularity => "פופולריות";
-  @override
-  String get default_ => "ברירת מחדל";
-  @override
-  String get run_connectivity_test => "מבחן קישוריות";
-  @override
-  String get connect => "התחבר";
-  @override
-  String get search_tv_shows_and_movies => "חפש סדרות וסרטים...";
-  @override
-  String get synopsis => "תקציר";
-  @override
-  String get ascending => "סדר עולה";
-  @override
-  String get power_user_settings_for_rocket_scientists => "הגדרות מתקדמות למדעני טילים.";
-  @override
-  String get clear_search_history => "הסר היסטוריית חיפוש";
-  @override
-  String get appearance => "נראות";
-  @override
-  String get rd_description => "Real-Debrid הינו מוריד שמאפשר לך להוריד קבצים המאוחסנים בענן באופן מהיר ונוח.";
-  @override
-  String get boost_your_experience => "הגבר את החוויה שלך";
-  @override
-  String get $_language_name_english => "Hebrew";
-  @override
-  String get blog => "בלוג";
-  @override
-  String get descending => "סדר יורד";
-  @override
-  String get removed_from_favorites => "הוסר מהמועדפים";
-  @override
-  String get change_theme => "שנה ערכת נושא...";
-  @override
-  String get updating => "מעדכן....";
-  @override
-  String get the_default_configuration_has_been_restored => "תצורת ברירת המחדל שוחזרה.";
-  @override
-  String get legal => "מידע משפטי";
-  @override
-  String get donate => "תרום";
-  @override
-  String get added_to_favorites => "נוסף למועדפים";
-  @override
-  String get check_for_updates => "בדיקת עדכון";
-  @override
-  String get settings => "הגדרות";
-  @override
-  String get authentication_successful => "אומת בהצלחה";
-  @override
-  String get customize_your_launchpad => "התאמה אישית של דף הבית.";
-  @override
-  String get $_language_name => "עברי";
-  @override
-  String get permission_denied => "ההרשאה נדחתה.";
-  @override
-  String get trakt_authenticator => "מאמת Trakt";
-  @override
-  String get sort => "מיין";
-  @override
-  String get sync => "סנכרן";
-  @override
-  String get done => "אישור";
-  @override
-  String get other_ => "אחר";
-  @override
-  String get link_copied_to_clipboard => "קישור הועתק.";
-  @override
-  String get favorites => "מועדפים";
-  @override
-  String get checks_whether_sources_can_be_reached => "בודק אם ניתן להגיע למקורות.";
-  @override
-  String get launchpad => "דף הבית";
-  @override
-  String get restore_defaults => "שחזר לתצורת ברירת המחדל";
-  @override
-  String get trakt_description => "עקוב באופן אוטומטי אחר מה שאת/ה צופה, סנכרן פלייליסטים בין מכשירים, ועוד...";
-  @override
-  String get tv_shows => "סדרות";
-  @override
-  String get trakt_renewal_failure_detailed => "רענון של אימות Trakt כשל. בצע/י בדיקה של פרטיך.";
-  @override
-  String get show_more => "עוד...";
-  @override
-  String get update_failed_please_try_again_later => "עדכון נכשל. נסה שוב מאוחר יותר.";
-  @override
-  String get no_results_found => "לא נמצאו תוצאות.";
-  @override
-  String get get_device_information => "קבל מידע על המכשיר";
-  @override
-  String get trakt_synchronization => "סנכרון Trakt...";
-  @override
-  String get error_updating_app => "שגיעה בביצוע עדכון.";
-  @override
-  String get clear_search_history_description => "מנקה את כל היסטוריית החיפוש.";
-  @override
-  String get vote_average => "הצבעה ממוצעת";
-  @override
-  String get gathers_useful_information_for_debugging => "אוסף מידע חיוני בשביל תיקון באגים.";
-  @override
-  String get downloading_update_file => "מוריד עדכון...";
-  @override
-  String general_error(String error) => "חלה שגיאה ($error)\n בבקשה דווח/י על הבעיה.";
-  @override
-  String n_ratings(String n) => "$n רייטינג";
-  @override
-  String this_x_has_no_synopsis_available(String x) => "אין תקציר ל$x הזה";
-  @override
-  String seasons_n(String n) => "עונה ($n)";
-  @override
-  String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName נוצר בזכות כל האנשים המדהימים האלו:";
-  @override
-  String unknown_x(String x) => "לא ידוע $x";
-  @override
-  String n_episodes(String n) => "$n פרקים";
-  @override
-  String by_x(String x) => "על ידי $x";
-  @override
-  String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName כשל עם האימות של Trakt.tv.";
-  @override
-  String make_appname_yours(String appName) => "עשה את $appName שלך";
 }
 
 class ro extends S {
@@ -3919,6 +4503,487 @@ class tr extends S {
   String make_appname_yours(String appName) => "$appName Uygulamasýný Kiþiselleþtirin";
 }
 
+class sr extends S {
+  const sr();
+
+   @override
+  TextDirection get textDirection => TextDirection.ltr;
+
+  @override
+  String get cancel => "Odustani";
+  @override
+  String get take_screenshot_report_apollotv_discord => "Molim Vas uhvatite scrinšot ove poruke i kontaktirajte člana u ApolloTV diskord serveru.";
+  @override
+  String get year => "Godina";
+  @override
+  String get an_error_occurred_whilst_communicating_with_claws => "Desila se greška prilikom komunikacije sa Clawsom.";
+  @override
+  String get authentication_timed_out_please_try_again => "Autentikacija nije uspela. Molimo Vas pokušajte ponovo.";
+  @override
+  String get disconnected_trakt_account => "Veza sa Trakt nalogom prekinuta.";
+  @override
+  String get manage_third_party_integrations => "Upravljanje integracijama.";
+  @override
+  String get play_movie => "Reprodukuj film";
+  @override
+  String get ongoing => "U toku";
+  @override
+  String get not_yet_implemented => "Nije još implementirano...";
+  @override
+  String get wiping_database => "Briše bazu podataka...";
+  @override
+  String get set_primary_color => "Odaberi primarne boje...";
+  @override
+  String get playback => "Reprodukcija";
+  @override
+  String get released => "Objavljen";
+  @override
+  String get create_profile => "Napravite Profil";
+  @override
+  String get no_favorites_description => "Možete dodati favorite pritiskom na srce gore desno na ekranu za pregled sadržaja.";
+  @override
+  String get url_copied => "URL adresa kopirana!";
+  @override
+  String get debug_only_logs_the_application_preferences_in_the_console => "(Samo Debug) Upisuje podešavanja aplikacije u konzoli.";
+  @override
+  String get quality => "Kvalitet";
+  @override
+  String get extensions => "Dodaci";
+  @override
+  String get general_application_settings => "Generalne postavke aplikacije.";
+  @override
+  String get see_all => "Vidi Sve";
+  @override
+  String get is_your_connection_too_slow => "Da li imate sporu konekciju?";
+  @override
+  String get an_error_occurred => "Desila se greška.";
+  @override
+  String get miscellaneous => "RAZNO";
+  @override
+  String get grid_layout => "Raspored u Rešetku";
+  @override
+  String get server_key => "Serverski Ključ";
+  @override
+  String get connect_your_trakt_account => "Zakačite Vas Trakt nalog";
+  @override
+  String get with_thanks => "Sa zahvalnošću...";
+  @override
+  String get popularity => "Popularnost";
+  @override
+  String get default_ => "Podrazumevano";
+  @override
+  String get be_careful_this_option_could_break_the_app_if_you => "Budite oprezni! Ova opcija može da poremeti aplikaciju ako ne znate šta radite.";
+  @override
+  String get close => "Zatvori";
+  @override
+  String get connect => "Spoji";
+  @override
+  String get whats_your_favorite_color_description => "Odaberite boju za naglasak; ona se koristi da promeni izgled dugmićima, ikonicama, itd...";
+  @override
+  String get select_language => "Izaberi Jezik...";
+  @override
+  String get saving_content_information => "Snimanje informacija o sadržaju...";
+  @override
+  String get error_loading_search => "Ups, neprijatno... Desila se greška prilikom dovlačenja rezultata pretrage.";
+  @override
+  String get unable_to_determine_reason => "Nije bilo moguće utvrditi razlog...";
+  @override
+  String get clear_search_history => "Izbriši istoriju pretraživanja";
+  @override
+  String get clearing_settings => "Briše opcije...";
+  @override
+  String get diagnostics => "DIJAGNOZA";
+  @override
+  String get error_loading_launchpad => "Ups, neprijatno... Desila se greška prilikom dovlačenja Vašeg lančpeda.";
+  @override
+  String get cast_and_crew => "Glumci & Tim";
+  @override
+  String get up_to_date => "Najnoviji. Provite ponovo za 1 - 3 nedelje.";
+  @override
+  String get information => "Informacije";
+  @override
+  String get play_trailer => "Pogledajte Trejler";
+  @override
+  String get general_settings => "Generalne Postavke";
+  @override
+  String get boost_your_experience => "POBOLJŠAJTE VAŠE ISKUSTVO";
+  @override
+  String get removed_from_favorites => "Izbrisano iz favorita";
+  @override
+  String get change_theme => "Promeni temu...";
+  @override
+  String get the_server_failed_to_verify_the_apps_integrity => "Server nije uspeo da ustanovi integritet aplikacije.";
+  @override
+  String get disconnect_your_realdebrid_account => "Otkačite Vaš Real-Debrid nalog";
+  @override
+  String get the_default_configuration_has_been_restored => "Podrazumevana konfiguracija je povraćena.";
+  @override
+  String get disconnected_real_debrid_account => "Nepovezani Real-Debrid Nalog.";
+  @override
+  String get legal => "Pravno";
+  @override
+  String get donate => "Doniraj";
+  @override
+  String get an_error_occurred_whilst_loading_this_page => "Desila se greška prilikom učitavanja ove strane.";
+  @override
+  String get authentication_successful => "Autentikacija uspešna";
+  @override
+  String get customize_your_launchpad => "Prilagodite vaš launchpad.";
+  @override
+  String get the_url_must_be_valid_and_include_a_trailing_ => "URL mora da bude validan i da uključuje / na kraju.";
+  @override
+  String get editors_choice => "Prograno od strane Editora";
+  @override
+  String get sync => "Sinhronizuj";
+  @override
+  String get downloading_trakt_data => "Skidanje Trakt podataka...";
+  @override
+  String get other_ => "Drugo";
+  @override
+  String get clears_all_application_settings => "Briše sva podešavanja u aplikaciji.";
+  @override
+  String get success => "Uspeh!";
+  @override
+  String get name => "Ime";
+  @override
+  String get if_this_problem_persists_please_contact_a_member_of_staff => "Ako se ovaj problem nastavi, kontaktirajte našeg člana sa Diskorda.";
+  @override
+  String get next => "NAREDNO";
+  @override
+  String get cast_settings => "Kast Opcije";
+  @override
+  String get card_layout => "Raspored sa Karticama";
+  @override
+  String get back => "PRETHODNO";
+  @override
+  String get trakt_renewal_failure_detailed => "Osvežavanje Trakt tokena nije uspelo. Molimo proverite Vaše podatke.";
+  @override
+  String get lets_go => "Hajdemo";
+  @override
+  String get run_initial_setup_procedure => "Pokrenite Početna Podešavanja";
+  @override
+  String get it_seems_this_copy_of_the_app_is_out_of => "Deluje da je verzija aplikacije koju koristite zastarela...";
+  @override
+  String get get_device_information => "Pokupi infomacije o uređaju";
+  @override
+  String get choose_n_categories_description => "Na kraju, hajde da prilagodimo sadržaj; Izaberite najmanje 3 kategorije da biste dobijali sugestije sadržaja u kome uživate!";
+  @override
+  String get real_debrid_authenticator => "Real-Debrid Autentifikacija";
+  @override
+  String get error_updating_app => "Greška kod ažuriranja...";
+  @override
+  String get clear_search_history_description => "Briše istoriju pretraživanja.";
+  @override
+  String get customize_appearance => "Prilagodite Izgled";
+  @override
+  String get gathers_useful_information_for_debugging => "Prikuplja korisne informacije za ispravljanje grešaka.";
+  @override
+  String get layout_preferences_subtitle => "Raspored sa karticama je više detaljan, ali je zato are rešetka raspored može da prikaže više stvari.";
+  @override
+  String get scraping_failed => "Struganje neuspelo...";
+  @override
+  String get downloading_update_file => "Skidam ažuriranje...";
+  @override
+  String get unable_to_connect_to_server => "Niste uspeli da se povežete na server.";
+  @override
+  String get no_favorites_header => "Nema favorita!";
+  @override
+  String get whats_your_favorite_color => "Koja je Vaša omiljena boja?";
+  @override
+  String get disconnect_your_trakt_account => "Otkačite Vaš Trakt nalog";
+  @override
+  String get disconnect => "Otkači";
+  @override
+  String get manually_override_the_default_content_server => "Ručno promeni zadati server za sadržaj.";
+  @override
+  String get realdebrid => "Real-Debrid";
+  @override
+  String get advanced => "Napredno";
+  @override
+  String get all_genres => "Svi Žanrovi";
+  @override
+  String get experimental => "Eksperimentalno";
+  @override
+  String get movies => "Filmovi";
+  @override
+  String get coming_soon => "Dolazi uskoro";
+  @override
+  String get play_episode => "Reprodukuj epizodu";
+  @override
+  String get select_player => "Odaberite plejer...";
+  @override
+  String get show_less => "Prikaži manje...";
+  @override
+  String get search_history_cleared => "Istorija pretraživanja izbrisana.";
+  @override
+  String get choose_a_theme_description => "Izaberite generalnu temu! Ovo najviše utiče na pozadinsku boju.";
+  @override
+  String get choose_player => "Izaberite plejer...";
+  @override
+  String get successfully_refreshed_trakt_token => "Uspešno osvežen Trakt token.";
+  @override
+  String get one_episode => "1 epizoda";
+  @override
+  String get order => "REDOSLED";
+  @override
+  String get okay => "U redu";
+  @override
+  String get dismiss => "Zatvori";
+  @override
+  String get loading => "Učitavanje...";
+  @override
+  String get air_date => "Datum prikazivanja";
+  @override
+  String get install => "Instaliraj";
+  @override
+  String get action_completed_successfully => "Akcija uspešno završena.";
+  @override
+  String get change_content_playback_settings => "Promenite opcije vezane za reprodukciju sadržaja.";
+  @override
+  String get please_check_the_announcements_channel_in_our_discord_server_for => "Molim Vas pogledajte #announcements kanal na Diskordu za više informacija.";
+  @override
+  String get please_wait => "Molimo sačekajte...";
+  @override
+  String get clears_the_application_database => "Briše bazu podataka aplikacije.";
+  @override
+  String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "Dodirnite 'Sinhronizuj' za sinhronizaciju Vaših Trakt favorita sa ApolloTV favoritima.\n\n(Trakt integracija je oganičena jer je još u razvoju.)";
+  @override
+  String get syncing => "Sinhronizacija...";
+  @override
+  String get youre_offline => "Niste povezani na internet...";
+  @override
+  String get ping => "Ping";
+  @override
+  String get update_failed_storage_permission_denied => "Ažuriranje nije uspjelo. Potrebno dozvola za pristup skladištu.";
+  @override
+  String get skip => "PRESKOČI";
+  @override
+  String get change_player => "Promenite plejer";
+  @override
+  String get customize_the_theme_and_primary_colors => "Prilagodite temu i primarne boje.";
+  @override
+  String get authentication_failed => "Autentikacije neuspela...";
+  @override
+  String get this_feature_has_not_yet_been_implemented => "Ova opcija još uvek nije implementirana.";
+  @override
+  String get unknown => "Nepoznato";
+  @override
+  String get authentication_unsuccessful => "Autentikacija nije uspela";
+  @override
+  String get trakt_favorites_sync_detailed => "Molimo pričekajte dok sinhronujemo Vaše favorite sa Trakt-om. Ovaj prozor će se automatski zatvoriti kada sinhronizacija bude gotova.";
+  @override
+  String get change_default_server => "Promeni zadati server";
+  @override
+  String get general_settings_description => "Evo par uobičajnih postavki koje Vas možda zanimaju.";
+  @override
+  String get realdebrid_service_info => "Ako imate pretplatu na RealDebrid, ApolloTV može da je iskoristi da dovuče rezultate visokog kvaliteta.";
+  @override
+  String get server_url => "Serverski URL";
+  @override
+  String get run_connectivity_test => "Pokreni proveru povezivosti";
+  @override
+  String get search_tv_shows_and_movies => "Pretraži serije i filmove...";
+  @override
+  String get continue_watching => "Nastavite da gledate";
+  @override
+  String get synopsis => "Sažetak";
+  @override
+  String get ascending => "Uzlazno";
+  @override
+  String get power_user_settings_for_rocket_scientists => "Napredne postavke za raketne naučnike.";
+  @override
+  String get file_size => "Veličina Datoteke";
+  @override
+  String get app_tagline => "Aplikacija za strimovanje napravljena za komuni, od strane članova komune.";
+  @override
+  String get debug_only_logs_the_application_database_in_the_console => "(Samo Debug) Upisuje baze podataka aplikacije u konzoli.";
+  @override
+  String get appearance => "Izgled";
+  @override
+  String get sorts_by_the_size_of_the_file => "Sortira po veličini datoteke.";
+  @override
+  String get curated => "Selektovano";
+  @override
+  String get connected_real_debrid_account => "Povezani Real-Debrid Nalog.";
+  @override
+  String get apollotv_builtin_player => "ApolloTV ugrađeni plejer.";
+  @override
+  String get the_socket_connection_failed => "Soket konekcija je napravila grešku";
+  @override
+  String get rd_description => "Real-Debrid je servis koji Vam omogućava brzo i neograničeno skidanje datoteka sa interneta.";
+  @override
+  String get connecting => "Povezivanje...";
+  @override
+  String get dump_database => "Dampuj Bazu podataka";
+  @override
+  String get networking => "MREŽA";
+  @override
+  String get $_language_name_english => "Serbian";
+  @override
+  String get blog => "Blog";
+  @override
+  String get descending => "Silazno";
+  @override
+  String get sorts_by_source_quality => "Sortira po kvalitetu izvora.";
+  @override
+  String get updating => "Ažuriram...";
+  @override
+  String get uploading_favorites => "Podizanje favorita...";
+  @override
+  String get added_to_favorites => "Dodato u favorite";
+  @override
+  String get check_for_updates => "Proveri ažuriranja";
+  @override
+  String get settings => "Postavke";
+  @override
+  String get language_settings => "Opcije za Jezik";
+  @override
+  String get which_do_you_prefer => "Koja Vam se sviđa?";
+  @override
+  String get $_language_name => "Srpski";
+  @override
+  String get permission_denied => "Dozvola odbijena";
+  @override
+  String get dump_preferences => "Dampuj Podešavanja";
+  @override
+  String get trakt_authenticator => "Trakt Autentikacija";
+  @override
+  String get wipe_database => "Obrišite Bazu Podataka";
+  @override
+  String get trakttv => "Trakt.tv";
+  @override
+  String get sort => "Sortiraj";
+  @override
+  String get sorts_by_the_time_the_server_took_to_respond => "Sortira po vremenu koje je bilo potrebno serveru da odgovori.";
+  @override
+  String get done => "Gotovo";
+  @override
+  String get wipe_settings => "Briše Opcije";
+  @override
+  String get core => "JEZGRO";
+  @override
+  String get the_key_must_be_32_characters_in_length => "Ključ mora da ima 32 karaktera.";
+  @override
+  String get link_copied_to_clipboard => "Link kopiran u klipbord.";
+  @override
+  String get unable_to_connect => "Niste uspeli da se povežete...";
+  @override
+  String get favorites => "Favoriti";
+  @override
+  String get checks_whether_sources_can_be_reached => "Proverava dostupnosti izvora.";
+  @override
+  String get launchpad => "Launchpad";
+  @override
+  String get restore_defaults => "Vrati na podrazumevano";
+  @override
+  String get connect_your_realdebrid_account => "Povežite Vač Real-Debrid nalog";
+  @override
+  String get sort_by => "Sortiraj Po...";
+  @override
+  String get action_unsuccessful => "Neuspela akcija.";
+  @override
+  String get trakt_description => "Automatski prati šta gledate, sinhronizuje playliste između uređaja i više...";
+  @override
+  String get sorts_alphabetically_by_name => "Sortira po abecednom redu.";
+  @override
+  String get tv_shows => "Serije";
+  @override
+  String get reload => "Ponovno učitavanje";
+  @override
+  String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "Startuje početna podešavanja koja su vidljiva kada prvi put uključite aplikaciju.";
+  @override
+  String get credits => "Zasluge";
+  @override
+  String get the_request_timed_out => "Zahtev je istekao.";
+  @override
+  String get show_more => "Prikaži više...";
+  @override
+  String get update_failed_please_try_again_later => "Ažuriranje nije uspjelo. Molimo pokušajte kasnije.";
+  @override
+  String get no_results_found => "Nema rezultata.";
+  @override
+  String get choose_a_theme => "Izaberite temu...";
+  @override
+  String get trakt_synchronization => "Trakt Sinhronizacija...";
+  @override
+  String get vote_average => "Prosečna ocena";
+  @override
+  String get the_socket_connection_timed_out => "Soket konekcija je istekla.";
+  @override
+  String appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(String appName) => "$appName može da sinhronizuje Vaše istoriju gledanja i favorite sa Trakt.tv...";
+  @override
+  String appname_failed_to_connect_to_the_internet(String appName) => "$appName nije uspela da se poveže na internet. Molimo Vas da proverite Vašu konekciju.";
+  @override
+  String extensions_description(String appName) => "Ako koristite neki od ovih servisa, možete ih povezati sa $appName.";
+  @override
+  String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "$appName server je trenutno nedostupan zbog unapređenja.";
+  @override
+  String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName se uspešno autentifikovala na Trakt.tv!";
+  @override
+  String welcome_to_appname(String appName) => "Dobrodošli u $appName";
+  @override
+  String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName omogućili su svi ovi nevevatni ljudi:";
+  @override
+  String by_x(String x) => "po $x";
+  @override
+  String make_appname_yours(String appName) => "UČINITE $appName SVOJIM";
+  @override
+  String version_x(String version) => "Verzija $version";
+  @override
+  String general_error(String error) => "Dogodila se greška. ($error)\nMolimo prijavite ovu grešku.";
+  @override
+  String n_ratings(String n) => "$n ocene";
+  @override
+  String this_x_has_no_synopsis_available(String x) => "Sažetak za $x nije dostupan.";
+  @override
+  String seasons_n(String n) => "Sezona ($n)";
+  @override
+  String unknown_x(String x) => "Nepoznato $x";
+  @override
+  String n_sources(String n) => "$n izvora";
+  @override
+  String n_episodes(String n) => "$n epizoda";
+  @override
+  String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName se nije uspeo autentifikovati sa Trakt.tv-om.";
+  @override
+  String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "Desila se greška prilikom komunikacije sa Clawsom. ($error)";
+  @override
+  String customize_appearance_description(String appName) => "$appName je u napravljena da može da se prijagodi. Krenite od biranja omiljene teme!";
+  @override
+  String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName nije uspela da se poveže sa Real-Debrid.";
+  @override
+  String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "Desila se greška prilikom deautentikacije sa Trakt.tv. ($errorCode)";
+  @override
+  String real_debrid_n_sources(String n) {
+    switch (n) {
+      case "1":
+        return "Real-Debrid ($n izvor)";
+      default:
+        return "Real-Debrid ($n izvora)";
+    }
+  }
+  @override
+  String standard_n_sources(String n) {
+    switch (n) {
+      case "1":
+        return "Standardno ($n izvor)";
+      default:
+        return "Standardno ($n izvora)";
+    }
+  }
+  @override
+  String choose_n_categories(String n) {
+    switch (n) {
+      case "0":
+        return "Sjajno!";
+      case "1":
+        return "Izaberite $n kategoriju...";
+      default:
+        return "Izabarite $n kategorija...";
+    }
+  }
+}
+
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocalizations> {
   const GeneratedLocalizationsDelegate();
@@ -3944,6 +5009,7 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocali
       const Locale("ro", ""),
       const Locale("nl", ""),
       const Locale("tr", ""),
+      const Locale("sr", ""),
 
     ];
   }
@@ -4003,6 +5069,8 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<WidgetsLocali
         return new SynchronousFuture<WidgetsLocalizations>(const nl());
       case "tr":
         return new SynchronousFuture<WidgetsLocalizations>(const tr());
+      case "sr":
+        return new SynchronousFuture<WidgetsLocalizations>(const sr());
 
       default:
         return new SynchronousFuture<WidgetsLocalizations>(const S());

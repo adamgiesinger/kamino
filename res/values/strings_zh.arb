@@ -1,4 +1,4 @@
-﻿{
+{
   "$_language_name": "中文",
   "$_language_name_english": "Chinese",
 
@@ -44,7 +44,7 @@
   "trakt_synchronization": "Trakt同步...",
   "trakt_favorites_sync_detailed": "请等待我们将您的收藏与Trakt同步.同步完成后，此对话框将自动关闭.",
 
-  "general_error": "发生错误（$ error）\n请报告此错误.",
+  "general_error": "发生错误 ($error)\n请报告此错误.",
 
   "play_episode": "播放剧集",
   "play_movie": "播放电影",
@@ -54,12 +54,12 @@
   "removed_from_favorites": "已删除收藏夹",
   "added_to_favorites": "添加到收藏夹",
 
-  "n_ratings": "$n评级",
+  "n_ratings": "$n 评级",
 
   "synopsis": "概要",
   "this_x_has_no_synopsis_available": "这个$x没有概要.",
 
-  "seasons_n": "四季（$n）",
+  "seasons_n": "四季 ($n)",
   "one_episode": "一集",
   "n_episodes": "$n剧集",
 
@@ -163,11 +163,11 @@
 
   "up_to_date": "最新.请在一到三周内回来查看.",
   "no_favorites_header": "这里没有收藏！",
-  "no_favorites_description": "您可以通过点按内容概述页面右上角的内容将项目添加到收藏夹."
+  "no_favorites_description": "您可以通过点按内容概述页面右上角的内容将项目添加到收藏夹.",
   "reload": "刷新",
   "appname_has_successfully_authenticated_with_trakttv": "$appName已成功通过Trakt.tv进行身份验证！",
   "action_unsuccessful": "行动不成功.",
-  "an_error_occurred_whilst_deauthenticating_with_trakttv": "使用Trakt.tv取消验证时发生错误.（$ERRORCODE）.",
+  "an_error_occurred_whilst_deauthenticating_with_trakttv": "使用Trakt.tv取消验证时发生错误. ($errorCode).",
   "uploading_favorites": "正在上传收藏夹...",
   "downloading_trakt_data": "正在下载Trakt数据...",
   "saving_content_information": "保存内容信息...",
@@ -239,7 +239,7 @@
   "the_socket_connection_failed": "套接字连接失败.",
   "the_socket_connection_timed_out": "套接字连接超时.",
   "an_error_occurred_whilst_communicating_with_claws": "与Claws通信时发生错误.",
-  "an_error_occurred_whilst_communicating_with_claws_detailed": "与Claws通信时发生错误.（$error）",
+  "an_error_occurred_whilst_communicating_with_claws_detailed": "与Claws通信时发生错误. ($error)",
   "the_request_timed_out": "请求超时.",
   "is_your_connection_too_slow": "你的连接太慢了吗?",
   "unable_to_connect_to_server": "无法连接到服务器.",

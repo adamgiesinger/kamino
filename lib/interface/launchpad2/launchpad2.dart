@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:async/async.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -280,14 +281,16 @@ class Launchpad2State extends State<Launchpad2> {
                                           _editorsChoice.title,
                                           fontSize: 24
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.only(top: 10, right: 5),
-                                        child: Text(
-                                          _editorsChoice.comment,
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 5,
-                                        ),
-                                      )
+                                      LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+                                        return Container(
+                                          margin: EdgeInsets.only(top: 10, right: 5),
+                                          child: AutoSizeText(
+                                            _editorsChoice.comment,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 5,
+                                          ),
+                                        );
+                                      })
                                     ],
                                   ),
                                 );

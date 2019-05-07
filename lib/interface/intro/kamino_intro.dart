@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:async/async.dart';
@@ -329,7 +330,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                       margin: EdgeInsets.symmetric(vertical: 20),
                     ),
 
-                    Material(
+                    (Platform.isAndroid) ? Material(
                       elevation: 3,
                       borderRadius: BorderRadius.circular(5),
                       color: Theme.of(context).cardColor,
@@ -345,7 +346,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                             playerSettings.isValid() ? playerSettings.name : "${PlaybackSettingsPage.BUILT_IN_PLAYER_NAME} (${S.of(context).default_})"
                         ),
                       ),
-                    ),
+                    ) : Container(child: Text("External players are not currently supported on iOS.", textAlign: TextAlign.center,)),
 
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 30),

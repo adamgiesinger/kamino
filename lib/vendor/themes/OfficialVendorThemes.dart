@@ -16,7 +16,7 @@ class _DarkVendorTheme extends ThemeConfiguration {
 
   _DarkVendorTheme(): super(
     id: "xyz.apollotv.dark",
-    name: "ApolloTV Official",
+    name: "Dark Theme",
     author: "Apollo15",
     allowsVariants: true,
     overlayStyle: SystemUiOverlayStyle.dark.copyWith(
@@ -132,7 +132,7 @@ class _BlackVendorTheme extends ThemeConfiguration {
 
   _BlackVendorTheme(): super(
     id: "xyz.apollotv.black",
-    name: "ApolloTV Official (AMOLED)",
+    name: "AMOLED Theme",
     author: "Apollo15",
     allowsVariants: true,
     overlayStyle: SystemUiOverlayStyle.dark.copyWith(

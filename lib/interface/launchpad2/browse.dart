@@ -91,7 +91,9 @@ class BrowsePageState extends State<StatefulWidget> {
                                       ? Icon(Icons.error)
                                       : AutoSizeText(
                                           list.name,
-                                          softWrap: true,
+                                          // We don't want to softWrap list names
+                                          // with only one word.
+                                          softWrap: list.name.contains(" "),
                                           maxLines: 2,
                                           textAlign: TextAlign.center,
                                           style: TextStyle(fontSize: 18, color: Colors.white, fontFamily: 'GlacialIndifference'),

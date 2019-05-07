@@ -106,9 +106,11 @@ flutter:
     - assets/flags/pl.png
     - assets/flags/pt.png
     - assets/flags/ro.png
+    - assets/flags/ru.png
     - assets/flags/sv.png
     - assets/flags/tr.png
     - assets/flags/us.png
+    - assets/flags/zh.png
 
     - assets/genre/movie/Action.svg
     - assets/genre/movie/Adventure.svg

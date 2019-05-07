@@ -1,4 +1,7 @@
 PODS:
+  - connectivity (0.0.1):
+    - Flutter
+    - Reachability
   - cplayer (0.0.1):
     - Flutter
   - device_info (0.0.1):
@@ -10,8 +13,9 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - permission_handler (3.0.0):
+  - permission_handler (3.0.1):
     - Flutter
+  - Reachability (3.2)
   - screen (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
@@ -24,6 +28,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - cplayer (from `.symlinks/plugins/cplayer/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
@@ -37,7 +42,13 @@ DEPENDENCIES:
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Reachability
+
 EXTERNAL SOURCES:
+  connectivity:
+    :path: ".symlinks/plugins/connectivity/ios"
   cplayer:
     :path: ".symlinks/plugins/cplayer/ios"
   device_info:
@@ -64,13 +75,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player/ios"
 
 SPEC CHECKSUMS:
+  connectivity: d5992e3758d68b1c4b12d6e012fe0813f1aa1645
   cplayer: bb7e0640e97d56e39f98a9e55b4b6ec1517777ef
   device_info: 76ce0b32e13034d1883be4a382433648f9dcee63
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
   flutter_webview_plugin: 116575b48572029304775b768e9f15ebfc316274
   package_info: d7c98b64f60add4c2908b9d94d82a45d3c8827ad
   path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
-  permission_handler: 03dcf3ade9d5f398b8854b366cb9de718d3daa76
+  permission_handler: b4cdd38c1c4385e9f4f394c9881c42b48476ccb6
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   screen: 22ab9c4a784112d4b21ad7d80e81729e0afdaa65
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
   uni_links: 5ee5240df5cbffc52d9e7f8017a576b6a6bc5141
