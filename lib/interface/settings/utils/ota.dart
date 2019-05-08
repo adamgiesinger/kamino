@@ -9,7 +9,7 @@ import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:permission/permission.dart';
 
 class OTAHelper {
   static const platform = const MethodChannel('xyz.apollotv.kamino/ota');
@@ -58,9 +58,9 @@ Future<Map> checkUpdate(BuildContext context, bool dismissSnackbar) async {
 updateApp(BuildContext context, bool dismissSnackbar) async {
   if(!Platform.isAndroid) return;
 
-  bool permissionStatus = (await PermissionHandler().checkPermissionStatus(PermissionGroup.storage)) == PermissionStatus.granted;
-  if(!permissionStatus) permissionStatus = (await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage]
-      == PermissionStatus.granted;
+  const validPermissionStates = [PermissionStatus.always, PermissionStatus.allow, PermissionStatus.whenInUse];
+  bool permissionStatus = validPermissionStates.contains(await Permission.getSinglePermissionStatus(PermissionName.Storage));
+  if(!permissionStatus) permissionStatus = validPermissionStates.contains(await Permission.requestSinglePermission(PermissionName.Storage));
   if(!permissionStatus && dismissSnackbar) return;
 
   if(permissionStatus) {
@@ -121,9 +121,9 @@ runInstallProcedure (context, data) async {
   try {
     Navigator.of(context).pop();
 
-    bool permissionStatus = (await PermissionHandler().checkPermissionStatus(PermissionGroup.storage)) == PermissionStatus.granted;
-    if(!permissionStatus) permissionStatus = (await PermissionHandler().requestPermissions([PermissionGroup.storage]))[PermissionGroup.storage]
-        == PermissionStatus.granted;
+    const validPermissionStates = [PermissionStatus.always, PermissionStatus.allow, PermissionStatus.whenInUse];
+    bool permissionStatus = validPermissionStates.contains(await Permission.getSinglePermissionStatus(PermissionName.Storage));
+    if(!permissionStatus) permissionStatus = validPermissionStates.contains(await Permission.requestSinglePermission(PermissionName.Storage));
     if(!permissionStatus) throw new FileSystemException(S.of(context).permission_denied);
 
     final downloadDir = new Directory((await getExternalStorageDirectory()).path + "/.apollo");

@@ -389,13 +389,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
-  permission_handler:
+  permission:
     dependency: "direct main"
     description:
-      name: permission_handler
+      name: permission
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "0.1.1"
   petitparser:
     dependency: transitive
     description:
