@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class FadeRoute<T> extends MaterialPageRoute<T> {
@@ -12,6 +14,10 @@ class FadeRoute<T> extends MaterialPageRoute<T> {
 
     if(settings.isInitialRoute){
       return child;
+    }
+
+    if(Platform.isIOS){
+      return super.buildTransitions(context, animation, secondaryAnimation, child);
     }
 
     return new FadeTransition(

@@ -388,99 +388,116 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
       title: TitleText(S.of(context).sort_by),
       children: <Widget>[
 
-        Column(
-          children: <Widget>[
-            RadioListTile(
-              isThreeLine: true,
-              secondary: Icon(Icons.network_check),
-              title: Text(S.of(context).ping),
-              subtitle: Text(S.of(context).sorts_by_the_time_the_server_took_to_respond),
-              value: 'ping',
-              groupValue: sortingMethod,
-              onChanged: (value){
-                setState(() {
-                  sortingMethod = value;
-                });
-              },
-              activeColor: Theme.of(context).primaryColor,
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
-
-            RadioListTile(
-              secondary: Icon(Icons.high_quality),
-              title: Text(S.of(context).quality),
-              subtitle: Text(S.of(context).sorts_by_source_quality),
-              value: 'quality',
-              groupValue: sortingMethod,
-              onChanged: (value){
-                setState(() {
-                  sortingMethod = value;
-                });
-              },
-              activeColor: Theme.of(context).primaryColor,
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
-
-            RadioListTile(
-              secondary: Icon(Icons.sort_by_alpha),
-              title: Text(S.of(context).name),
-              subtitle: Text(S.of(context).sorts_alphabetically_by_name),
-              value: 'name',
-              groupValue: sortingMethod,
-              onChanged: (value){
-                setState(() {
-                  sortingMethod = value;
-                });
-              },
-              activeColor: Theme.of(context).primaryColor,
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
-
-            RadioListTile(
-              isThreeLine: true,
-              secondary: Icon(Icons.import_export),
-              title: Text(S.of(context).file_size),
-              subtitle: Text(S.of(context).sorts_by_the_size_of_the_file),
-              value: 'fileSize',
-              groupValue: sortingMethod,
-              onChanged: (value){
-                setState(() {
-                  sortingMethod = value;
-                });
-              },
-              activeColor: Theme.of(context).primaryColor,
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
-          ],
-        ),
-
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+          return Column(
             children: <Widget>[
-              FlatButton.icon(
-                  color: !sortReversed ? Theme.of(context).primaryColor : null,
-                  onPressed: () async {
-                    sortReversed = false;
-                    setState(() {});
-                  },
-                  icon: Icon(Icons.keyboard_arrow_up),
-                  label: TitleText(S.of(context).ascending)
+              RadioListTile(
+                isThreeLine: true,
+                secondary: (constraints.maxWidth >= 300) ? Icon(Icons.network_check) : null,
+                title: Text(S.of(context).ping),
+                subtitle: Text(S.of(context).sorts_by_the_time_the_server_took_to_respond),
+                value: 'ping',
+                groupValue: sortingMethod,
+                onChanged: (value){
+                  setState(() {
+                    sortingMethod = value;
+                  });
+                },
+                activeColor: Theme.of(context).primaryColor,
+                controlAffinity: ListTileControlAffinity.trailing,
               ),
-              FlatButton.icon(
-                  color: sortReversed ? Theme.of(context).primaryColor : null,
-                  onPressed: () async {
-                    sortReversed = true;
-                    setState(() {});
-                  },
-                  icon: Icon(Icons.keyboard_arrow_down),
-                  label: TitleText(S.of(context).descending)
-              )
+
+              RadioListTile(
+                secondary: (constraints.maxWidth >= 300) ? Icon(Icons.high_quality) : null,
+                title: Text(S.of(context).quality),
+                subtitle: Text(S.of(context).sorts_by_source_quality),
+                value: 'quality',
+                groupValue: sortingMethod,
+                onChanged: (value){
+                  setState(() {
+                    sortingMethod = value;
+                  });
+                },
+                activeColor: Theme.of(context).primaryColor,
+                controlAffinity: ListTileControlAffinity.trailing,
+              ),
+
+              RadioListTile(
+                secondary: (constraints.maxWidth >= 300) ? Icon(Icons.sort_by_alpha) : null,
+                title: Text(S.of(context).name),
+                subtitle: Text(S.of(context).sorts_alphabetically_by_name),
+                value: 'name',
+                groupValue: sortingMethod,
+                onChanged: (value){
+                  setState(() {
+                    sortingMethod = value;
+                  });
+                },
+                activeColor: Theme.of(context).primaryColor,
+                controlAffinity: ListTileControlAffinity.trailing,
+              ),
+
+              RadioListTile(
+                isThreeLine: true,
+                secondary: (constraints.maxWidth >= 300) ? Icon(Icons.import_export) : null,
+                title: Text(S.of(context).file_size),
+                subtitle: Text(S.of(context).sorts_by_the_size_of_the_file),
+                value: 'fileSize',
+                groupValue: sortingMethod,
+                onChanged: (value){
+                  setState(() {
+                    sortingMethod = value;
+                  });
+                },
+                activeColor: Theme.of(context).primaryColor,
+                controlAffinity: ListTileControlAffinity.trailing,
+              ),
             ],
-          ),
-        ),
+          );
+        }),
+
+        LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+          var _orderButtons = <Widget>[
+            FlatButton.icon(
+                color: !sortReversed ? Theme.of(context).primaryColor : null,
+                onPressed: () async {
+                  sortReversed = false;
+                  setState(() {});
+                },
+                icon: Icon(Icons.keyboard_arrow_up),
+                label: TitleText(S.of(context).ascending)
+            ),
+            FlatButton.icon(
+                color: sortReversed ? Theme.of(context).primaryColor : null,
+                onPressed: () async {
+                  sortReversed = true;
+                  setState(() {});
+                },
+                icon: Icon(Icons.keyboard_arrow_down),
+                label: TitleText(S.of(context).descending)
+          )
+          ];
+
+          if(constraints.maxWidth < 300){
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: _orderButtons
+              ),
+            );
+          }else{
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: _orderButtons
+              ),
+            );
+          }
+        }),
 
         Container(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),

@@ -1,12 +1,11 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
-import 'package:kamino/main.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/interface/settings/page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kamino/ui/interface.dart';
 
 class ExtensionsSettingsPage extends SettingsPage {
   ExtensionsSettingsPage(BuildContext context) : super(
@@ -46,11 +45,17 @@ class ExtensionsSettingsPageState extends SettingsPageState {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              ListTile(
-                isThreeLine: true,
-                leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
-                title: Text(S.of(context).trakttv),
-                subtitle: Text(S.of(context).trakt_description),
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                child: ListTile(
+                  isThreeLine: true,
+                  leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
+                  title: Text(S.of(context).trakttv),
+                  subtitle: Container(
+                      height: 30,
+                      child: AutoSizeText(S.of(context).trakt_description, overflow: TextOverflow.visible)
+                  ),
+                ),
               ),
               ButtonTheme.bar( // make buttons use the appropriate styles for cards
                 child: ButtonBar(
@@ -103,11 +108,17 @@ class ExtensionsSettingsPageState extends SettingsPageState {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              ListTile(
-                isThreeLine: true,
-                leading: SvgPicture.asset("assets/icons/realdebrid.svg", height: 36, width: 36, color: const Color(0xFF78BB6F)),
-                title: Text(S.of(context).realdebrid),
-                subtitle: Text(S.of(context).rd_description),
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                child: ListTile(
+                  isThreeLine: true,
+                  leading: SvgPicture.asset("assets/icons/realdebrid.svg", height: 36, width: 36, color: const Color(0xFF78BB6F)),
+                  title: Text(S.of(context).realdebrid),
+                  subtitle: Container(
+                      height: 30,
+                      child: AutoSizeText(S.of(context).rd_description, overflow: TextOverflow.visible)
+                  ),
+                ),
               ),
               ButtonTheme.bar( // make buttons use the appropriate styles for cards
                 child: ButtonBar(

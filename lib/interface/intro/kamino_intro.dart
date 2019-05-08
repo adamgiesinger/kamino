@@ -139,10 +139,10 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    TitleText(S.of(context).welcome_to_appname(appName), fontSize: 32, textAlign: TextAlign.center),
+                    TitleText(S.of(context).welcome_to_appname(appName), fontSize: 32, textAlign: TextAlign.center, allowOverflow: true),
                     Text(S.of(context).app_tagline, textAlign: TextAlign.center),
 
-                    Container(padding: EdgeInsets.symmetric(vertical: 10)),
+                    Container(padding: EdgeInsets.symmetric(vertical: 20)),
 
                     FlatButton.icon(
                       shape: Border(
@@ -218,7 +218,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
               width: MediaQuery.of(context).size.width,
               child: ListView(
                 children: <Widget>[
-                  TitleText(S.of(context).customize_appearance, fontSize: 32),
+                  TitleText(S.of(context).customize_appearance, fontSize: 32, allowOverflow: true),
+                  Container(padding: EdgeInsets.symmetric(vertical: 10)),
                   Text(S.of(context).customize_appearance_description(appName), style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                   Container(
@@ -238,7 +239,10 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                             leading: Icon(Icons.style),
                             isThreeLine: true,
                             title: TitleText(S.of(context).choose_a_theme),
-                            subtitle: Text(S.of(context).choose_a_theme_description),
+                            subtitle: Container(
+                              height: 50,
+                              child: AutoSizeText(S.of(context).choose_a_theme_description)
+                            ),
                           ),
                         ),
 
@@ -276,9 +280,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                     style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)
                                 ),
                               ),
-                              ButtonBar(
-                                alignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
+                              LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+                                var _buttonElements = <Widget>[
                                   VerticalIconButton(
                                     backgroundColor: _detailedLayoutType ? Theme.of(context).primaryColor : null,
                                     onTap: () async {
@@ -288,7 +291,6 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                     },
                                     title: TitleText(S.of(context).card_layout),
                                     icon: Icon(Icons.view_agenda),
-
                                   ),
                                   VerticalIconButton(
                                     backgroundColor: !_detailedLayoutType ? Theme.of(context).primaryColor : null,
@@ -300,8 +302,21 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                     title: TitleText(S.of(context).grid_layout),
                                     icon: Icon(Icons.grid_on),
                                   )
-                                ],
-                              )
+                                ];
+
+                                if(constraints.maxWidth < 300){
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: _buttonElements
+                                        + [Container(padding: EdgeInsets.symmetric(vertical: 10))],
+                                  );
+                                }else{
+                                  return ButtonBar(
+                                    alignment: MainAxisAlignment.spaceBetween,
+                                    children: _buttonElements,
+                                  );
+                                }
+                              })
                             ],
                           ),
                         )
@@ -324,6 +339,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                 child: ListView(
                   children: <Widget>[
                     TitleText(S.of(context).general_settings, fontSize: 32),
+                    Container(padding: EdgeInsets.symmetric(vertical: 10)),
                     Text(S.of(context).general_settings_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                     Container(
@@ -439,7 +455,8 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                 width: MediaQuery.of(context).size.width,
                 child: ListView(
                   children: <Widget>[
-                    TitleText(S.of(context).choose_n_categories((3 - _selectedCategories.length < 0 ? 0 : 3 - _selectedCategories.length).toString()), fontSize: 32),
+                    TitleText(S.of(context).choose_n_categories((3 - _selectedCategories.length < 0 ? 0 : 3 - _selectedCategories.length).toString()), fontSize: 32, allowOverflow: true),
+                    Container(padding: EdgeInsets.symmetric(vertical: 10)),
                     Text(S.of(context).choose_n_categories_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                     Container(

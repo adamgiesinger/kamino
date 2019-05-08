@@ -251,57 +251,62 @@ class KaminoAppState extends State<KaminoApp> {
     }catch(_){}
 
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       color: ApolloVendor.getThemeConfigs()[0].getThemeData().backgroundColor,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: ListView(
         children: <Widget>[
-          Image.asset("assets/images/logo.png", width: 64),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset("assets/images/logo.png", width: 64),
 
-          Container(
-            padding: EdgeInsets.only(top: 10),
-            child: Center(
-                child: Text(S.of(context).an_error_occurred, style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontFamily: 'GlacialIndifference',
-                    fontFamilyFallback: ['SF UI Display', 'Roboto'],
-                    decoration: TextDecoration.none,
-                    fontWeight: FontWeight.normal
-                ))
-            ),
-          ),
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                child: Center(
+                    child: Text(S.of(context).an_error_occurred, style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontFamily: 'GlacialIndifference',
+                        fontFamilyFallback: ['SF UI Display', 'Roboto'],
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.normal
+                    ))
+                ),
+              ),
 
-          Container(
-            padding: EdgeInsets.only(top: 10),
-            child: Text(error.exceptionAsString(), style: _errorStyle),
-          ),
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                child: Text(error.exceptionAsString(), style: _errorStyle),
+              ),
 
-          Container(child: Text("Library: ${error.library}", style: _errorStyle)),
-          Container(
-              margin: EdgeInsets.symmetric(horizontal: 30),
-              padding: EdgeInsets.only(top: 30),
-              child: Text("Reference: $_errorReference",
-              textAlign: TextAlign.center,
-              style: _errorStyle)
-          ),
+              Container(child: Text("Library: ${error.library}", style: _errorStyle)),
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 30),
+                  padding: EdgeInsets.only(top: 30),
+                  child: Text("Reference: $_errorReference",
+                      textAlign: TextAlign.center,
+                      style: _errorStyle)
+              ),
 
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 30),
-            padding: EdgeInsets.only(top: 30),
-            child: Text(S.of(context).take_screenshot_report_apollotv_discord, style: _errorStyle.copyWith(fontSize: 18, fontFamily: 'GlacialIndifference'), textAlign: TextAlign.center),
-          ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 30),
+                padding: EdgeInsets.only(top: 30),
+                child: Text(S.of(context).take_screenshot_report_apollotv_discord, style: _errorStyle.copyWith(fontSize: 18, fontFamily: 'GlacialIndifference'), textAlign: TextAlign.center),
+              ),
 
-          Container(
-            padding: EdgeInsets.only(top: 30),
-            child: FlatButton(
-              color: context != null ? Theme.of(context).primaryColor
-              : ApolloVendor.getThemeConfigs()[0].getThemeData().primaryColor,
-              child: Text("Open Discord", style: _errorStyle),
-              onPressed: () => Interface.launchURL("https://discord.gg/euyQRWs")
-            ),
-          ),
+              Container(
+                padding: EdgeInsets.only(top: 30),
+                child: FlatButton(
+                    color: context != null ? Theme.of(context).primaryColor
+                        : ApolloVendor.getThemeConfigs()[0].getThemeData().primaryColor,
+                    child: Text("Open Discord", style: _errorStyle),
+                    onPressed: () => Interface.launchURL("https://discord.gg/euyQRWs")
+                ),
+              ),
+            ],
+          )
         ],
       )
     );
