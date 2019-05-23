@@ -74,12 +74,7 @@ class Trakt {
     // If the authentication code is null, the user probably exited the
     // authentication manually, but let's show a dialog to be safe.
     if(authCode == null){
-      Interface.showSimpleErrorDialog(
-        context,
-        title: S.of(context).authentication_unsuccessful,
-        reason: S.of(context).appname_was_unable_to_authenticate_with_trakttv(appName)
-      );
-
+      Interface.showSnackbar(S.of(context).appname_was_unable_to_authenticate_with_trakttv(appName), context: context, backgroundColor: Colors.red);
       return false;
     }
 
@@ -108,12 +103,7 @@ class Trakt {
 
     }
 
-    Interface.showSimpleErrorDialog(
-        context,
-        title: S.of(context).authentication_unsuccessful,
-        reason: S.of(context).appname_was_unable_to_authenticate_with_trakttv(appName) +
-            "\n\nError ${response.statusCode.toString()}"
-    );
+    Interface.showSnackbar(S.of(context).appname_was_unable_to_authenticate_with_trakttv(appName), context: context, backgroundColor: Colors.red);
     return false;
   }
 

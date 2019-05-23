@@ -1,18 +1,8 @@
 {
 	"Developers": [
 		{
-			"name": "ddivad",
-			"image": "https://cdn.discordapp.com/avatars/394484823944593409/5c0081254e48edc6904179a7ddae90a1.png?size=2048",
-			"color": "#2ecc71"
-		},
-		{
-			"name": "SamJakob",
-			"image": "https://cdn.discordapp.com/avatars/162203541006450688/e12c89233fafc42a7e47887aa45cbaaf.png?size=2048",
-			"color": "#2ecc71"
-		},
-		{
-			"name": "Teekzilla",
-			"image": "https://cdn.discordapp.com/avatars/544993334964256779/089793980733cb61c213171e47f452bb.png?size=2048",
+			"name": "NBTX",
+			"image": "https://cdn.discordapp.com/avatars/578742670567014400/eb216c57d6c6736028e7051743f55255.png?size=2048",
 			"color": "#2ecc71"
 		},
 		{
@@ -23,6 +13,16 @@
 	],
 	"Former Developers": [
 		{
+			"name": "ddivad",
+			"image": "https://cdn.discordapp.com/avatars/394484823944593409/5c0081254e48edc6904179a7ddae90a1.png?size=2048",
+			"color": "#979c9f"
+		},
+		{
+			"name": "Teekzilla",
+			"image": "https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png",
+			"color": "#979c9f"
+		},
+		{
 			"name": "TeamOrange",
 			"image": "https://discordapp.com/assets/1cbd08c76f8af6dddce02c5138971129.png",
 			"color": "#979c9f"
@@ -30,18 +30,8 @@
 	],
 	"Staff": [
 		{
-			"name": "Cosmos",
-			"image": "https://cdn.discordapp.com/avatars/177733580959514624/2d64722b6d657897bdee090e6587f59a.png?size=2048",
-			"color": "#9b59b6"
-		},
-		{
 			"name": "BradB.",
 			"image": "https://cdn.discordapp.com/avatars/90899152921190400/b594ffd0dc299ebaba02e58ef4d07d3b.png?size=2048",
-			"color": "#9b59b6"
-		},
-		{
-			"name": "mschrissie",
-			"image": "https://cdn.discordapp.com/avatars/494546579705823272/85f63ad564d16bc1d93056392eeec170.png?size=2048",
 			"color": "#9b59b6"
 		},
 		{
@@ -51,12 +41,7 @@
 		},
 		{
 			"name": "Steam Hammer",
-			"image": "https://cdn.discordapp.com/avatars/371272259526197258/d5bf4fcc977cdddd9af74e805388bb4f.png?size=2048",
-			"color": "#9b59b6"
-		},
-		{
-			"name": "DesusDhrist",
-			"image": "https://cdn.discordapp.com/avatars/520200850136629248/afaa383cb62198e78f53d155de378f9f.png?size=2048",
+			"image": "https://cdn.discordapp.com/avatars/371272259526197258/1f1d23c9fed777477a33aa0de240c908.png?size=2048",
 			"color": "#9b59b6"
 		},
 		{
@@ -72,19 +57,7 @@
 			"color": "#ad1457"
 		}
 	],
-	"VIPs": [
-		{
-			"name": "RedJohn",
-			"image": "https://discordapp.com/assets/1cbd08c76f8af6dddce02c5138971129.png",
-			"color": "#f1c40f"
-		}
-	],
 	"Translator": [
-		{
-			"name": "Captain Meliodas (T: AR)",
-			"image": "https://cdn.discordapp.com/avatars/499327645746724864/7cb63dcfc46c0a17b7d81eae31d3b5b4.png?size=2048",
-			"color": "#e74c3c"
-		},
 		{
 			"name": "deeeh👻(T: PL)",
 			"image": "https://cdn.discordapp.com/avatars/152710357461368832/b4e4c261707be73aa0ac2f0638aa3073.png?size=2048",
@@ -151,6 +124,11 @@
 			"name": "Gymcap",
 			"image": "https://cdn.discordapp.com/avatars/282841617705074688/b469699e50148c649e7f263e9a96bada.png?size=2048",
 			"color": "#61d8eb"
+		},
+		{
+			"name": "VinylCarbon",
+			"image": "https://discordapp.com/assets/322c936a8c8be1b803cd94861bdfa868.png",
+			"color": "#61d8eb"
 		}
 	],
 	"Astronauts (Supporters)": [
@@ -170,6 +148,11 @@
 			"color": "#457f9c"
 		},
 		{
+			"name": "J3d1c4nn4",
+			"image": "https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png",
+			"color": "#457f9c"
+		},
+		{
 			"name": "DViper96",
 			"image": "https://cdn.discordapp.com/avatars/125627148433227776/96db6c12a0d530562ccd88187537a09d.png?size=2048",
 			"color": "#457f9c"
@@ -185,8 +168,18 @@
 			"color": "#457f9c"
 		},
 		{
+			"name": "Dark_N1ghtmar3",
+			"image": "https://cdn.discordapp.com/avatars/334869433447350273/fdebfb05d110355c3cdfbaf172ad7187.png?size=2048",
+			"color": "#457f9c"
+		},
+		{
 			"name": "Sukhbrinder Brar",
 			"image": "https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png",
+			"color": "#457f9c"
+		},
+		{
+			"name": "American Vet",
+			"image": "https://cdn.discordapp.com/avatars/557561889568194562/bbe408a092030d0051fd533d341c2911.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -205,6 +198,11 @@
 			"color": "#457f9c"
 		},
 		{
+			"name": "XxxFBZxxX",
+			"image": "https://cdn.discordapp.com/avatars/351310155541118986/435f94dce6bd96261bc5c73788d4177a.png?size=2048",
+			"color": "#457f9c"
+		},
+		{
 			"name": "earzfish",
 			"image": "https://cdn.discordapp.com/avatars/489426910976278528/ac6e8cb2a41f705079e5e395799543e4.png?size=2048",
 			"color": "#457f9c"
@@ -217,6 +215,11 @@
 		{
 			"name": "quikslvr82x420",
 			"image": "https://cdn.discordapp.com/avatars/489896934451183643/6a8468f63031a02bce1060c1e5931640.png?size=2048",
+			"color": "#457f9c"
+		},
+		{
+			"name": "Chief",
+			"image": "https://cdn.discordapp.com/avatars/388850337466941440/716646433312d4e0df4da9c424af9284.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -270,6 +273,11 @@
 			"color": "#457f9c"
 		},
 		{
+			"name": "Arnas",
+			"image": "https://cdn.discordapp.com/avatars/140475941343330304/c1a3f7432b08a85557b67c63cb6b15e6.png?size=2048",
+			"color": "#457f9c"
+		},
+		{
 			"name": "Redcurse",
 			"image": "https://cdn.discordapp.com/avatars/234426179216474113/a5936d8ac8f4183971e1598f55f7439e.png?size=2048",
 			"color": "#457f9c"
@@ -292,6 +300,11 @@
 		{
 			"name": "Ibby",
 			"image": "https://cdn.discordapp.com/avatars/190127634926010368/b505784e0c4d61d140b136050a170a92.png?size=2048",
+			"color": "#457f9c"
+		},
+		{
+			"name": "Sy1ar_015",
+			"image": "https://cdn.discordapp.com/avatars/271844755556532225/4334a52d2154135eef9e33fc1a3398e6.png?size=2048",
 			"color": "#457f9c"
 		},
 		{

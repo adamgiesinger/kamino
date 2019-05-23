@@ -59,6 +59,7 @@ class S implements WidgetsLocalizations {
   String get choose_a_theme_description => "Select a general theme! This is used primarily to decide the background color.";
   String get choose_n_categories_description => "Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!";
   String get choose_player => "Choose player...";
+  String get clear => "Clear";
   String get clear_search_history => "Clear Search History";
   String get clear_search_history_description => "Removes search suggestions based on past searches.";
   String get clearing_settings => "Clearing settings...";
@@ -160,6 +161,7 @@ class S implements WidgetsLocalizations {
   String get released => "Released";
   String get reload => "Reload";
   String get removed_from_favorites => "Removed from favorites";
+  String get reset => "Reset";
   String get restore_defaults => "Restore Defaults";
   String get run_connectivity_test => "Run Connectivity Test";
   String get run_initial_setup_procedure => "Run Initial Setup Procedure";
@@ -172,6 +174,7 @@ class S implements WidgetsLocalizations {
   String get select_player => "Select Player...";
   String get server_key => "Server Key";
   String get server_url => "Server URL";
+  String get set => "Set";
   String get set_primary_color => "Set Primary Color...";
   String get settings => "Settings";
   String get show_less => "Show less...";

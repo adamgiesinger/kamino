@@ -80,8 +80,9 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                         child: TitleText(S.of(context).connect),
                         onPressed: () async {
                           await Trakt.authenticate(context, shouldShowSnackbar: true);
-                          this.traktAuthenticated = await Trakt.isAuthenticated();
-                          Trakt.synchronize(context, silent: false);
+                          traktAuthenticated = await Trakt.isAuthenticated();
+
+                          if(traktAuthenticated) Trakt.synchronize(context, silent: false);
                           setState(() {});
                         },
                       ) :
@@ -128,7 +129,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       child: TitleText(S.of(context).connect),
                       onPressed: () async {
                         await RealDebrid.authenticate(context, shouldShowSnackbar: true);
-                        this.rdAuthenticated = await RealDebrid.isAuthenticated();
+                        rdAuthenticated = await RealDebrid.isAuthenticated();
                         setState(() {});
                       },
                     ) :
@@ -137,7 +138,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                       child: TitleText(S.of(context).disconnect),
                       onPressed: () async {
                         await RealDebrid.deauthenticate(context, shouldShowSnackbar: true);
-                        this.rdAuthenticated = await RealDebrid.isAuthenticated();
+                        rdAuthenticated = await RealDebrid.isAuthenticated();
                         setState(() {});
                       },
                     ),

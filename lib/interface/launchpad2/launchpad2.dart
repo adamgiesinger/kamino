@@ -165,7 +165,7 @@ class Launchpad2State extends State<Launchpad2> {
                                   var content = _topPicksList[index];
 
                                   return Container(
-                                    child: CarouselCard(content, keepAlive: true),
+                                    child: CarouselCard(content),
                                     margin: EdgeInsets.symmetric(horizontal: 5),
                                     padding: EdgeInsets.symmetric(vertical: 10),
                                   );
@@ -288,6 +288,7 @@ class Launchpad2State extends State<Launchpad2> {
                                             _editorsChoice.comment,
                                             overflow: TextOverflow.fade,
                                             maxLines: 5,
+                                            maxFontSize: 12,
                                           ),
                                         );
                                       })

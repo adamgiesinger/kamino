@@ -33,12 +33,7 @@ class RealDebrid {
     // If the authentication code is null, the user probably exited the
     // authentication manually, but let's show a dialog to be safe.
     if (data["user_code"] == null) {
-      Interface.showSimpleErrorDialog(
-        context,
-        title: S.of(context).authentication_unsuccessful,
-        reason: S.of(context).appname_was_unable_to_authenticate_with_real_debrid(appName)
-      );
-
+      Interface.showSnackbar(S.of(context).appname_was_unable_to_authenticate_with_real_debrid(appName), context: context, backgroundColor: Colors.red);
       return false;
     }
 
@@ -62,12 +57,7 @@ class RealDebrid {
       return true;
     }
 
-    Interface.showSimpleErrorDialog(
-        context,
-        title: S.of(context).authentication_unsuccessful,
-        reason: S.of(context).appname_was_unable_to_authenticate_with_real_debrid(appName) +
-            (result != null && response.statusCode != 200 ? "\n\nError ${response.statusCode.toString()}" : "")
-    );
+    Interface.showSnackbar(S.of(context).appname_was_unable_to_authenticate_with_real_debrid(appName), context: context, backgroundColor: Colors.red);
     return false;
   }
 
@@ -228,14 +218,7 @@ class _RealDebridAuthenticatorState extends State<RealDebridAuthenticator> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if(this.context != null) Navigator.pop(
-            this.context,
-            await RealDebrid.getToken(widget.oauthData["device_code"])
-        );
-        return false;
-      },
+    return Container(
       child: targetUrl != null ? WebviewScaffold(
         url: targetUrl,
         userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "

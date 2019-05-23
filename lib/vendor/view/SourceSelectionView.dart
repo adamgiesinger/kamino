@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
 import 'package:kamino/util/filesize.dart';
@@ -30,11 +31,14 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
   List<SourceModel> sourceList = new List();
   bool rdEnabled = false;
 
-  String sortingMethod = 'ping';
-  bool sortReversed = false;
+  String sortingMethod = 'quality';
+  bool sortReversed = true;
 
   bool rdExpanded = true;
   bool generalExpanded = true;
+
+  bool isShimVendor = false;
+  bool _disableSecurityMessages = false;
 
   @override
   void initState() {
@@ -42,6 +46,10 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
       rdEnabled = await RealDebrid.isAuthenticated();
 
       List sortingSettings = await Settings.contentSortSettings;
+
+      KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+      isShimVendor = await application.isShimVendorEnabled();
+      _disableSecurityMessages = await Settings.disableSecurityMessages;
 
       if(sortingSettings.length == 2) {
         sortingMethod = sortingSettings[0];
@@ -85,9 +93,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
               .of(context)
               .backgroundColor,
           appBar: AppBar(
-            backgroundColor: Theme
-                .of(context)
-                .backgroundColor,
+            backgroundColor: !isShimVendor || _disableSecurityMessages ? Theme.of(context).backgroundColor
+              : Colors.red,
             title: TitleText(
                 "${widget.title} \u2022 " + S.of(context).n_sources(sourceList.length.toString())
             ),
@@ -100,10 +107,10 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                     ? SizedBox(
                   height: SourceSelectionView._kAppBarProgressHeight,
                   child: LinearProgressIndicator(
+                    backgroundColor: !isShimVendor || _disableSecurityMessages ? null : Colors.red,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme
-                            .of(context)
-                            .primaryColor
+                        !isShimVendor || _disableSecurityMessages ? Theme.of(context).primaryColor
+                            : Colors.white
                     ),
                   ),
                 )
@@ -116,29 +123,44 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
             ],
           ),
           body: Container(
-            child: ListView(
-              primary: true,
-              children: <Widget>[
-                rdEnabled ? _buildSourceList(
-                  _rdSources,
-                  title: S.of(context).real_debrid_n_sources(_rdSources.length.toString()),
-                  sectionExpanded: rdExpanded,
-                  onToggleExpanded: () => setState((){
-                    rdExpanded = !rdExpanded;
-                  })
-                ) : Container(),
-                _buildSourceList(
-                  _sources,
-                  title: rdEnabled
-                      ? S.of(context).standard_n_sources(_sources.length.toString())
-                      : null,
-                  sectionExpanded: generalExpanded,
-                  onToggleExpanded: () => setState((){
-                    generalExpanded = !generalExpanded;
-                  })
-                )
-              ],
-            )
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                  onNotification: (notification){
+                    if(notification.leading){
+                      notification.disallowGlow();
+                    }
+                  },
+                  child: ListView(
+                    primary: true,
+                    children: <Widget>[
+                      isShimVendor && !_disableSecurityMessages ? Container(
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        color: Colors.red,
+                        child: Text("SECURITY RISK: You are using an unoffical server. Use of unofficial servers is at your own risk. They have not been vetted or inspected by the ApolloTV team and are not guaranteed to be running official code. By connecting to a server on the internet, you are sharing your IP address. If this is a concern, use a VPN or do not use unofficial servers."),
+                      ) : Container(),
+
+                      rdEnabled ? _buildSourceList(
+                          _rdSources,
+                          title: S.of(context).real_debrid_n_sources(_rdSources.length.toString()),
+                          sectionExpanded: rdExpanded,
+                          onToggleExpanded: () => setState((){
+                            rdExpanded = !rdExpanded;
+                          })
+                      ) : Container(),
+                      _buildSourceList(
+                          _sources,
+                          title: rdEnabled
+                              ? S.of(context).standard_n_sources(_sources.length.toString())
+                              : null,
+                          sectionExpanded: generalExpanded,
+                          onToggleExpanded: () => setState((){
+                            generalExpanded = !generalExpanded;
+                          })
+                      ),
+
+                      Container(margin: EdgeInsets.only(bottom: 15))
+                    ],
+                  )
+              )
           )
       ),
     );
@@ -261,7 +283,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
                                 title: TitleText(
                                     "${source.metadata.provider} (${source.metadata
-                                        .source}) • ${source.metadata.ping}ms"),
+                                        .source})"),
                                 subtitle: Text(
                                   source.file.data,
                                   maxLines: 2,
@@ -307,14 +329,13 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
     sourceList.sort((SourceModel left, SourceModel right) {
       switch(sortingMethod){
-        case 'quality':
-          return _getSourceQualityIndex(left.metadata.quality).compareTo(_getSourceQualityIndex(right.metadata.quality));
         case 'name':
           return left.metadata.provider.compareTo(right.metadata.provider);
         case 'fileSize':
           return left.metadata.contentLength.compareTo(right.metadata.contentLength);
+        // Default: sort by quality
         default:
-          return left.metadata.ping.compareTo(right.metadata.ping);
+          return _getSourceQualityIndex(left.metadata.quality).compareTo(_getSourceQualityIndex(right.metadata.quality));
       }
     });
 
@@ -388,75 +409,59 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
       title: TitleText(S.of(context).sort_by),
       children: <Widget>[
 
-        LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
-          return Column(
-            children: <Widget>[
-              RadioListTile(
-                isThreeLine: true,
-                secondary: (constraints.maxWidth >= 300) ? Icon(Icons.network_check) : null,
-                title: Text(S.of(context).ping),
-                subtitle: Text(S.of(context).sorts_by_the_time_the_server_took_to_respond),
-                value: 'ping',
-                groupValue: sortingMethod,
-                onChanged: (value){
-                  setState(() {
-                    sortingMethod = value;
-                  });
-                },
-                activeColor: Theme.of(context).primaryColor,
-                controlAffinity: ListTileControlAffinity.trailing,
-              ),
+        Column(
+            children: [Column(
+              children: <Widget>[
+                RadioListTile(
+                  secondary: (MediaQuery.of(context).size.width >= 300) ? Icon(Icons.high_quality) : null,
+                  title: Text(S.of(context).quality),
+                  subtitle: Text(S.of(context).sorts_by_source_quality),
+                  value: 'quality',
+                  groupValue: sortingMethod,
+                  onChanged: (value){
+                    setState(() {
+                      sortingMethod = value;
+                    });
+                  },
+                  activeColor: Theme.of(context).primaryColor,
+                  controlAffinity: ListTileControlAffinity.trailing,
+                ),
 
-              RadioListTile(
-                secondary: (constraints.maxWidth >= 300) ? Icon(Icons.high_quality) : null,
-                title: Text(S.of(context).quality),
-                subtitle: Text(S.of(context).sorts_by_source_quality),
-                value: 'quality',
-                groupValue: sortingMethod,
-                onChanged: (value){
-                  setState(() {
-                    sortingMethod = value;
-                  });
-                },
-                activeColor: Theme.of(context).primaryColor,
-                controlAffinity: ListTileControlAffinity.trailing,
-              ),
+                RadioListTile(
+                  secondary: (MediaQuery.of(context).size.width >= 300) ? Icon(Icons.sort_by_alpha) : null,
+                  title: Text(S.of(context).name),
+                  subtitle: Text(S.of(context).sorts_alphabetically_by_name),
+                  value: 'name',
+                  groupValue: sortingMethod,
+                  onChanged: (value){
+                    setState(() {
+                      sortingMethod = value;
+                    });
+                  },
+                  activeColor: Theme.of(context).primaryColor,
+                  controlAffinity: ListTileControlAffinity.trailing,
+                ),
 
-              RadioListTile(
-                secondary: (constraints.maxWidth >= 300) ? Icon(Icons.sort_by_alpha) : null,
-                title: Text(S.of(context).name),
-                subtitle: Text(S.of(context).sorts_alphabetically_by_name),
-                value: 'name',
-                groupValue: sortingMethod,
-                onChanged: (value){
-                  setState(() {
-                    sortingMethod = value;
-                  });
-                },
-                activeColor: Theme.of(context).primaryColor,
-                controlAffinity: ListTileControlAffinity.trailing,
-              ),
+                RadioListTile(
+                  isThreeLine: true,
+                  secondary: (MediaQuery.of(context).size.width >= 300) ? Icon(Icons.import_export) : null,
+                  title: Text(S.of(context).file_size),
+                  subtitle: Text(S.of(context).sorts_by_the_size_of_the_file),
+                  value: 'fileSize',
+                  groupValue: sortingMethod,
+                  onChanged: (value){
+                    setState(() {
+                      sortingMethod = value;
+                    });
+                  },
+                  activeColor: Theme.of(context).primaryColor,
+                  controlAffinity: ListTileControlAffinity.trailing,
+                ),
+              ],
+            )
+            ]),
 
-              RadioListTile(
-                isThreeLine: true,
-                secondary: (constraints.maxWidth >= 300) ? Icon(Icons.import_export) : null,
-                title: Text(S.of(context).file_size),
-                subtitle: Text(S.of(context).sorts_by_the_size_of_the_file),
-                value: 'fileSize',
-                groupValue: sortingMethod,
-                onChanged: (value){
-                  setState(() {
-                    sortingMethod = value;
-                  });
-                },
-                activeColor: Theme.of(context).primaryColor,
-                controlAffinity: ListTileControlAffinity.trailing,
-              ),
-            ],
-          );
-        }),
-
-        LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
+        Builder(builder: (BuildContext context){
           var _orderButtons = <Widget>[
             FlatButton.icon(
                 color: !sortReversed ? Theme.of(context).primaryColor : null,
@@ -475,25 +480,25 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
                 },
                 icon: Icon(Icons.keyboard_arrow_down),
                 label: TitleText(S.of(context).descending)
-          )
+            )
           ];
 
-          if(constraints.maxWidth < 300){
+          if(MediaQuery.of(context).size.width < 300){
             return Container(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: ListView(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                children: _orderButtons
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: _orderButtons
               ),
             );
           }else{
             return Container(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: _orderButtons
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: _orderButtons
               ),
             );
           }

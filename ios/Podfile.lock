@@ -13,8 +13,6 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - permission_handler (3.0.1):
-    - Flutter
   - Reachability (3.2)
   - screen (0.0.1):
     - Flutter
@@ -35,7 +33,6 @@ DEPENDENCIES:
   - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
-  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
   - screen (from `.symlinks/plugins/screen/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
@@ -61,8 +58,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
-  permission_handler:
-    :path: ".symlinks/plugins/permission_handler/ios"
   screen:
     :path: ".symlinks/plugins/screen/ios"
   shared_preferences:
@@ -82,7 +77,6 @@ SPEC CHECKSUMS:
   flutter_webview_plugin: 116575b48572029304775b768e9f15ebfc316274
   package_info: d7c98b64f60add4c2908b9d94d82a45d3c8827ad
   path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
-  permission_handler: b4cdd38c1c4385e9f4f394c9881c42b48476ccb6
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   screen: 22ab9c4a784112d4b21ad7d80e81729e0afdaa65
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53

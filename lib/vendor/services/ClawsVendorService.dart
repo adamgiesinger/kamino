@@ -383,6 +383,7 @@ class ClawsVendorService extends VendorService {
               rdModel.metadata.provider = event['provider'];
               rdModel.metadata.source = event['resolver'];
               rdModel.metadata.quality = event['quality'];
+
               addSource(rdModel);
             }
             break;
@@ -490,6 +491,7 @@ class ClawsVendorService extends VendorService {
             // list of found content.
             SourceModel source = SourceModel.fromJSON(event);
             source.metadata.contentLength = contentLength;
+
             addSource(source);
             break;
 
@@ -506,8 +508,7 @@ class ClawsVendorService extends VendorService {
 
             if (pendingScrapes.length == 0
                 // (We don't want to call done twice.)
-                &&
-                status == VendorServiceStatus.PROCESSING) {
+                && status == VendorServiceStatus.PROCESSING) {
               setStatus(context, VendorServiceStatus.DONE);
             }
             break;

@@ -49,6 +49,10 @@ abstract class VendorConfiguration {
 
   Future<VendorService> getService();
 
+  void beginExecCommand(String command){
+    throw new Exception("Feature not implemented.");
+  }
+
 }
 
 class TraktCredentials {

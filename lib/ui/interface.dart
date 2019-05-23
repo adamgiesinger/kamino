@@ -155,16 +155,10 @@ class Interface {
                     width: 300,
                     child: ListView.builder(itemBuilder: (BuildContext context, int index) {
                       var currentLocale = localesList[index];
-                      var iconFile = currentLocale.languageCode;
-                      var iconVariant = currentLocale.countryCode;
+                      var languageCode = currentLocale.languageCode;
+                      var languageCountry = currentLocale.countryCode;
 
-                      // Flag corrections
-                      if(iconFile == "ar") iconFile = "arab_league";
-                      if(iconFile == "he") iconFile = "hebrew";
-                      if(iconFile == "en" && iconVariant == "GB") iconFile = "gb";
-                      if(iconFile == "en") iconFile = "us";
-                      // ./Flag corrections
-
+                      var iconFile = getLocaleFlag(languageCode, languageCountry);
                       Future _loadLocaleData = S.delegate.load(currentLocale);
 
                       return FutureBuilder(future: _loadLocaleData, builder: (_, AsyncSnapshot snapshot) {
@@ -196,6 +190,22 @@ class Interface {
               ]);
         }
     );
+  }
+
+  static String getLocaleFlag(String languageCode, String languageCountry){
+
+    String iconFile = languageCode;
+    String iconVariant = languageCountry;
+
+    // Flag corrections
+    if(iconFile == "ar") iconFile = "arab_league";
+    if(iconFile == "he") iconFile = "hebrew";
+    if(iconFile == "en" && iconVariant == "GB") iconFile = "gb";
+    if(iconFile == "en") iconFile = "us";
+    // ./Flag corrections
+
+    return iconFile;
+
   }
 
   static void showConnectingDialog(BuildContext context, { Function onPop }){

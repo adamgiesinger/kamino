@@ -259,5 +259,8 @@
   "information": "Information",
   "play_trailer": "Play Trailer",
   "see_all": "See All",
-  "copy_to_clipboard": "Copy to Clipboard"
+  "copy_to_clipboard": "Copy to Clipboard",
+  "clear": "Clear",
+  "reset": "Reset",
+  "set": "Set"
 }

@@ -13,12 +13,10 @@ class CarouselCard extends StatefulWidget {
   final ContentModel model;
   final double width;
   final double height;
-  final bool keepAlive;
 
   CarouselCard(this.model, {
     this.width,
     this.height,
-    this.keepAlive = false
   });
 
   @override
@@ -26,7 +24,7 @@ class CarouselCard extends StatefulWidget {
 
 }
 
-class CarouselCardState extends State<CarouselCard> with AutomaticKeepAliveClientMixin<CarouselCard> {
+class CarouselCardState extends State<CarouselCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +98,5 @@ class CarouselCardState extends State<CarouselCard> with AutomaticKeepAliveClien
       }),
     );
   }
-
-  @override
-  bool get wantKeepAlive => widget.keepAlive;
 
 }

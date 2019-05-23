@@ -54,6 +54,31 @@ Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = fals
 
     if(Navigator.of(context).canPop()) Navigator.of(context).pop();
 
+    print(error.runtimeType);
+    if(error.runtimeType == SocketException){
+      showDialog(context: context, builder: (BuildContext context){
+        return AlertDialog(
+          title: Icon(Icons.offline_bolt, size: 42, color: Colors.grey),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 100,
+            child: ListView(
+              children: <Widget>[
+                TitleText(S.of(context).unable_to_connect, fontSize: 26, textAlign: TextAlign.center),
+                Container(margin: EdgeInsets.symmetric(vertical: 10)),
+                Text(S.of(context).appname_failed_to_connect_to_the_internet(appName), style: TextStyle(
+                  fontFamily: 'GlacialIndifference',
+                  fontSize: 18,
+                ), textAlign: TextAlign.center),
+              ]
+            ),
+          )
+        );
+      });
+
+      return;
+    }
+
     String _errorReference;
     try {
       _errorReference = stacktrace.toString().split("\n").firstWhere((line) => line.contains("kamino")).split("     ")[1];
@@ -335,11 +360,13 @@ class KaminoAppState extends State<KaminoApp> {
     ));
   }
 
-  Future<VendorService> getPrimaryVendorService({ bool excludeShim = false }) async {
-    bool shimEnabled = await Settings.serverURLOverride != null &&
-      await Settings.serverKeyOverride != null;
+  Future<bool> isShimVendorEnabled() async {
+    return await Settings.serverURLOverride != null &&
+        await Settings.serverKeyOverride != null;
+  }
 
-    if(!excludeShim && shimEnabled){
+  Future<VendorService> getPrimaryVendorService({ bool excludeShim = false }) async {
+    if(!excludeShim && await isShimVendorEnabled()){
       return ShimVendorConfiguration().getService();
     }
 

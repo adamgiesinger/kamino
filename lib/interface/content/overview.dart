@@ -716,6 +716,7 @@ class _ContentOverviewState extends State<ContentOverview> {
               children: <Widget>[
 
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(

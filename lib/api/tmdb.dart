@@ -93,53 +93,65 @@ class TMDB {
 
 
   static Future<dynamic> getList(BuildContext context, int id, { bool loadFully = false, bool raw = false, bool useCache = false }) async {
-    if(useCache){
-      if(await DatabaseHelper.playlistInCache(id)){
-        // If the list is empty, MISS the cache.
-        ContentListModel listModel = await DatabaseHelper.getCachedPlaylist(id);
-        if(listModel.content.length > 0) return listModel;
-      }
-    }
-
-    var rawContentResponse = (await http.get("https://api.themoviedb.org/4/list/$id${getDefaultArguments(context)}", headers: {
-    'Content-Type': 'application/json;charset=utf-8'
-    })).body;
-
-    if(raw) return rawContentResponse;
-    ContentListModel listModel = ContentListModel.fromJSON(Convert.jsonDecode(rawContentResponse));
-
-    if(!listModel.fullyLoaded && loadFully && listModel.totalPages != null && listModel.totalPages > 1){
-      List<ContentModel> fullContentList = new List();
-
-      // (TMDB starts at index of 1 *sigh*)
-      for(int i = 1; i < listModel.totalPages; i++){
-        // Make a request to TMDB for the desired page.
-        var sublistContentResponse = (await http.get("https://api.themoviedb.org/4/list/$id${getDefaultArguments(context)}&page=$i", headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        })).body;
-
-        // Cast the results into a list.
-        List sublistContent = Convert.jsonDecode(sublistContentResponse)["results"];
-
-        if(sublistContent != null) {
-          // Map the list items to ContentModels and add all the items to fullContentList.
-          fullContentList.addAll(sublistContent.map((contentItem) =>
-          contentItem['media_type'] == 'movie'
-              ? MovieContentModel.fromJSON(contentItem)
-              : TVShowContentModel.fromJSON(contentItem)
-          ).toList());
+    try {
+      if (useCache) {
+        if (await DatabaseHelper.playlistInCache(id)) {
+          // If the list is empty, MISS the cache.
+          ContentListModel listModel = await DatabaseHelper.getCachedPlaylist(
+              id);
+          if (listModel.content.length > 0) return listModel;
         }
       }
 
-      // Finally, update the ContentListModel's content item.
-      listModel.content = fullContentList;
-      listModel.fullyLoaded = true;
-    }
+      var rawContentResponse = (await http.get(
+          "https://api.themoviedb.org/4/list/$id${getDefaultArguments(
+              context)}", headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      })).body;
 
-    if(useCache){
-      DatabaseHelper.cachePlaylist(listModel);
+      if (raw) return rawContentResponse;
+      ContentListModel listModel = ContentListModel.fromJSON(
+          Convert.jsonDecode(rawContentResponse));
+
+      if (!listModel.fullyLoaded && loadFully && listModel.totalPages != null &&
+          listModel.totalPages > 1) {
+        List<ContentModel> fullContentList = new List();
+
+        // (TMDB starts at index of 1 *sigh*)
+        for (int i = 1; i < listModel.totalPages; i++) {
+          // Make a request to TMDB for the desired page.
+          var sublistContentResponse = (await http.get(
+              "https://api.themoviedb.org/4/list/$id${getDefaultArguments(
+                  context)}&page=$i", headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+          })).body;
+
+          // Cast the results into a list.
+          List sublistContent = Convert.jsonDecode(
+              sublistContentResponse)["results"];
+
+          if (sublistContent != null) {
+            // Map the list items to ContentModels and add all the items to fullContentList.
+            fullContentList.addAll(sublistContent.map((contentItem) =>
+            contentItem['media_type'] == 'movie'
+                ? MovieContentModel.fromJSON(contentItem)
+                : TVShowContentModel.fromJSON(contentItem)
+            ).toList());
+          }
+        }
+
+        // Finally, update the ContentListModel's content item.
+        listModel.content = fullContentList;
+        listModel.fullyLoaded = true;
+      }
+
+      if (useCache) {
+        DatabaseHelper.cachePlaylist(listModel);
+      }
+      return listModel;
+    }catch(ex){
+      print("Error whilst fetching list #$id");
     }
-    return listModel;
   }
 
   static Future<ContentModel> getContentInfo(BuildContext context, ContentType type, int id, { String appendToResponse }) async {

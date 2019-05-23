@@ -102,6 +102,12 @@ class _Settings {
     "manuallySelectSourcesEnabled": $(type: bool, defaultValue: true),
     "serverURLOverride": $(type: String),
     "serverKeyOverride": $(type: String),
+    // (Version Tack)
+    "releaseVersionTrack": $(type: int, defaultValue: 0),
+
+    // Advanced
+    // (Disable security messages)
+    "disableSecurityMessages": $(type: bool, defaultValue: false),
 
     // Source Selection View
     // (The sorting method to use.)

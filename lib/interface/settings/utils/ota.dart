@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/util/settings.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission/permission.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OTAHelper {
   static const platform = const MethodChannel('xyz.apollotv.kamino/ota');
@@ -26,17 +27,19 @@ class OTAHelper {
 }
 
 Future<Map> checkUpdate(BuildContext context, bool dismissSnackbar) async {
-  //get the build info
+  // Get the build info
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   String buildNumber = packageInfo.buildNumber;
 
   String url = "https://houston.apollotv.xyz/ota/download";
 
-  //get latest build info from, houston
-  http.Response res = await http.get("https://houston.apollotv.xyz/ota/");
+  // Get latest build info from Apollo Houston
+  String versionTrack = ['stable', 'beta', 'development'][(await Settings.releaseVersionTrack)];
+  http.Response res = await http.get("https://houston.apollotv.xyz/ota/$versionTrack");
 
   if (res.statusCode == 200) {
     var results = json.decode(res.body);
+    if(results['latest'] == null) return {};
 
     if (int.parse(results["latest"]["buildNumber"]) > int.parse(buildNumber)) {
       //new version is available
@@ -49,7 +52,7 @@ Future<Map> checkUpdate(BuildContext context, bool dismissSnackbar) async {
     }
   }
 
-  return {"title": "", "build": "", "url": null, "changelog": ""};
+  return {};
 }
 
 ///
@@ -58,9 +61,8 @@ Future<Map> checkUpdate(BuildContext context, bool dismissSnackbar) async {
 updateApp(BuildContext context, bool dismissSnackbar) async {
   if(!Platform.isAndroid) return;
 
-  const validPermissionStates = [PermissionStatus.always, PermissionStatus.allow, PermissionStatus.whenInUse];
-  bool permissionStatus = validPermissionStates.contains(await Permission.getSinglePermissionStatus(PermissionName.Storage));
-  if(!permissionStatus) permissionStatus = validPermissionStates.contains(await Permission.requestSinglePermission(PermissionName.Storage));
+  bool permissionStatus = [PermissionStatus.granted, PermissionStatus.restricted].contains(await PermissionHandler().checkPermissionStatus(PermissionGroup.storage));
+  if(!permissionStatus) [PermissionStatus.granted, PermissionStatus.restricted].contains(await PermissionHandler().requestPermissions([PermissionGroup.storage]));
   if(!permissionStatus && dismissSnackbar) return;
 
   if(permissionStatus) {
@@ -121,9 +123,8 @@ runInstallProcedure (context, data) async {
   try {
     Navigator.of(context).pop();
 
-    const validPermissionStates = [PermissionStatus.always, PermissionStatus.allow, PermissionStatus.whenInUse];
-    bool permissionStatus = validPermissionStates.contains(await Permission.getSinglePermissionStatus(PermissionName.Storage));
-    if(!permissionStatus) permissionStatus = validPermissionStates.contains(await Permission.requestSinglePermission(PermissionName.Storage));
+    bool permissionStatus = [PermissionStatus.granted, PermissionStatus.restricted].contains(await PermissionHandler().checkPermissionStatus(PermissionGroup.storage));
+    if(!permissionStatus) [PermissionStatus.granted, PermissionStatus.restricted].contains(await PermissionHandler().requestPermissions([PermissionGroup.storage]));
     if(!permissionStatus) throw new FileSystemException(S.of(context).permission_denied);
 
     final downloadDir = new Directory((await getExternalStorageDirectory()).path + "/.apollo");

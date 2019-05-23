@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
@@ -6,6 +8,7 @@ import 'package:kamino/interface/settings/page.dart';
 import 'package:kamino/util/database_helper.dart';
 
 import 'package:kamino/util/settings.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class OtherSettingsPage extends SettingsPage {
 
@@ -19,7 +22,14 @@ class OtherSettingsPage extends SettingsPage {
 
 class OtherSettingsPageState extends SettingsPageState {
 
+  int _releaseVersionTrack = 0;
   bool _autoplaySourcesEnabled = false;
+
+  static const List<String> releaseVersionTracks = [
+    "Stable",
+    "Beta",
+    "Development"
+  ];
 
   @override
   void initState(){
@@ -29,6 +39,12 @@ class OtherSettingsPageState extends SettingsPageState {
     (Settings.manuallySelectSourcesEnabled as Future).then((data){
       setState(() {
         _autoplaySourcesEnabled = !data;
+      });
+    });
+
+    (Settings.releaseVersionTrack as Future).then((data){
+      setState(() {
+        _releaseVersionTrack = data;
       });
     });
 
@@ -82,9 +98,11 @@ class OtherSettingsPageState extends SettingsPageState {
           ),
         ),*/
 
+        SubtitleText("Search", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
+            leading: Icon(Icons.clear_all),
             title: TitleText(S.of(context).clear_search_history),
             subtitle: Text(S.of(context).clear_search_history_description),
             enabled: true,
@@ -95,20 +113,133 @@ class OtherSettingsPageState extends SettingsPageState {
           ),
         ),
 
+        if(Platform.isAndroid)
+          ...[
+            SubtitleText("Updates", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+            Container(
+              margin: EdgeInsets.only(bottom: 10),
+              child: Material(
+                color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    ListTile(
+                      leading: Icon(Icons.looks_one),
+                      title: TitleText("Version Track"),
+                      subtitle: Text(releaseVersionTracks[_releaseVersionTrack]),
+                    ),
+
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          Slider(
+                              onChanged: (double value) async {
+                                await (Settings.releaseVersionTrack = value.toInt());
+
+                                (Settings.releaseVersionTrack as Future).then((data){
+                                  setState(() {
+                                    _releaseVersionTrack = data;
+                                  });
+                                });
+                              },
+                              value: _releaseVersionTrack.toDouble(),
+                              min: 0,
+                              max: 2,
+                              divisions: 2,
+                              label: releaseVersionTracks[_releaseVersionTrack]
+                          ),
+
+                          Container(
+                            margin: EdgeInsets.only(top: 10, left: 5),
+                            child: Column(
+                              children: <Widget>[
+                                RichText(
+                                    text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                              text: "\u2022 Stable: ",
+                                              style: TextStyle(fontWeight: FontWeight.bold)
+                                          ),
+                                          TextSpan(
+                                              text: "When a beta build is well-tested and is, to the best of our knowledge bug-free, the build will graduate to a stable release."
+                                          )
+                                        ]
+                                    )
+                                ),
+
+                                Container(margin: EdgeInsets.only(top: 15)),
+
+                                RichText(
+                                    text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                              text: "\u2022 Beta: ",
+                                              style: TextStyle(fontWeight: FontWeight.bold)
+                                          ),
+                                          TextSpan(
+                                              text: "Once a few development-build features are complete, they will be cherry-picked and released as beta builds."
+                                          )
+                                        ]
+                                    )
+                                ),
+
+                                Container(margin: EdgeInsets.only(top: 15)),
+
+                                RichText(
+                                    text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                              text: "\u2022 [COMING SOON] Development: ",
+                                              style: TextStyle(fontWeight: FontWeight.bold)
+                                          ),
+                                          TextSpan(
+                                              text: "As soon as a feature has been pushed to the master branch a development build will be automatically generated and released."
+                                          )
+                                        ]
+                                    )
+                                )
+                              ],
+                            ),
+                          )
+                        ]
+                      )
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+
         Divider(),
 
+        SubtitleText("Localization", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
+            leading: Icon(Icons.translate),
+            trailing: Container(
+              child: FadeInImage(
+                fadeInDuration: Duration(milliseconds: 400),
+                placeholder: MemoryImage(kTransparentImage),
+                image: AssetImage(
+                    "assets/flags/${Interface.getLocaleFlag(
+                        Localizations.localeOf(context).languageCode,
+                        Localizations.localeOf(context).countryCode
+                    )}.png"
+                ),
+                fit: BoxFit.contain,
+                alignment: Alignment.center,
+                width: 48,
+              )
+            ),
             title: TitleText(S.of(context).language_settings),
             subtitle: Text(S.of(context).$_language_name),
             enabled: true,
             onTap: () => Interface.showLanguageSelectionDialog(context),
-          ),
         )
-
-      ],
-    );
+      )
+    ]);
   }
 
 }
