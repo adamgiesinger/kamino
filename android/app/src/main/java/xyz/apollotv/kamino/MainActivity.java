@@ -239,7 +239,7 @@ public class MainActivity extends FlutterActivity {
               Uri apkUri = OTAFileProvider.getUriForFile(getApplicationContext(), "xyz.apollotv.kamino.provider", new File(path));
               intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
               intent.setData(apkUri);
-              intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+              intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION|Intent.FLAG_ACTIVITY_NEW_TASK);
           } else {
               intent = new Intent(Intent.ACTION_VIEW);
               intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
