@@ -61,7 +61,7 @@ abstract class VendorService {
   ///
   void triggerUpdate() {
     for (Function onUpdate in onUpdateEvents)
-      onUpdate();
+      try { onUpdate(); } catch(ex){}
   }
 
   Future<void> playMovie(MovieContentModel movie, BuildContext context);

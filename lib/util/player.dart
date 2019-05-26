@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:cplayer/cplayer.dart';
+import 'package:dart_chromecast/casting/cast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
+import 'package:kamino/main.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
 
@@ -12,6 +16,25 @@ class PlayerHelper {
     @required String url,
     @required String mimeType
   }) async {
+
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    if(application.activeCastSender != null){
+      
+      runZoned((){
+        // application.activeCastSender.launch(appCastID);
+
+        application.activeCastSender.loadPlaylist([CastMedia(
+            contentId: url,
+            title: title,
+            autoPlay: true
+        )], append: false, forceNext: true);
+      }, onError: (error, stacktrace){
+        Interface.showSnackbar(S.of(context).an_error_occurred_whilst_casting, context: context, backgroundColor: Colors.red);
+      });
+      
+      return;
+    }
+
     PlayerSettings playerSettings = await Settings.playerInfo;
 
     if(!playerSettings.isValid()) {

@@ -76,6 +76,11 @@ class ClawsVendorService extends VendorService {
       this.setStatus(context, VendorServiceStatus.IDLE);
       print("Exception whilst determining Claws status: $ex");
 
+      if(ex is SocketException){
+        reportError(ex, null, shouldShowDialog: true, cancelPop: true);
+        return false;
+      }
+
       Interface.showSimpleErrorDialog(context,
           title: S.of(context).unable_to_connect,
           reason: isOfficial

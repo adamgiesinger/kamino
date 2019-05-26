@@ -1,6 +1,10 @@
+import 'package:dart_chromecast/casting/cast.dart';
 import 'package:flutter/material.dart';
+import 'package:kamino/cast/cast_devices_dialog.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
+
+import 'interface.dart';
 
 class TitleText extends Text {
 
@@ -299,6 +303,50 @@ class ErrorLoadingMixin extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+}
+
+class CastButton extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() => CastButtonState();
+
+}
+
+class CastButtonState extends State<CastButton> {
+
+  @override
+  Widget build(BuildContext context) {
+    KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
+    bool hasActiveCast = application.activeCastSender != null;
+
+    return IconButton(
+      icon: hasActiveCast ? Icon(Icons.cast_connected) : Icon(Icons.cast),
+      tooltip: hasActiveCast ? S.of(context).disconnect: S.of(context).google_cast_prompt,
+      onPressed: () async {
+        if(hasActiveCast){
+          Interface.showSnackbar(S.of(context).disconnected_from_device(application.activeCastSender.device.friendlyName), context: context, backgroundColor: Colors.red);
+          application.activeCastSender.stop();
+          await application.activeCastSender.disconnect();
+          setState(() {
+            application.activeCastSender = null;
+          });
+          return;
+        }
+
+        CastDevice device = await CastDevicesDialog.show(context);
+        if(device != null){
+          CastSender sender = CastSender(device);
+          await sender.connect();
+          sender.launch(appCastID);
+          setState(() {
+            application.activeCastSender = sender;
+            Interface.showSnackbar(S.of(context).now_connected_to_device(device.friendlyName), context: context);
+          });
+        }
+      },
     );
   }
 

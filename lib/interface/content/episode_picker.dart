@@ -71,6 +71,13 @@ class _EpisodePickerState extends State<EpisodePicker> {
               textColor: Theme.of(context).primaryTextTheme.title.color
           ),
           centerTitle: true,
+
+          actions: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: CastButton(),
+            )
+          ],
         ),
         body: _season == null ?
 

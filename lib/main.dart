@@ -2,14 +2,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dart_chromecast/casting/cast.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/favorites.dart';
 import 'package:kamino/interface/intro/kamino_intro.dart';
 import 'package:kamino/interface/launchpad2/browse.dart';
 import 'package:kamino/interface/launchpad2/launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
-import 'package:kamino/interface/search/smart_search.dart';
-import 'package:kamino/skyspace/skyspace.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
@@ -27,6 +26,7 @@ import 'package:kamino/vendor/index.dart';
 import 'package:kamino/interface/settings/settings.dart';
 
 const appName = "ApolloTV";
+const appCastID = "6569632D";
 Logger log;
 
 const platform = const MethodChannel('xyz.apollotv.kamino/init');
@@ -43,26 +43,24 @@ class ErrorScaffold extends StatelessWidget {
   }
 }
 
-Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = false}) async {
-  print(error.toString());
-  print(stacktrace);
-
+Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false, cancelPop = false}) async {
   try {
     OverlayState overlay = KaminoApp.navigatorKey.currentState.overlay;
     if(overlay == null || overlay.context == null || !shouldShowDialog) return;
     BuildContext context = overlay.context;
 
-    if(Navigator.of(context).canPop()) Navigator.of(context).pop();
+    if(Navigator.of(context).canPop() && !cancelPop) Navigator.of(context).pop();
 
-    print(error.runtimeType);
-    if(error.runtimeType == SocketException){
+    if(error is SocketException){
       showDialog(context: context, builder: (BuildContext context){
         return AlertDialog(
           title: Icon(Icons.offline_bolt, size: 42, color: Colors.grey),
           content: Container(
             width: MediaQuery.of(context).size.width,
-            height: 100,
+            height: 150,
             child: ListView(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
               children: <Widget>[
                 TitleText(S.of(context).unable_to_connect, fontSize: 26, textAlign: TextAlign.center),
                 Container(margin: EdgeInsets.symmetric(vertical: 10)),
@@ -70,6 +68,18 @@ Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = fals
                   fontFamily: 'GlacialIndifference',
                   fontSize: 18,
                 ), textAlign: TextAlign.center),
+                Container(
+                  margin: EdgeInsets.only(top: 15),
+                  child: RaisedButton(
+                    onPressed: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(S.of(context).close.toUpperCase()),
+                    color: Theme.of(context).backgroundColor,
+                    elevation: 2,
+                    highlightElevation: 2
+                  ),
+                )
               ]
             ),
           )
@@ -78,6 +88,9 @@ Future<void> _reportError(error, StackTrace stacktrace, {shouldShowDialog = fals
 
       return;
     }
+
+    print(error.toString());
+    print(stacktrace);
 
     String _errorReference;
     try {
@@ -147,7 +160,7 @@ void main() async {
   }().then((platformType){
     FlutterError.onError = (FlutterErrorDetails details) async {
       print("A Flutter exception was caught by the $appName internal error handler.");
-      await _reportError(details.exception, details.stack);
+      await reportError(details.exception, details.stack);
     };
 
     runZoned<Future<void>>((){
@@ -161,7 +174,7 @@ void main() async {
       runApp(KaminoApp());
     }, onError: (error, StackTrace stacktrace) async {
       print("A Dart zone exception was caught by the $appName internal error handler.");
-      await _reportError(error, stacktrace, shouldShowDialog: true);
+      await reportError(error, stacktrace, shouldShowDialog: true);
     });
 
   });
@@ -195,12 +208,23 @@ class KaminoApp extends StatefulWidget {
 
 class KaminoAppState extends State<KaminoApp> {
 
+  CastSender _activeCastSender;
   Locale _currentLocale;
 
   List<VendorConfiguration> _vendorConfigs;
   List<ThemeConfiguration> _themeConfigs;
   String _activeTheme;
   Color _primaryColorOverride;
+
+  CastSender get activeCastSender {
+    return _activeCastSender;
+  }
+
+  set activeCastSender (CastSender sender){
+    setState(() {
+      _activeCastSender = sender;
+    });
+  }
 
   KaminoAppState(){
     // Load vendor and theme configs.
@@ -335,6 +359,11 @@ class KaminoAppState extends State<KaminoApp> {
         ],
       )
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -518,13 +547,9 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
           elevation: 6,
 
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.search),
-                tooltip: "Search",
-                onPressed: (){
-                  showSearch(context: context, delegate: SmartSearch());
-                },
-            ),
+            CastButton(),
+
+            Interface.generateSearchIcon(context),
 
             PopupMenuButton<String>(
               tooltip: "Options",

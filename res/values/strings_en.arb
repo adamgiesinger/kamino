@@ -262,5 +262,11 @@
   "copy_to_clipboard": "Copy to Clipboard",
   "clear": "Clear",
   "reset": "Reset",
-  "set": "Set"
+  "set": "Set",
+  "google_cast_prompt": "Cast",
+  "searching_for_cast_devices": "Searching for Cast devices...",
+  "unknown_model": "Unknown model",
+  "now_connected_to_device": "Now connected to $device",
+  "disconnected_from_device": "Disconnected from $device",
+  "an_error_occurred_whilst_casting": "An error occurred whilst casting."
 }

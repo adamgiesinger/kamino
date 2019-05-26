@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/generated/i18n.dart';
@@ -40,9 +42,19 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
   bool isShimVendor = false;
   bool _disableSecurityMessages = false;
 
+  Stopwatch stopwatch;
+
+  @override
+  void dispose() {
+    stopwatch.stop();
+
+    super.dispose();
+  }
+
   @override
   void initState() {
     (() async {
+      stopwatch = new Stopwatch()..start();
       rdEnabled = await RealDebrid.isAuthenticated();
 
       List sortingSettings = await Settings.contentSortSettings;
@@ -61,6 +73,21 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
     widget.service.addUpdateEvent(() {
       if (mounted) setState(() {});
     });
+
+    tickUpdateTimer(){
+      Timer(Duration(milliseconds: 500), (){
+        if(widget.service.status != VendorServiceStatus.DONE &&
+            widget.service.status != VendorServiceStatus.IDLE){
+          if(mounted) setState(() {});
+          tickUpdateTimer();
+          return;
+        }
+
+        stopwatch.stop();
+        if(mounted) setState(() {});
+      });
+    }
+    tickUpdateTimer();
 
     super.initState();
   }
@@ -96,29 +123,63 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
             backgroundColor: !isShimVendor || _disableSecurityMessages ? Theme.of(context).backgroundColor
               : Colors.red,
             title: TitleText(
-                "${widget.title} \u2022 " + S.of(context).n_sources(sourceList.length.toString())
+                widget.title
             ),
-            centerTitle: true,
+            centerTitle: false,
+            titleSpacing: NavigationToolbar.kMiddleSpacing,
             bottom: PreferredSize(
-                child: (
-                    widget.service.status != VendorServiceStatus.DONE &&
-                    widget.service.status != VendorServiceStatus.IDLE
-                )
-                    ? SizedBox(
-                  height: SourceSelectionView._kAppBarProgressHeight,
-                  child: LinearProgressIndicator(
-                    backgroundColor: !isShimVendor || _disableSecurityMessages ? null : Colors.red,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        !isShimVendor || _disableSecurityMessages ? Theme.of(context).primaryColor
-                            : Colors.white
-                    ),
+              preferredSize: Size(
+                  double.infinity,
+                  SourceSelectionView._kAppBarProgressHeight + 20
+              ),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: Builder(builder: (BuildContext context){
+                      String elapsed = stopwatch.elapsed.inMinutes.toString().padLeft(2, '0') + ":" +
+                          stopwatch.elapsed.inSeconds.toString().padLeft(2, '0');
+
+                      return Text(
+                        "${S.of(context).n_sources(sourceList.length.toString())} found in $elapsed",
+                        style: TextStyle(
+                            fontFamily: 'GlacialIndifference',
+                            fontSize: 16
+                        ),
+                      );
+                    }),
                   ),
-                )
-                    : Container(),
-                preferredSize: Size(
-                    double.infinity, SourceSelectionView._kAppBarProgressHeight)
+                  PreferredSize(
+                      child: (
+                          widget.service.status != VendorServiceStatus.DONE &&
+                              widget.service.status != VendorServiceStatus.IDLE
+                      )
+                          ? Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: SourceSelectionView._kAppBarProgressHeight,
+                            child: LinearProgressIndicator(
+                              backgroundColor: !isShimVendor || _disableSecurityMessages ? null : Colors.red,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  !isShimVendor || _disableSecurityMessages ? Theme.of(context).primaryColor
+                                      : Colors.white
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                          : Container(),
+                      preferredSize: Size(
+                          double.infinity, SourceSelectionView._kAppBarProgressHeight)
+                  )
+                ],
+              ),
             ),
             actions: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: CastButton(),
+              ),
               IconButton(icon: Icon(Icons.sort), onPressed: () => _showSortingDialog(context))
             ],
           ),

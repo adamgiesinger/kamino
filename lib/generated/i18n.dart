@@ -30,6 +30,7 @@ class S implements WidgetsLocalizations {
   String get air_date => "Air date";
   String get all_genres => "All Genres";
   String get an_error_occurred => "An error occurred.";
+  String get an_error_occurred_whilst_casting => "An error occurred whilst casting.";
   String get an_error_occurred_whilst_communicating_with_claws => "An error occurred whilst communicating with Claws.";
   String get an_error_occurred_whilst_loading_this_page => "An error occurred whilst loading this page.";
   String get apollotv_builtin_player => "ApolloTV built-in player.";
@@ -112,6 +113,7 @@ class S implements WidgetsLocalizations {
   String get general_settings => "General Settings";
   String get general_settings_description => "Here's some commonly used settings options that you might want to take a look at.";
   String get get_device_information => "Get Device Information";
+  String get google_cast_prompt => "Cast";
   String get grid_layout => "Grid Layout";
   String get if_this_problem_persists_please_contact_a_member_of_staff => "If this problem persists, please contact a member of staff on Discord.";
   String get information => "Information";
@@ -169,6 +171,7 @@ class S implements WidgetsLocalizations {
   String get scraping_failed => "Scraping failed...";
   String get search_history_cleared => "Search history cleared.";
   String get search_tv_shows_and_movies => "Search TV shows and movies...";
+  String get searching_for_cast_devices => "Searching for Cast devices...";
   String get see_all => "See All";
   String get select_language => "Select Language...";
   String get select_player => "Select Player...";
@@ -213,6 +216,7 @@ class S implements WidgetsLocalizations {
   String get unable_to_connect_to_server => "Unable to connect to server.";
   String get unable_to_determine_reason => "Unable to determine reason...";
   String get unknown => "Unknown";
+  String get unknown_model => "Unknown model";
   String get up_to_date => "Up to date. Check back in 1 - 3 weeks.";
   String get update_failed_please_try_again_later => "Update failed. Please try again later.";
   String get update_failed_storage_permission_denied => "Update failed. Storage permission denied.";
@@ -240,12 +244,14 @@ class S implements WidgetsLocalizations {
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName was unable to authenticate with Trakt.tv.";
   String by_x(String x) => "by $x";
   String customize_appearance_description(String appName) => "$appName is all about customization. Let's get started by choosing your favorite theme!";
+  String disconnected_from_device(String device) => "Disconnected from $device";
   String extensions_description(String appName) => "If you use these any of these third party services, you can connect them to $appName.";
   String general_error(String error) => "An error occurred ($error)\nPlease report this error.";
   String make_appname_yours(String appName) => "MAKE $appName YOURS";
   String n_episodes(String n) => "$n episodes";
   String n_ratings(String n) => "$n ratings";
   String n_sources(String n) => "$n sources";
+  String now_connected_to_device(String device) => "Now connected to $device";
   String seasons_n(String n) => "Seasons ($n)";
   String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "The $appName server is currently offline for server upgrades.";
   String this_x_has_no_synopsis_available(String x) => "This $x has no synopsis available.";

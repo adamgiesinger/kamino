@@ -199,8 +199,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                             SliverAppBar(
                               backgroundColor: Theme.of(context).backgroundColor,
                               actions: <Widget>[
-
-                                Interface.generateSearchIcon(context),
+                                CastButton(),
 
                                 IconButton(
                                   icon: Icon(
