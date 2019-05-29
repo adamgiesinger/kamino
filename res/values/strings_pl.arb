@@ -65,7 +65,7 @@
   "n_episodes": "$n odcinkow",
 
   "released": "Wydany",
-  "ongoing": "Trwajacy
+  "ongoing": "Trwajacy",
   "year": "Rok",
 
   "popularity": "Popularnosc",
@@ -123,7 +123,7 @@
   "gathers_useful_information_for_debugging": "Zbiera przydatne informacje do debugowania.",
   "link_copied_to_clipboard": "Link skopiowany do schowka.",
   "the_default_configuration_has_been_restored": "Domyslna konfiguracja zostala przywrocona.",
-  "restore_defaults": "Przywroc domyslne"
+  "restore_defaults": "Przywroc domyslne",
   
   "select_language": "Wybierz jezyk...",
   "language_settings": "Ustawienia jezyka",

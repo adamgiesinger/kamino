@@ -40,6 +40,7 @@
   "appname_was_unable_to_authenticate_with_trakttv": "$appName כשל עם האימות של Trakt.tv.",
   "you_can_now_tap_sync_to_synchronise_your_trakt_favorites": "הנך יכול/ה ללחוץ על 'סנכרן' על מנת לסנכרן את מועדפי הTrakt עם מועדפי הApolloTV שלך.\n\n(אינטגרציית Trakt עדיין מוגבלת בגלל שהיא עדיין בשלבי פיתוח.)",
   "disconnected_trakt_account": "משתמש Trakt נותק.",
+  "disconnected_trakt_account": "Disconnected Trakt account.",
   "trakt_synchronization": "סנכרון Trakt...",
   "trakt_favorites_sync_detailed": "נא המתן בזמן שאנחנו מסנכרנים את המועדפים שלך עם Trakt. החלון יסגר באופן אוטומטי שהפעולה תסתיים.",
 

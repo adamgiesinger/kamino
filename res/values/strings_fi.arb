@@ -259,5 +259,14 @@
   "information": "Tietoa",
   "play_trailer": "Toista traileri",
   "see_all": "Näytä kaikki",
-  "copy_to_clipboard": "Kopioi leikepöydälle"
+  "copy_to_clipboard": "Kopioi leikepöydälle",
+  "clear": "Tyhjennä",
+  "reset": "Nollaa",
+  "set": "Aseta",
+  "google_cast_prompt": "Suoratoista",
+  "searching_for_cast_devices": "Etsitään suoratoistolaitteita...",
+  "unknown_model": "Tuntematon malli",
+  "now_connected_to_device": "Yhdistetty laitteeseen $device",
+  "disconnected_from_device": "Yhteys laitteeseen $device katkaistu",
+  "an_error_occurred_whilst_casting": "Virhe suoratoistossa."
 }
