@@ -47,6 +47,8 @@ class TMDB {
       "108281",
       // Netflix Exclusives
       "105648",
+      // New TV Shows
+      "110825",
       // Other Exclusives
       "109260",
       // TV Top Picks
