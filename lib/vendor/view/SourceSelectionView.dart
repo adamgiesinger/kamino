@@ -296,95 +296,105 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                 color: Theme.of(context).cardColor,
                 elevation: 2,
                 child: IntrinsicHeight(
-                    child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
+                    child: Stack(
+                      children: <Widget>[
+                        Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
 
-                          Container(
-                              width: 80,
-                              color: source.metadata.isRD ? Theme.of(context).primaryColor : Color.fromRGBO(
-                                  Theme.of(context).cardColor.red + 10,
-                                  Theme.of(context).cardColor.green + 10,
-                                  Theme.of(context).cardColor.blue + 10,
-                                  Theme.of(context).cardColor == const Color(0xFF000000) ? 0.0 : 1.0
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Container(
-                                      padding: EdgeInsets.symmetric(vertical: 5),
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.white, width: 1.5),
-                                          borderRadius: BorderRadius.circular(5)
-                                      ),
-                                      child: TitleText(
-                                        (qualityInfo != null ? qualityInfo : "-"),
-                                        textAlign: TextAlign.center,
-                                      )
+                              Container(
+                                  width: 80,
+                                  color: source.metadata.isRD ? Theme.of(context).primaryColor : Color.fromRGBO(
+                                      Theme.of(context).cardColor.red + 10,
+                                      Theme.of(context).cardColor.green + 10,
+                                      Theme.of(context).cardColor.blue + 10,
+                                      Theme.of(context).cardColor == const Color(0xFF000000) ? 0.0 : 1.0
                                   ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Container(
+                                          padding: EdgeInsets.symmetric(vertical: 5),
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(color: Colors.white, width: 1.5),
+                                              borderRadius: BorderRadius.circular(5)
+                                          ),
+                                          child: TitleText(
+                                            (qualityInfo != null ? qualityInfo : "-"),
+                                            textAlign: TextAlign.center,
+                                          )
+                                      ),
 
-                                  Container(
-                                      child: TitleText(
-                                          (
-                                              source.metadata.contentLength != null
-                                                  ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true)
-                                                  : ""
+                                      Container(
+                                          child: TitleText(
+                                              (
+                                                  source.metadata.contentLength != null
+                                                      ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true)
+                                                      : ""
+                                              )
                                           )
                                       )
+                                    ],
                                   )
-                                ],
+                              ),
+
+                              Expanded(
+                                  child: ListTile(
+                                      enabled: true,
+                                      isThreeLine: true,
+
+                                      title: TitleText(
+                                          "${source.metadata.provider} (${source.metadata
+                                              .source})"),
+                                      subtitle: Text(
+                                        source.file.data,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                  )
                               )
+
+                            ]
+                        ),
+
+                        Material(
+                          type: MaterialType.transparency,
+                          child: InkWell(
+                            child: Container(),
+                            onTap: () async {
+                              PlayerHelper.play(
+                                  context,
+                                  title: widget.title,
+                                  url: source.file.data,
+                                  mimeType: 'video/*'
+                              );
+                            },
+                            onLongPress: () {
+                              if(Platform.isAndroid) {
+                                PlayerHelper.choosePlayer(
+                                    context,
+                                    title: widget.title,
+                                    url: source.file.data,
+                                    mimeType: 'video/*'
+                                );
+                                return;
+                              }
+
+                              Clipboard.setData(
+                                  new ClipboardData(text: source.file.data));
+                              Interface.showSnackbar(S
+                                  .of(context)
+                                  .url_copied, context: ctx);
+                            },
                           ),
-
-                          Expanded(
-                              child: ListTile(
-                                enabled: true,
-                                isThreeLine: true,
-
-                                title: TitleText(
-                                    "${source.metadata.provider} (${source.metadata
-                                        .source})"),
-                                subtitle: Text(
-                                  source.file.data,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-
-                                onTap: () async {
-                                  PlayerHelper.play(
-                                      context,
-                                      title: widget.title,
-                                      url: source.file.data,
-                                      mimeType: 'video/*'
-                                  );
-                                },
-                                onLongPress: () {
-                                  if(Platform.isAndroid) {
-                                    PlayerHelper.choosePlayer(
-                                        context,
-                                        title: widget.title,
-                                        url: source.file.data,
-                                        mimeType: 'video/*'
-                                    );
-                                    return;
-                                  }
-
-                                  Clipboard.setData(
-                                      new ClipboardData(text: source.file.data));
-                                  Interface.showSnackbar(S
-                                      .of(context)
-                                      .url_copied, context: ctx);
-                                },
-                              )
-                          )
-
-                        ]
+                        ),
+                      ],
                     )
                 ),
-              )
+              ),
           );
         }
       );
