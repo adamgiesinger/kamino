@@ -664,10 +664,12 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
               DotsIndicator(
                 position: _controller.hasClients ? _controller.page.round() : _controller.initialPage,
-                numberOfDot: _pages.length,
-                dotActiveShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-                dotActiveColor: Theme.of(context).primaryColor,
-                dotActiveSize: const Size(18.0, 9.0),
+                decorator: DotsDecorator(
+                  activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                  activeColor: Theme.of(context).primaryColor,
+                  activeSize: const Size(18.0, 9.0),
+                ),
+                dotsCount: _pages.length
               ),
 
               new FlatButton(
