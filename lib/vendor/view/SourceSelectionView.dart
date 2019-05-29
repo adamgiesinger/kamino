@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
+import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/filesize.dart';
 import 'package:kamino/util/player.dart';
 import 'package:kamino/util/settings.dart';
@@ -137,8 +140,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                   Container(
                     margin: EdgeInsets.only(bottom: 10),
                     child: Builder(builder: (BuildContext context){
-                      String elapsed = stopwatch.elapsed.inMinutes.toString().padLeft(2, '0') + ":" +
-                          stopwatch.elapsed.inSeconds.toString().padLeft(2, '0');
+                      String elapsed = formatTimestamp(stopwatch.elapsed.inMilliseconds);
 
                       return Text(
                         "${S.of(context).n_sources(sourceList.length.toString())} found in $elapsed",
@@ -360,17 +362,21 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                                   );
                                 },
                                 onLongPress: () {
-                                  /*Clipboard.setData(
+                                  if(Platform.isAndroid) {
+                                    PlayerHelper.choosePlayer(
+                                        context,
+                                        title: widget.title,
+                                        url: source.file.data,
+                                        mimeType: 'video/*'
+                                    );
+                                    return;
+                                  }
+
+                                  Clipboard.setData(
                                       new ClipboardData(text: source.file.data));
                                   Interface.showSnackbar(S
                                       .of(context)
-                                      .url_copied, context: ctx);*/
-                                  PlayerHelper.choosePlayer(
-                                    context,
-                                    title: widget.title,
-                                    url: source.file.data,
-                                    mimeType: 'video/*'
-                                  );
+                                      .url_copied, context: ctx);
                                 },
                               )
                           )
@@ -432,6 +438,16 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
       case '4K': return 70;
       default: return -1;
     }
+  }
+
+  String formatTimestamp(int millis){
+    int seconds = ((millis ~/ 1000)%60);
+    int minutes = ((millis ~/ (1000*60))%60);
+
+    String minutesString = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();
+    String secondsString = (seconds < 10) ? "0" + seconds.toString() : seconds.toString();
+
+    return minutesString + ":" + secondsString;
   }
 
 }
