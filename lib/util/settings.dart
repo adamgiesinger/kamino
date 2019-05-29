@@ -98,8 +98,11 @@ class _Settings {
     "rdCredentials": $(type: List, defaultValue: <String>[]),
 
     // Other
+    // (Hide unreleased content)
+    "hideUnreleasedPartialContent": $(type: bool, defaultValue: true),
     // (Manually Select Sources)
     "manuallySelectSourcesEnabled": $(type: bool, defaultValue: true),
+    // (Server Override)
     "serverURLOverride": $(type: String),
     "serverKeyOverride": $(type: String),
     // (Version Tack)

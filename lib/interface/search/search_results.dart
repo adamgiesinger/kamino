@@ -35,7 +35,9 @@ class _SearchResultViewState extends State<SearchResultView> {
 
   int _currentPages = 1;
   int total_pages = 1;
+
   bool _expandedSearchPref = false;
+  bool _hideUnreleasedPartialContent = false;
 
   List<SearchModel> _results = [];
   List<int> _favIDs = [];
@@ -96,27 +98,33 @@ class _SearchResultViewState extends State<SearchResultView> {
   @override
   void initState() {
     hasLoaded = false;
-    (Settings.detailedContentInfoEnabled as Future).then((data) => setState(() => _expandedSearchPref = data));
 
-    DatabaseHelper.getAllFavoriteIds().then((data){
-      _favIDs = data;
-    });
+    (() async {
 
-    controller = new ScrollController()..addListener(_scrollListener);
-    controllerList = new ScrollController()..addListener(_scrollListenerList);
+      _expandedSearchPref = await (Settings.detailedContentInfoEnabled as Future);
+      _hideUnreleasedPartialContent = await (Settings.hideUnreleasedPartialContent as Future);
 
-    _getContent(widget.query, _currentPages).then((data) {
-      setState(() {
-        _results = data;
+    })().then((_){
+      DatabaseHelper.getAllFavoriteIds().then((data){
+        _favIDs = data;
       });
-    }).catchError((ex){
-      if(ex is SocketException
-          || ex is HttpException) {
-        _override = OfflineMixin();
-        return;
-      }
 
-      _override = ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading search results.");
+      controller = new ScrollController()..addListener(_scrollListener);
+      controllerList = new ScrollController()..addListener(_scrollListenerList);
+
+      _getContent(widget.query, _currentPages).then((data) {
+        setState(() {
+          _results = data;
+        });
+      }).catchError((ex){
+        if(ex is SocketException
+            || ex is HttpException) {
+          _override = OfflineMixin();
+          return;
+        }
+
+        _override = ErrorLoadingMixin(errorMessage: "Well this is awkward... An error occurred whilst loading search results.");
+      });
     });
 
     super.initState();
@@ -156,25 +164,48 @@ class _SearchResultViewState extends State<SearchResultView> {
     );
   }
 
+  ///
+  /// This method determines whether a result item should be ignored,
+  /// i.e. because it lacks required metadata.
+  ///
+  bool detectShouldYield(SearchModel resultItem){
+
+    if(!_hideUnreleasedPartialContent) return false;
+
+    // Yield if data is missing.
+    if([
+      resultItem.year,
+      resultItem.backdrop_path,
+      resultItem.poster_path
+    ].contains(null)) return true;
+
+    // Yield if released in the future.
+    return (DateTime.parse(resultItem.year).compareTo(DateTime.now()) > 0);
+  }
+
   Widget _listPage(){
+    List<SearchModel> resultsList = _results.where(
+            (SearchModel model) => !detectShouldYield(model)
+    ).toList(growable: false);
+
     return Padding(
       padding: const EdgeInsets.only(top:5.0),
       child: ListView.builder(
-        itemCount: _results.length,
+        itemCount: resultsList.length,
         controller: controllerList,
         itemBuilder: (BuildContext context, int index){
           return ContentCard(
-            id: _results[index].id,
-            backdrop: _results[index].backdrop_path,
-            year: _results[index].year,
-            name: _results[index].name,
-            genre: genre.resolveGenreNames(_results[index].genre_ids, _results[index].mediaType),
-            mediaType: _results[index].mediaType,
-            ratings: _results[index].vote_average,
-            overview: _results[index].overview,
+            id: resultsList[index].id,
+            backdrop: resultsList[index].backdrop_path,
+            year: resultsList[index].year,
+            name: resultsList[index].name,
+            genre: genre.resolveGenreNames(resultsList[index].genre_ids, resultsList[index].mediaType),
+            mediaType: resultsList[index].mediaType,
+            ratings: resultsList[index].vote_average,
+            overview: resultsList[index].overview,
             elevation: 5.0,
             onTap: () => _openContentScreen(context, index),
-            isFavorite: _favIDs.contains(_results[index].id),
+            isFavorite: _favIDs.contains(resultsList[index].id),
           );
         },
       ),
@@ -182,6 +213,10 @@ class _SearchResultViewState extends State<SearchResultView> {
   }
 
   Widget _gridPage(){
+    List<SearchModel> resultsList = _results.where(
+            (SearchModel model) => !detectShouldYield(model)
+    ).toList(growable: false);
+
     return LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints){
       double idealWidth = 150;
       double spacing = 10.0;
@@ -195,18 +230,16 @@ class _SearchResultViewState extends State<SearchResultView> {
             mainAxisSpacing: spacing,
             crossAxisSpacing: spacing,
           ),
-
-          itemCount: _results.length,
-
+          itemCount: resultsList.length,
           itemBuilder: (BuildContext context, int index){
             return InkWell(
               onTap: () => _openContentScreen(context, index),
               splashColor: Colors.white,
               child: ContentPoster(
-                background: _results[index].poster_path,
-                name: _results[index].name,
-                releaseDate: _results[index].year,
-                mediaType: _results[index].mediaType
+                background: resultsList[index].poster_path,
+                name: resultsList[index].name,
+                releaseDate: resultsList[index].year,
+                mediaType: resultsList[index].mediaType
               ),
             );
           }

@@ -101,7 +101,8 @@ class AdvancedSettingsPageState extends SettingsPageState {
                               ))),
                             ) : Container(),
 
-                            Container(
+                            /** PRESETS **/
+                            /*Container(
                               height: 35,
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: ListView(
@@ -127,7 +128,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
                                   )
                                 ],
                               ),
-                            ),
+                            ),*/
 
                             Container(
                               margin: EdgeInsets.symmetric(vertical: 10),

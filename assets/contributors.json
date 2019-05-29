@@ -11,6 +11,28 @@
 			"color": "#2ecc71"
 		}
 	],
+	"Staff": [
+		{
+			"name": "BradB.",
+			"image": "https://cdn.discordapp.com/avatars/90899152921190400/b594ffd0dc299ebaba02e58ef4d07d3b.png?size=2048",
+			"color": "#9b59b6"
+		},
+		{
+			"name": "FailBoat",
+			"image": "https://cdn.discordapp.com/avatars/137593731661430784/21fe92a03df49acea1b7eebf70fec8c6.png?size=2048",
+			"color": "#9b59b6"
+		},
+		{
+			"name": "Steam Hammer",
+			"image": "https://cdn.discordapp.com/avatars/371272259526197258/017a21de09364911c20bfaa6d10c84d3.png?size=2048",
+			"color": "#9b59b6"
+		},
+		{
+			"name": "Zaquarius",
+			"image": "https://cdn.discordapp.com/avatars/309025909439201281/fb20fa8fb8d1260b46bc4e5e75469a70.png?size=2048",
+			"color": "#9b59b6"
+		}
+	],
 	"Former Developers": [
 		{
 			"name": "ddivad",
@@ -28,28 +50,6 @@
 			"color": "#979c9f"
 		}
 	],
-	"Staff": [
-		{
-			"name": "BradB.",
-			"image": "https://cdn.discordapp.com/avatars/90899152921190400/b594ffd0dc299ebaba02e58ef4d07d3b.png?size=2048",
-			"color": "#9b59b6"
-		},
-		{
-			"name": "FailBoat",
-			"image": "https://cdn.discordapp.com/avatars/137593731661430784/21fe92a03df49acea1b7eebf70fec8c6.png?size=2048",
-			"color": "#9b59b6"
-		},
-		{
-			"name": "Steam Hammer",
-			"image": "https://cdn.discordapp.com/avatars/371272259526197258/1f1d23c9fed777477a33aa0de240c908.png?size=2048",
-			"color": "#9b59b6"
-		},
-		{
-			"name": "Zaquarius",
-			"image": "https://cdn.discordapp.com/avatars/309025909439201281/fb20fa8fb8d1260b46bc4e5e75469a70.png?size=2048",
-			"color": "#9b59b6"
-		}
-	],
 	"Artists": [
 		{
 			"name": "Sbonhom1",
@@ -57,7 +57,12 @@
 			"color": "#ad1457"
 		}
 	],
-	"Translator": [
+	"Translators": [
+		{
+			"name": "𝕮𝖆𝖕𝖙𝖆𝖎𝖓 𝕸𝖊𝖑𝖎𝖔𝖉𝖆𝖘 (T: AR)",
+			"image": "https://cdn.discordapp.com/avatars/499327645746724864/7cb63dcfc46c0a17b7d81eae31d3b5b4.png?size=2048",
+			"color": "#e74c3c"
+		},
 		{
 			"name": "deeeh👻(T: PL)",
 			"image": "https://cdn.discordapp.com/avatars/152710357461368832/b4e4c261707be73aa0ac2f0638aa3073.png?size=2048",
@@ -85,7 +90,7 @@
 		},
 		{
 			"name": "adagi (T: DE)",
-			"image": "https://cdn.discordapp.com/avatars/174562458697072640/5c32957b938b2be9d525c31544f1176e.png?size=2048",
+			"image": "https://cdn.discordapp.com/avatars/174562458697072640/8f4332fb63d0f912fb5ec45e9050a77d.png?size=2048",
 			"color": "#e74c3c"
 		},
 		{
@@ -135,6 +140,11 @@
 		{
 			"name": "joemackg",
 			"image": "https://cdn.discordapp.com/avatars/432129197767393290/d2dc012827bec13c5ee5575d25490c51.png?size=2048",
+			"color": "#457f9c"
+		},
+		{
+			"name": "phuzzeeoyster",
+			"image": "https://cdn.discordapp.com/avatars/422906946186641419/537bc69730facc93a6e8e310b3aa2154.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -209,7 +219,7 @@
 		},
 		{
 			"name": "om",
-			"image": "https://cdn.discordapp.com/avatars/457757979719106570/20a5fc5d05a5361197aaaf839ec7f5d3.png?size=2048",
+			"image": "https://cdn.discordapp.com/avatars/457757979719106570/b1a8329852b156d4f0d3b21871c8c039.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -223,7 +233,7 @@
 			"color": "#457f9c"
 		},
 		{
-			"name": "dieggywegz",
+			"name": "bruv",
 			"image": "https://discordapp.com/assets/1cbd08c76f8af6dddce02c5138971129.png",
 			"color": "#457f9c"
 		},
@@ -249,7 +259,7 @@
 		},
 		{
 			"name": "1izardo",
-			"image": "https://cdn.discordapp.com/avatars/214835073973747713/054532045e5f41c10a3b50088d15ccb3.png?size=2048",
+			"image": "https://cdn.discordapp.com/avatars/214835073973747713/d4d3b447662af860f48ed3b1304ab6e0.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -278,6 +288,11 @@
 			"color": "#457f9c"
 		},
 		{
+			"name": "Justin Kruit",
+			"image": "https://cdn.discordapp.com/avatars/147057414137577472/5e4099ca5f40046f388f0c0880fddb6a.png?size=2048",
+			"color": "#457f9c"
+		},
+		{
 			"name": "Redcurse",
 			"image": "https://cdn.discordapp.com/avatars/234426179216474113/a5936d8ac8f4183971e1598f55f7439e.png?size=2048",
 			"color": "#457f9c"
@@ -290,6 +305,11 @@
 		{
 			"name": "hagjie",
 			"image": "https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png",
+			"color": "#457f9c"
+		},
+		{
+			"name": "klausklein",
+			"image": "https://cdn.discordapp.com/avatars/438528825660276757/fcb901707fa9ff217cf2911406dc800a.png?size=2048",
 			"color": "#457f9c"
 		},
 		{

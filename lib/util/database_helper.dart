@@ -370,7 +370,7 @@ class DatabaseHelper {
               current['timestamp'].compareTo(next['timestamp'])
       );
     // ...and map to a simple List<String>
-    return results.map((Map result) => result['text']).toList(growable: false).cast<String>();
+    return results.map((Map result) => result['text']).toList().reversed.toList(growable: false).cast<String>();
   }
 
   static Future<void> writeToSearchHistory(String text) async {

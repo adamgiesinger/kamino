@@ -24,6 +24,7 @@ class OtherSettingsPageState extends SettingsPageState {
 
   int _releaseVersionTrack = 0;
   bool _autoplaySourcesEnabled = false;
+  bool _hideUnreleasedPartialContent = false;
 
   static const List<String> releaseVersionTracks = [
     "Stable",
@@ -36,9 +37,15 @@ class OtherSettingsPageState extends SettingsPageState {
     // This is done for legacy reasons.
     // We would upgrade the setting but we do intent to switch back
     // to having autoplay enabled by default.
-    (Settings.manuallySelectSourcesEnabled as Future).then((data){
+    /*(Settings.manuallySelectSourcesEnabled as Future).then((data){
       setState(() {
         _autoplaySourcesEnabled = !data;
+      });
+    });*/
+
+    (Settings.hideUnreleasedPartialContent as Future).then((data){
+      setState(() {
+        _hideUnreleasedPartialContent = data;
       });
     });
 
@@ -101,6 +108,25 @@ class OtherSettingsPageState extends SettingsPageState {
         SubtitleText("Search", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
+          child: SwitchListTile(
+            activeColor: Theme.of(context).primaryColor,
+            isThreeLine: true,
+            secondary: Icon(Icons.receipt),
+            title: TitleText("Hide Partial/Unreleased Content"),
+            subtitle: Text("Filters out content that is lacking information or has not yet been released."),
+            value: _hideUnreleasedPartialContent,
+            onChanged: (bool newValue) async {
+              if (newValue != _hideUnreleasedPartialContent){
+                await (Settings.hideUnreleasedPartialContent = newValue); // ignore: await_only_futures
+                (Settings.hideUnreleasedPartialContent as Future).then(
+                  (data) => setState(() => _hideUnreleasedPartialContent = data)
+                );
+              }
+            },
+          ),
+        ),
+        Material(
+          color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.clear_all),
             title: TitleText(S.of(context).clear_search_history),
@@ -124,7 +150,7 @@ class OtherSettingsPageState extends SettingsPageState {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     ListTile(
-                      leading: Icon(Icons.looks_one),
+                      leading: Icon(Icons.swap_vert),
                       title: TitleText("Version Track"),
                       subtitle: Text(releaseVersionTracks[_releaseVersionTrack]),
                     ),
