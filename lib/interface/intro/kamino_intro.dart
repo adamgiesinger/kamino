@@ -88,7 +88,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
         );
 
         // Call handleEvent on that pointer event.
-        result.path.forEach((entry){ try { entry.target.handleEvent(pointerEvent, entry); } catch(_) {} });
+        result.path.forEach((entry) => entry.target.handleEvent(pointerEvent, entry));
 
       }
       return false;
