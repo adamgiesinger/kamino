@@ -42,7 +42,6 @@ class Interface {
       onPressed: () => showSearch(context: context, delegate: SmartSearch()),
     );
   }
-
   static void showAlert({@required BuildContext context, @required Widget title, @required List<Widget> content, bool dismissible = false, @required List<Widget> actions}){
     showDialog(
       context: context,

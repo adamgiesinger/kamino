@@ -74,7 +74,7 @@ class _ResultCardState extends State<ResultCard> {
       imageWidget = CachedNetworkImage(
         imageUrl: TMDB.IMAGE_CDN_POSTER + widget.background,
         fit: BoxFit.cover,
-        placeholder: new Image(
+        placeholder: (BuildContext context, String url) => Image(
           image: AssetImage("assets/images/no_image_detail.jpg"),
           fit: BoxFit.cover,
           height: _imageHeight,
@@ -82,7 +82,7 @@ class _ResultCardState extends State<ResultCard> {
         ),
         height: _imageHeight,
         width: _imageWidth,
-        errorWidget: new Icon(Icons.error, size: 20.0)
+        errorWidget: (BuildContext context, String url, error) => Icon(Icons.error, size: 20.0)
       );
 
     }else{

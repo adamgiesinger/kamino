@@ -383,10 +383,10 @@ class _ContentOverviewState extends State<ContentOverview> {
                 CachedNetworkImage(
                   imageUrl: TMDB.IMAGE_CDN + content.backdropPath,
                   fit: BoxFit.cover,
-                  placeholder: Container(),
+                  placeholder: (BuildContext context, String url) => Container(),
                   height: 220.0,
                   width: contextWidth,
-                  errorWidget: new Icon(Icons.error, size: 30.0)
+                  errorWidget: (BuildContext context, String url, error) => new Icon(Icons.error, size: 30.0)
                 ) :
               new Icon(Icons.error, size: 30.0)
           ),
@@ -630,7 +630,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                                       return CachedNetworkImage(
                                         height: constraints.maxHeight,
                                         width: constraints.maxHeight,
-                                        placeholder: Image.memory(kTransparentImage),
+                                        placeholder: (BuildContext context, String url) => Image.memory(kTransparentImage),
                                         imageUrl: TMDB.IMAGE_CDN +
                                             castAndCrew[index].profilePath,
                                         fit: BoxFit.cover,

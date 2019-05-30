@@ -61,10 +61,10 @@ class ContentPosterState extends State<ContentPoster> {
     Widget imageWidget = Container();
     if(widget.background != null) {
       imageWidget = new CachedNetworkImage(
-        errorWidget: new Icon(Icons.error),
+        errorWidget: (BuildContext context, String url, error) => new Icon(Icons.error),
         imageUrl: "${TMDB.IMAGE_CDN_POSTER}/${widget.background}",
         fit: widget.imageFit,
-        placeholder: Center(
+        placeholder: (BuildContext context, String url) => Center(
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(
                 Theme.of(context).primaryColor

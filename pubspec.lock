@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   auto_orientation:
     dependency: transitive
     description:
@@ -56,7 +56,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.1"
+    version: "0.8.0"
   charcode:
     dependency: transitive
     description:
@@ -224,7 +224,7 @@ packages:
       name: flutter_cache_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.0+1"
+    version: "0.3.2"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -273,7 +273,7 @@ packages:
       name: flutter_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.4"
+    version: "0.13.0+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -432,7 +432,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.1"
+    version: "0.5.0+1"
   pedantic:
     dependency: transitive
     description:
@@ -453,7 +453,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.1"
+    version: "2.3.0"
   pointycastle:
     dependency: transitive
     description:
@@ -488,7 +488,7 @@ packages:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
   rxdart:
     dependency: "direct main"
     description:
@@ -566,6 +566,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.5"
+  sqflite:
+    dependency: transitive
+    description:
+      name: sqflite
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.5"
   stack_trace:
     dependency: transitive
     description:
@@ -600,7 +607,7 @@ packages:
       name: synchronized
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.3+2"
+    version: "2.1.0"
   term_glyph:
     dependency: transitive
     description:
@@ -614,7 +621,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.5"
   transparent_image:
     dependency: "direct main"
     description:
@@ -663,7 +670,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "2.0.1"
   vector_math:
     dependency: transitive
     description:
@@ -676,7 +683,7 @@ packages:
     description:
       path: "packages/video_player"
       ref: master
-      resolved-ref: "083699cafcaab82b54a9c3b317db7c2a6157745e"
+      resolved-ref: fe9d5ff4c0badf38546e31dfd451d2d4b64e8e45
       url: "git://github.com/flutter/plugins.git"
     source: git
     version: "0.10.1+2"
@@ -707,7 +714,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.5"
+    version: "3.5.0"
   yaml:
     dependency: transitive
     description:
@@ -716,5 +723,5 @@ packages:
     source: hosted
     version: "2.1.15"
 sdks:
-  dart: ">=2.2.2 <2.4.0"
-  flutter: ">=1.5.0 <2.0.0"
+  dart: ">=2.3.0 <2.4.0"
+  flutter: ">=1.5.9-pre.94 <2.0.0"

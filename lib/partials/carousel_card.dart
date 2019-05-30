@@ -48,10 +48,10 @@ class CarouselCardState extends State<CarouselCard> {
                 child: CachedNetworkImage(
                   imageUrl: widget.model.backdropPath != null ? TMDB.IMAGE_CDN + widget.model.backdropPath : "",
                   fit: BoxFit.cover,
-                  placeholder: Container(color: Colors.black, width: width, height: height),
+                  placeholder: (BuildContext context, String url) => Container(color: Colors.black, width: width, height: height),
                   height: height,
                   width: width + 100,
-                  errorWidget: Center(child: Icon(Icons.error, size: 30.0))
+                  errorWidget: (BuildContext context, String url, error) => Center(child: Icon(Icons.error, size: 30.0))
                 )
               // height: 220.0,
               // fit: BoxFit.cover,

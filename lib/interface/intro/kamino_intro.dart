@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:async/async.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kamino/api/realdebrid.dart';
@@ -51,6 +55,69 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
 
   PageController _controller;
   bool _detailedLayoutType;
+
+  bool _handleKeyEvent(FocusNode node, RawKeyEvent event){
+    const KEY_ENTER = 1108101562391;
+
+    if(event.logicalKey != null && event.logicalKey.keyId == KEY_ENTER){
+      final renderObject = context.findRenderObject();
+      if(renderObject is RenderBox){
+        // Get the currently focused node.
+        FocusNode focusedNode = node.enclosingScope.children.first.children.where((node) => node.hasFocus).first;
+
+        // Get a list of elements at the focused node's coordinates
+        BoxHitTestResult result = BoxHitTestResult();
+        renderObject.hitTest(result, position: focusedNode.rect.center);
+
+        // Generate the appropriate pointer event.
+        PointerEvent pointerEvent;
+        if(event is RawKeyDownEvent) pointerEvent = PointerDownEvent(
+            device: 0,
+            kind: PointerDeviceKind.touch,
+            pointer: 1,
+            buttons: kPrimaryButton,
+            pressure: 1
+        );
+
+        if(event is RawKeyUpEvent) pointerEvent = PointerUpEvent(
+            device: 0,
+            kind: PointerDeviceKind.touch,
+            pointer: 1,
+            buttons: kPrimaryButton,
+            pressure: 1
+        );
+
+        // Call handleEvent on that pointer event.
+        result.path.forEach((entry){ try { entry.target.handleEvent(pointerEvent, entry); } catch(_) {} });
+
+      }
+      return false;
+    }
+
+    if(event is RawKeyDownEvent){
+      if(event.logicalKey == LogicalKeyboardKey.arrowUp){
+        node.focusInDirection(TraversalDirection.up);
+        return true;
+      }
+
+      if(event.logicalKey == LogicalKeyboardKey.arrowDown){
+        node.focusInDirection(TraversalDirection.down);
+        return true;
+      }
+
+      if(event.logicalKey == LogicalKeyboardKey.arrowLeft){
+        node.focusInDirection(TraversalDirection.left);
+        return true;
+      }
+
+      if(event.logicalKey == LogicalKeyboardKey.arrowRight){
+        node.focusInDirection(TraversalDirection.right);
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   @override
   void initState() {
@@ -597,110 +664,117 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
       return _controller.hasClients && _controller.page.round() == (_pages.length - 1);
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: new Container(),
-        backgroundColor: Theme.of(context).backgroundColor,
-        elevation: 0,
+    return DefaultFocusTraversal(
+        policy: ReadingOrderTraversalPolicy(),
+        child: FocusScope(
+            onKey: _handleKeyEvent,
+            autofocus: true,
+            child: Scaffold(
+              appBar: AppBar(
+                leading: new Container(),
+                backgroundColor: Theme.of(context).backgroundColor,
+                elevation: 0,
 
-        centerTitle: true,
-        title: Interface.generateHeaderLogo(context),
-      ),
-
-      backgroundColor: Theme.of(context).backgroundColor,
-
-      body: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (notification){
-          notification.disallowGlow();
-          return true;
-        },
-        child: IgnorePointer(
-          ignoring: !_animationController.isCompleted,
-          child: PageView.builder(
-            controller: _controller,
-            itemCount: _pages.length,
-            itemBuilder: (BuildContext context, int index){
-              return _pages[index];
-            },
-          ),
-        )
-      ),
-
-      bottomNavigationBar: AnimatedBuilder(
-        animation: _animationController,
-        builder: (BuildContext context, Widget child) => IgnorePointer(
-          ignoring: !_fadeInAnimation.isCompleted,
-          child: Opacity(
-            opacity: _fadeInTween.evaluate(_fadeInAnimation),
-            child: Container(
-              child: child,
-            )
-          ),
-        ),
-
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              FlatButton(
-                onPressed: (){
-                  if(onFirstPage()){
-                    Navigator.of(context).pop();
-                    Settings.initialSetupComplete = true;
-
-                    // Perform OTA check now.
-                    if(widget.then != null) widget.then();
-                  }
-                  else _controller.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-                },
-                highlightColor: Colors.transparent,
-                child: Text(onFirstPage() ? S.of(context).skip : S.of(context).back, style: TextStyle(
-                    fontSize: 16
-                )),
-                padding: EdgeInsets.symmetric(vertical: 15),
-                materialTapTargetSize: MaterialTapTargetSize.padded,
+                centerTitle: true,
+                title: Interface.generateHeaderLogo(context),
               ),
 
-              DotsIndicator(
-                position: _controller.hasClients ? _controller.page.round() : _controller.initialPage,
-                decorator: DotsDecorator(
-                  activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-                  activeColor: Theme.of(context).primaryColor,
-                  activeSize: const Size(18.0, 9.0),
+              backgroundColor: Theme.of(context).backgroundColor,
+
+              body: NotificationListener<OverscrollIndicatorNotification>(
+                  onNotification: (notification){
+                    notification.disallowGlow();
+                    return true;
+                  },
+                  child: IgnorePointer(
+                    ignoring: !_animationController.isCompleted,
+                    child: PageView.builder(
+                      controller: _controller,
+                      itemCount: _pages.length,
+                      itemBuilder: (BuildContext context, int index){
+                        return _pages[index];
+                      },
+                    ),
+                  )
+              ),
+
+              bottomNavigationBar: AnimatedBuilder(
+                animation: _animationController,
+                builder: (BuildContext context, Widget child) => IgnorePointer(
+                  ignoring: !_fadeInAnimation.isCompleted,
+                  child: Opacity(
+                      opacity: _fadeInTween.evaluate(_fadeInAnimation),
+                      child: Container(
+                        child: child,
+                      )
+                  ),
                 ),
-                dotsCount: _pages.length
+
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: (){
+                          if(onFirstPage()){
+                            Navigator.of(context).pop();
+                            Settings.initialSetupComplete = true;
+
+                            // Perform OTA check now.
+                            if(widget.then != null) widget.then();
+                          }
+                          else _controller.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                        },
+                        highlightColor: Colors.transparent,
+                        child: Text(onFirstPage() ? S.of(context).skip : S.of(context).back, style: TextStyle(
+                            fontSize: 16
+                        )),
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        materialTapTargetSize: MaterialTapTargetSize.padded,
+                      ),
+
+                      DotsIndicator(
+                          position: _controller.hasClients ? _controller.page.round() : _controller.initialPage,
+                          decorator: DotsDecorator(
+                            activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+                            activeColor: Theme.of(context).primaryColor,
+                            activeSize: const Size(18.0, 9.0),
+                          ),
+                          dotsCount: _pages.length
+                      ),
+
+                      new FlatButton(
+                        onPressed: _pages[_controller.hasClients ? _controller.page.round() : _controller.initialPage]._canProceed() ? (){
+                          // DONE BUTTON?: onLastPage
+                          if(onLastPage()){
+                            // Write settings.
+                            Settings.homepageCategories = jsonEncode(_selectedCategories);
+                            Settings.initialSetupComplete = true;
+
+                            Navigator.of(context).pop();
+
+                            // Perform OTA check now.
+                            if(widget.then != null) widget.then();
+
+                            return;
+                          }
+
+                          _controller.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+                        } : null,
+                        highlightColor: Colors.transparent,
+                        child: Text(onLastPage() ? S.of(context).lets_go : S.of(context).next, style: TextStyle(
+                            fontSize: 16
+                        )),
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        materialTapTargetSize: MaterialTapTargetSize.padded,
+                      )
+                    ],
+                  ),
+                ),
               ),
-
-              new FlatButton(
-                onPressed: _pages[_controller.hasClients ? _controller.page.round() : _controller.initialPage]._canProceed() ? (){
-                  // DONE BUTTON?: onLastPage
-                  if(onLastPage()){
-                    // Write settings.
-                    Settings.homepageCategories = jsonEncode(_selectedCategories);
-                    Settings.initialSetupComplete = true;
-
-                    Navigator.of(context).pop();
-
-                    // Perform OTA check now.
-                    if(widget.then != null) widget.then();
-
-                    return;
-                  }
-
-                  _controller.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-                } : null,
-                highlightColor: Colors.transparent,
-                child: Text(onLastPage() ? S.of(context).lets_go : S.of(context).next, style: TextStyle(
-                    fontSize: 16
-                )),
-                padding: EdgeInsets.symmetric(vertical: 15),
-                materialTapTargetSize: MaterialTapTargetSize.padded,
-              )
-            ],
-          ),
-        ),
-      ),
+            )
+        )
     );
   }
 
