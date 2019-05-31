@@ -306,10 +306,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                             leading: Icon(Icons.style),
                             isThreeLine: true,
                             title: TitleText(S.of(context).choose_a_theme),
-                            subtitle: Container(
-                              height: 50,
-                              child: AutoSizeText(S.of(context).choose_a_theme_description)
-                            ),
+                            subtitle: Text(S.of(context).choose_a_theme_description),
                           ),
                         ),
 

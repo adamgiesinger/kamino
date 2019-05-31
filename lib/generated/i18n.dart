@@ -126,6 +126,7 @@ class S implements WidgetsLocalizations {
   String get if_this_problem_persists_please_contact_a_member_of_staff => "If this problem persists, please contact a member of staff on Discord.";
   String get information => "Information";
   String get install => "Install";
+  String get intentionally_throws_an_error_to_test_error_handling => "Intentionally throws an error to test error handling.";
   String get is_your_connection_too_slow => "Is your connection too slow?";
   String get it_seems_this_copy_of_the_app_is_out_of => "It seems this copy of the app is out of date...";
   String get language_settings => "Language Settings";
@@ -226,6 +227,7 @@ class S implements WidgetsLocalizations {
   String get theme => "Theme";
   String get this_disables_all_warnings_regarding_potential_security_concerns => "This disables all warnings regarding potential security concerns.";
   String get this_feature_has_not_yet_been_implemented => "This feature has not yet been implemented.";
+  String get throw_error => "Throw Error";
   String get trakt_authenticator => "Trakt Authenticator";
   String get trakt_description => "Automatically track what you're watching, synchronise playlists across devices and more...";
   String get trakt_favorites_sync_detailed => "Please wait while we synchronize your favorites with Trakt. This dialog will close automatically when synchronization is complete.";
@@ -255,6 +257,7 @@ class S implements WidgetsLocalizations {
   String get we_recommend_that_you_do_not_enable_this_option_unless => "We recommend that you do not enable this option unless you are positive that you know what you're doing.";
   String get we_will_announce_it_on_our_social_pages_when_its => "We will announce it on our social pages when it's ready.";
   String get welcome_to_apollo_skyspace => "Welcome to Apollo Skyspace!";
+  String get well_dont_say_you_didnt_ask => "Well don't say you didn't ask!";
   String get whats_your_favorite_color => "What's your favorite color?";
   String get whats_your_favorite_color_description => "Tap to set the accent color; it's used to give a splash of color to buttons, icons, etc...";
   String get which_do_you_prefer => "Which do you prefer?";

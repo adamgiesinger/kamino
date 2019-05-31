@@ -112,7 +112,7 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
                   fontSize: 18
               )),
               Container(child: Divider(), margin: EdgeInsets.symmetric(vertical: 10)),
-              Container(child: Text("$appName v${packageInfo.version} \u2022 Build ${packageInfo.buildNumber}\n")),
+              Container(child: Text("$appName v${packageInfo.version} \u2022 ${KaminoAppState._getInstance().getPrimaryVendorConfig().getName()} Build ${packageInfo.buildNumber}\n", textAlign: TextAlign.center)),
               Container(child: Text(error.toString() + "\n")),
               RichText(
                 text: TextSpan(
@@ -229,7 +229,15 @@ class KaminoAppState extends State<KaminoApp> {
     });
   }
 
+  // This is used in [main.dart] only, as a fallback.
+  static KaminoAppState _instance;
+  static KaminoAppState _getInstance(){
+    return _instance;
+  }
+
   KaminoAppState(){
+    _instance = this;
+
     // Load vendor and theme configs.
     _vendorConfigs = ApolloVendor.getVendorConfigs();
     _themeConfigs = ApolloVendor.getThemeConfigs();

@@ -173,7 +173,9 @@ class OtherSettingsPageState extends SettingsPageState {
                               min: 0,
                               max: 2,
                               divisions: 2,
-                              label: releaseVersionTracks[_releaseVersionTrack]
+                              label: releaseVersionTracks[_releaseVersionTrack],
+                              activeColor: Theme.of(context).primaryColor,
+                              inactiveColor: Theme.of(context).primaryColor.withOpacity(0.3),
                           ),
 
                           Container(

@@ -299,5 +299,8 @@
   "apollo_skyspace_is_still_under_development": "Apollo Skyspace is still under development.",
   "we_will_announce_it_on_our_social_pages_when_its": "We will announce it on our social pages when it's ready.",
   "home": "Home",
-  "open_discord": "Open Discord"
+  "open_discord": "Open Discord",
+  "throw_error": "Throw Error",
+  "intentionally_throws_an_error_to_test_error_handling": "Intentionally throws an error to test error handling.",
+  "well_dont_say_you_didnt_ask": "Well don't say you didn't ask!"
 }
