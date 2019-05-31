@@ -48,11 +48,20 @@ class SmartSearch extends SearchDelegate<String> {
       primaryColor: Theme.of(context).backgroundColor,
       textTheme: TextTheme(
         title: TextStyle(
-          fontFamily: "GlacialIndifference",
+          fontFamily: 'GlacialIndifference',
           fontSize: 19.0,
-          color: Theme.of(context).textTheme.body1.color
+          color: Colors.white
         ),
       ),
+      // These values are not yet used.
+      // We're waiting on https://github.com/flutter/flutter/pull/30388
+      // We adjusted this in the application theme instead.
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(
+          color: Colors.grey[400]
+        )
+      ),
+      cursorColor: Theme.of(context).primaryColor
     );
   }
 

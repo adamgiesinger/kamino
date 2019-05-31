@@ -58,7 +58,7 @@ class _DarkVendorTheme extends ThemeConfiguration {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
         hintStyle: TextStyle(
-          color: _primaryColor
+          color: Colors.grey[400]
         )
       )
     );
@@ -117,7 +117,7 @@ class _LightVendorTheme extends ThemeConfiguration {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
         hintStyle: TextStyle(
-          color: _primaryColor
+          color: Colors.grey[400]
         )
       )
     );
@@ -174,7 +174,7 @@ class _BlackVendorTheme extends ThemeConfiguration {
       inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(borderSide: BorderSide(color: _primaryColor)),
           hintStyle: TextStyle(
-              color: _primaryColor
+              color: Colors.grey[400]
           )
       )
     );
