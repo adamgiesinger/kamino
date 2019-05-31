@@ -180,7 +180,12 @@ class _SearchResultViewState extends State<SearchResultView> {
     ].contains(null)) return true;
 
     // Yield if released in the future.
-    return (DateTime.parse(resultItem.year).compareTo(DateTime.now()) > 0);
+    try {
+      return (DateTime.parse(resultItem.year).compareTo(DateTime.now()) > 0);
+    }catch(ex){
+      // Invalid date format
+      return false;
+    }
   }
 
   Widget _listPage(){
