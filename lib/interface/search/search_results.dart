@@ -237,15 +237,12 @@ class _SearchResultViewState extends State<SearchResultView> {
           ),
           itemCount: resultsList.length,
           itemBuilder: (BuildContext context, int index){
-            return InkWell(
+            return ContentPoster(
+              background: resultsList[index].poster_path,
+              name: resultsList[index].name,
+              releaseDate: resultsList[index].year,
+              mediaType: resultsList[index].mediaType,
               onTap: () => _openContentScreen(context, index),
-              splashColor: Colors.white,
-              child: ContentPoster(
-                background: resultsList[index].poster_path,
-                name: resultsList[index].name,
-                releaseDate: resultsList[index].year,
-                mediaType: resultsList[index].mediaType
-              ),
             );
           }
       );
