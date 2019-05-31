@@ -5,6 +5,7 @@ TRAKT_SECRET="$3"
 CLAWS_URL_BETA="$4"
 CLAWS_KEY_BETA="$5"
 VENDOR_NAME="$6"
+TRAVIS_BUILD_NUMBER="$7"
 
 cat <<____HERE
 /*
@@ -20,7 +21,7 @@ class OfficialVendorConfiguration extends VendorConfiguration {
   OfficialVendorConfiguration() : super(
       /// The name of the vendor. If you are developing this independently,
       /// use your GitHub name.
-      name: "`echo $VENDOR_NAME`",
+      name: "`echo $VENDOR_NAME` (#`echo $TRAVIS_BUILD_NUMBER`)",
 
       /// These next options are not mandatory unless this configuration is the
       /// primary configuration.
