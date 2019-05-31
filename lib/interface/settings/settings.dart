@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:kamino/interface/settings/page_advanced.dart';
 import 'package:kamino/interface/settings/page_credits.dart';
 import 'package:kamino/interface/settings/page_extensions.dart';
 import 'package:kamino/interface/settings/page_playback.dart';
+import 'package:kamino/util/settings.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:kamino/main.dart';
@@ -23,14 +23,6 @@ class SettingsView extends StatefulWidget {
   @override
   _SettingsViewState createState() => _SettingsViewState();
 
-  // DO NOT TRANSLATE!
-  static final buildTypes = [
-    "Pre-Release",
-    "Beta",
-    "Release Candidate",
-    "Stable"
-  ];
-
 }
 
 class _SettingsViewState extends State<SettingsView> {
@@ -44,19 +36,15 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   void initState() {
-    _fetchPackageInfo();
+    (() async {
+      PackageInfo info = await SettingsManager.getPackageInfo();
+      setState(() {
+        _packageInfo = info;
+      });
+    })();
 
     super.initState();
   }
-
-  Future<Null> _fetchPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
-  }
-
-  int versionTapCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -295,8 +283,8 @@ class _SettingsViewState extends State<SettingsView> {
                     Material(
                       color: Theme.of(context).backgroundColor,
                       child: ListTile(
-                        title: TitleText("Credits"),
-                        subtitle: Text("This app is brought to you with \u2764 by these awesome people!"),
+                        title: TitleText(S.of(context).credits),
+                        subtitle: Text(S.of(context).credits_description),
                         leading: new Icon(Icons.people),
                         enabled: true,
                         isThreeLine: true,
@@ -317,7 +305,7 @@ class _SettingsViewState extends State<SettingsView> {
   String _getBuildType(){
     int buildType = int.tryParse(_packageInfo.buildNumber.split('').last);
 
-    if(buildType != null) return SettingsView.buildTypes[buildType];
+    if(buildType != null) return SettingsManager.buildTypes[buildType];
     return S.of(context).unknown;
   }
 

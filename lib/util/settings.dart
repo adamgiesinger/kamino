@@ -1,3 +1,4 @@
+import 'package:kamino/main.dart';
 import 'package:meta/meta.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,6 +56,27 @@ class SettingsManager {
       print("$key -> " + sharedPreferences.get(key).toString());
     });
   }
+
+  static Future<PackageInfo> getPackageInfo() async {
+    try {
+      return await PackageInfo.fromPlatform();
+    }catch(ex){
+      return new PackageInfo(
+          appName: appName,
+          packageName: 'Unknown',
+          version: 'Unknown',
+          buildNumber: 'Unknown'
+      );
+    }
+  }
+
+  // DO NOT TRANSLATE!
+  static final buildTypes = [
+    "Pre-Release",
+    "Beta",
+    "Release Candidate",
+    "Stable"
+  ];
 
 }
 

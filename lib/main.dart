@@ -24,13 +24,13 @@ import 'package:flutter/services.dart';
 import 'package:kamino/vendor/index.dart';
 
 import 'package:kamino/interface/settings/settings.dart';
+import 'package:package_info/package_info.dart';
 
 const appName = "ApolloTV";
 const appCastID = "6569632D";
 Logger log;
 
 const platform = const MethodChannel('xyz.apollotv.kamino/init');
-
 class PlatformType {
   static const GENERAL = 0;
   static const TV = 1;
@@ -45,8 +45,7 @@ class ErrorScaffold extends StatelessWidget {
 
 Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false, cancelPop = false}) async {
   try {
-    print(error);
-    print(stacktrace);
+    PackageInfo packageInfo = await SettingsManager.getPackageInfo();
 
     OverlayState overlay = KaminoApp.navigatorKey.currentState.overlay;
     if(overlay == null || overlay.context == null || !shouldShowDialog) return;
@@ -113,6 +112,7 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
                   fontSize: 18
               )),
               Container(child: Divider(), margin: EdgeInsets.symmetric(vertical: 10)),
+              Container(child: Text("$appName v${packageInfo.version} \u2022 Build ${packageInfo.buildNumber}\n")),
               Container(child: Text(error.toString() + "\n")),
               RichText(
                 text: TextSpan(
@@ -130,12 +130,12 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
         actions: <Widget>[
           FlatButton(
             textColor: Theme.of(context).textTheme.button.color,
-            child: Text("Open Discord"),
+            child: Text(S.of(context).open_discord),
             onPressed: () => Interface.launchURL("https://discord.gg/euyQRWs"),
           ),
           FlatButton(
             textColor: Theme.of(context).textTheme.button.color,
-            child: Text("Dismiss"),
+            child: Text(S.of(context).dismiss),
             onPressed: () => Navigator.of(context).pop(),
           )
         ],
@@ -574,27 +574,27 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
                 return [
                   PopupMenuItem<String>(
                     value: 'discord',
-                    child: Container(child: Text("Discord"), padding: EdgeInsets.only(right: 50)),
+                    child: Container(child: Text(S.of(context).discord), padding: EdgeInsets.only(right: 50)),
                   ),
 
                   PopupMenuItem<String>(
                     value: 'blog',
-                    child: Container(child: Text("Blog"), padding: EdgeInsets.only(right: 50))
+                    child: Container(child: Text(S.of(context).blog), padding: EdgeInsets.only(right: 50))
                   ),
 
                   PopupMenuItem<String>(
                     value: 'privacy',
-                    child: Container(child: Text("Privacy"), padding: EdgeInsets.only(right: 50))
+                    child: Container(child: Text(S.of(context).privacy), padding: EdgeInsets.only(right: 50))
                   ),
 
                   PopupMenuItem<String>(
                     value: 'donate',
-                    child: Container(child: Text("Donate"), padding: EdgeInsets.only(right: 50))
+                    child: Container(child: Text(S.of(context).donate), padding: EdgeInsets.only(right: 50))
                   ),
 
                   PopupMenuItem<String>(
                     value: 'settings',
-                    child: Container(child: Text("Settings"), padding: EdgeInsets.only(right: 50))
+                    child: Container(child: Text(S.of(context).settings), padding: EdgeInsets.only(right: 50))
                   )
                 ];
               }
@@ -627,22 +627,22 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
 
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              title: Text("Home"),
+              title: Text(S.of(context).home),
               icon: Icon(Icons.home)
             ),
 
             BottomNavigationBarItem(
-              title: Text("TV Shows"),
+              title: Text(S.of(context).tv_shows),
               icon: Icon(Icons.live_tv)
             ),
 
             BottomNavigationBarItem(
-              title: Text("Movies"),
+              title: Text(S.of(context).movies),
               icon: Icon(Icons.local_movies)
             ),
 
             BottomNavigationBarItem(
-              title: Text("Favorites"),
+              title: Text(S.of(context).favorites),
               icon: Icon(Icons.favorite)
             ),
           ]

@@ -105,15 +105,15 @@ class OtherSettingsPageState extends SettingsPageState {
           ),
         ),*/
 
-        SubtitleText("Search", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+        SubtitleText(S.of(context).search, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: SwitchListTile(
             activeColor: Theme.of(context).primaryColor,
             isThreeLine: true,
             secondary: Icon(Icons.receipt),
-            title: TitleText("Hide Partial/Unreleased Content"),
-            subtitle: Text("Filters out content that is lacking information or has not yet been released."),
+            title: TitleText(S.of(context).hide_partial_unreleased_content),
+            subtitle: Text(S.of(context).hide_partial_unreleased_content_description),
             value: _hideUnreleasedPartialContent,
             onChanged: (bool newValue) async {
               if (newValue != _hideUnreleasedPartialContent){
@@ -141,7 +141,7 @@ class OtherSettingsPageState extends SettingsPageState {
 
         if(Platform.isAndroid)
           ...[
-            SubtitleText("Updates", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+            SubtitleText(S.of(context).updates, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
             Container(
               margin: EdgeInsets.only(bottom: 10),
               child: Material(
@@ -151,7 +151,7 @@ class OtherSettingsPageState extends SettingsPageState {
                   children: <Widget>[
                     ListTile(
                       leading: Icon(Icons.swap_vert),
-                      title: TitleText("Version Track"),
+                      title: TitleText(S.of(context).version_track),
                       subtitle: Text(releaseVersionTracks[_releaseVersionTrack]),
                     ),
 
@@ -188,7 +188,7 @@ class OtherSettingsPageState extends SettingsPageState {
                                               style: TextStyle(fontWeight: FontWeight.bold)
                                           ),
                                           TextSpan(
-                                              text: "When a beta build is well-tested and is, to the best of our knowledge bug-free, the build will graduate to a stable release."
+                                              text: S.of(context).version_track_stable_description
                                           )
                                         ]
                                     )
@@ -204,7 +204,7 @@ class OtherSettingsPageState extends SettingsPageState {
                                               style: TextStyle(fontWeight: FontWeight.bold)
                                           ),
                                           TextSpan(
-                                              text: "Once a few development-build features are complete, they will be cherry-picked and released as beta builds."
+                                              text: S.of(context).version_track_beta_description
                                           )
                                         ]
                                     )
@@ -220,7 +220,7 @@ class OtherSettingsPageState extends SettingsPageState {
                                               style: TextStyle(fontWeight: FontWeight.bold)
                                           ),
                                           TextSpan(
-                                              text: "As soon as a feature has been pushed to the master branch a development build will be automatically generated and released."
+                                              text: S.of(context).version_track_development_description
                                           )
                                         ]
                                     )
@@ -239,7 +239,7 @@ class OtherSettingsPageState extends SettingsPageState {
 
         Divider(),
 
-        SubtitleText("Localization", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+        SubtitleText(S.of(context).localization, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(

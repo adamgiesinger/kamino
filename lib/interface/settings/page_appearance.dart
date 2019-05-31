@@ -41,7 +41,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
       physics: widget.isPartial ? NeverScrollableScrollPhysics() : null,
       shrinkWrap: widget.isPartial ? true : false,
       children: <Widget>[
-        SubtitleText("Theme", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+        SubtitleText(S.of(context).theme, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
 
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
@@ -70,7 +70,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
           ),
         ),
 
-        SubtitleText("Layout", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 0)),
+        SubtitleText(S.of(context).layout, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 0)),
 
         Container(
           child: Column(
@@ -157,8 +157,8 @@ void showThemeChoice(BuildContext context, KaminoAppState appState){
                         Navigator.of(context).pop();
                         appState.setActiveTheme(theme.getId());
                       },
-                      title: TitleText("${theme.getName()}"),
-                      subtitle: Text("${theme.getAuthor()}")
+                      title: TitleText(theme.getName()),
+                      subtitle: Text(theme.getAuthor())
                   );
                 }
             ),

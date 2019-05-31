@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/skyspace/tv_remote.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/vendor/themes/OfficialVendorThemes.dart';
@@ -168,14 +169,14 @@ class SkyspaceState extends State<Skyspace> {
                 Container(
                   margin: EdgeInsets.only(top: 20),
                   child: TitleText(
-                      "Houston, Stand by...",
+                      S.of(context).houston_stand_by,
                       textColor: Colors.white,
                       fontSize: 20
                   )
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 10),
-                  child: Text("Apollo Skyspace is still under development.\nWe will announce it on our social pages when it's ready."),
+                  child: Text(S.of(context).apollo_skyspace_is_still_under_development + "\n" + S.of(context).we_will_announce_it_on_our_social_pages_when_its),
                 )
               ],
             )

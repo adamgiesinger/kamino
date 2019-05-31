@@ -57,10 +57,10 @@ class CreditsSettingsPageState extends SettingsPageState {
                 children: <Widget>[
                   Image.asset("assets/images/logo.png", height: 48),
                   Container(margin: EdgeInsets.symmetric(vertical: 5)),
-                  TitleText("Thank you!", fontSize: 22),
+                  TitleText(S.of(context).thank_you, fontSize: 22),
                   Container(margin: EdgeInsets.symmetric(vertical: 5)),
                   Text(
-                    "ApolloTV is a community effort and without these people, this app wouldn't exist. For everyone's contribution, no matter how small, I am extremely grateful.\n\n~NBTX",
+                    S.of(context).thank_you_notice,
                     style: TextStyle(
                       color: Colors.grey[400]
                     )

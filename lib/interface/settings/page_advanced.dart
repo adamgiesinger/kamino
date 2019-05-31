@@ -93,9 +93,9 @@ class AdvancedSettingsPageState extends SettingsPageState {
                             !_disableSecurityMessages ? Container(
                               margin: EdgeInsets.symmetric(vertical: 10),
                               child: RichText(text: TextSpan(children: [
-                                TextSpan(text: "SECURITY RISK:", style: TextStyle(fontWeight: FontWeight.bold)),
+                                TextSpan(text: S.of(context).security_risk, style: TextStyle(fontWeight: FontWeight.bold)),
                                 TextSpan(text: " "),
-                                TextSpan(text: "Using unofficial servers can expose your IP address. If this is a concern, you should use a VPN.")
+                                TextSpan(text: S.of(context).using_unofficial_servers_can_expose_your_ip_address)
                               ], style: TextStyle(
                                   color: Colors.red
                               ))),
@@ -252,12 +252,17 @@ class AdvancedSettingsPageState extends SettingsPageState {
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
             leading: Icon(Icons.code),
-            title: TitleText("Run Command"),
+            title: TitleText(S.of(context).run_command),
             enabled: true,
             onTap: () async {
-              Interface.showSnackbar("Waiting for input...", context: context);
-              KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
-              application.getPrimaryVendorConfig().beginExecCommand('init_debug');
+              Interface.showSnackbar(S.of(context).waiting_for_input, context: context);
+              
+              try {
+                KaminoAppState application = context.ancestorStateOfType(
+                    const TypeMatcher<KaminoAppState>());
+                application.getPrimaryVendorConfig().beginExecCommand(
+                    'init_debug');
+              }catch(_){}
             }
           )
         ),
@@ -360,22 +365,22 @@ class AdvancedSettingsPageState extends SettingsPageState {
           ),
         ) : Container(),
 
-        SubtitleText("Security", padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
+        SubtitleText(S.of(context).security, padding: EdgeInsets.symmetric(vertical: 30, horizontal: 15).copyWith(bottom: 5)),
 
         Material(
             color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
             child: SwitchListTile(
               activeColor: Theme.of(context).primaryColor,
               secondary: Icon(Icons.warning),
-              title: TitleText("Disable Security Warnings"),
+              title: TitleText(S.of(context).disable_security_warnings),
               subtitle: RichText(text: TextSpan(
                 children: [
                   TextSpan(text: "\n"),
-                  TextSpan(text: "This disables all warnings regarding potential security concerns."),
+                  TextSpan(text: S.of(context).this_disables_all_warnings_regarding_potential_security_concerns),
                   if(!_disableSecurityMessages)
-                    TextSpan(text: "\n\nWe recommend that you do not enable this option unless you are positive that you know what you're doing.", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red))
+                    TextSpan(text: "\n\n" + S.of(context).we_recommend_that_you_do_not_enable_this_option_unless, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red))
                   else
-                    TextSpan(text: "\n\nSecurity warnings have been disabled!", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red))
+                    TextSpan(text: "\n\n" + S.of(context).security_warnings_have_been_disabled, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red))
                 ]
               )),
               value: _disableSecurityMessages,
