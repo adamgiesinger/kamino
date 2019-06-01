@@ -95,6 +95,10 @@ android/key.properties
 # VSCode
 .vscode/*
 
+# NodeJS
+node_modules
+package-lock.json
+
 # Language Files
 # Commenting as doing otherwise means people without Flutter i18n Jetbrains
 # plugin are unable to build the project.

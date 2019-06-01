@@ -78,5 +78,4 @@ after_failure:
 cache:
   directories:
     - $HOME/.pub-cache
-    - /opt/android
     - node_modules

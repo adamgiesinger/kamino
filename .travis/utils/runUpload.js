@@ -1,4 +1,4 @@
-const createWTClient = require('/usr/local/lib/node_modules/@wetransfer/js-sdk');
+const createWTClient = require('@wetransfer/js-sdk');
 
 const commit = process.env.TRAVIS_COMMIT.substring(0, 6)
 const jobName = process.env.TRAVIS_JOB_NUMBER
