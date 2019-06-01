@@ -1,3 +1,4 @@
+const fs = require('fs');
 const createWTClient = require('@wetransfer/js-sdk');
 
 const commit = process.env.TRAVIS_COMMIT.substring(0, 6);

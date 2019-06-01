@@ -4571,7 +4571,7 @@ class zh extends S {
   @override
   String version_x(String version) => "版本$version";
   @override
-  String general_error(String ) => "发生错误（$ error）\n请报告此错误.";
+  String general_error(String error) => "发生错误 ($error)\n请报告此错误.";
   @override
   String n_ratings(String n) => "$n评级";
   @override
@@ -4579,7 +4579,7 @@ class zh extends S {
   @override
   String disconnected_from_device(String device) => "断开连接$device";
   @override
-  String seasons_n(String n）) => "四季（$n）";
+  String seasons_n(String n) => "四季 ($n)";
   @override
   String unknown_x(String x) => "未知$x";
   @override
