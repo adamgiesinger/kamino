@@ -1,11 +1,11 @@
 const createWTClient = require('@wetransfer/js-sdk');
 
-const commit = process.env.TRAVIS_COMMIT.substring(0, 6)
-const jobName = process.env.TRAVIS_JOB_NUMBER
-const buildName = process.env.TRAVIS_BUILD_NUMBER
-const title = process.env.COMMIT_SUBJECT
-const author = process.env.AUTHOR_NAME
-const message = `Job: ${jobName}, Build: ${buildName}\n\n${title} (${author})`
+const commit = process.env.TRAVIS_COMMIT.substring(0, 6);
+const jobName = process.env.TRAVIS_JOB_NUMBER;
+const buildName = process.env.TRAVIS_BUILD_NUMBER;
+const title = process.env.COMMIT_SUBJECT;
+const author = process.env.AUTHOR_NAME;
+const message = `Job: ${jobName}, Build: ${buildName}\n\n${title} (${author})`;
 
 (async function(){
   const wtClient = await createWTClient(process.env.WT_API_KEY);

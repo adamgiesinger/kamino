@@ -4589,7 +4589,7 @@ class zh extends S {
   @override
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName无法使用Trakt.tv进行身份验证.";
   @override
-  String an_error_occurred_whilst_communicating_with_claws_detailed(String error）) => "与Claws通信时发生错误.（$error）";
+  String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "与Claws通信时发生错误. ($error)";
   @override
   String customize_appearance_description(String appName) => "$appName就是自定义.让我们开始选择你最喜欢的主题吧！";
   @override
@@ -4597,7 +4597,7 @@ class zh extends S {
   @override
   String now_connected_to_device(String device) => "现在连接到$device";
   @override
-  String an_error_occurred_whilst_deauthenticating_with_trakttv(String ERRORCODE）) => "使用Trakt.tv取消验证时发生错误.（$ERRORCODE）.";
+  String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "使用Trakt.tv取消验证时发生错误. ($errorCode).";
   @override
   String real_debrid_n_sources(String n) {
     switch (n) {
