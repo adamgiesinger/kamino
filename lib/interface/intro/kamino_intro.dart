@@ -724,7 +724,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                           else _controller.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
                         },
                         highlightColor: Colors.transparent,
-                        child: Text(onFirstPage() ? S.of(context).skip : S.of(context).back, style: TextStyle(
+                        child: Text(onFirstPage() ? S.of(context).skip.toUpperCase() : S.of(context).back.toUpperCase(), style: TextStyle(
                             fontSize: 16
                         )),
                         padding: EdgeInsets.symmetric(vertical: 15),
@@ -760,7 +760,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                           _controller.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
                         } : null,
                         highlightColor: Colors.transparent,
-                        child: Text(onLastPage() ? S.of(context).lets_go : S.of(context).next, style: TextStyle(
+                        child: Text(onLastPage() ? S.of(context).lets_go : S.of(context).next.toUpperCase(), style: TextStyle(
                             fontSize: 16
                         )),
                         padding: EdgeInsets.symmetric(vertical: 15),

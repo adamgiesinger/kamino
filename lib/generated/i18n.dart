@@ -2335,9 +2335,15 @@ class sv extends S {
   @override
   String get set_primary_color => "Välj primär färg...";
   @override
+  String get throw_error => "Avlös Fel";
+  @override
   String get playback => "Uppspelning";
   @override
   String get released => "Släppt";
+  @override
+  String get recommended_movies => "Rekommenderade Filmer";
+  @override
+  String get welcome_to_apollo_skyspace => "Välkommen till Apollo Skyspace!";
   @override
   String get create_profile => "Skapa Profil";
   @override
@@ -2353,11 +2359,19 @@ class sv extends S {
   @override
   String get general_application_settings => "Allmänna applikationsinställningar.";
   @override
+  String get thank_you => "Tack!";
+  @override
+  String get see_all => "Se Alla";
+  @override
   String get is_your_connection_too_slow => "Är din uppkoppling för långsam?";
   @override
   String get an_error_occurred => "Ett fel har inträffat.";
   @override
   String get miscellaneous => "DIVERSE";
+  @override
+  String get houston_stand_by => "Houston, Vänta...";
+  @override
+  String get source_autoplay_description => "Väljer automatiskt en källa att spela upp istället för att visa en dialog som innehåller listan av källor.";
   @override
   String get grid_layout => "Rutnätslayout";
   @override
@@ -2365,9 +2379,13 @@ class sv extends S {
   @override
   String get connect_your_trakt_account => "Anslut ditt Trakt konto";
   @override
+  String get search => "Sök";
+  @override
   String get with_thanks => "Med tack...";
   @override
   String get popularity => "Popularitet";
+  @override
+  String get connected_trakt_account => "Trakt konto anslutet";
   @override
   String get default_ => "Default";
   @override
@@ -2379,9 +2397,15 @@ class sv extends S {
   @override
   String get whats_your_favorite_color_description => "Tryck för att sätta accentfärgen; den är använd för att ge en skvätt färg till knappar, ikoner, etc...";
   @override
+  String get set => "Sätt";
+  @override
   String get select_language => "Välj Språk...";
   @override
   String get saving_content_information => "Sparar föremålsinformation...";
+  @override
+  String get security_risk => "SÄKERHETSRISK:";
+  @override
+  String get apollo_skyspace_is_still_under_development => "Apollo Skyspace är fortfarande under utveckling.";
   @override
   String get error_loading_search => "Well this is awkward... Ett fel har uppstått under laddningen av dina sökresultat.";
   @override
@@ -2395,19 +2419,27 @@ class sv extends S {
   @override
   String get error_loading_launchpad => "Nämen, detta är pinsamt... Ett fel har uppstått under laddningen av din launchpad.";
   @override
-  String get cast_and_crew => "Personal";
+  String get cast_and_crew => "Team";
   @override
   String get up_to_date => "Appen är redan uppdaterad. Kom tillbaka om 1 - 3 veckor.";
+  @override
+  String get information => "Information";
+  @override
+  String get play_trailer => "Se Trailer";
   @override
   String get general_settings => "Allmänna Inställningar";
   @override
   String get boost_your_experience => "FÖRBÄTTRA DIN UPPLEVELSE";
+  @override
+  String get disable_security_warnings => "Inaktivera Säkerhetsvarningar";
   @override
   String get removed_from_favorites => "Borttagen från favoriterna";
   @override
   String get change_theme => "Ändra Tema...";
   @override
   String get the_server_failed_to_verify_the_apps_integrity => "Servern misslyckades med att verifiera appens integritet.";
+  @override
+  String get open_discord => "Öppna Discord";
   @override
   String get disconnect_your_realdebrid_account => "Koppla bort ditt Real-Debrid konto";
   @override
@@ -2423,6 +2455,8 @@ class sv extends S {
   @override
   String get authentication_successful => "Autentisering Lyckades";
   @override
+  String get customize_your_launchpad => "Förändra din Launchpad";
+  @override
   String get the_url_must_be_valid_and_include_a_trailing_ => "URL måste vara giltig och inkludera en efterföljning /.";
   @override
   String get editors_choice => "Redigerarens Val";
@@ -2435,15 +2469,31 @@ class sv extends S {
   @override
   String get clears_all_application_settings => "Tar bort alla applikations-inställningar.";
   @override
+  String get discord => "Discord";
+  @override
   String get success => "Succé!";
   @override
   String get name => "Namn";
   @override
+  String get copy_to_clipboard => "Kopiera till Urklipp";
+  @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Om detta problem fortsätter, kontakta vänligen en personal på Discord.";
+  @override
+  String get next => "Nästa";
   @override
   String get cast_settings => "Cast Inställningar";
   @override
   String get card_layout => "Kortlayout";
+  @override
+  String get we_will_announce_it_on_our_social_pages_when_its => "Vi kommer meddela på våra sociala medier när det är redo.";
+  @override
+  String get privacy => "Sekretess";
+  @override
+  String get back => "Backa";
+  @override
+  String get updates => "Uppdateringar";
+  @override
+  String get using_unofficial_servers_can_expose_your_ip_address => "Användning av inofficiella servrar kan avslöja din IP adress. Om detta är ett oro så borde du använda en VPN.";
   @override
   String get trakt_renewal_failure_detailed => "Misslyckades med att förnya Trakt polletten. Vänligen kolla detaljerna.";
   @override
@@ -2459,7 +2509,13 @@ class sv extends S {
   @override
   String get real_debrid_authenticator => "Real-Debrid Autentiserare";
   @override
+  String get hide_partial_unreleased_content_description => "Filtrerar ut föremål som saknar information eller som ännu inte blivit släppt.";
+  @override
+  String get home => "Hem";
+  @override
   String get error_updating_app => "Error med uppdatering av appen...";
+  @override
+  String get layout => "Layout";
   @override
   String get clear_search_history_description => "Tar bort sökningsförslag som är baserade på tidigare sökningar.";
   @override
@@ -2481,6 +2537,10 @@ class sv extends S {
   @override
   String get disconnect_your_trakt_account => "Koppla bort Trakt konto";
   @override
+  String get an_error_occurred_whilst_casting => "Ett fel inträffade medans Casting.";
+  @override
+  String get localization => "Lokalisering";
+  @override
   String get disconnect => "Koppla från";
   @override
   String get manually_override_the_default_content_server => "Överskriv den förinställda innehålls-servern manuellt.";
@@ -2489,9 +2549,17 @@ class sv extends S {
   @override
   String get advanced => "Avancerat";
   @override
+  String get unknown_model => "Okänd modell";
+  @override
+  String get this_disables_all_warnings_regarding_potential_security_concerns => "Detta inaktiverar alla varningar angående potentiella säkerhetsproblem.";
+  @override
   String get all_genres => "Alla Genrer";
   @override
+  String get we_recommend_that_you_do_not_enable_this_option_unless => "Vi rekommenderar att du inte slår på detta alternativ om du inte är säker på vad du gör.";
+  @override
   String get experimental => "Experimentell";
+  @override
+  String get version_track_development_description => "Så snart som en funktion har blivit tillagd till mästar-grenen så kommer en utvecklingsversion automatiskt att bli genererad och utsläppt.";
   @override
   String get movies => "Filmer";
   @override
@@ -2511,7 +2579,11 @@ class sv extends S {
   @override
   String get successfully_refreshed_trakt_token => "Lyckades med att uppdatera Trakt polletten.";
   @override
+  String get thank_you_notice => "ApolloTV är en gemenskaps-insats och utan dessa personer så skulle denna app inte existera. För allas bidrag, det spelar ingen roll hur liten, är jag extremt tacksam.\n\n~NBTX";
+  @override
   String get one_episode => "En episod";
+  @override
+  String get security_warnings_have_been_disabled => "Säkerhetsvarningar har blivit inaktiverade!";
   @override
   String get order => "ORDNING";
   @override
@@ -2523,7 +2595,11 @@ class sv extends S {
   @override
   String get air_date => "Sändningsdatum";
   @override
+  String get install => "Installera";
+  @override
   String get action_completed_successfully => "Handling avklarad framgångsrikt.";
+  @override
+  String get reset => "Återställ";
   @override
   String get change_content_playback_settings => "Ändra inställningarna för uppspelning.";
   @override
@@ -2533,9 +2609,13 @@ class sv extends S {
   @override
   String get clears_the_application_database => "Raderar applikationens databas.";
   @override
+  String get version_track_stable_description => "När en beta version är väl testad och är, så långt som vi vet fri från problem så kommer versionen övergå till ett stabilt utsläpp.";
+  @override
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "Du kan nu trycka på 'Synkronisera' för att synkronisera dina Trakt favoriter med dina ApolloTV favoriter.\n\n(Trakt integration är fortfarande begränsat eftersom att den fortfarande jobbas på.)";
   @override
   String get syncing => "Synkar...";
+  @override
+  String get well_dont_say_you_didnt_ask => "Nåja, säg inte att du inte frågade!";
   @override
   String get youre_offline => "Du är offline...";
   @override
@@ -2545,11 +2625,17 @@ class sv extends S {
   @override
   String get change_player => "Ändra Videospelare";
   @override
+  String get skip => "Skippa";
+  @override
+  String get customize_the_theme_and_primary_colors => "Ändra temat och primära färger.";
+  @override
   String get authentication_failed => "Autentikationen misslyckad...";
   @override
   String get this_feature_has_not_yet_been_implemented => "Denna funktion har ännu inte blivit implementerad.";
   @override
   String get unknown => "Okänt";
+  @override
+  String get source_autoplay => "Slå På Automatisk Uppspelning Av Källorna";
   @override
   String get authentication_unsuccessful => "Autentisering Misslyckades";
   @override
@@ -2560,6 +2646,10 @@ class sv extends S {
   String get general_settings_description => "Här är några vanligt använda inställningar som du kanske vill ta en titt på.";
   @override
   String get realdebrid_service_info => "Om du har en RealDebrid prenumeration så kan ApolloTV använda den för att skaffa snabba nedladdningsresultat.";
+  @override
+  String get recommended_tv_shows => "Rekommenderade Serier";
+  @override
+  String get theme => "Tema";
   @override
   String get server_url => "Server URL";
   @override
@@ -2597,7 +2687,15 @@ class sv extends S {
   @override
   String get connecting => "Ansluter...";
   @override
+  String get google_cast_prompt => "Cast";
+  @override
+  String get version_track => "Version-Spår";
+  @override
+  String get credits_description => "Denna app är given till dig med \u2764 av dessa otroliga personer!";
+  @override
   String get dump_database => "Dumpa Databasen";
+  @override
+  String get version_track_beta_description => "När några utvecklingsversioners funktioner är kompletta så kommer de bli utplockade och släppta som beta versioner.";
   @override
   String get networking => "NÄTVERKSARBETANDE";
   @override
@@ -2608,6 +2706,8 @@ class sv extends S {
   String get descending => "Fallande";
   @override
   String get sorts_by_source_quality => "Sorterar genom källans kvalitet.";
+  @override
+  String get run_command => "Kör Kommand";
   @override
   String get updating => "Uppdaterar...";
   @override
@@ -2645,6 +2745,8 @@ class sv extends S {
   @override
   String get core => "KÄRNA";
   @override
+  String get intentionally_throws_an_error_to_test_error_handling => "Avlöser ett felmeddelande för att testa hanteringen av fel.";
+  @override
   String get the_key_must_be_32_characters_in_length => "Nyckeln måste vara 32 karaktärer i längd.";
   @override
   String get link_copied_to_clipboard => "Länk kopierad till urklipp.";
@@ -2655,7 +2757,7 @@ class sv extends S {
   @override
   String get checks_whether_sources_can_be_reached => "Kollar om källor kan nås.";
   @override
-  String get launchpad => "Startplatta";
+  String get launchpad => "Launchpad";
   @override
   String get restore_defaults => "Återställ till den förinställda konfigurationen";
   @override
@@ -2671,9 +2773,15 @@ class sv extends S {
   @override
   String get tv_shows => "Serier";
   @override
+  String get hide_partial_unreleased_content => "Göm Ofullständig/Icke Släppt Inehåll";
+  @override
+  String get security => "Säkerhet";
+  @override
   String get reload => "Ladda Om";
   @override
   String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "Startar den initiella setup proceduren som är visad när appen är öppnad för första gången.";
+  @override
+  String get credits => "Eftertexter";
   @override
   String get the_request_timed_out => "Begäran tajmade ut.";
   @override
@@ -2683,11 +2791,17 @@ class sv extends S {
   @override
   String get no_results_found => "Inga resultat hittades.";
   @override
+  String get clear => "Rensa";
+  @override
+  String get searching_for_cast_devices => "Söker efter Cast enheter...";
+  @override
   String get choose_a_theme => "Välj tema...";
   @override
   String get trakt_synchronization => "Trakt Synkronisation...";
   @override
   String get vote_average => "Röstnings Genomsnitt";
+  @override
+  String get waiting_for_input => "Väntar på input...";
   @override
   String get the_socket_connection_timed_out => "Socket anslutningen tajmade ut";
   @override
@@ -2717,6 +2831,8 @@ class sv extends S {
   @override
   String this_x_has_no_synopsis_available(String x) => "Denna $x har ingen tillgänglig synopsis.";
   @override
+  String disconnected_from_device(String device) => "Urkopplad från $device";
+  @override
   String seasons_n(String n) => "Säsonger ($n)";
   @override
   String unknown_x(String x) => "Okänt $x";
@@ -2732,6 +2848,8 @@ class sv extends S {
   String customize_appearance_description(String appName) => "$appName handlar om anpassning. Vi börjar med att välja ditt favorittema!";
   @override
   String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName misslyckades med autentiseringen av Real-Debrid.";
+  @override
+  String now_connected_to_device(String device) => "Ansluten till $device";
   @override
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "Ett fel har uppstått med ifrånkopplingen till Trakt.tv. ($errorCode)";
   @override

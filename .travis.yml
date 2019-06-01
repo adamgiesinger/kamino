@@ -1,7 +1,7 @@
 os: linux
-language: ruby
-rvm:
-  - 2.6
+language: node_js
+node_js:
+  - "12"
 
 env:
   global:
@@ -22,8 +22,10 @@ addons:
       - curl
 
 before_install:
+  # Test all translations files
+  - ./.travis/0_translations.sh
   # Execute ApolloTV prebuild webhook.
-  - ./.travis/prebuild.sh $WEBHOOK_URL
+  - ./.travis/10_prebuild.sh $WEBHOOK_URL
 
 before_script:
   # Setup gradle.
@@ -45,14 +47,15 @@ before_script:
   # List sdkmanager packages
   - sdkmanager --list
   # Clone Flutter
-  - git clone https://github.com/flutter/flutter.git -b beta --depth 1
+  - git clone https://github.com/flutter/flutter.git -b dev --depth 1
   - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
   - mkdir -p `pwd`/lib/vendor/dist/
   # Inject build configuration
   - yes | cp -rf ./android/app/build.gradle.example ./android/app/build.gradle
-  - ./.travis/generateVendorConfig.sh $TMDB_KEY $TRAKT_ID $TRAKT_SECRET $CLAWS_URL_BETA $CLAWS_KEY_BETA $VENDOR_NAME $TRAVIS_BUILD_NUMBER > `pwd`/lib/vendor/dist/OfficialVendorConfiguration.dart
+  - ./.travis/30_generate_vendor_config.sh $TMDB_KEY $TRAKT_ID $TRAKT_SECRET $CLAWS_URL_BETA $CLAWS_KEY_BETA $VENDOR_NAME $TRAVIS_BUILD_NUMBER > `pwd`/lib/vendor/dist/OfficialVendorConfiguration.dart
 
 script:
+  # Get Flutter information
   - flutter doctor -v
   # Run Flutter build
   - ./flutter/bin/flutter build apk
@@ -64,14 +67,16 @@ after_success:
   - export COMMIT_SUBJECT=`git log -1 "$TRAVIS_COMMIT" --pretty="%s"`
   - export COMMIT_MESSAGE=`git log -1 "$TRAVIS_COMMIT" --pretty="%b"`
   # Upload to WeTransfer
-  - gem install wetransfer -v '0.9.0.beta3'
-  - export BUILD_OUTPUT_URL=`ruby ./.travis/upload/runUpload.rb`
+  - npm install -g @wetransfer/js-sdk
+  - export BUILD_OUTPUT_URL=`node ./.travis/utils/runUpload.js`
   # Post in chat
-  - ./.travis/postbuild.sh success $WEBHOOK_URL $BUILD_OUTPUT_URL
+  - ./.travis/40_postbuild.sh success $WEBHOOK_URL $BUILD_OUTPUT_URL
 
 after_failure:
-  - ./.travis/postbuild.sh failure $WEBHOOK_URL
+  - ./.travis/40_postbuild.sh failure $WEBHOOK_URL
 
 cache:
   directories:
     - $HOME/.pub-cache
+    - /opt/android
+    - node_modules
