@@ -4081,11 +4081,15 @@ class zh extends S {
   @override
   String get set_primary_color => "设置主要颜色...";
   @override
+  String get throw_error => "扔错误";
+  @override
   String get playback => "回放";
   @override
   String get released => "发布";
   @override
   String get recommended_movies => "推荐电影";
+  @override
+  String get welcome_to_apollo_skyspace => "欢迎来到Apollo Skyspace!";
   @override
   String get create_profile => "创建个人资料";
   @override
@@ -4101,6 +4105,8 @@ class zh extends S {
   @override
   String get general_application_settings => "一般应用设置.";
   @override
+  String get thank_you => "谢谢！";
+  @override
   String get see_all => "查看全部";
   @override
   String get is_your_connection_too_slow => "你的连接太慢了吗?";
@@ -4109,6 +4115,8 @@ class zh extends S {
   @override
   String get miscellaneous => "杂";
   @override
+  String get houston_stand_by => "休斯顿，待命...";
+  @override
   String get source_autoplay_description => "自动选择要播放的源，而不是显示包含源列表的对话框.";
   @override
   String get grid_layout => "网格布局";
@@ -4116,6 +4124,8 @@ class zh extends S {
   String get server_key => "服务器密钥";
   @override
   String get connect_your_trakt_account => "连接您的Trakt帐户";
+  @override
+  String get search => "搜索";
   @override
   String get with_thanks => "谢谢...";
   @override
@@ -4133,9 +4143,15 @@ class zh extends S {
   @override
   String get whats_your_favorite_color_description => "点击以设置强调色;它曾用于给按钮，图标等带来一抹亮色...";
   @override
+  String get set => "组";
+  @override
   String get select_language => "选择语言...";
   @override
   String get saving_content_information => "保存内容信息...";
+  @override
+  String get security_risk => "安全风险：";
+  @override
+  String get apollo_skyspace_is_still_under_development => "Apollo Skyspace仍处于开发阶段.";
   @override
   String get error_loading_search => "嗯这很尴尬...加载搜索结果时出错.";
   @override
@@ -4161,11 +4177,15 @@ class zh extends S {
   @override
   String get boost_your_experience => "提升您的经验";
   @override
+  String get disable_security_warnings => "禁用安全警告";
+  @override
   String get removed_from_favorites => "已删除收藏夹";
   @override
   String get change_theme => "改变主题...";
   @override
   String get the_server_failed_to_verify_the_apps_integrity => "服务器无法验证应用程序的完整性.";
+  @override
+  String get open_discord => "打开不和谐";
   @override
   String get disconnect_your_realdebrid_account => "断开Real-debrid帐户";
   @override
@@ -4195,9 +4215,13 @@ class zh extends S {
   @override
   String get clears_all_application_settings => "清除所有应用程序设置.";
   @override
+  String get discord => "不和";
+  @override
   String get success => "成功！";
   @override
   String get name => "名称";
+  @override
+  String get copy_to_clipboard => "复制到剪贴板";
   @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "如果此问题仍然存在，请联系Discord的工作人员.";
   @override
@@ -4207,7 +4231,15 @@ class zh extends S {
   @override
   String get card_layout => "卡布局";
   @override
+  String get we_will_announce_it_on_our_social_pages_when_its => "我们会在准备就绪后在社交网页上公布.";
+  @override
   String get back => "背部";
+  @override
+  String get privacy => "隐私";
+  @override
+  String get updates => "更新";
+  @override
+  String get using_unofficial_servers_can_expose_your_ip_address => "使用非官方服务器可能会暴露您的IP地址. 如果这是一个问题，您应该使用VPN.";
   @override
   String get trakt_renewal_failure_detailed => "无法续订Trakt令牌.请检查您的详细信息.";
   @override
@@ -4223,7 +4255,13 @@ class zh extends S {
   @override
   String get real_debrid_authenticator => "Real-debrid身份验证器";
   @override
+  String get hide_partial_unreleased_content_description => "过滤掉缺少信息或尚未发布的内容.";
+  @override
+  String get home => "家";
+  @override
   String get error_updating_app => "更新应用时出错...";
+  @override
+  String get layout => "布局";
   @override
   String get clear_search_history_description => "根据过去的搜索删除搜索建议.";
   @override
@@ -4245,6 +4283,10 @@ class zh extends S {
   @override
   String get disconnect_your_trakt_account => "断开您的Trakt帐户";
   @override
+  String get an_error_occurred_whilst_casting => "投影时发生错误.";
+  @override
+  String get localization => "语言";
+  @override
   String get disconnect => "断开";
   @override
   String get manually_override_the_default_content_server => "手动覆盖默认内容服务器.";
@@ -4253,9 +4295,17 @@ class zh extends S {
   @override
   String get advanced => "先进";
   @override
+  String get unknown_model => "未知的模型";
+  @override
+  String get this_disables_all_warnings_regarding_potential_security_concerns => "这会禁用有关潜在安全问题的所有警告.";
+  @override
   String get all_genres => "所有类型";
   @override
+  String get we_recommend_that_you_do_not_enable_this_option_unless => "我们建议您不要启用此选项，除非您肯定知道自己在做什么.";
+  @override
   String get experimental => "试验";
+  @override
+  String get version_track_development_description => "一旦将功能推送到主分支，就会自动生成并释放开发构建.";
   @override
   String get movies => "电影";
   @override
@@ -4275,7 +4325,11 @@ class zh extends S {
   @override
   String get successfully_refreshed_trakt_token => "成功刷新Trakt令牌.";
   @override
+  String get thank_you_notice => "ApolloTV是一项社区活动，没有这些人，这个应用程序就不存在了. 对于每个人的贡献，无论多小，我都非常感激.\n\n~NBTX";
+  @override
   String get one_episode => "一集";
+  @override
+  String get security_warnings_have_been_disabled => "安全警告已被禁用！";
   @override
   String get order => "订购";
   @override
@@ -4291,6 +4345,8 @@ class zh extends S {
   @override
   String get action_completed_successfully => "行动成功完成.";
   @override
+  String get reset => "重启";
+  @override
   String get change_content_playback_settings => "更改内容播放设置.";
   @override
   String get please_check_the_announcements_channel_in_our_discord_server_for => "有关详细信息，请查看我们的Discord服务器中的#announcements频道.";
@@ -4299,9 +4355,13 @@ class zh extends S {
   @override
   String get clears_the_application_database => "清除应用程序数据库.";
   @override
+  String get version_track_stable_description => "当beta版本经过充分测试并且据我们所知，无错误时，构建将逐渐发展为稳定版本.";
+  @override
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "您现在可以点击“同步”以将您的Trakt收藏夹与您的ApolloTV收藏夹同步。\n\n（Trakt集成受限，因为它仍在开发中.)";
   @override
   String get syncing => "同步...";
+  @override
+  String get well_dont_say_you_didnt_ask => "好吧不要说你没问！";
   @override
   String get youre_offline => "你离线了...";
   @override
@@ -4334,6 +4394,8 @@ class zh extends S {
   String get general_settings_description => "以下是您可能想要查看的一些常用设置选项.";
   @override
   String get realdebrid_service_info => "如果您有Real Debrid订阅，ApolloTV可以使用它来获得高速下载结果.";
+  @override
+  String get theme => "主题";
   @override
   String get server_url => "服务器URL";
   @override
@@ -4371,7 +4433,15 @@ class zh extends S {
   @override
   String get connecting => "连...";
   @override
+  String get google_cast_prompt => "投射";
+  @override
+  String get version_track => "版本跟踪";
+  @override
+  String get credits_description => "这个应用程序是由这些可怕的人带给你的\u2764！";
+  @override
   String get dump_database => "转储数据库";
+  @override
+  String get version_track_beta_description => "一旦完成了一些开发构建功能，它们将被挑选出来并作为beta版本发布.";
   @override
   String get networking => "联网";
   @override
@@ -4382,6 +4452,8 @@ class zh extends S {
   String get descending => "大到小";
   @override
   String get sorts_by_source_quality => "按来源质量排序.";
+  @override
+  String get run_command => "运行命令";
   @override
   String get updating => "更新...";
   @override
@@ -4419,6 +4491,8 @@ class zh extends S {
   @override
   String get core => "核心";
   @override
+  String get intentionally_throws_an_error_to_test_error_handling => "故意抛出错误来测试错误处理.";
+  @override
   String get the_key_must_be_32_characters_in_length => "密钥长度必须为32个字符.";
   @override
   String get link_copied_to_clipboard => "链接复制到剪贴板.";
@@ -4445,6 +4519,10 @@ class zh extends S {
   @override
   String get tv_shows => "电视节目";
   @override
+  String get hide_partial_unreleased_content => "隐藏部分/未发布的内容";
+  @override
+  String get security => "安全";
+  @override
   String get reload => "刷新";
   @override
   String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "开始第一次打开应用程序时显示的初始设置过程.";
@@ -4459,11 +4537,17 @@ class zh extends S {
   @override
   String get no_results_found => "未找到结果.";
   @override
+  String get clear => "明确";
+  @override
+  String get searching_for_cast_devices => "正在搜索投影设备...";
+  @override
   String get choose_a_theme => "选择一个主题...";
   @override
   String get trakt_synchronization => "Trakt同步...";
   @override
   String get vote_average => "投票平均";
+  @override
+  String get waiting_for_input => "等待输入...";
   @override
   String get the_socket_connection_timed_out => "套接字连接超时.";
   @override
@@ -4487,29 +4571,33 @@ class zh extends S {
   @override
   String version_x(String version) => "版本$version";
   @override
-  String general_error(String error) => "发生错误 ($error)\n请报告此错误.";
+  String general_error(String ) => "发生错误（$ error）\n请报告此错误.";
   @override
-  String n_ratings(String n) => "$n 评级";
+  String n_ratings(String n) => "$n评级";
   @override
   String this_x_has_no_synopsis_available(String x) => "这个$x没有概要.";
   @override
-  String seasons_n(String n) => "四季 ($n)";
+  String disconnected_from_device(String device) => "断开连接$device";
+  @override
+  String seasons_n(String n）) => "四季（$n）";
   @override
   String unknown_x(String x) => "未知$x";
   @override
-  String n_sources(String n) => "$n 来源";
+  String n_sources(String n) => "$n来源";
   @override
   String n_episodes(String n) => "$n剧集";
   @override
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName无法使用Trakt.tv进行身份验证.";
   @override
-  String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "与Claws通信时发生错误. ($error)";
+  String an_error_occurred_whilst_communicating_with_claws_detailed(String error）) => "与Claws通信时发生错误.（$error）";
   @override
   String customize_appearance_description(String appName) => "$appName就是自定义.让我们开始选择你最喜欢的主题吧！";
   @override
   String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName无法通过Real-Debrid进行身份验证.";
   @override
-  String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "使用Trakt.tv取消验证时发生错误. ($errorCode).";
+  String now_connected_to_device(String device) => "现在连接到$device";
+  @override
+  String an_error_occurred_whilst_deauthenticating_with_trakttv(String ERRORCODE）) => "使用Trakt.tv取消验证时发生错误.（$ERRORCODE）.";
   @override
   String real_debrid_n_sources(String n) {
     switch (n) {
