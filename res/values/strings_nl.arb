@@ -26,7 +26,7 @@
   "done": "Klaar",
   "install": "Installeer",
   "next": "VOLGENDE",
-  "back": "TERUG",
+  "back": "VORIGE",
   "skip": "OVERSLAAN",
 
   "coming_soon": "Binnenkort Beschikbaar",
@@ -82,7 +82,7 @@
 
   "make_appname_yours": "MAAK $appName VAN JOU",
   "appearance": "Uiterlijk",
-  "customize_the_theme_and_primary_colors": "Pas het thema en de hoofdkleur aan.",
+  "customize_the_theme_and_primary_colors": "Pas het thema en de primaire kleur aan.",
   "launchpad": "Launchpad",
   "customize_your_launchpad": "Pas je launchpad aan.",
   "boost_your_experience": "VERBETER JE ERVARING",
@@ -290,7 +290,7 @@
   "localization": "Lokalisatie",
   "theme": "Thema",
   "layout": "Lay-out",
-  "credits_description": "Deze is app werd naar u gebracht met \n2764 bij deze geweldige mensen!!",
+  "credits_description": "Deze is app werd naar u gebracht door \n2764 van deze geweldige mensen!!",
   "thank_you": "Dank u wel!",
   "thank_you_notice": "ApolloTV is een community inspanning en zonder deze mensen zal deze app niet bestaan. Voor iedereens bijdrage, ongeacht hoe klein, ben ik buitengewoon dankbaar. \n\n~NBTX",
   "run_command": "Voer Opdracht Uit",
