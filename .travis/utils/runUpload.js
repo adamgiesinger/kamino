@@ -9,7 +9,11 @@ const author = process.env.AUTHOR_NAME;
 const message = `Job: ${jobName}, Build: ${buildName}\n\n${title} (${author})`;
 
 (async function(){
-  const wtClient = await createWTClient(process.env.WT_API_KEY);
+  const wtClient = await createWTClient(process.env.WT_API_KEY, {
+    logger: {
+      level: 'error'
+    }
+  });
 
   const appBinaryContent = await new Promise((resolve, reject) => {
     fs.readFile(
