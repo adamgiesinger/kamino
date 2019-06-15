@@ -9,6 +9,7 @@ import 'package:kamino/interface/intro/kamino_intro.dart';
 import 'package:kamino/interface/launchpad2/browse.dart';
 import 'package:kamino/interface/launchpad2/launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
+import 'package:kamino/skyspace/skyspace.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
@@ -30,10 +31,11 @@ const appName = "ApolloTV";
 const appCastID = "6569632D";
 Logger log;
 
+PlatformType currentPlatform;
 const platform = const MethodChannel('xyz.apollotv.kamino/init');
-class PlatformType {
-  static const GENERAL = 0;
-  static const TV = 1;
+enum PlatformType {
+  GENERAL,
+  TV
 }
 
 class ErrorScaffold extends StatelessWidget {
@@ -157,22 +159,21 @@ void main() async {
     await SettingsManager.onAppInit();
 
     if(Platform.isAndroid) {
-      return (await platform.invokeMethod('getDeviceType')) as int;
+      switch (await platform.invokeMethod('getDeviceType')) {
+        case 1:
+          return PlatformType.TV;
+      }
     }
     return PlatformType.GENERAL;
   }().then((platformType){
+    currentPlatform = platformType;
+
     FlutterError.onError = (FlutterErrorDetails details) async {
       print("A Flutter exception was caught by the $appName internal error handler.");
       await reportError(details.exception, details.stack);
     };
 
     runZoned<Future<void>>((){
-      /*if(platformType == PlatformType.TV) {
-        // Start Kamino (TV)
-        runApp(KaminoSkyspace());
-        return;
-      }*/
-
       // Start Kamino (mobile)
       runApp(KaminoApp());
     }, onError: (error, StackTrace stacktrace) async {
@@ -381,6 +382,13 @@ class KaminoAppState extends State<KaminoApp> {
   Widget build(BuildContext context) {
     ErrorWidget.builder = (FlutterErrorDetails error) => _getErrorWidget(error);
 
+    StatefulWidget applicationHome;
+    if(currentPlatform == PlatformType.TV) {
+      applicationHome = KaminoSkyspace();
+    }else{
+      applicationHome = KaminoAppHome();
+    }
+
     return new KaminoAppDelegateProxyRenderer(child: MaterialApp(
       navigatorKey: KaminoApp.navigatorKey,
       localizationsDelegates: [
@@ -392,7 +400,7 @@ class KaminoAppState extends State<KaminoApp> {
       locale: _currentLocale != null ? _currentLocale : Locale('en'),
 
       title: appName,
-      home: KaminoAppHome(),
+      home: applicationHome,
       theme: getActiveThemeData(),
 
       // Hide annoying debug banner
