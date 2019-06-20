@@ -1,4 +1,6 @@
 os: linux
+dist: trusty
+jdk: oraclejdk8
 
 language: node_js
 node_js:
@@ -8,7 +10,6 @@ env:
   global:
     - ANDROID_SDK_ROOT=/opt/android
 
-jdk: oraclejdk8
 sudo: required
 
 addons:
@@ -28,8 +29,6 @@ before_install:
   - ./.travis/10_prebuild.sh $WEBHOOK_URL
 
 before_script:
-  # Switch to JDK 8
-  - jdk_switcher use oraclejdk8
   # Setup gradle.
   - wget https://services.gradle.org/distributions/gradle-4.10.3-bin.zip
   - unzip -qq gradle-4.10.3-bin.zip
