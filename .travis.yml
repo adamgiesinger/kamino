@@ -28,6 +28,8 @@ before_install:
   - ./.travis/10_prebuild.sh $WEBHOOK_URL
 
 before_script:
+  # Switch to JDK 8
+  - jdk_switcher use oraclejdk8
   # Setup gradle.
   - wget https://services.gradle.org/distributions/gradle-4.10.3-bin.zip
   - unzip -qq gradle-4.10.3-bin.zip
