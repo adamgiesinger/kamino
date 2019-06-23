@@ -6797,7 +6797,7 @@ class nl extends S {
   @override
   String get syncing => "Synchroniseren...";
   @override
-  String get well_dont_say_you_didnt_ask => "U heeft er zelf voor gevraagd!!";
+  String get well_dont_say_you_didnt_ask => "U heeft er zelf om gevraagd!!";
   @override
   String get youre_offline => "U bent offline...";
   @override
