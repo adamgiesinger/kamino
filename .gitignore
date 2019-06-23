@@ -108,3 +108,6 @@ package-lock.json
 # Ignoring build.gradle, so app can be more easily configured
 # for development builds immediately after downloading.
 android/app/build.gradle
+
+# Gradle directory
+.gradle/*
