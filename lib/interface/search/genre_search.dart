@@ -118,36 +118,34 @@ class _GenreSearchState extends State<GenreSearch>{
     TextStyle _glacialFont = TextStyle(
         fontFamily: "GlacialIndifference");
 
-    return Scrollbar(
-        child: Scaffold(
-          backgroundColor: Theme.of(context).backgroundColor,
-          appBar: new AppBar(
-            title: Text(widget.genreName, style: _glacialFont,),
-            centerTitle: true,
-            backgroundColor: Theme.of(context).backgroundColor,
-            elevation: 5.0,
-            actions: <Widget>[
-              Interface.generateSearchIcon(context),
-            ],
-          ),
-          body: RefreshIndicator(
-            onRefresh: () async {
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: new AppBar(
+        title: Text(widget.genreName, style: _glacialFont,),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).backgroundColor,
+        elevation: 5.0,
+        actions: <Widget>[
+          Interface.generateSearchIcon(context),
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
 
-              await Future.delayed(Duration(seconds: 2));
-              DatabaseHelper.getAllFavoriteIds().then((data){
-                if(mounted) setState(() {
-                  _favIDs = data;
-                });
-              });
-            },
-            child: Scrollbar(
-              child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints)
-                  => _expandedSearchPref == false ? _gridResults(context, constraints) : _listResult()
-              ),
-            ),
+          await Future.delayed(Duration(seconds: 2));
+          DatabaseHelper.getAllFavoriteIds().then((data){
+            if(mounted) setState(() {
+              _favIDs = data;
+            });
+          });
+        },
+        child: Scrollbar(
+          child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints)
+              => _expandedSearchPref == false ? _gridResults(context, constraints) : _listResult()
           ),
         ),
+      ),
     );
   }
 
