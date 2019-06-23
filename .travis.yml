@@ -1,4 +1,7 @@
 os: linux
+dist: trusty
+jdk: oraclejdk8
+
 language: node_js
 node_js:
   - "12"
@@ -7,7 +10,6 @@ env:
   global:
     - ANDROID_SDK_ROOT=/opt/android
 
-jdk: oraclejdk8
 sudo: required
 
 addons:
@@ -18,7 +20,6 @@ addons:
     packages:
       - lib32stdc++6 # https://github.com/flutter/flutter/issues/6207
       - libstdc++6
-      - fonts-droid
       - curl
 
 before_install:
@@ -29,9 +30,9 @@ before_install:
 
 before_script:
   # Setup gradle.
-  - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
-  - unzip -qq gradle-3.5-bin.zip
-  - export GRADLE_HOME=`pwd`/gradle-3.5
+  - wget https://services.gradle.org/distributions/gradle-4.10.3-bin.zip
+  - unzip -qq gradle-4.10.3-bin.zip
+  - export GRADLE_HOME=`pwd`/gradle-4.10.3
   - export PATH=$GRADLE_HOME/bin:$PATH
   # Silence sdkmanager warning
   - mkdir -p /home/travis/.android
@@ -47,7 +48,7 @@ before_script:
   # List sdkmanager packages
   - sdkmanager --list
   # Clone Flutter
-  - git clone https://github.com/flutter/flutter.git -b dev --depth 1
+  - git clone https://github.com/flutter/flutter.git -b beta --depth 1
   - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
   - mkdir -p `pwd`/lib/vendor/dist/
   # Inject build configuration
