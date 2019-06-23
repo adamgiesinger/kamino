@@ -7078,7 +7078,7 @@ class tr extends S {
   @override
   String get year => "Yıl";
   @override
-  String get an_error_occurred_whilst_communicating_with_claws => "An error occurred whilst communicating with Claws.";
+  String get an_error_occurred_whilst_communicating_with_claws => "Claw'larla iletişim kurarken bir hata oluştu.";
   @override
   String get authentication_timed_out_please_try_again => "Kimlik doğrulama zaman aşımına uğradı. Lütfen tekrar deneyin. ";
   @override
@@ -7150,25 +7150,25 @@ class tr extends S {
   @override
   String get default_ => "Varsayılan";
   @override
-  String get be_careful_this_option_could_break_the_app_if_you => "Dikkatli ol!  Ne yaptığınızı bilmiyorsanız bu seçenek uygulamayı bozabilir.";
+  String get be_careful_this_option_could_break_the_app_if_you => "Dikkatli ol! Ne yaptığınızı bilmiyorsanız bu seçenek uygulamayı bozabilir.";
   @override
   String get close => "Kapat";
   @override
   String get connect => "Bağlan";
   @override
-  String get whats_your_favorite_color_description => "Vurgu rengini ayarlamak için dokunun;  düğmelere, simgelere vb. renk serpmek için kullanılır...";
+  String get whats_your_favorite_color_description => "Vurgu rengini ayarlamak için dokunun; düğmelere, simgelere vb. renk serpmek için kullanılır...";
   @override
   String get set => "Ayarla";
   @override
   String get select_language => "Dil Seçin...";
   @override
-  String get saving_content_information => "İçerik bilgisi kaydediliyor ... ";
+  String get saving_content_information => "İçerik bilgisi kaydediliyor... ";
   @override
   String get security_risk => "GÜVENLİK RİSKİ:";
   @override
   String get apollo_skyspace_is_still_under_development => "Apollo Skyspace hala geliştirilme aşamasında.";
   @override
-  String get error_loading_search => "Eh bu garip ... Arama sonuçları yüklenirken bir hata oluştu.";
+  String get error_loading_search => "Eh bu garip... Arama sonuçları yüklenirken bir hata oluştu.";
   @override
   String get unable_to_determine_reason => "Sebep belirlenemedi...";
   @override
@@ -7178,11 +7178,11 @@ class tr extends S {
   @override
   String get diagnostics => "ARIZA TESPİTLERİ";
   @override
-  String get error_loading_launchpad => "Eh bu garip ... Başlatma panelini yüklerken bir hata oluştu.";
+  String get error_loading_launchpad => "Eh bu garip... Başlatma panelini yüklerken bir hata oluştu.";
   @override
   String get cast_and_crew => "Kast & Ekip";
   @override
-  String get up_to_date => "Güncel.  1 - 3 hafta içinde tekrar kontrol edin. ";
+  String get up_to_date => "Güncel. 1-3 hafta içinde tekrar kontrol edin. ";
   @override
   String get information => "Bilgi";
   @override
@@ -7220,7 +7220,7 @@ class tr extends S {
   @override
   String get the_url_must_be_valid_and_include_a_trailing_ => "URL geçerli olmalı ve bir iz bırakmalı /.";
   @override
-  String get editors_choice => "Editör'ün Seçimi";
+  String get editors_choice => "Editörün Seçimi";
   @override
   String get sync => "Senkron";
   @override
@@ -7240,7 +7240,7 @@ class tr extends S {
   @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Bu sorun devam ederse, lütfen Discord'da personel üyesi ile iletişime geçin.";
   @override
-  String get next => "SONRAKİ";
+  String get next => "İLERİ";
   @override
   String get cast_settings => "Kast Ayarları";
   @override
@@ -7286,7 +7286,7 @@ class tr extends S {
   @override
   String get layout_preferences_subtitle => "Kart düzenleri daha ayrıntılı, ancak ızgara düzenleri daha fazla öğeye sığabilir.";
   @override
-  String get scraping_failed => "Scraping failed...";
+  String get scraping_failed => "Scraping başarısız...";
   @override
   String get downloading_update_file => "Güncelleme dosyası indiriliyor...";
   @override
@@ -7340,7 +7340,7 @@ class tr extends S {
   @override
   String get successfully_refreshed_trakt_token => "Trakt belirteci başarıyla yenilendi.";
   @override
-  String get thank_you_notice => "ApolloTV bir topluluk çalışmasıdır ve bu insanlar olmadan bu uygulama olmazdı.  Herkesin katkısı için, ne kadar küçük olursa olsun, minnettarım.\n\n~NBTX";
+  String get thank_you_notice => "ApolloTV bir topluluk çalışmasıdır ve bu insanlar olmadan bu uygulama olmazdı. Herkesin katkısı için, ne kadar küçük olursa olsun, minnettarım.\n\n~NBTX";
   @override
   String get one_episode => "1 bölüm";
   @override
@@ -7376,7 +7376,7 @@ class tr extends S {
   @override
   String get syncing => "Senkronizasyon...";
   @override
-  String get well_dont_say_you_didnt_ask => "Well don't say you didn't ask!";
+  String get well_dont_say_you_didnt_ask => "Sorma deme!";
   @override
   String get youre_offline => "Çevrimdışısın...";
   @override
@@ -7408,7 +7408,7 @@ class tr extends S {
   @override
   String get general_settings_description => "İşte, bakmak isteyebileceğiniz sık kullanılan bazı ayar seçenekleri.";
   @override
-  String get realdebrid_service_info => "RealDebrid aboneliğiniz varsa, ApolloTV bunu yüksek hızlı indirme sonuçları elde etmek için kullanabilir.";
+  String get realdebrid_service_info => "Real-Debrid aboneliğiniz varsa, ApolloTV bunu yüksek hızlı indirme sonuçları elde etmek için kullanabilir.";
   @override
   String get theme => "Tema";
   @override
@@ -7444,13 +7444,13 @@ class tr extends S {
   @override
   String get the_socket_connection_failed => "Soket bağlantısı başarısız oldu. ";
   @override
-  String get rd_description => "Real-Debrid, Internet'te barındırılan dosyaları hızlı bir şekilde indirmenize izin veren kısıtlanmamış bir indiricidir.";
+  String get rd_description => "Real-Debrid, İnternet'te barındırılan dosyaları hızlı bir şekilde indirmenize izin veren kısıtlanmamış bir indiricidir.";
   @override
   String get connecting => "Bağlanıyor...";
   @override
   String get google_cast_prompt => "Yayın";
   @override
-  String get version_track => "Version Track";
+  String get version_track => "Versiyon Takibi";
   @override
   String get credits_description => "Bu uygulama size bu harika insanlar tarafından \u2764 ile getirildi!";
   @override
@@ -7488,7 +7488,7 @@ class tr extends S {
   @override
   String get permission_denied => "İzin reddedildi.";
   @override
-  String get dump_preferences => "Tercih Dökümğ";
+  String get dump_preferences => "Tercih Dökümü";
   @override
   String get trakt_authenticator => "Trakt Kimlik Doğrulayıcı";
   @override
@@ -7570,7 +7570,7 @@ class tr extends S {
   @override
   String appname_failed_to_connect_to_the_internet(String appName) => "$appName internete bağlanamadı. Lütfen bağlantınızı kontrol edin.";
   @override
-  String extensions_description(String appName) => "Bu üçüncü taraf hizmetlerden herhangi birini kullanıyorsanız, bunları $appName ''ye bağlayabilirsiniz.";
+  String extensions_description(String appName) => "Bu üçüncü taraf hizmetlerden herhangi birini kullanıyorsanız, bunları $appName 'ye bağlayabilirsiniz.";
   @override
   String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => " $appName sunucusu şu anda sunucu yükseltmeleri için çevrimdışıdır. ";
   @override
@@ -7598,15 +7598,15 @@ class tr extends S {
   @override
   String unknown_x(String x) => "Bilinmeyen $x";
   @override
-  String n_sources(String n) => "$n kaynaklar";
+  String n_sources(String n) => "$n kaynak";
   @override
-  String n_episodes(String n) => "$n bölümler";
+  String n_episodes(String n) => "$n bölüm";
   @override
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName Trakt.tv ile kimlik doğrulaması yapamadı.";
   @override
-  String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "An error occurred whilst communicating with Claws. ($error)";
+  String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "Claw'larla iletişim kurarken bir hata oluştu. ($error)";
   @override
-  String customize_appearance_description(String appName) => "$appName özelleştirme ile ilgili.  En sevdiğiniz temayı seçerek başlayalım!";
+  String customize_appearance_description(String appName) => "$appName özelleştirme ile ilgili. En sevdiğiniz temayı seçerek başlayalım!";
   @override
   String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName Real-Debrid ile kimliğini doğrulayamadı";
   @override
@@ -7617,18 +7617,18 @@ class tr extends S {
   String real_debrid_n_sources(String n) {
     switch (n) {
       case "1":
-        return "Real-Debrid ($n kaynaklar)";
+        return "Real-Debrid ($n kaynak)";
       default:
-        return "Real-Debrid ($n kaynaklar)";
+        return "Real-Debrid ($n kaynak)";
     }
   }
   @override
   String standard_n_sources(String n) {
     switch (n) {
       case "1":
-        return "Standart ($n kaynaklar)";
+        return "Standart ($n kaynak)";
       default:
-        return "Standart ($n kaynaklar)";
+        return "Standart ($n kaynak)";
     }
   }
   @override
@@ -7639,7 +7639,7 @@ class tr extends S {
       case "1":
         return "$n kategori seçin...";
       default:
-        return "$n kategorileri seçin...";
+        return "$n kategori seçin...";
     }
   }
 }

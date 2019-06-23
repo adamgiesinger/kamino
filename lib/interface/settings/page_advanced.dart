@@ -260,7 +260,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
               try {
                 KaminoAppState application = context.ancestorStateOfType(
                     const TypeMatcher<KaminoAppState>());
-                application.getPrimaryVendorConfig().beginExecCommand(
+                application.getPrimaryVendorConfig().execCommand(
                     'init_debug');
               }catch(_){}
             }
@@ -278,6 +278,7 @@ class AdvancedSettingsPageState extends SettingsPageState {
               var deviceInfoPlugin = DeviceInfoPlugin();
 
               if(Platform.isAndroid){
+                KaminoAppState application = context.ancestorStateOfType(const TypeMatcher<KaminoAppState>());
                 AndroidDeviceInfo deviceInfo = await deviceInfoPlugin.androidInfo;
 
                 String info = "";
@@ -291,10 +292,20 @@ class AdvancedSettingsPageState extends SettingsPageState {
                 info += ("\t\t--> Build ${deviceInfo.display} (${deviceInfo.tags})");
 
                 try {
-                  var response = await http.post("https://hastebin.com/documents", body: info);
-                  String key = jsonDecode(response.body)["key"];
+                  var response = await http.post("https://api.paste.ee/v1/pastes", body: jsonEncode({
+                    "description": "Device Information | $appName",
+                    "sections": [{
+                      "name": "Device Information",
+                      "syntax": "yaml",
+                      "contents": info
+                    }]
+                  }), headers: {
+                    'Content-Type': 'application/json',
+                    'X-Auth-Token': await application.getPrimaryVendorConfig().execCommand("getDebugPasteToken")
+                  });
+                  String link = jsonDecode(response.body)["link"];
 
-                  await Clipboard.setData(new ClipboardData(text: "https://hastebin.com/$key.apollodebug"));
+                  await Clipboard.setData(new ClipboardData(text: link));
                   Interface.showSnackbar(S.of(context).link_copied_to_clipboard, context: context);
                 }catch(ex){
                   if(ex is SocketException || ex is HttpException)

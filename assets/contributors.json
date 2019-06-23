@@ -116,7 +116,7 @@
 			"color": "#61d8eb"
 		},
 		{
-			"name": "House",
+			"name": "HouseLegend",
 			"image": "https://cdn.discordapp.com/avatars/101118270903435264/40731b2a546a5550b4dc9bc71e95d960.png?size=2048",
 			"color": "#61d8eb"
 		},
@@ -184,7 +184,7 @@
 		},
 		{
 			"name": "Sukhbrinder Brar",
-			"image": "https://discordapp.com/assets/0e291f67c9274a1abdddeb3fd919cbaa.png",
+			"image": "https://cdn.discordapp.com/avatars/490896834483716122/9bcef8586020faf1dfe672b809720b1d.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -204,7 +204,7 @@
 		},
 		{
 			"name": "L3G3ND4RY N00B (dali546)",
-			"image": "https://cdn.discordapp.com/avatars/328936805975982080/c1965651a00b917c75dd64630099a22a.png?size=2048",
+			"image": "https://cdn.discordapp.com/avatars/328936805975982080/173365e55d963bea4df85510f20cffda.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -219,7 +219,7 @@
 		},
 		{
 			"name": "om",
-			"image": "https://cdn.discordapp.com/avatars/457757979719106570/b1a8329852b156d4f0d3b21871c8c039.png?size=2048",
+			"image": "https://cdn.discordapp.com/avatars/457757979719106570/36e2e9f72b29acebf0d91a2b517b25a4.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -259,7 +259,7 @@
 		},
 		{
 			"name": "1izardo",
-			"image": "https://cdn.discordapp.com/avatars/214835073973747713/d4d3b447662af860f48ed3b1304ab6e0.png?size=2048",
+			"image": "https://cdn.discordapp.com/avatars/214835073973747713/077c86a7e07de5f088ddf7c1202d3a2b.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -293,8 +293,18 @@
 			"color": "#457f9c"
 		},
 		{
+			"name": "daplugg23",
+			"image": "https://discordapp.com/assets/322c936a8c8be1b803cd94861bdfa868.png",
+			"color": "#457f9c"
+		},
+		{
 			"name": "Redcurse",
 			"image": "https://cdn.discordapp.com/avatars/234426179216474113/a5936d8ac8f4183971e1598f55f7439e.png?size=2048",
+			"color": "#457f9c"
+		},
+		{
+			"name": "leonardosegurat",
+			"image": "https://cdn.discordapp.com/avatars/257758987087380492/bfc344585c50b4ecde6b3f6ab37c6cab.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -319,7 +329,7 @@
 		},
 		{
 			"name": "Ibby",
-			"image": "https://cdn.discordapp.com/avatars/190127634926010368/b505784e0c4d61d140b136050a170a92.png?size=2048",
+			"image": "https://cdn.discordapp.com/avatars/190127634926010368/df754d962579c27a1b0f805c5a5e5721.png?size=2048",
 			"color": "#457f9c"
 		},
 		{
@@ -328,7 +338,7 @@
 			"color": "#457f9c"
 		},
 		{
-			"name": "Jase2urFace",
+			"name": "Jase2urFace(Camille)",
 			"image": "https://cdn.discordapp.com/avatars/137327004994240522/79193d689851a5402d57d1d5269247c9.png?size=2048",
 			"color": "#457f9c"
 		},

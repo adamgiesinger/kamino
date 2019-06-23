@@ -49,7 +49,7 @@ abstract class VendorConfiguration {
 
   Future<VendorService> getService();
 
-  bool beginExecCommand(String command){
+  dynamic execCommand(String command){
     throw new Exception("Feature not implemented.");
   }
 
