@@ -75,6 +75,7 @@ class S implements WidgetsLocalizations {
   String get connected_real_debrid_account => "Connected Real-Debrid Account.";
   String get connected_trakt_account => "Connected Trakt account.";
   String get connecting => "Connecting...";
+  String get content_trackers => "Content Trackers";
   String get continue_watching => "Continue Watching";
   String get copy_to_clipboard => "Copy to Clipboard";
   String get core => "CORE";
@@ -165,6 +166,7 @@ class S implements WidgetsLocalizations {
   String get please_wait => "Please wait...";
   String get popularity => "Popularity";
   String get power_user_settings_for_rocket_scientists => "Power user settings for rocket scientists.";
+  String get premium_hosts => "Premium Hosts";
   String get privacy => "Privacy";
   String get quality => "Quality";
   String get rd_description => "Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet.";

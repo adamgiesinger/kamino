@@ -100,6 +100,7 @@ flutter:
     - assets/images/logo_foreground_lg.png
 
     - assets/icons/trakt.svg
+    - assets/icons/simkl.svg
     - assets/icons/realdebrid.svg
 
     - assets/flags/arab_league.png

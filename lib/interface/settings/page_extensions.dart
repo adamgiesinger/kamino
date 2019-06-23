@@ -39,6 +39,8 @@ class ExtensionsSettingsPageState extends SettingsPageState {
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       children: <Widget>[
 
+        SubtitleText(S.of(context).content_trackers),
+
         Card(
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           elevation: 3,
@@ -50,7 +52,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                 child: ListTile(
                   isThreeLine: true,
                   leading: SvgPicture.asset("assets/icons/trakt.svg", height: 36, width: 36, color: const Color(0xFFED1C24)),
-                  title: Text(S.of(context).trakttv),
+                  title: Text("Trakt.tv", style: TextStyle(fontFamily: 'GlacialIndifference', fontSize: 18)),
                   subtitle: Container(
                       height: 30,
                       child: AutoSizeText(S.of(context).trakt_description, overflow: TextOverflow.visible)
@@ -113,8 +115,42 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                 padding: EdgeInsets.only(top: 10),
                 child: ListTile(
                   isThreeLine: true,
+                  leading: SvgPicture.asset("assets/icons/simkl.svg", height: 36, width: 36, color: const Color(0xFFFFFFFF)),
+                  title: Text("SIMKL", style: TextStyle(fontFamily: 'GlacialIndifference', fontSize: 18)),
+                  subtitle: Container(
+                      height: 30,
+                      child: AutoSizeText("All your favorite TV shows, anime and movies — in one place. Stop searching, marking and checking in. Start watching.", overflow: TextOverflow.visible)
+                  ),
+                ),
+              ),
+              ButtonTheme.bar( // make buttons use the appropriate styles for cards
+                child: ButtonBar(
+                  children: <Widget>[
+                    FlatButton(
+                      textColor: Theme.of(context).primaryTextTheme.body1.color,
+                      child: TitleText(S.of(context).coming_soon)
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        SubtitleText(S.of(context).premium_hosts),
+
+        Card(
+          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+          elevation: 3,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 10),
+                child: ListTile(
+                  isThreeLine: true,
                   leading: SvgPicture.asset("assets/icons/realdebrid.svg", height: 36, width: 36, color: const Color(0xFF78BB6F)),
-                  title: Text(S.of(context).realdebrid),
+                  title: Text("Real-Debrid", style: TextStyle(fontFamily: 'GlacialIndifference', fontSize: 18)),
                   subtitle: Container(
                       height: 30,
                       child: AutoSizeText(S.of(context).rd_description, overflow: TextOverflow.visible)

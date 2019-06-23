@@ -302,5 +302,7 @@
   "open_discord": "Open Discord",
   "throw_error": "Throw Error",
   "intentionally_throws_an_error_to_test_error_handling": "Intentionally throws an error to test error handling.",
-  "well_dont_say_you_didnt_ask": "Well don't say you didn't ask!"
+  "well_dont_say_you_didnt_ask": "Well don't say you didn't ask!",
+  "content_trackers": "Content Trackers",
+  "premium_hosts": "Premium Hosts"
 }
