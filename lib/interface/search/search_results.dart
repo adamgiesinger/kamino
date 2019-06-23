@@ -71,14 +71,14 @@ class _SearchResultViewState extends State<SearchResultView> {
     return _data;
   }
 
-  _openContentScreen(BuildContext context, int index) {
-    if (_results[index].mediaType == "tv") {
+  _openContentScreen(BuildContext context, int contentId, String mediaType) {
+    if (mediaType == "tv") {
       Navigator.push(
           context,
           ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
-                      contentId: _results[index].id,
+                      contentId: contentId,
                       contentType: ContentType.TV_SHOW )
           )
       );
@@ -88,7 +88,7 @@ class _SearchResultViewState extends State<SearchResultView> {
           ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
-                      contentId: _results[index].id,
+                      contentId: contentId,
                       contentType: ContentType.MOVIE )
           )
       );
@@ -207,7 +207,7 @@ class _SearchResultViewState extends State<SearchResultView> {
             ratings: resultsList[index].vote_average,
             overview: resultsList[index].overview,
             elevation: 5.0,
-            onTap: () => _openContentScreen(context, index),
+            onTap: () => _openContentScreen(context, resultsList[index].id, resultsList[index].mediaType),
             isFavorite: _favIDs.contains(resultsList[index].id),
           );
         },
@@ -240,7 +240,7 @@ class _SearchResultViewState extends State<SearchResultView> {
               name: resultsList[index].name,
               releaseDate: resultsList[index].year,
               mediaType: resultsList[index].mediaType,
-              onTap: () => _openContentScreen(context, index),
+              onTap: () => _openContentScreen(context, resultsList[index].id, resultsList[index].mediaType),
             );
           }
       );
