@@ -258,7 +258,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: b50245902f1cc66aeb5160d4723430902c5246a7
+      resolved-ref: "40d5e211cfc1c01a360265ccaa0f0458c1fc990e"
       url: "https://github.com/NBTX/flutter_mdns_plugin.git"
     source: git
     version: "0.0.1"
