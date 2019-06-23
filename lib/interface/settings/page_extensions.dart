@@ -119,7 +119,7 @@ class ExtensionsSettingsPageState extends SettingsPageState {
                   title: Text("SIMKL", style: TextStyle(fontFamily: 'GlacialIndifference', fontSize: 18)),
                   subtitle: Container(
                       height: 30,
-                      child: AutoSizeText("All your favorite TV shows, anime and movies — in one place. Stop searching, marking and checking in. Start watching.", overflow: TextOverflow.visible)
+                      child: AutoSizeText(S.of(context).simkl_description, overflow: TextOverflow.visible)
                   ),
                 ),
               ),

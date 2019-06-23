@@ -141,15 +141,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0"
-  dart_config:
-    dependency: transitive
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: a7ed88a4793e094a4d5d5c2d88a89e55510accde
-      url: "https://github.com/MarkOSullivan94/dart_config.git"
-    source: git
-    version: "0.5.0"
   dart_internal:
     dependency: transitive
     description:
@@ -185,20 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.5+1"
-  dragable_flutter_list:
-    dependency: "direct main"
-    description:
-      name: dragable_flutter_list
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   encrypt:
     dependency: "direct main"
     description:
       name: encrypt
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "3.2.0"
   execution_queue:
     dependency: transitive
     description:
@@ -256,7 +240,7 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.1"
+    version: "0.7.2"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -268,13 +252,13 @@ packages:
       name: flutter_material_color_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.5"
+    version: "1.0.0"
   flutter_mdns_plugin:
     dependency: "direct main"
     description:
       path: "."
       ref: master
-      resolved-ref: b968d1ee55a40e7b9b62583e85497a151327edf3
+      resolved-ref: b50245902f1cc66aeb5160d4723430902c5246a7
       url: "https://github.com/NBTX/flutter_mdns_plugin.git"
     source: git
     version: "0.0.1"
@@ -422,7 +406,7 @@ packages:
       name: package_info
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2+1"
+    version: "0.4.0+4"
   package_resolver:
     dependency: transitive
     description:
@@ -486,13 +470,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  pool:
-    dependency: "direct main"
-    description:
-      name: pool
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.0"
   preload_page_view:
     dependency: "direct main"
     description:
@@ -541,7 +518,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.5.3+1"
   shimmer:
     dependency: "direct main"
     description:
@@ -653,7 +630,7 @@ packages:
       name: transparent_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0"
+    version: "1.0.0"
   tuple:
     dependency: transitive
     description:
@@ -674,14 +651,14 @@ packages:
       name: uni_links
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.4"
+    version: "0.2.0"
   url_launcher:
     dependency: "direct main"
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0+3"
+    version: "5.0.3"
   utf:
     dependency: transitive
     description:

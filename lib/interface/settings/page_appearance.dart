@@ -230,7 +230,7 @@ class _PrimaryColorChooserState extends State<PrimaryColorChooser> {
                 selectedColor: _activeColor,
                 colors: _findMainColor(_activeColor) != null
                     ? materialColors : () {
-                  // Return list of colors including the current primary color.
+                  // Return list of colors including the current primary color
                   List<ColorSwatch<dynamic>> _anonymousColors = new List();
                   _anonymousColors.addAll(materialColors);
                   _anonymousColors.add(

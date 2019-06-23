@@ -202,6 +202,7 @@ class S implements WidgetsLocalizations {
   String get settings => "Settings";
   String get show_less => "Show less...";
   String get show_more => "Show more...";
+  String get simkl_description => "All your favorite TV shows, anime and movies — in one place. Stop searching, marking and checking in. Start watching.";
   String get skip => "SKIP";
   String get sort => "Sort";
   String get sort_by => "Sort By...";
