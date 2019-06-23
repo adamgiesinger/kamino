@@ -61,6 +61,7 @@ class S implements WidgetsLocalizations {
   String get choose_a_theme_description => "Select a general theme! This is used primarily to decide the background color.";
   String get choose_n_categories_description => "Finally, let's tailor your content; choose at least 3 categories and get suggestions for content you enjoy!";
   String get choose_player => "Choose player...";
+  String get chooser => "Chooser";
   String get clear => "Clear";
   String get clear_search_history => "Clear Search History";
   String get clear_search_history_description => "Removes search suggestions based on past searches.";
@@ -120,6 +121,7 @@ class S implements WidgetsLocalizations {
   String get get_device_information => "Get Device Information";
   String get google_cast_prompt => "Cast";
   String get grid_layout => "Grid Layout";
+  String get hex => "Hex";
   String get hide_partial_unreleased_content => "Hide Partial/Unreleased Content";
   String get hide_partial_unreleased_content_description => "Filters out content that is lacking information or has not yet been released.";
   String get home => "Home";

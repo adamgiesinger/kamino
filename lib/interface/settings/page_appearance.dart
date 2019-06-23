@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/elements.dart';
@@ -60,7 +61,7 @@ class AppearenceSettingsPageState extends SettingsPageState {
           child: ListTile(
             title: TitleText(S.of(context).set_primary_color),
             subtitle: Text(
-                PrimaryColorChooser.colorToHexString(Theme.of(context).primaryColor)
+                PrimaryColorChooser.colorToHexString(Theme.of(context).primaryColor).toUpperCase()
             ),
             leading: CircleColor(
               circleSize: 32,
@@ -188,10 +189,15 @@ class PrimaryColorChooser extends StatefulWidget {
 
 class _PrimaryColorChooserState extends State<PrimaryColorChooser> {
 
+  bool _isAdvancedMode;
+  TextEditingController _hexInput;
+
   Color _activeColor;
   KaminoAppState appState;
 
   _PrimaryColorChooserState(Color initialColor){
+    _hexInput = new TextEditingController();
+    _isAdvancedMode = false;
     _activeColor = initialColor;
   }
 
@@ -218,71 +224,119 @@ class _PrimaryColorChooserState extends State<PrimaryColorChooser> {
         ],
       ),
       content: new Container(
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.75.clamp(0, 720),
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            MaterialColorPicker(
-                onColorChange: (Color color) => setState(() => _activeColor = color),
-                selectedColor: _activeColor,
-                colors: _findMainColor(_activeColor) != null
-                    ? materialColors : () {
-                  // Return list of colors including the current primary color
-                  List<ColorSwatch<dynamic>> _anonymousColors = new List();
-                  _anonymousColors.addAll(materialColors);
-                  _anonymousColors.add(
-                      ColorSwatch(_activeColor.value, <int, Color>{
-                        500: _activeColor
-                      }));
-                  return _anonymousColors;
-                }()
-            ),
+        width: MediaQuery.of(context).size.width * 0.75.clamp(0, 720),
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (notification){
+            notification.disallowGlow();
+            return false;
+          },
+          child: ListView(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            children: <Widget>[
+              if(!_isAdvancedMode) MaterialColorPicker(
+                  onColorChange: (Color color) => setState(() => _activeColor = color),
+                  selectedColor: _activeColor,
+                  colors: () {
+                    // Return list of colors including the current primary color
+                    List<ColorSwatch<dynamic>> _anonymousColors = new List();
+                    _anonymousColors.addAll(materialColors);
 
-            new Container(
-                child: new Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    new FlatButton(
-                        onPressed: () {
-                          KaminoAppState appState = context.ancestorStateOfType(
-                              const TypeMatcher<KaminoAppState>());
-                          appState.setPrimaryColorOverride(null);
+                    // Replace Material Design purple with ApolloTV purple.
+                    _anonymousColors.insert(0, ColorSwatch(0xFF8147FF, {500: const Color(0xFF8147FF)}));
+                    _anonymousColors.remove(Colors.deepPurple);
+
+                    if(_findMainColor(_activeColor, _anonymousColors) == null) {
+                      _anonymousColors.add(
+                          ColorSwatch(_activeColor.value, <int, Color>{
+                            500: _activeColor
+                          }));
+                    }
+                    return _anonymousColors;
+                  }()
+              ),
+
+              if(_isAdvancedMode) Container(
+                margin: EdgeInsets.symmetric(vertical: 20),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    textSelectionColor: _activeColor,
+                    textSelectionHandleColor: _activeColor,
+                    primaryColor: _activeColor,
+                    accentColor: _activeColor
+                  ),
+                  child: TextField(
+                    controller: _hexInput,
+                    maxLength: 6,
+                    maxLengthEnforced: true,
+                    cursorColor: _activeColor,
+                    decoration: InputDecoration(
+                        prefix: Text("#"),
+                        labelText: "Hex Color Code",
+                        counterText: "",
+                        hoverColor: _activeColor,
+                        focusColor: _activeColor,
+                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: _activeColor))
+                    ),
+                    autofocus: true,
+                    onChanged: (value){
+                      setState(() {
+                        if(value.length == 6)
+                          _activeColor = Color(int.parse("0xFF" + value));
+                      });
+                    },
+                    inputFormatters: [
+                      TextInputFormatter.withFunction((oldValue, newValue){
+                        return TextEditingValue(
+                          text: newValue.text?.toUpperCase(),
+                          selection: newValue.selection,
+                        );
+                      }),
+                      WhitelistingTextInputFormatter(RegExp('[0-9A-F]'))
+                    ],
+                  ),
+                ),
+              ),
+
+              new Container(
+                  child: new Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      new FlatButton(
+                          onPressed: () {
+                            _hexInput.text = PrimaryColorChooser.colorToHexString(_activeColor)
+                                .toUpperCase().replaceFirst("#", "");
+
+                            setState(() => _isAdvancedMode = !_isAdvancedMode);
+                          },
+                          child: Text(
+                            _isAdvancedMode ? S.of(context).chooser : S.of(context).hex,
+                            style: TextStyle(color: _activeColor),
+                          )
+                      ),
+
+                      new RaisedButton(
+                        color: _activeColor,
+                        onPressed: (){
+                          appState.setPrimaryColorOverride(_activeColor);
                           Navigator.of(context).pop();
                         },
-                        child: Text(
-                          S.of(context).default_,
-                          style: TextStyle(
-                              color: appState
-                                  .getActiveThemeData(ignoreOverride: true)
-                                  .primaryColor
-                          ),
-                        )
-                    ),
-
-                    new RaisedButton(
-                      color: _activeColor,
-                      onPressed: (){
-                        appState.setPrimaryColorOverride(_activeColor);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(S.of(context).done)
-                    )
-                  ],
-                )
-            )
-          ],
+                        child: Text(S.of(context).done)
+                      )
+                    ],
+                  )
+              )
+            ],
+          )
         ),
       ),
     );
   }
 
   /* UTILS */
-  ColorSwatch _findMainColor(Color shadeColor) {
-    for (final mainColor in materialColors)
+  ColorSwatch _findMainColor(Color shadeColor, List<ColorSwatch> colorSet) {
+    for (final mainColor in colorSet)
       if (_isShadeOfMain(mainColor, shadeColor)) return mainColor;
 
     return null;

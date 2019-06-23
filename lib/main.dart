@@ -48,6 +48,9 @@ class ErrorScaffold extends StatelessWidget {
 
 Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false, cancelPop = false}) async {
   try {
+    print(error.toString());
+    print(stacktrace);
+
     PackageInfo packageInfo = await SettingsManager.getPackageInfo();
 
     OverlayState overlay = KaminoApp.navigatorKey.currentState.overlay;
@@ -93,9 +96,6 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
 
       return;
     }
-
-    print(error.toString());
-    print(stacktrace);
 
     String _errorReference;
     try {
