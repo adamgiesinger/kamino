@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/models/tv_show.dart';
 import 'package:kamino/ui/elements.dart';
@@ -115,7 +116,7 @@ class TVShowLayout{
   ){
     Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => EpisodePicker(
+        ApolloTransitionRoute(builder: (context) => EpisodePicker(
             contentId: _data.id,
             show: _data,
             seasonIndex: _data.seasons[index]["season_number"]

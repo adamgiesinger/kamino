@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/models/movie.dart';
 import 'package:kamino/models/source.dart';
 import 'package:kamino/models/tv_show.dart';
@@ -128,7 +129,7 @@ abstract class VendorService {
             bool showSourceSelect = await _sourceSelectionEnabled();
 
             if(showSourceSelect){
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
+              Navigator.of(context).pushReplacement(ApolloTransitionRoute(
                   builder: (BuildContext context) => SourceSelectionView(
                       title: title,
                       service: this

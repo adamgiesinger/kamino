@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page.dart';
+import 'package:kamino/ui/loading.dart';
 
 class LaunchpadSettingsPage extends SettingsPage {
 
@@ -26,11 +27,7 @@ class LaunchpadSettingsPageState extends SettingsPageState {
     if(_userOptions == null){
       return Container(
         child: Center(
-          child: new CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation(
-                  Theme.of(context).primaryColor
-              )
-          )
+          child: ApolloLoadingSpinner()
         ),
       );
     }

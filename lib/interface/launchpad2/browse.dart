@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/search/genre_search.dart';
@@ -106,7 +107,7 @@ class BrowsePageState extends State<StatefulWidget> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () => Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (BuildContext context) => CuratedSearch(
+                                      ApolloTransitionRoute(builder: (BuildContext context) => CuratedSearch(
                                           listName: list.name,
                                           listID: list.id,
                                           contentType: getRawContentType(list.content[0].contentType)
@@ -178,7 +179,7 @@ class BrowsePageState extends State<StatefulWidget> {
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
+                                ApolloTransitionRoute(
                                     builder: (BuildContext context) => GenreSearch(
                                       genreID: genreId,
                                       genreName: Genre.resolveGenreName(

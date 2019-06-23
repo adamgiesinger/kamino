@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/loading.dart';
 
 class SearchingSourcesDialog extends StatefulWidget {
 
@@ -29,11 +30,7 @@ class SearchingSourcesDialogState extends State<SearchingSourcesDialog> {
               children: <Widget>[
                 Container(
                     padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
-                    child: new CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor
-                      ),
-                    )
+                    child: ApolloLoadingSpinner()
                 ),
                 Center(child: Text("Please wait..."))
               ],

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/settings.dart';
 
 import 'package:flutter/material.dart';
@@ -252,7 +253,7 @@ class _RealDebridAuthenticatorState extends State<RealDebridAuthenticator> {
           backgroundColor: Theme.of(context).cardColor,
         ),
         body: Center(
-          child: CircularProgressIndicator(),
+          child: ApolloLoadingSpinner(),
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
@@ -19,6 +20,7 @@ import 'package:kamino/partials/carousel_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:shimmer/shimmer.dart';
@@ -132,11 +134,7 @@ class Launchpad2State extends State<Launchpad2> {
           case ConnectionState.active:
           case ConnectionState.waiting:
             return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor
-                ),
-              ),
+              child: ApolloLoadingSpinner()
             );
           case ConnectionState.done:
           return ListView(
@@ -211,7 +209,7 @@ class Launchpad2State extends State<Launchpad2> {
                                   onTap: (){
                                     Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        ApolloTransitionRoute(
                                             builder: (context) => ContentOverview(
                                                 contentId: _continueWatchingList[index].id,
                                                 contentType: _continueWatchingList[index].contentType
@@ -318,7 +316,7 @@ class Launchpad2State extends State<Launchpad2> {
                   !_watchlistsLoaded ? Container(
                     margin: EdgeInsets.symmetric(vertical: 30),
                     child: Center(
-                      child: CircularProgressIndicator()
+                      child: ApolloLoadingSpinner()
                     )
                   ) : ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
@@ -343,7 +341,7 @@ class Launchpad2State extends State<Launchpad2> {
                                     padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                                     child: Text(S.of(context).see_all, style: TextStyle(color: Theme.of(context).primaryTextTheme.body1.color)),
                                     onPressed: () => Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (BuildContext context) => CuratedSearch(
+                                        ApolloTransitionRoute(builder: (BuildContext context) => CuratedSearch(
                                           listName: watchlist.name,
                                           listID: watchlist.id,
                                           contentType: getRawContentType(watchlist.content[0].contentType)
@@ -371,7 +369,7 @@ class Launchpad2State extends State<Launchpad2> {
                                             onTap: (){
                                               Navigator.push(
                                                   context,
-                                                  MaterialPageRoute(
+                                                  ApolloTransitionRoute(
                                                       builder: (context) => ContentOverview(
                                                           contentId: content.id,
                                                           contentType: content.contentType

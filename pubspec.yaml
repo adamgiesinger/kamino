@@ -67,6 +67,12 @@ dependencies:
       ref: "master"
   dart_chromecast: ^0.1.0
 
+  flare_flutter:
+    git:
+      url: git://github.com/2d-inc/Flare-Flutter.git
+      ref: dev
+      path: flare_flutter
+
 # Compile-only dependencies
 dev_dependencies:
   flutter_launcher_icons: "^0.6.1"
@@ -154,6 +160,8 @@ flutter:
     - assets/genre/tv/Talk.svg
     - assets/genre/tv/War & Politics.svg
     - assets/genre/tv/Western.svg
+
+    - lib/res/loader.flr
 
   fonts:
     - family: GlacialIndifference

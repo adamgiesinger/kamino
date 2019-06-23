@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_chromecast/casting/cast.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/favorites.dart';
 import 'package:kamino/interface/intro/kamino_intro.dart';
@@ -579,7 +580,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
                   case 'blog': return Interface.launchURL("https://medium.com/apolloblog");
                   case 'privacy': return Interface.launchURL("https://apollotv.xyz/legal/privacy");
                   case 'donate': return Interface.launchURL("https://apollotv.xyz/donate");
-                  case 'settings': return Navigator.push(context, MaterialPageRoute(
+                  case 'settings': return Navigator.push(context, ApolloTransitionRoute(
                       builder: (context) => SettingsView()
                   ));
 

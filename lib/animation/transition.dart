@@ -1,88 +1,74 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
-class FadeRoute<T> extends MaterialPageRoute<T> {
-  FadeRoute({ WidgetBuilder builder, RouteSettings settings })
-    : super(builder: builder, settings:settings);
+///
+/// This route transition currently mirrors that of Android Q's
+/// 'Material Design 2' page transition. (An expand-fade effect)
+///
+class ApolloTransitionRoute extends PageRouteBuilder {
+
+  Curve get animationCurve => Curves.easeInOutQuad;
+
+  ApolloTransitionRoute({
+    WidgetBuilder builder,
+    RouteSettings settings
+  }) : super(
+      pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation
+      ) => builder(context),
+      settings: settings,
+      transitionDuration: Duration(milliseconds: 500),
+  );
 
   @override
-  Widget buildTransitions(BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-
-    if(settings.isInitialRoute){
-      return child;
-    }
-
-    if(Platform.isIOS){
-      return super.buildTransitions(context, animation, secondaryAnimation, child);
-    }
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child
+  ){
 
     return new FadeTransition(
-        opacity: animation,
-        child: child
-    );
-
-  }
-
-}
-
-class SlideLeftRoute<T> extends MaterialPageRoute<T> {
-  SlideLeftRoute({ WidgetBuilder builder, RouteSettings settings })
-      : super(builder: builder, settings:settings);
-
-  @override
-  Widget buildTransitions(BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-
-    if(settings.isInitialRoute){
-      return child;
-    }
-
-    return new FadeTransition(
-      opacity: animation,
-      child: SlideTransition(
-          position: new Tween<Offset>(
-            begin: const Offset(1.0, 0.0),
-            end: Offset.zero
-          ).animate(animation),
-          child: child
-      )
-    );
-
-  }
-
-}
-
-class SlideRightRoute<T> extends MaterialPageRoute<T> {
-  SlideRightRoute({ WidgetBuilder builder, RouteSettings settings })
-      : super(builder: builder, settings:settings);
-
-  @override
-  Widget buildTransitions(BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-
-    if(settings.isInitialRoute){
-      return child;
-    }
-
-    return new FadeTransition(
-        opacity: animation,
-        child: SlideTransition(
-            position: new Tween<Offset>(
-                begin: const Offset(-1.0, 0.0),
-                end: Offset.zero
-            ).animate(animation),
-            child: child
+        opacity: CurvedAnimation(
+            parent: animation,
+            curve: Interval(0.3, 1, curve: animationCurve)
+        ),
+        child: ScaleTransition(
+            scale: new Tween<double>(
+                begin: 0.95,
+                end: 1
+            ).animate(CurvedAnimation(
+                parent: animation,
+                curve: animationCurve
+            )),
+            child: buildSecondaryTransitions(
+                context,
+                animation,
+                secondaryAnimation,
+                child
+            )
         )
     );
 
+  }
+
+  Widget buildSecondaryTransitions(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child
+  ){
+    return ScaleTransition(
+      scale: new Tween<double>(
+          begin: 1,
+          end: 1.05
+      ).animate(CurvedAnimation(
+          parent: secondaryAnimation,
+          curve: animationCurve
+      )),
+      child: child,
+    );
   }
 
 }

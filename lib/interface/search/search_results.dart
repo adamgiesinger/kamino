@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/partials/content_card.dart';
 import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/genre.dart' as genre;
 
 import 'package:flutter/material.dart';
@@ -73,7 +75,7 @@ class _SearchResultViewState extends State<SearchResultView> {
     if (_results[index].mediaType == "tv") {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
@@ -83,7 +85,7 @@ class _SearchResultViewState extends State<SearchResultView> {
     } else {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
@@ -141,11 +143,7 @@ class _SearchResultViewState extends State<SearchResultView> {
           if(widget.query == null || widget.query.isEmpty) return Container();
 
           if(!hasLoaded) return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor
-                ),
-              )
+              child: ApolloLoadingSpinner()
           );
 
           return Container(

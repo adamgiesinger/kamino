@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/interface/search/smart_search.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,7 +20,7 @@ class Interface {
     } else id = reference;
 
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (BuildContext context) => ContentOverview(
+        ApolloTransitionRoute(builder: (BuildContext context) => ContentOverview(
           contentId: id,
           contentType: type,
         ))
@@ -114,16 +116,21 @@ class Interface {
   }
 
   static void showSnackbar(String text, { BuildContext context, ScaffoldState state, Color backgroundColor = Colors.green }){
-    var snackbar = SnackBar(
-      duration: Duration(milliseconds: 1500),
-      content: TitleText(text),
-      backgroundColor: backgroundColor,
-    );
+    try {
+      var snackbar = SnackBar(
+        duration: Duration(milliseconds: 1500),
+        content: TitleText(text),
+        backgroundColor: backgroundColor,
+      );
 
-    if(context != null) { Scaffold.of(context).showSnackBar(snackbar); return; }
-    if(state != null) { state.showSnackBar(snackbar); return; }
+      if(context != null) { Scaffold.of(context).showSnackBar(snackbar); return; }
+      if(state != null) { state.showSnackBar(snackbar); return; }
 
-    print("Unable to show snackbar (text='$text')! No context or state was provided.");
+      print("Unable to show snackbar (text='$text')! No context or state was provided.");
+    }catch(ex){
+      print("Error showing snackbar!");
+      print(ex);
+    }
   }
 
   static Future<void> launchURL(String url) async {
@@ -223,11 +230,7 @@ class Interface {
                   children: <Widget>[
                     Container(
                         padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
-                        child: new CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).primaryColor
-                          ),
-                        )
+                        child: new ApolloLoadingSpinner()
                     ),
                     Center(child: Text(S.of(context).please_wait))
                   ],
@@ -268,11 +271,7 @@ class Interface {
               children: <Widget>[
                 Container(
                     padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
-                    child: new CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor
-                      ),
-                    )
+                    child: ApolloLoadingSpinner()
                 ),
                 Center(child: Text(S.of(context).please_wait))
               ],

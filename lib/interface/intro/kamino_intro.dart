@@ -24,6 +24,7 @@ import 'package:kamino/models/list.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/settings.dart';
 
 class KaminoIntro extends StatefulWidget {
@@ -579,7 +580,7 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                                     case ConnectionState.waiting:
                                     case ConnectionState.active:
                                       return Center(
-                                        child: CircularProgressIndicator(),
+                                        child: ApolloLoadingSpinner(),
                                       );
 
                                     case ConnectionState.done:

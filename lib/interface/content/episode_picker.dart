@@ -9,6 +9,7 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/tv_show.dart';
 import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/loading.dart';
 
 class EpisodePicker extends StatefulWidget {
   final int contentId;
@@ -83,11 +84,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
 
         // Shown whilst loading...
         Center(
-            child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor
-              ),
-            )
+            child: ApolloLoadingSpinner()
         ) :
 
         // Shown once loading is complete.

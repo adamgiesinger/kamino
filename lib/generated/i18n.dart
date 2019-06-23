@@ -6669,7 +6669,7 @@ class nl extends S {
   @override
   String get we_will_announce_it_on_our_social_pages_when_its => "Wij zullen mededelen op onze sociale pagina's als het klaar is.";
   @override
-  String get back => "TERUG";
+  String get back => "VORIGE";
   @override
   String get privacy => "Privacy";
   @override
@@ -6797,7 +6797,7 @@ class nl extends S {
   @override
   String get syncing => "Synchroniseren...";
   @override
-  String get well_dont_say_you_didnt_ask => "Niet zeggen dat u het niet gevraagd hebt!";
+  String get well_dont_say_you_didnt_ask => "U heeft er zelf voor gevraagd!!";
   @override
   String get youre_offline => "U bent offline...";
   @override
@@ -6809,7 +6809,7 @@ class nl extends S {
   @override
   String get change_player => "Verander speler";
   @override
-  String get customize_the_theme_and_primary_colors => "Pas het thema en de hoofdkleur aan.";
+  String get customize_the_theme_and_primary_colors => "Pas het thema en de primaire kleur aan.";
   @override
   String get authentication_failed => "Authenticatie gefaald...";
   @override
@@ -6873,7 +6873,7 @@ class nl extends S {
   @override
   String get version_track => "Version Track";
   @override
-  String get credits_description => "Deze is app werd naar u gebracht met \n2764 bij deze geweldige mensen!!";
+  String get credits_description => "Deze is app werd naar u gebracht door \n2764 van deze geweldige mensen!!";
   @override
   String get dump_database => "Dump Database";
   @override
@@ -6951,7 +6951,7 @@ class nl extends S {
   @override
   String get trakt_description => "Automatisch bijhouden wat u aan het kijken bent, afspeellijsten synchroniseren tussen apparaten en meer...";
   @override
-  String get sorts_alphabetically_by_name => "Sorteert alfabetisch p[ naam.";
+  String get sorts_alphabetically_by_name => "Sorteert alfabetisch op naam.";
   @override
   String get tv_shows => "TV Shows";
   @override

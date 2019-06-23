@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'dart:async';
 import 'package:kamino/models/content.dart';
@@ -89,7 +90,7 @@ class _CuratedSearchState extends State<CuratedSearch>{
     if (_results[index].mediaType == "tv") {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
@@ -99,7 +100,7 @@ class _CuratedSearchState extends State<CuratedSearch>{
     } else {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
