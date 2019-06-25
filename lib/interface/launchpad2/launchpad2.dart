@@ -90,13 +90,21 @@ class Launchpad2State extends State<Launchpad2> {
     List<String> watchlists = (jsonDecode((await Settings.homepageCategories)) as Map).keys.toList();
 
     if(!_watchlistsLoaded ||
-        !ListEquality().equals(_watchlists.map((ContentListModel list) => list.id.toString()).toList(), watchlists)){
+        !ListEquality().equals(_watchlists
+            .where((ContentListModel list) => list != null)
+            .map((ContentListModel list) => list.id.toString())
+            .toList(), watchlists)
+    ){
       (() async {
         //_watchlists = await _watchListMemoizer.runOnce(() async {
         List<ContentListModel> _loadedWatchlists = new List();
         for(String watchlist in watchlists){
           if(!mounted) break;
-          _loadedWatchlists.add(await TMDB.getList(context, int.parse(watchlist), loadFully: false, useCache: true));
+          try {
+            _loadedWatchlists.add(await TMDB.getList(
+                context, int.parse(watchlist), loadFully: false,
+                useCache: true));
+          }catch(ex){}
         }
         //});
 
