@@ -153,6 +153,7 @@ class S implements WidgetsLocalizations {
   String get no_favorites_description => "You can add an item to favorites by tapping the heart on the top right of a content overview page.";
   String get no_favorites_header => "No favorites here!";
   String get no_results_found => "No results found.";
+  String get no_sources_found => "No sources found.";
   String get not_yet_implemented => "Not yet implemented...";
   String get okay => "Okay";
   String get one_episode => "1 episode";
@@ -274,6 +275,7 @@ class S implements WidgetsLocalizations {
   String get with_thanks => "With thanks...";
   String get year => "Year";
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)";
+  String get your_request_has_been_saved => "Your request has been saved.";
   String get youre_offline => "You're offline...";
   String an_error_occurred_whilst_communicating_with_claws_detailed(String error) => "An error occurred whilst communicating with Claws. ($error)";
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "An error occurred whilst deauthenticating with Trakt.tv. ($errorCode)";
@@ -298,6 +300,7 @@ class S implements WidgetsLocalizations {
   String this_x_has_no_synopsis_available(String x) => "This $x has no synopsis available.";
   String unknown_x(String x) => "Unknown $x";
   String version_x(String version) => "Version $version";
+  String we_couldnt_find_any_sources_for_content(String content) => "We couldn't find any sources for '$content'.";
   String welcome_to_appname(String appName) => "Welcome to $appName";
   String choose_n_categories(String n) {
     switch (n) {

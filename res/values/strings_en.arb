@@ -309,5 +309,8 @@
   "hex": "Hex",
   "chooser": "Chooser",
   "content_suggestions": "Content Suggestions",
-  "content_suggestions_description": "Tailor your experience with our curated watchlists! If you're interested in a curated list, tap on it."
+  "content_suggestions_description": "Tailor your experience with our curated watchlists! If you're interested in a curated list, tap on it.",
+  "no_sources_found": "No sources found.",
+  "we_couldnt_find_any_sources_for_content": "We couldn't find any sources for '$content'.",
+  "your_request_has_been_saved": "Your request has been saved."
 }

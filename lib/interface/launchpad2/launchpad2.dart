@@ -138,7 +138,7 @@ class Launchpad2State extends State<Launchpad2> {
           if(snapshot is Error) print((snapshot.error as Error).stackTrace);
           return ErrorLoadingMixin(
             errorMessage: S.of(context).error_loading_launchpad,
-            reloadAction: () async {
+            action: () async {
               _launchpadMemoizer = new AsyncMemoizer();
               await _launchpadMemoizer.runOnce(load).catchError((error){});
               setState(() {});

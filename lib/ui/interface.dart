@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/content/overview.dart';
