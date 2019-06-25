@@ -46,20 +46,22 @@ class Launchpad2State extends State<Launchpad2> {
   List<ContentListModel> _watchlists;
 
   Future<void> load() async {
-    TMDB.getList(context, 105604, loadFully: false, useCache: true).then<ContentListModel>((list){
-      if(mounted) setState(() => _topPicksList = list.content);
-    });
+    return Future.any([
+      TMDB.getList(context, 105604, loadFully: false, useCache: true).then<ContentListModel>((list){
+        if(mounted) setState(() => _topPicksList = list.content);
+      }),
 
-    // Load editor's choice without preventing homepage from being displayed.
-    DatabaseHelper.refreshEditorsChoice(context).then((_) {
-      if (mounted) DatabaseHelper.selectRandomEditorsChoice().then(
-        (EditorsChoice editorsChoice){
-          if(mounted) setState(() =>
-            _editorsChoice = editorsChoice
-          );
-        }
-      );
-    });
+      // Load editor's choice without preventing homepage from being displayed.
+      DatabaseHelper.refreshEditorsChoice(context).then((_) {
+        if (mounted) DatabaseHelper.selectRandomEditorsChoice().then(
+                (EditorsChoice editorsChoice){
+              if(mounted) setState(() =>
+              _editorsChoice = editorsChoice
+              );
+            }
+        );
+      })
+    ]);
   }
 
   @override
@@ -125,8 +127,15 @@ class Launchpad2State extends State<Launchpad2> {
           );
 
           print(snapshot.error);
-          print((snapshot.error as Error).stackTrace);
-          return ErrorLoadingMixin(errorMessage: S.of(context).error_loading_launchpad);
+          if(snapshot is Error) print((snapshot.error as Error).stackTrace);
+          return ErrorLoadingMixin(
+            errorMessage: S.of(context).error_loading_launchpad,
+            reloadAction: () async {
+              _launchpadMemoizer = new AsyncMemoizer();
+              await _launchpadMemoizer.runOnce(load).catchError((error){});
+              setState(() {});
+            },
+          );
         }
 
         switch(snapshot.connectionState){

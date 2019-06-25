@@ -384,10 +384,12 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                               }
 
                               Clipboard.setData(
-                                  new ClipboardData(text: source.file.data));
-                              Interface.showSnackbar(S
-                                  .of(context)
-                                  .url_copied, context: ctx);
+                                  new ClipboardData(text: source.file.data)
+                              );
+                              Interface.showSnackbar(
+                                  S.of(context).url_copied,
+                                  context: ctx
+                              );
                             },
                           ),
                         ),

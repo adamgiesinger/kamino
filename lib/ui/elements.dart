@@ -265,17 +265,32 @@ class OfflineMixinState extends State<OfflineMixin> {
 
 }
 
-class ErrorLoadingMixin extends StatelessWidget {
+class ErrorLoadingMixin extends StatefulWidget {
 
   final String errorMessage;
+  final Function reloadAction;
 
   ErrorLoadingMixin({
-    this.errorMessage
+    this.errorMessage,
+    this.reloadAction
   });
 
   @override
+  State<StatefulWidget> createState() => ErrorLoadingMixinState();
+
+}
+
+class ErrorLoadingMixinState extends State<ErrorLoadingMixin> {
+
+  bool _isLoading;
+
+  ErrorLoadingMixinState(){
+    _isLoading = false;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if(errorMessage == null) S.of(context).an_error_occurred_whilst_loading_this_page;
+    if(widget.errorMessage == null) S.of(context).an_error_occurred_whilst_loading_this_page;
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -292,14 +307,33 @@ class ErrorLoadingMixin extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 50),
                 child: Text(
-                  errorMessage,
+                  widget.errorMessage,
                   softWrap: true,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 16
                   ),
                 ),
-              )
+              ),
+
+              widget.reloadAction != null ? Container(
+                padding: EdgeInsets.only(top: 10),
+                child: !_isLoading ? FlatButton(
+                  child: Text(S.of(context).reload.toUpperCase()),
+                  textColor: Theme.of(context).primaryColor,
+                  onPressed: () async {
+                    _isLoading = true;
+                    setState((){});
+                    await Future.delayed(Duration(seconds: 3));
+                    await widget.reloadAction();
+                    setState((){});
+                    _isLoading = false;
+                  },
+                ) : Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: ApolloLoadingSpinner(),
+                ),
+              ) : Container()
             ],
           ),
         ),
