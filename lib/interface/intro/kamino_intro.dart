@@ -521,9 +521,6 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
       ),
 
       Page(
-        canProceedFunction: (){
-          return _selectedCategories.length >= 3;
-        },
         child: Builder(builder: (_) => Expanded(
             child: Scrollbar(
               child: Container(
@@ -531,9 +528,9 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                 width: MediaQuery.of(context).size.width,
                 child: ListView(
                   children: <Widget>[
-                    TitleText(S.of(context).choose_n_categories((3 - _selectedCategories.length < 0 ? 0 : 3 - _selectedCategories.length).toString()), fontSize: 32, allowOverflow: true),
+                    TitleText(S.of(context).content_suggestions, fontSize: 32, allowOverflow: true),
                     Container(padding: EdgeInsets.symmetric(vertical: 10)),
-                    Text(S.of(context).choose_n_categories_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
+                    Text(S.of(context).content_suggestions_description, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14)),
 
                     Container(
                       margin: EdgeInsets.symmetric(vertical: 20),
@@ -767,7 +764,11 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
                   _controller.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
                 } : null,
                 highlightColor: Colors.transparent,
-                child: Text(onLastPage() ? S.of(context).lets_go : S.of(context).next.toUpperCase(), style: TextStyle(
+                child: Text(onLastPage()
+                    ? ((_selectedCategories.length > 0)
+                        ? S.of(context).lets_go.toUpperCase()
+                        : S.of(context).skip.toUpperCase())
+                    : S.of(context).next.toUpperCase(), style: TextStyle(
                     fontSize: 16
                 )),
                 padding: EdgeInsets.symmetric(vertical: 15),

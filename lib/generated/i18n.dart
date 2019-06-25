@@ -76,6 +76,8 @@ class S implements WidgetsLocalizations {
   String get connected_real_debrid_account => "Connected Real-Debrid Account.";
   String get connected_trakt_account => "Connected Trakt account.";
   String get connecting => "Connecting...";
+  String get content_suggestions => "Content Suggestions";
+  String get content_suggestions_description => "Tailor your experience with our curated watchlists! If you're interested in a curated list, tap on it.";
   String get content_trackers => "Content Trackers";
   String get continue_watching => "Continue Watching";
   String get copy_to_clipboard => "Copy to Clipboard";
