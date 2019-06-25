@@ -14,13 +14,14 @@ class TitleText extends Text {
     Color textColor,
     bool allowOverflow = false,
     TextAlign textAlign,
-    int maxLines
+    int maxLines,
+    TextStyle style
   }) : super(
     text,
     overflow: (allowOverflow
         ? (maxLines == null ? null : TextOverflow.ellipsis)
         : TextOverflow.ellipsis),
-    style: TextStyle(
+    style: TextStyle().merge(style).copyWith(
       fontFamily: 'GlacialIndifference',
       fontSize: fontSize,
       color: textColor,
