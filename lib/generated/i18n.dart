@@ -2538,6 +2538,8 @@ class sv extends S {
   @override
   String get play_movie => "Se Film";
   @override
+  String get converting_realdebrid_fidelity_points => "Konverterar Real-Debrid lojalitets-poäng...";
+  @override
   String get ongoing => "Pågående";
   @override
   String get not_yet_implemented => "Inte implementerad ännu...";
@@ -2548,9 +2550,13 @@ class sv extends S {
   @override
   String get throw_error => "Avlös Fel";
   @override
+  String get premium_hosts => "Premiumvärdar";
+  @override
   String get playback => "Uppspelning";
   @override
   String get released => "Släppt";
+  @override
+  String get simkl_description => "Alla dina favoritserier, anime och filmer — allt på en plats. Sluta söka, markera och checka in. Börja titta.";
   @override
   String get recommended_movies => "Rekommenderade Filmer";
   @override
@@ -2686,11 +2692,17 @@ class sv extends S {
   @override
   String get name => "Namn";
   @override
+  String get content_trackers => "Innehållsspårare";
+  @override
   String get copy_to_clipboard => "Kopiera till Urklipp";
   @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Om detta problem fortsätter, kontakta vänligen en personal på Discord.";
   @override
   String get next => "Nästa";
+  @override
+  String get expires => "Förfaller";
+  @override
+  String get real_debrid_convert_points => "Konvertera Poäng";
   @override
   String get cast_settings => "Cast Inställningar";
   @override
@@ -2792,15 +2804,21 @@ class sv extends S {
   @override
   String get thank_you_notice => "ApolloTV är en gemenskaps-insats och utan dessa personer så skulle denna app inte existera. För allas bidrag, det spelar ingen roll hur liten, är jag extremt tacksam.\n\n~NBTX";
   @override
+  String get hex => "Hex";
+  @override
   String get one_episode => "En episod";
   @override
   String get security_warnings_have_been_disabled => "Säkerhetsvarningar har blivit inaktiverade!";
   @override
   String get order => "ORDNING";
   @override
+  String get real_debrid_purchase_premium => "Köp Premium";
+  @override
   String get okay => "Okej";
   @override
   String get dismiss => "Avfärda";
+  @override
+  String get content_suggestions_description => "Skräddarsy din upplevelse med våra behandlade listor! Om du är intereserad av en behandlad lista, klicka på den.";
   @override
   String get loading => "Laddar...";
   @override
@@ -2846,7 +2864,9 @@ class sv extends S {
   @override
   String get unknown => "Okänt";
   @override
-  String get source_autoplay => "Slå På Automatisk Uppspelning Av Källorna";
+  String get content_suggestions => "Innehållsförslag";
+  @override
+  String get source_autoplay => "Slå På Automatisk Uppspelning Av Källa";
   @override
   String get authentication_unsuccessful => "Autentisering Misslyckades";
   @override
@@ -2886,7 +2906,7 @@ class sv extends S {
   @override
   String get sorts_by_the_size_of_the_file => "Sorterar genom storleken av filen.";
   @override
-  String get curated => "Kurerat";
+  String get curated => "Behandlat";
   @override
   String get connected_real_debrid_account => "Real-Debrid Konto Kopplat.";
   @override
@@ -2913,6 +2933,8 @@ class sv extends S {
   String get $_language_name_english => "Swedish";
   @override
   String get blog => "Blogg";
+  @override
+  String get your_request_has_been_saved => "Din förfrågan har blivit sparad.";
   @override
   String get descending => "Fallande";
   @override
@@ -2998,6 +3020,8 @@ class sv extends S {
   @override
   String get show_more => "Visa mer...";
   @override
+  String get no_sources_found => "Inga källor hittades.";
+  @override
   String get update_failed_please_try_again_later => "Uppdatering misslyckades. Försök igen senare.";
   @override
   String get no_results_found => "Inga resultat hittades.";
@@ -3007,6 +3031,8 @@ class sv extends S {
   String get searching_for_cast_devices => "Söker efter Cast enheter...";
   @override
   String get choose_a_theme => "Välj tema...";
+  @override
+  String get chooser => "Väljare";
   @override
   String get trakt_synchronization => "Trakt Synkronisation...";
   @override
@@ -3027,6 +3053,8 @@ class sv extends S {
   String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName har lyckats med att autentisera med Trakt.tv!";
   @override
   String welcome_to_appname(String appName) => "Välkommen till $appName";
+  @override
+  String we_couldnt_find_any_sources_for_content(String content) => "Vi kunde inte hitta några källor för '$content'.";
   @override
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName möjliggjordes tack vare alla dessa otroliga personer:";
   @override
@@ -3063,6 +3091,8 @@ class sv extends S {
   String now_connected_to_device(String device) => "Ansluten till $device";
   @override
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "Ett fel har uppstått med ifrånkopplingen till Trakt.tv. ($errorCode)";
+  @override
+  String real_debrid_n_points(String points) => "$points poäng";
   @override
   String real_debrid_n_sources(String n) {
     switch (n) {
