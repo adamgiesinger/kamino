@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/api/realdebrid.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
@@ -192,7 +194,49 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                       notification.disallowGlow();
                     }
                   },
-                  child: ListView(
+                  child: (widget.service.status == VendorServiceStatus.DONE && sourceList.length == 0) ?
+                    ErrorLoadingMixin(
+                      partialForm: true,
+                      errorTitle: S.of(context).no_sources_found,
+                      errorMessage: S.of(context).we_couldnt_find_any_sources_for_content(widget.title),
+                      action: (){
+                        final FlutterWebviewPlugin webview = FlutterWebviewPlugin();
+                        webview.close();
+
+                        webview.onStateChanged.take(1).listen((_) async {
+                          webview.evalJavascript("window.onselect = window.oncontextmenu = function(event){ event.preventDefault(); return false; }");
+                          webview.evalJavascript("document.head.innerHTML+='<style>*{user-select:none !important;}</style>'");
+
+                          webview.onUrlChanged.listen((data) async {
+                            if(await webview.evalJavascript("document.body.innerHTML.indexOf('Submit another response') > -1") == 'true'){
+                              webview.stopLoading();
+                              webview.dispose();
+                              Navigator.of(context).pop();
+
+                              Interface.showSimpleSuccessDialog(context, message: S.of(context).your_request_has_been_saved);
+                            }
+                          });
+                        });
+
+                        Navigator.push(context, ApolloTransitionRoute(builder: (_){
+                          return WebviewScaffold(
+                            appBar: AppBar(
+                              leading: IconButton(
+                                icon: Icon(Icons.close),
+                                tooltip: "Close",
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                            ),
+                            url: "https://docs.google.com/forms/d/e/1FAIpQLScMfEYwPtmIi3z-pUVnxD8IRjGEwMNLNYwz4lkOVA0Mn9Liuw/viewform",
+                            withJavascript: true,
+                            supportMultipleWindows: false,
+                            allowFileURLs: false
+                          );
+                        }));
+                      },
+                      actionLabel: "Submit Request",
+                    )
+                  : ListView(
                     primary: true,
                     children: <Widget>[
                       isShimVendor && !_disableSecurityMessages ? Container(
@@ -266,136 +310,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
 
           var source = sourceList[index];
-
-          String qualityInfo; // until we sort out quality detection
-          if (source.metadata.quality != null
-              && source.metadata.quality.replaceAll(" ", "").isNotEmpty) {
-            qualityInfo = source.metadata.quality;
-          }
-
-          /*
-                if(source["metadata"]["extended"] != null){
-                  var extendedMeta = source["metadata"]["extended"]["streams"][0];
-                  var resolution = extendedMeta["coded_height"];
-
-                  if(resolution < 360) qualityInfo = "[LQ]";
-                  if(resolution >= 360) qualityInfo = "[SD]";
-                  if(resolution > 720) qualityInfo = "[HD]";
-                  if(resolution > 1080) qualityInfo = "[FHD]";
-                  if(resolution > 2160) qualityInfo = "[4K]";
-
-                  qualityInfo += " [" + extendedMeta["codec_name"].toUpperCase() + "]";
-                }
-              */
-
-          return Container(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: Material(
-                clipBehavior: Clip.antiAlias,
-                borderRadius: BorderRadius.circular(5),
-                color: Theme.of(context).cardColor,
-                elevation: 2,
-                child: IntrinsicHeight(
-                    child: Stack(
-                      children: <Widget>[
-                        Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-
-                              Container(
-                                  width: 80,
-                                  color: source.metadata.isRD ? Theme.of(context).primaryColor : Color.fromRGBO(
-                                      Theme.of(context).cardColor.red + 10,
-                                      Theme.of(context).cardColor.green + 10,
-                                      Theme.of(context).cardColor.blue + 10,
-                                      Theme.of(context).cardColor == const Color(0xFF000000) ? 0.0 : 1.0
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Container(
-                                          padding: EdgeInsets.symmetric(vertical: 5),
-                                          width: 60,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(color: Colors.white, width: 1.5),
-                                              borderRadius: BorderRadius.circular(5)
-                                          ),
-                                          child: TitleText(
-                                            (qualityInfo != null ? qualityInfo : "-"),
-                                            textAlign: TextAlign.center,
-                                          )
-                                      ),
-
-                                      Container(
-                                          child: TitleText(
-                                              (
-                                                  source.metadata.contentLength != null
-                                                      ? formatFilesize(source.metadata.contentLength, round: 0, decimal: true)
-                                                      : ""
-                                              )
-                                          )
-                                      )
-                                    ],
-                                  )
-                              ),
-
-                              Expanded(
-                                  child: ListTile(
-                                      enabled: true,
-                                      isThreeLine: true,
-
-                                      title: TitleText(
-                                          "${source.metadata.provider} (${source.metadata
-                                              .source})"),
-                                      subtitle: Text(
-                                        source.file.data,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                  )
-                              )
-
-                            ]
-                        ),
-
-                        Material(
-                          type: MaterialType.transparency,
-                          child: InkWell(
-                            child: Container(),
-                            onTap: () async {
-                              PlayerHelper.play(
-                                  context,
-                                  title: widget.title,
-                                  url: source.file.data,
-                                  mimeType: 'video/*'
-                              );
-                            },
-                            onLongPress: () {
-                              if(Platform.isAndroid) {
-                                PlayerHelper.choosePlayer(
-                                    context,
-                                    title: widget.title,
-                                    url: source.file.data,
-                                    mimeType: 'video/*'
-                                );
-                                return;
-                              }
-
-                              Clipboard.setData(
-                                  new ClipboardData(text: source.file.data));
-                              Interface.showSnackbar(S
-                                  .of(context)
-                                  .url_copied, context: ctx);
-                            },
-                          ),
-                        ),
-                      ],
-                    )
-                ),
-              ),
-          );
+          return _SourceLink(source: source, title: widget.title);
         }
       );
   }
@@ -403,6 +318,10 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
   List<SourceModel> _sortList(List<SourceModel> sourceList) {
     /* By default, sorting is descending. (Ideally best to worst.)
      * Reversed, is descending. */
+
+    if(sortingMethod != 'fileSize') sourceList.sort((SourceModel left, SourceModel right){
+      return left.metadata.contentLength.compareTo(right.metadata.contentLength);
+    });
 
     sourceList.sort((SourceModel left, SourceModel right) {
       switch(sortingMethod){
@@ -624,6 +543,226 @@ class SourceSortingDialogState extends State<SourceSortingDialog> {
           ),
         )
       ],
+    );
+  }
+
+}
+
+
+
+
+class _SourceLink extends StatefulWidget {
+
+  final String title;
+  final SourceModel source;
+
+  _SourceLink({
+    @required this.title,
+    @required this.source
+  });
+
+  @override
+  State<StatefulWidget> createState() => _SourceLinkState();
+
+}
+
+class _SourceLinkState extends State<_SourceLink> {
+
+  bool _sourceTapped;
+
+  @override
+  void initState(){
+    _sourceTapped = false;
+
+    super.initState();
+  }
+
+  String getQualityInfo(){
+    /*
+                if(source["metadata"]["extended"] != null){
+                  var extendedMeta = source["metadata"]["extended"]["streams"][0];
+                  var resolution = extendedMeta["coded_height"];
+
+                  if(resolution < 360) qualityInfo = "[LQ]";
+                  if(resolution >= 360) qualityInfo = "[SD]";
+                  if(resolution > 720) qualityInfo = "[HD]";
+                  if(resolution > 1080) qualityInfo = "[FHD]";
+                  if(resolution > 2160) qualityInfo = "[4K]";
+
+                  qualityInfo += " [" + extendedMeta["codec_name"].toUpperCase() + "]";
+                }
+              */
+    if (widget.source.metadata.quality != null) {
+      return widget.source.metadata.quality;
+    }
+
+    return "-";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Material(
+        clipBehavior: Clip.antiAlias,
+        borderRadius: BorderRadius.circular(5),
+        color: Theme.of(context).cardColor,
+        elevation: 2,
+        child: IntrinsicHeight(
+            child: Stack(
+              children: <Widget>[
+                Row(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+
+                      Container(
+                          width: 80,
+                          color: widget.source.metadata.isRD ? Theme.of(context).primaryColor : Color.fromRGBO(
+                              Theme.of(context).cardColor.red + 10,
+                              Theme.of(context).cardColor.green + 10,
+                              Theme.of(context).cardColor.blue + 10,
+                              Theme.of(context).cardColor == const Color(0xFF000000) ? 0.0 : 1.0
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Container(
+                                  padding: EdgeInsets.symmetric(vertical: 5),
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white, width: 1.5),
+                                      borderRadius: BorderRadius.circular(5)
+                                  ),
+                                  child: TitleText(
+                                    getQualityInfo(),
+                                    textAlign: TextAlign.center,
+                                  )
+                              ),
+
+                              Container(
+                                  child: TitleText(
+                                      (
+                                          widget.source.metadata.contentLength != null
+                                              ? formatFilesize(widget.source.metadata.contentLength, round: 0, decimal: true)
+                                              : ""
+                                      )
+                                  )
+                              )
+                            ],
+                          )
+                      ),
+
+                      Expanded(
+                          child: ListTile(
+                              enabled: true,
+                              isThreeLine: true,
+
+                              title: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Expanded(child: TitleText(
+                                      "${widget.source.metadata.provider} (${widget.source.metadata
+                                          .source})"
+                                  )),
+
+                                  if(_sourceTapped) Icon(Icons.history, size: 20)
+                                ],
+                              ),
+                              subtitle: Builder(
+                                builder: (BuildContext context){
+                                  Uri source = Uri.parse(widget.source.file.data);
+                                  bool isSSL = source.scheme == "https";
+                                  String fileExtension = source.pathSegments.last.split('.').last.length == 3
+                                      ? source.pathSegments.last.split('.').last.toUpperCase() : null;
+
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(vertical: 5),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Text(
+                                                  (fileExtension != null ? "($fileExtension) " : "") + source.pathSegments.last,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.fade,
+                                                  softWrap: false
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Container(margin: EdgeInsets.only(top: 10)),
+                                        Row(
+                                          children: <Widget>[
+                                            if(isSSL) Container(
+                                              padding: EdgeInsetsDirectional.only(end: 3),
+                                              child: Icon(Icons.lock, size: 14, color: Colors.lightGreen),
+                                            ),
+                                            /*if(isSSL) Text("${source.scheme.toLowerCase()}://", style: TextStyle(
+                                              color: Colors.lightGreen
+                                            )),*/
+                                            Text(source.host, style: TextStyle(
+                                              color: Theme.of(context).textTheme.display4.color.withOpacity(0.4)
+                                            ))
+                                          ],
+                                        )
+                                      ],
+                                      //maxLines: 2,
+                                      //overflow: TextOverflow.ellipsis
+                                    ),
+                                  );
+                                },
+                              )
+                          )
+                      )
+
+                    ]
+                ),
+
+                Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    child: Container(),
+                    onTap: () async {
+                      setState(() => _sourceTapped = true);
+
+                      PlayerHelper.play(
+                          context,
+                          title: widget.title,
+                          url: widget.source.file.data,
+                          mimeType: 'video/*'
+                      );
+                    },
+                    onLongPress: () {
+                      setState(() => _sourceTapped = true);
+
+                      if(Platform.isAndroid) {
+                        PlayerHelper.choosePlayer(
+                            context,
+                            title: widget.title,
+                            url: widget.source.file.data,
+                            mimeType: 'video/*'
+                        );
+                        return;
+                      }
+
+                      Clipboard.setData(
+                          new ClipboardData(text: widget.source.file.data)
+                      );
+                      Interface.showSnackbar(
+                          S.of(context).url_copied,
+                          context: context
+                      );
+                    },
+                  ),
+                ),
+              ],
+            )
+        ),
+      ),
     );
   }
 

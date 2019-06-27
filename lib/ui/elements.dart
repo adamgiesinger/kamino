@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kamino/cast/cast_devices_dialog.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
+import 'package:kamino/ui/loading.dart';
 
 import 'interface.dart';
 
@@ -13,13 +14,14 @@ class TitleText extends Text {
     Color textColor,
     bool allowOverflow = false,
     TextAlign textAlign,
-    int maxLines
+    int maxLines,
+    TextStyle style
   }) : super(
     text,
     overflow: (allowOverflow
         ? (maxLines == null ? null : TextOverflow.ellipsis)
         : TextOverflow.ellipsis),
-    style: TextStyle(
+    style: TextStyle().merge(style).copyWith(
       fontFamily: 'GlacialIndifference',
       fontSize: fontSize,
       color: textColor,
@@ -252,7 +254,7 @@ class OfflineMixinState extends State<OfflineMixin> {
                   },
                 ) : Padding(
                   padding: EdgeInsets.only(top: 10),
-                  child: CircularProgressIndicator(),
+                  child: ApolloLoadingSpinner(),
                 ),
               ) : Container()
             ],
@@ -264,43 +266,91 @@ class OfflineMixinState extends State<OfflineMixin> {
 
 }
 
-class ErrorLoadingMixin extends StatelessWidget {
+class ErrorLoadingMixin extends StatefulWidget {
 
+  final String errorTitle;
   final String errorMessage;
+  final Function action;
+  final String actionLabel;
+  final bool partialForm;
 
   ErrorLoadingMixin({
-    this.errorMessage
+    this.errorTitle,
+    this.errorMessage,
+    this.action,
+    this.actionLabel,
+    this.partialForm = false
   });
 
   @override
-  Widget build(BuildContext context) {
-    if(errorMessage == null) S.of(context).an_error_occurred_whilst_loading_this_page;
+  State<StatefulWidget> createState() => ErrorLoadingMixinState();
 
+}
+
+class ErrorLoadingMixinState extends State<ErrorLoadingMixin> {
+
+  bool _isLoading;
+
+  ErrorLoadingMixinState(){
+    _isLoading = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String errorMessage = widget.errorMessage;
+    if(errorMessage == null) errorMessage = S.of(context).an_error_occurred_whilst_loading_this_page;
+
+    if(widget.partialForm) return _buildBody(errorMessage);
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Container(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.error, size: 48, color: Colors.grey),
-              Container(padding: EdgeInsets.symmetric(vertical: 10)),
-              TitleText(S.of(context).an_error_occurred, fontSize: 24),
-              Container(padding: EdgeInsets.symmetric(vertical: 3)),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 50),
-                child: Text(
-                  errorMessage,
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 16
-                  ),
+      body: _buildBody(errorMessage),
+    );
+  }
+
+  Widget _buildBody(String errorMessage){
+    return Container(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(Icons.error, size: 48, color: Colors.grey),
+            Container(padding: EdgeInsets.symmetric(vertical: 10)),
+            TitleText(widget.errorTitle != null
+                && widget.errorTitle.isNotEmpty ? widget.errorTitle : S.of(context).an_error_occurred, fontSize: 24),
+            Container(padding: EdgeInsets.symmetric(vertical: 3)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Text(
+                errorMessage,
+                softWrap: true,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+
+            widget.action != null ? Container(
+              padding: EdgeInsets.only(top: 10),
+              child: !_isLoading ? FlatButton(
+                child: Text(widget.actionLabel != null
+                    && widget.actionLabel.isNotEmpty ? widget.actionLabel.toUpperCase() : S.of(context).reload.toUpperCase()),
+                textColor: Theme.of(context).primaryColor,
+                onPressed: () async {
+                  _isLoading = true;
+                  setState((){});
+                  await Future.delayed(Duration(seconds: 3));
+                  await widget.action();
+                  setState((){});
+                  _isLoading = false;
+                },
+              ) : Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: ApolloLoadingSpinner(),
+              ),
+            ) : Container()
+          ],
         ),
       ),
     );

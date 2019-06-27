@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'dart:async';
 import 'package:kamino/models/content.dart';
@@ -91,7 +92,7 @@ class _GenreSearchState extends State<GenreSearch>{
     if (_results[index].mediaType == "tv") {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
@@ -101,7 +102,7 @@ class _GenreSearchState extends State<GenreSearch>{
     } else {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
                       contentId: _results[index].id,
@@ -117,36 +118,34 @@ class _GenreSearchState extends State<GenreSearch>{
     TextStyle _glacialFont = TextStyle(
         fontFamily: "GlacialIndifference");
 
-    return Scrollbar(
-        child: Scaffold(
-          backgroundColor: Theme.of(context).backgroundColor,
-          appBar: new AppBar(
-            title: Text(widget.genreName, style: _glacialFont,),
-            centerTitle: true,
-            backgroundColor: Theme.of(context).backgroundColor,
-            elevation: 5.0,
-            actions: <Widget>[
-              Interface.generateSearchIcon(context),
-            ],
-          ),
-          body: RefreshIndicator(
-            onRefresh: () async {
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      appBar: new AppBar(
+        title: Text(widget.genreName, style: _glacialFont,),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).backgroundColor,
+        elevation: 5.0,
+        actions: <Widget>[
+          Interface.generateSearchIcon(context),
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
 
-              await Future.delayed(Duration(seconds: 2));
-              DatabaseHelper.getAllFavoriteIds().then((data){
-                if(mounted) setState(() {
-                  _favIDs = data;
-                });
-              });
-            },
-            child: Scrollbar(
-              child: LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints)
-                  => _expandedSearchPref == false ? _gridResults(context, constraints) : _listResult()
-              ),
-            ),
+          await Future.delayed(Duration(seconds: 2));
+          DatabaseHelper.getAllFavoriteIds().then((data){
+            if(mounted) setState(() {
+              _favIDs = data;
+            });
+          });
+        },
+        child: Scrollbar(
+          child: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints)
+              => _expandedSearchPref == false ? _gridResults(context, constraints) : _listResult()
           ),
         ),
+      ),
     );
   }
 

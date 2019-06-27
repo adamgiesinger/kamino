@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
@@ -185,11 +186,7 @@ void showLoadingDialog(BuildContext context, String title, Widget content){
                 children: <Widget>[
                   Container(
                       padding: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 20),
-                      child: new CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            Theme.of(context).primaryColor
-                        ),
-                      )
+                      child: new ApolloLoadingSpinner()
                   ),
                   Center(child: content)
                 ],

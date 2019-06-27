@@ -2,13 +2,16 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:dart_chromecast/casting/cast.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/favorites.dart';
 import 'package:kamino/interface/intro/kamino_intro.dart';
 import 'package:kamino/interface/launchpad2/browse.dart';
 import 'package:kamino/interface/launchpad2/launchpad2.dart';
 import 'package:kamino/interface/settings/utils/ota.dart' as OTA;
+import 'package:kamino/skyspace/skyspace.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
 import 'package:kamino/util/settings.dart';
@@ -25,15 +28,17 @@ import 'package:kamino/vendor/index.dart';
 
 import 'package:kamino/interface/settings/settings.dart';
 import 'package:package_info/package_info.dart';
+import 'package:http/http.dart' as http;
 
 const appName = "ApolloTV";
 const appCastID = "6569632D";
 Logger log;
 
+PlatformType currentPlatform;
 const platform = const MethodChannel('xyz.apollotv.kamino/init');
-class PlatformType {
-  static const GENERAL = 0;
-  static const TV = 1;
+enum PlatformType {
+  GENERAL,
+  TV
 }
 
 class ErrorScaffold extends StatelessWidget {
@@ -45,6 +50,9 @@ class ErrorScaffold extends StatelessWidget {
 
 Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false, cancelPop = false}) async {
   try {
+    print(error.toString());
+    print(stacktrace);
+
     PackageInfo packageInfo = await SettingsManager.getPackageInfo();
 
     OverlayState overlay = KaminoApp.navigatorKey.currentState.overlay;
@@ -90,9 +98,6 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
 
       return;
     }
-
-    print(error.toString());
-    print(stacktrace);
 
     String _errorReference;
     try {
@@ -157,22 +162,21 @@ void main() async {
     await SettingsManager.onAppInit();
 
     if(Platform.isAndroid) {
-      return (await platform.invokeMethod('getDeviceType')) as int;
+      switch (await platform.invokeMethod('getDeviceType')) {
+        case 1:
+          return PlatformType.TV;
+      }
     }
     return PlatformType.GENERAL;
   }().then((platformType){
+    currentPlatform = platformType;
+
     FlutterError.onError = (FlutterErrorDetails details) async {
       print("A Flutter exception was caught by the $appName internal error handler.");
       await reportError(details.exception, details.stack);
     };
 
     runZoned<Future<void>>((){
-      /*if(platformType == PlatformType.TV) {
-        // Start Kamino (TV)
-        runApp(KaminoSkyspace());
-        return;
-      }*/
-
       // Start Kamino (mobile)
       runApp(KaminoApp());
     }, onError: (error, StackTrace stacktrace) async {
@@ -381,6 +385,13 @@ class KaminoAppState extends State<KaminoApp> {
   Widget build(BuildContext context) {
     ErrorWidget.builder = (FlutterErrorDetails error) => _getErrorWidget(error);
 
+    StatefulWidget applicationHome;
+    if(currentPlatform == PlatformType.TV) {
+      applicationHome = KaminoSkyspace();
+    }else{
+      applicationHome = KaminoAppHome();
+    }
+
     return new KaminoAppDelegateProxyRenderer(child: MaterialApp(
       navigatorKey: KaminoApp.navigatorKey,
       localizationsDelegates: [
@@ -392,7 +403,7 @@ class KaminoAppState extends State<KaminoApp> {
       locale: _currentLocale != null ? _currentLocale : Locale('en'),
 
       title: appName,
-      home: KaminoAppHome(),
+      home: applicationHome,
       theme: getActiveThemeData(),
 
       // Hide annoying debug banner
@@ -498,6 +509,8 @@ class KaminoAppPage extends StatefulWidget {
 
 class KaminoAppHomeState extends State<KaminoAppHome> {
 
+  bool isConnected;
+
   final List<KaminoAppPage> _pages = [
     Launchpad2(),
     BrowseTVShowsPage(),
@@ -514,6 +527,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
   @override
   void initState() {
     _activePage = 0;
+    isConnected = true;
     
     (() async {
 
@@ -522,16 +536,34 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) => KaminoIntro(then: () async {
             setState(() {});
-            OTA.updateApp(context, true);
+            prepare();
           })
         ));
       }else{
-        OTA.updateApp(context, true);
+        prepare();
       }
 
     })();
     
     super.initState();
+  }
+
+  StreamSubscription connectivityCheck;
+  void prepare(){
+    OTA.updateApp(context, true);
+    connectivityCheck = Connectivity().onConnectivityChanged.listen((ConnectivityResult result){
+      http.head("https://static.apollotv.xyz/generate_204").then((http.Response response){
+        if(response == null || response.statusCode != 204) {
+          isConnected = false;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose(){
+    connectivityCheck.cancel();
+    super.dispose();
   }
 
   @override
@@ -571,7 +603,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
                   case 'blog': return Interface.launchURL("https://medium.com/apolloblog");
                   case 'privacy': return Interface.launchURL("https://apollotv.xyz/legal/privacy");
                   case 'donate': return Interface.launchURL("https://apollotv.xyz/donate");
-                  case 'settings': return Navigator.push(context, MaterialPageRoute(
+                  case 'settings': return Navigator.push(context, ApolloTransitionRoute(
                       builder: (context) => SettingsView()
                   ));
 
@@ -614,7 +646,15 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
         ),
 
           // Body content
-        body: _pages.elementAt(_activePage),
+        body: Builder(builder: (BuildContext context){
+          if(!isConnected) return OfflineMixin(
+            reloadAction: () async {
+              setState(() {});
+            },
+          );
+
+          return _pages.elementAt(_activePage);
+        }),
 
         bottomNavigationBar: BottomNavigationBar(
           elevation: 0,

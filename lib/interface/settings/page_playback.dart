@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page.dart';
 import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:package_info/package_info.dart';
 
@@ -38,11 +39,7 @@ class PlaybackSettingsPage extends SettingsPage {
                     child: FutureBuilder(future: _loadPlayerData, builder: (_, AsyncSnapshot<dynamic> snapshot) {
                       if(snapshot.connectionState != ConnectionState.done) {
                         return Container(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).primaryColor
-                            ),
-                          ),
+                          child: ApolloLoadingSpinner(),
                         );
                       }
 

@@ -153,6 +153,7 @@ class TMDB {
       return listModel;
     }catch(ex){
       print("Error whilst fetching list #$id");
+      throw ex;
     }
   }
 

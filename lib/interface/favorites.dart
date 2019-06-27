@@ -5,6 +5,7 @@ import 'package:kamino/models/content.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/elements.dart';
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/database_helper.dart';
 
 class FavoritesPage extends KaminoAppPage {
@@ -44,11 +45,7 @@ class FavoritesPageState extends State<FavoritesPage>
   Widget build(BuildContext context) {
     if(favorites == null){
       return Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(
-            Theme.of(context).primaryColor
-          ),
-        ),
+        child: ApolloLoadingSpinner(),
       );
     }
 

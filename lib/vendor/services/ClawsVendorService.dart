@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt/encrypt.dart' as Crypto;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -560,19 +560,16 @@ class ClawsVendorService extends VendorService {
   }
 
   Future<String> _generateClawsHash(String clawsClientKey, int now) async {
-    final randGen = Random.secure();
+    Crypto.IV iv = Crypto.IV(Uint8List.fromList(
+        new List.generate(8, (_) => Random.secure().nextInt(128))
+    ));
 
-    Uint8List ivBytes =
-        Uint8List.fromList(new List.generate(8, (_) => randGen.nextInt(128)));
-    String ivHex = formatBytesAsHexString(ivBytes);
-    String iv = Convert.utf8.decode(ivBytes);
-
-    final key = clawsClientKey.substring(0, 32);
-    final encrypter = new Encrypter(new Salsa20(key, iv));
+    final key = Crypto.Key.fromUtf8(clawsClientKey.substring(0, 32));
+    final encryptor = Crypto.Encrypter(Crypto.Salsa20(key));
     final plainText = "$now|$clawsClientKey";
-    final encryptedText = encrypter.encrypt(plainText);
+    final payload = encryptor.encrypt(plainText, iv: iv);
 
-    return "$ivHex|$encryptedText";
+    return "${iv.base16}|${payload.base16}";
   }
 
   String formatBytesAsHexString(Uint8List bytes) {

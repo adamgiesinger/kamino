@@ -12,30 +12,7 @@ class KaminoSkyspace extends StatefulWidget {
 
 }
 
-class KaminoSkyspaceState extends State<StatefulWidget> {
-
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-        title: "Skyspace",
-        home: Skyspace(),
-        theme: OfficialVendorTheme.dark.getThemeData(),
-
-        // Hide annoying debug banner
-        debugShowCheckedModeBanner: false
-    );
-  }
-
-}
-
-class Skyspace extends StatefulWidget {
-
-  @override
-  State<StatefulWidget> createState() => SkyspaceState();
-
-}
-
-class SkyspaceState extends State<Skyspace> {
+class KaminoSkyspaceState extends State<KaminoSkyspace> {
 
   int _currentPage;
 

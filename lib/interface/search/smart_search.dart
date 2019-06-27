@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/search/search_results.dart';
@@ -162,7 +163,7 @@ class SmartSearch extends SearchDelegate<String> {
             onTap: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  ApolloTransitionRoute(
                       builder: (context) => ContentOverview(
                           contentId: snapshot.data[index].id,
                           contentType: snapshot.data[index].mediaType == "tv"

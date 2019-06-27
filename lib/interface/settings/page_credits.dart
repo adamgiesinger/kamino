@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/interface/settings/page.dart';
 import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class CreditsSettingsPage extends SettingsPage {
@@ -39,7 +40,7 @@ class CreditsSettingsPageState extends SettingsPageState {
   Widget buildPage(BuildContext context) {
     if(_contributors == null){
       return Center(
-        child: CircularProgressIndicator(),
+        child: ApolloLoadingSpinner(),
       );
     }
 

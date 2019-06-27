@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parallax/flutter_parallax.dart';
 import 'package:intl/intl.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/interface/content/overview.dart';
 import 'package:kamino/models/content.dart';
@@ -84,7 +85,7 @@ class CarouselCardState extends State<CarouselCard> {
               color: Colors.transparent,
               child: InkWell(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(
+                  Navigator.push(context, ApolloTransitionRoute(
                       builder: (context) => ContentOverview(
                         contentId: widget.model.id,
                         contentType: (widget.model is MovieContentModel) ? ContentType.MOVIE : ContentType.TV_SHOW,

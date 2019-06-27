@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/settings.dart';
 
 import 'package:flutter/material.dart';
@@ -25,8 +26,7 @@ class RealDebrid {
   ///
   static Future<bool> authenticate(BuildContext context, { bool shouldShowSnackbar = false }) async {
     // Make a request to the API with the code to get oauth credentials.
-    String url = REAL_DEBRID_OAUTH_ENDPOINT + "/device"
-        "/code?client_id=$CLIENT_ID&new_credentials=yes";
+    String url = "$REAL_DEBRID_OAUTH_ENDPOINT/device/code?client_id=$CLIENT_ID&new_credentials=yes";
     http.Response response = await http.get(url);
     Map data = json.decode(response.body);
 
@@ -67,6 +67,44 @@ class RealDebrid {
   static Future<void> deauthenticate(BuildContext context, { bool shouldShowSnackbar = false }) async {
     await Settings.setRdCredentials(RealDebridCredentials.unauthenticated());
     if(shouldShowSnackbar) Interface.showSnackbar(S.of(context).disconnected_real_debrid_account, context: context, backgroundColor: Colors.red);
+  }
+
+  static Future<RealDebridUser> getUserInfo() async {
+    await RealDebrid.validateToken();
+
+    RealDebridCredentials rdCredentials = await Settings.rdCredentials;
+    Map<String, String> userHeader = {'Authorization': 'Bearer ' + rdCredentials.accessToken};
+
+    http.Response userDataResponse = await http.get(
+      REAL_DEBRID_API_ENDPOINT + "/user",
+      headers: userHeader
+    );
+
+    if (userDataResponse.statusCode == 200) {
+      // Get Real-Debrid user information.
+      return RealDebridUser.fromJSON(json.decode(userDataResponse.body));
+    }
+
+    return null;
+  }
+
+  /// IT SEEMS WE DO NOT HAVE ACCESS TO THIS METHOD.
+  static Future<bool> convertFidelityPoints(BuildContext context, { bool shouldShowSnackbar = true }) async {
+    throw new Exception("Unimplemented method. [We do not have access to this API method.]");
+    /*await RealDebrid.validateToken();
+
+    RealDebridCredentials rdCredentials = await Settings.rdCredentials;
+    Map<String, String> userHeader = {'Authorization': 'Bearer ' + rdCredentials.accessToken};
+
+    http.Response convertPointsResponse = await http.post(
+        REAL_DEBRID_API_ENDPOINT + "/settings/convertPoints",
+        headers: userHeader
+    );
+
+    print(convertPointsResponse.statusCode);
+    print(convertPointsResponse.body);
+
+    return false;*/
   }
 
   ///
@@ -252,7 +290,7 @@ class _RealDebridAuthenticatorState extends State<RealDebridAuthenticator> {
           backgroundColor: Theme.of(context).cardColor,
         ),
         body: Center(
-          child: CircularProgressIndicator(),
+          child: ApolloLoadingSpinner(),
         ),
       ),
     );
@@ -275,4 +313,33 @@ class _RealDebridAuthenticatorState extends State<RealDebridAuthenticator> {
     flutterWebviewPlugin.dispose();
     super.dispose();
   }
+}
+
+class RealDebridUser {
+
+  int id;
+  String username;
+  String email;
+  int points;
+  String locale;
+  String avatar;
+  String type;
+  int premiumSecondsRemaining;
+  DateTime expirationDate;
+
+  RealDebridUser.fromJSON(Map json) :
+    id = json['id'],
+    username = json['username'],
+    email = json['email'],
+    points = json['points'],
+    locale = json['locale'],
+    avatar = json['avatar'],
+    type = json['type'],
+    premiumSecondsRemaining = json['premium'],
+    expirationDate = DateTime.parse(json['expiration']);
+
+  bool isPremium(){
+    return this.type.toLowerCase() == "premium";
+  }
+
 }

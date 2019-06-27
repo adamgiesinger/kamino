@@ -159,7 +159,7 @@ class _SettingsViewState extends State<SettingsView> {
                         subtitle: Text(S.of(context).customize_the_theme_and_primary_colors),
                         leading: new Icon(Icons.style),
                         onTap: (){
-                          Navigator.push(context, FadeRoute(
+                          Navigator.push(context, ApolloTransitionRoute(
                               builder: (context) => AppearanceSettingsPage(context)
                           ));
                         },
@@ -173,7 +173,7 @@ class _SettingsViewState extends State<SettingsView> {
                         subtitle: Text(S.of(context).change_content_playback_settings),
                         leading: new Icon(Icons.play_circle_filled),
                         onTap: (){
-                          Navigator.push(context, FadeRoute(
+                          Navigator.push(context, ApolloTransitionRoute(
                               builder: (context) => PlaybackSettingsPage(context)
                           ));
                         },
@@ -215,7 +215,7 @@ class _SettingsViewState extends State<SettingsView> {
                         leading: new Icon(Icons.extension),
                         enabled: true,
                         onTap: (){
-                          Navigator.push(context, FadeRoute(
+                          Navigator.push(context, ApolloTransitionRoute(
                               builder: (context) => ExtensionsSettingsPage(context)
                           ));
                         },
@@ -243,7 +243,7 @@ class _SettingsViewState extends State<SettingsView> {
                         leading: new Icon(Icons.settings),
                         enabled: true,
                         onTap: (){
-                          Navigator.push(context, FadeRoute(
+                          Navigator.push(context, ApolloTransitionRoute(
                               builder: (context) => OtherSettingsPage(context)
                           ));
                         },
@@ -258,7 +258,7 @@ class _SettingsViewState extends State<SettingsView> {
                         leading: new Icon(Icons.developer_mode),
                         enabled: true,
                         onTap: (){
-                          Navigator.push(context, FadeRoute(
+                          Navigator.push(context, ApolloTransitionRoute(
                               builder: (context) => AdvancedSettingsPage(context)
                           ));
                         },
@@ -289,7 +289,7 @@ class _SettingsViewState extends State<SettingsView> {
                         enabled: true,
                         isThreeLine: true,
                         onTap: (){
-                          Navigator.push(context, FadeRoute(
+                          Navigator.push(context, ApolloTransitionRoute(
                               builder: (context) => CreditsSettingsPage(context)
                           ));
                         },

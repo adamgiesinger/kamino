@@ -302,5 +302,21 @@
   "open_discord": "Open Discord",
   "throw_error": "Throw Error",
   "intentionally_throws_an_error_to_test_error_handling": "Intentionally throws an error to test error handling.",
-  "well_dont_say_you_didnt_ask": "Well don't say you didn't ask!"
+  "well_dont_say_you_didnt_ask": "Well don't say you didn't ask!",
+  "content_trackers": "Content Trackers",
+  "premium_hosts": "Premium Hosts",
+  "simkl_description": "All your favorite TV shows, anime and movies — in one place. Stop searching, marking and checking in. Start watching.",
+  "hex": "Hex",
+  "chooser": "Chooser",
+  "content_suggestions": "Content Suggestions",
+  "content_suggestions_description": "Tailor your experience with our curated watchlists! If you're interested in a curated list, tap on it.",
+  "no_sources_found": "No sources found.",
+  "we_couldnt_find_any_sources_for_content": "We couldn't find any sources for '$content'.",
+  "your_request_has_been_saved": "Your request has been saved.",
+
+  "expires": "Expires",
+  "real_debrid_n_points": "$points points",
+  "real_debrid_convert_points": "Convert Points",
+  "converting_realdebrid_fidelity_points": "Converting Real-Debrid fidelity points...",
+  "real_debrid_purchase_premium": "Purchase Premium"
 }

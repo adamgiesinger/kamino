@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/partials/content_card.dart';
 import 'package:kamino/ui/elements.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/genre.dart' as genre;
 
 import 'package:flutter/material.dart';
@@ -69,24 +71,24 @@ class _SearchResultViewState extends State<SearchResultView> {
     return _data;
   }
 
-  _openContentScreen(BuildContext context, int index) {
-    if (_results[index].mediaType == "tv") {
+  _openContentScreen(BuildContext context, int contentId, String mediaType) {
+    if (mediaType == "tv") {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
-                      contentId: _results[index].id,
+                      contentId: contentId,
                       contentType: ContentType.TV_SHOW )
           )
       );
     } else {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   ContentOverview(
-                      contentId: _results[index].id,
+                      contentId: contentId,
                       contentType: ContentType.MOVIE )
           )
       );
@@ -141,11 +143,7 @@ class _SearchResultViewState extends State<SearchResultView> {
           if(widget.query == null || widget.query.isEmpty) return Container();
 
           if(!hasLoaded) return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor
-                ),
-              )
+              child: ApolloLoadingSpinner()
           );
 
           return Container(
@@ -209,7 +207,7 @@ class _SearchResultViewState extends State<SearchResultView> {
             ratings: resultsList[index].vote_average,
             overview: resultsList[index].overview,
             elevation: 5.0,
-            onTap: () => _openContentScreen(context, index),
+            onTap: () => _openContentScreen(context, resultsList[index].id, resultsList[index].mediaType),
             isFavorite: _favIDs.contains(resultsList[index].id),
           );
         },
@@ -242,7 +240,7 @@ class _SearchResultViewState extends State<SearchResultView> {
               name: resultsList[index].name,
               releaseDate: resultsList[index].year,
               mediaType: resultsList[index].mediaType,
-              onTap: () => _openContentScreen(context, index),
+              onTap: () => _openContentScreen(context, resultsList[index].id, resultsList[index].mediaType),
             );
           }
       );

@@ -5,6 +5,7 @@ import 'package:kamino/ui/elements.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/ui/loading.dart';
 
 class ContentPoster extends StatefulWidget {
 
@@ -65,11 +66,7 @@ class ContentPosterState extends State<ContentPoster> {
         imageUrl: "${TMDB.IMAGE_CDN_POSTER}/${widget.background}",
         fit: widget.imageFit,
         placeholder: (BuildContext context, String url) => Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Theme.of(context).primaryColor
-              ),
-            ),
+            child: ApolloLoadingSpinner(),
         ),
         height: widget.height,
         width: widget.width,

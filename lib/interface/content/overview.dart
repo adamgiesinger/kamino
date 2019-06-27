@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 
 import 'package:flutter/material.dart';
+import 'package:kamino/animation/transition.dart';
 import 'package:kamino/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
@@ -19,6 +20,7 @@ import 'package:kamino/ui/interface.dart';
 import 'package:kamino/interface/search/genre_search.dart';
 import 'package:kamino/interface/content/movie_layout.dart';
 import 'package:kamino/interface/content/tv_show_layout.dart';
+import 'package:kamino/ui/loading.dart';
 
 import 'package:kamino/util/database_helper.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -158,11 +160,7 @@ class _ContentOverviewState extends State<ContentOverview> {
             return Scaffold(
                 backgroundColor: Theme.of(context).backgroundColor,
                 body: Center(
-                    child: CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).primaryColor
-                      ),
-                    )
+                    child: ApolloLoadingSpinner()
                 )
             );
           case ConnectionState.done:
@@ -406,7 +404,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     if (mediaType == "tv"){
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   GenreSearch(
                       contentType: "tv",
@@ -417,7 +415,7 @@ class _ContentOverviewState extends State<ContentOverview> {
     } else if (mediaType == "movie"){
       Navigator.push(
           context,
-          MaterialPageRoute(
+          ApolloTransitionRoute(
               builder: (context) =>
                   GenreSearch(
                       contentType: "movie",
@@ -741,7 +739,7 @@ class _ContentOverviewState extends State<ContentOverview> {
                                 child: ContentPoster(
                                     onTap: () => Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        ApolloTransitionRoute(
                                           builder: (context) => ContentOverview(
                                               contentId: model.recommendations[index].id,
                                               contentType: model.contentType

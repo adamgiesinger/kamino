@@ -20,7 +20,7 @@ class SettingsManager {
   static int _lastMajorRevision = 104001;
 
   static Future<bool> _checkNeedsWipe(SharedPreferences sharedPreferences) async {
-    if(!sharedPreferences.getKeys().contains("__kaminoVersion")) return true;
+    if(!sharedPreferences.containsKey("__kaminoVersion")) return true;
     if(sharedPreferences.getInt("__kaminoVersion") < _lastMajorRevision) return true;
 
     return false;
