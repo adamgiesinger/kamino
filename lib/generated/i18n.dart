@@ -857,11 +857,19 @@ class hi extends S {
   @override
   String get set_primary_color => "प्राथमिक रंग सेट करें ...";
   @override
+  String get throw_error => "थ्रो एरर";
+  @override
+  String get premium_hosts => "प्रीमियम होस्ट";
+  @override
   String get playback => "प्लेबैक";
   @override
   String get released => "प्रकाशित";
   @override
+  String get simkl_description => "आपके मनपसंद कार्यक्रम, ऐनिमे और फ़िल्में - सब एक जगह पर। खोजना बंद करें। देखना शुरू करें।";
+  @override
   String get recommended_movies => "सुझायी हुई फ़िल्में";
+  @override
+  String get welcome_to_apollo_skyspace => "Apollo स्काईस्पेस में आपका स्वागत है!";
   @override
   String get create_profile => "प्रोफ़ायल बनाए";
   @override
@@ -877,6 +885,8 @@ class hi extends S {
   @override
   String get general_application_settings => "सामान्य ऐप सेटिंग्स।";
   @override
+  String get thank_you => "शुक्रिया!";
+  @override
   String get see_all => "सब कुछ देखें";
   @override
   String get is_your_connection_too_slow => "आपका कनेक्शन स्लो है क्या?";
@@ -885,13 +895,17 @@ class hi extends S {
   @override
   String get miscellaneous => "अन्य";
   @override
+  String get houston_stand_by => "ह्यूस्टन, स्टैंड बाई...";
+  @override
   String get source_autoplay_description => "सॉर्सेज़ की सूची दिखाने की जगह अपने आप ही सोर्स चुन लिया जाता है।";
   @override
-  String get grid_layout => "ग्रीड लेआउट";
+  String get grid_layout => "ग्रिड लेआउट";
   @override
   String get server_key => "सरवर की की";
   @override
   String get connect_your_trakt_account => "ट्रैक्ट अकाउंट कनेक्ट करें";
+  @override
+  String get search => "सर्च";
   @override
   String get with_thanks => "धन्यवाद...";
   @override
@@ -909,9 +923,15 @@ class hi extends S {
   @override
   String get whats_your_favorite_color_description => "स्वरोंक रंग चुनिए। यह रंग बटन, आइकॉन, आदि के लिए चुना जाएगा।";
   @override
+  String get set => "सेट";
+  @override
   String get select_language => "भाषा बदले...";
   @override
   String get saving_content_information => "कांटेंट जानकारी सेव हो रही है...";
+  @override
+  String get security_risk => "सुरक्षा चेतावनी:";
+  @override
+  String get apollo_skyspace_is_still_under_development => "Apollo स्काईस्पेस अभी डिवेलप हो रहा है।";
   @override
   String get error_loading_search => "यह क्या हुआ... परिणाम लोड करते समय एरर पाया गया";
   @override
@@ -935,13 +955,17 @@ class hi extends S {
   @override
   String get general_settings => "सामान्य सेटिंग्स";
   @override
-  String get boost_your_experience => "अपने इक्स्पिरीयन्स को बूस्ट करें";
+  String get boost_your_experience => "अपने अनुभव को बूस्ट करें";
+  @override
+  String get disable_security_warnings => "सुरक्षा चेतावनी बंद करें";
   @override
   String get removed_from_favorites => "मनपसंद से हटा दिया गया है";
   @override
   String get change_theme => "थीम बदले";
   @override
   String get the_server_failed_to_verify_the_apps_integrity => "सर्वर ऐप की अखंडता को सत्यापित करने में विफल रहा।";
+  @override
+  String get open_discord => "डिस्कोर्ड खोले";
   @override
   String get disconnect_your_realdebrid_account => "अपना Real-Debrid अकाउंट डिसकोंनेक्ट करें";
   @override
@@ -971,9 +995,15 @@ class hi extends S {
   @override
   String get clears_all_application_settings => "ऐप्लिकेशन की सेट्टिंग स डिलीट करें।";
   @override
+  String get discord => "डिस्कोर्ड";
+  @override
   String get success => "सफलता!";
   @override
   String get name => "नाम";
+  @override
+  String get content_trackers => "कांटेंट ट्रैकर";
+  @override
+  String get copy_to_clipboard => "क्लिप्बॉर्ड पर कॉपी करें";
   @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "यदि यह समस्या बनी रहती है, तो कृपया डिस्कॉर्ड पर स्टाफ़ से संपर्क करें।";
   @override
@@ -983,7 +1013,15 @@ class hi extends S {
   @override
   String get card_layout => "कार्ड लेआउट";
   @override
+  String get we_will_announce_it_on_our_social_pages_when_its => "हम अपने सोशल मीडिया पर इसके पूरे होने की घोषणा करेंगे।";
+  @override
   String get back => "पिछला";
+  @override
+  String get privacy => "एकांत";
+  @override
+  String get updates => "अप्डेट्स";
+  @override
+  String get using_unofficial_servers_can_expose_your_ip_address => "अनफ़िशल सर्वर उसे करने से आपके IP ऐड्रेस लीक हो सकता है। अगर यह आपको परेशानी देता है तो आप VPN उसे करें।";
   @override
   String get trakt_renewal_failure_detailed => "ट्रैक्ट टोकन का नवीकरण नहीं हो सका। कृपया अपने विवरण पर ध्यान दें।";
   @override
@@ -999,7 +1037,13 @@ class hi extends S {
   @override
   String get real_debrid_authenticator => "Real-Debrid प्रमाणिकरण";
   @override
+  String get hide_partial_unreleased_content_description => "वह कांटेंट जिसकी पूरी जानकारी न हो या रिलीज़ ना हुआ हो छुपा दिया जाएगा।";
+  @override
+  String get home => "होम";
+  @override
   String get error_updating_app => "ऐप अप्डेट असफल रही...";
+  @override
+  String get layout => "लेआउट";
   @override
   String get clear_search_history_description => "पिछले सर्चेज़ के हिसाब से सुझाव डिलीट हो जाएँगे।";
   @override
@@ -1021,6 +1065,10 @@ class hi extends S {
   @override
   String get disconnect_your_trakt_account => "ट्रैक्ट अकाउंट डिस्कनेक्ट करें";
   @override
+  String get an_error_occurred_whilst_casting => "कास्ट करते वक़्त एरर मिला।";
+  @override
+  String get localization => "लोकलिज़ेशन";
+  @override
   String get disconnect => "डिसकोंनेक्ट करे";
   @override
   String get manually_override_the_default_content_server => "डिफ़ॉल्ट सरवर को ख़ुद से ओवर्राइड करें।";
@@ -1029,11 +1077,19 @@ class hi extends S {
   @override
   String get advanced => "एडवांस्ड";
   @override
+  String get unknown_model => "Unknown model";
+  @override
+  String get this_disables_all_warnings_regarding_potential_security_concerns => "सुरक्षा से सम्बंधित सभी चेतावनियाँ बंद हो जाएँगी।";
+  @override
   String get all_genres => "सारी शैलियां";
+  @override
+  String get we_recommend_that_you_do_not_enable_this_option_unless => "हमारा सुझाव है की अगर आपको नहीं पता यह विकल्प क्या करता है, आप इस विकल्प को ना एनेबल करें।";
   @override
   String get experimental => "प्रयोगात्मक";
   @override
-  String get movies => "फ़िल्म";
+  String get version_track_development_description => "जैसे ही एक विशेषता मास्टर ब्रांच में पुश की जाती है, एक डिवेलप्मेंट बिल्ड अपने आप जेनरेट होकर रिलीज़ हो जाता है।";
+  @override
+  String get movies => "फ़िल्में";
   @override
   String get coming_soon => "जल्द आ रहा है";
   @override
@@ -1051,13 +1107,21 @@ class hi extends S {
   @override
   String get successfully_refreshed_trakt_token => "ट्रैक्ट टोकें का नवीकरण सफलतापूर्वक रहा।";
   @override
+  String get thank_you_notice => "ApolloTV कम्यूनिटी एफ़र्ट है और इन लोगों के बिना यह ऐप मुमकिन नहीं है। सभी के योगदान, बढ़े व छोटे, का मैं बहुत आभारी हूँ। \n\n~NBTX";
+  @override
+  String get hex => "हेक्स";
+  @override
   String get one_episode => "1 एपिसोड";
+  @override
+  String get security_warnings_have_been_disabled => "सुरक्षा चेतावनी बंद कर दी गयी है!";
   @override
   String get order => "क्रम";
   @override
   String get okay => "ठीक है";
   @override
   String get dismiss => "ख़ारिज करे";
+  @override
+  String get content_suggestions_description => "हमारे क्यूरेट वॉचलिस्ट के साथ अपने अनुभव को दर्जी करें! यदि आप एक क्यूरेटेड सूची में रुचि रखते हैं, तो उस पर टैप करें।";
   @override
   String get loading => "लोड हो रहा है...";
   @override
@@ -1067,6 +1131,8 @@ class hi extends S {
   @override
   String get action_completed_successfully => "कार्य सफलतापूर्वक पूर्ण हुआ।";
   @override
+  String get reset => "रीसेट ";
+  @override
   String get change_content_playback_settings => "प्लेबैक सेटिंग्स बदले।";
   @override
   String get please_check_the_announcements_channel_in_our_discord_server_for => "और जानकारी के लिए कृपया हमारे डिस्कोर्ड सरवर में #announcements चैनल देखें।";
@@ -1075,9 +1141,13 @@ class hi extends S {
   @override
   String get clears_the_application_database => "ऐप्लिकेशन के डेटबेस को डिलीट करें।";
   @override
+  String get version_track_stable_description => "जब एक बीटा बिल्ड सही से टेस्ट कर लिए हाट है और हमारे ज्ञान में बग-फ़्री पाया जाता है, यह बिल्ड एक स्टेबल रिलीज़ के तौर पर रिलीज़ किया जाता है।";
+  @override
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "अब आप 'सिंक करे' को दबा कर अपने ApolloTV पर मनपसंद कार्यक्रमों को Trakt के मनपसंद कार्यक्रमों के साथ सिंक्रनाइज़ कर सकते है।\n\n(ट्रैक्ट के साथ एकीकरण अभी सीमित है क्यूँकि यह अभी डिवेलप्मेंट में है।)";
   @override
   String get syncing => "सिंकिंग...";
+  @override
+  String get well_dont_say_you_didnt_ask => "यह मत कहे की आपने पूछा नहीं था!";
   @override
   String get youre_offline => "आप ऑफ़्लाइन है...";
   @override
@@ -1097,6 +1167,8 @@ class hi extends S {
   @override
   String get unknown => "अज्ञात";
   @override
+  String get content_suggestions => "कांटेंट का सुझाव";
+  @override
   String get source_autoplay => "सोर्स ऑटोप्ले एनेबल करें";
   @override
   String get authentication_unsuccessful => "प्रमाणिकरण असफल";
@@ -1110,6 +1182,8 @@ class hi extends S {
   String get general_settings_description => "इधर कुछ सामान्य सेटिंग्स है जिन्हें आप एक बार घयान से देख ले।";
   @override
   String get realdebrid_service_info => "अगर आपके पास RealDebrid की सब्स्क्रिप्शन है, ApolloTV उसका प्रयोग कर तेज़ स्पीड में डाउनलोड कर सकता है।";
+  @override
+  String get theme => "थीम";
   @override
   String get server_url => "सरवर का URL";
   @override
@@ -1147,7 +1221,15 @@ class hi extends S {
   @override
   String get connecting => "कनेक्टिंग...";
   @override
+  String get google_cast_prompt => "कास्ट";
+  @override
+  String get version_track => "वर्ज़न ट्रैक";
+  @override
+  String get credits_description => "यह ऐप \u2764 के साथ इन शानदार लोगों द्वारा लायी गयी है!";
+  @override
   String get dump_database => "डम्प डेटबेस";
+  @override
+  String get version_track_beta_description => "जब कुछ गिनती के डिवेलप्मेंट-बिल्ड के विशेषताएं पूरे हो जाते हैं, तब उन्हें बीता बिल्ड के तौर पर रिलीज़ किया जाता है।";
   @override
   String get networking => "नेटवर्किंग";
   @override
@@ -1155,9 +1237,13 @@ class hi extends S {
   @override
   String get blog => "ब्लॉग";
   @override
+  String get your_request_has_been_saved => "आपका निवेदन सेव हो गया है।";
+  @override
   String get descending => "अवरोही";
   @override
   String get sorts_by_source_quality => "सोर्स की क्वालिटी में क्रमबद्ध करें";
+  @override
+  String get run_command => "Run Command";
   @override
   String get updating => "अप्डेटिंग...";
   @override
@@ -1195,6 +1281,8 @@ class hi extends S {
   @override
   String get core => "कोर";
   @override
+  String get intentionally_throws_an_error_to_test_error_handling => "एरर हैंड्लिंग टेस्ट करने के लिए जानबूझ कर एरर थ्रो करें।";
+  @override
   String get the_key_must_be_32_characters_in_length => "की 32 वर्ण लंबा होना चाहिए।";
   @override
   String get link_copied_to_clipboard => "लिंक क्लिप्बॉर्ड पर कॉपी हो गया है।";
@@ -1221,6 +1309,10 @@ class hi extends S {
   @override
   String get tv_shows => "कार्यक्रम";
   @override
+  String get hide_partial_unreleased_content => "अन्रेलीस्ट व आधा अधूरा कांटेंट ना दिखाएँ";
+  @override
+  String get security => "सुरक्षा";
+  @override
   String get reload => "रीलोड";
   @override
   String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "शुरुआती सेटअप प्रक्रिया को शुरू करता है जो ऐप को पहली बार खोलने पर प्रदर्शित होता है।";
@@ -1231,21 +1323,31 @@ class hi extends S {
   @override
   String get show_more => "और दिखाएं...";
   @override
+  String get no_sources_found => "कोई सोर्स नहीं मिला";
+  @override
   String get update_failed_please_try_again_later => "अप्डेट असफल रही। कयिप्या थोड़ी देर में दोबारा कोशिश करें।";
   @override
   String get no_results_found => "कुछ नहीं मिला।";
   @override
+  String get clear => "क्लीर";
+  @override
+  String get searching_for_cast_devices => "कास्ट उपकरण खोजे जा रहे है...";
+  @override
   String get choose_a_theme => "थीम चुनिए...";
+  @override
+  String get chooser => "Chooser";
   @override
   String get trakt_synchronization => "ट्रैक्ट तुल्यकालन...";
   @override
   String get vote_average => "औसत वोट";
   @override
+  String get waiting_for_input => "इनपुट की प्रतीक्षा करी जा रही है...";
+  @override
   String get the_socket_connection_timed_out => "सॉकेट कनेक्शन समय समाप्त हो गया.";
   @override
   String appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(String appName) => "$appName आपके देखें हुए और मनपसंद टीवी शो और फ़िल्मों को Trakt.tv से सिंक्रिनायज़ कर सकता है...";
   @override
-  String appname_failed_to_connect_to_the_internet(String appName) => "$appName इंटर्नेट से कोंननेक नहीं कर पा रहा है। कृपया अपने कनेक्शन को चेक कर लें।";
+  String appname_failed_to_connect_to_the_internet(String appName) => "$appName इंटर्नेट से कनेक्ट नहीं कर पा रहा है। कृपया अपने कनेक्शन को चेक कर लें।";
   @override
   String extensions_description(String appName) => "अगर आप इनमे से कोई भी थर्ड पार्टी सर्विसेज़ का प्रयोग करते है तो आप इन्हें $appName से कनेक्ट कर सकते है।";
   @override
@@ -1255,7 +1357,9 @@ class hi extends S {
   @override
   String welcome_to_appname(String appName) => "$appName पर आपका स्वागत है";
   @override
-  String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName इन कमाल लोगों की वजह से बन सकी है:";
+  String we_couldnt_find_any_sources_for_content(String content) => "हम $content के लिए कोई भी सोर्स नहीं खोज सके।";
+  @override
+  String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName इन कमाल लोगों की वजह से बन सकी है!";
   @override
   String by_x(String x) => "$x के द्वारा";
   @override
@@ -1268,6 +1372,8 @@ class hi extends S {
   String n_ratings(String n) => "$n ratings";
   @override
   String this_x_has_no_synopsis_available(String x) => "इस $x का कोई सार नहीं पाया गया";
+  @override
+  String disconnected_from_device(String device) => "$device डिसकोंनेक्ट हो गयी है";
   @override
   String seasons_n(String n) => "सीजन ($n)";
   @override
@@ -1284,6 +1390,8 @@ class hi extends S {
   String customize_appearance_description(String appName) => "$appName अनुकूलन के बारे में है। शुरू करते है आपके मनपसंद थीम चुनके!";
   @override
   String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName और Real-Debrid का प्रमाणिकरण नहीं हो सका।";
+  @override
+  String now_connected_to_device(String device) => "$device कनेक्ट हो गयी है";
   @override
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "Trakt.tv से अपरमणिकरन करते समय एरर मिले है। ($errorCode)";
   @override
