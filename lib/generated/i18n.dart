@@ -6622,9 +6622,13 @@ class nl extends S {
   @override
   String get throw_error => "Maak Fout";
   @override
+  String get premium_hosts => "Premium Hosts";
+  @override
   String get playback => "Afspelen";
   @override
   String get released => "Uitgebracht";
+  @override
+  String get simkl_description => "Al uw favoriete TV shows, anime en films - in een plek. Stop zoeken, markeren en inchecken. Start met kijken.";
   @override
   String get recommended_movies => "Aanbevolen Films";
   @override
@@ -6760,6 +6764,8 @@ class nl extends S {
   @override
   String get name => "Naam";
   @override
+  String get content_trackers => "Content Trackers";
+  @override
   String get copy_to_clipboard => "Kopiëren naar Klembord";
   @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Als dit probleem blijft voortbestaan, neem contact op met een lid van de staff op Discord.";
@@ -6866,6 +6872,8 @@ class nl extends S {
   @override
   String get thank_you_notice => "ApolloTV is een community inspanning en zonder deze mensen zal deze app niet bestaan. Voor iedereens bijdrage, ongeacht hoe klein, ben ik buitengewoon dankbaar. \n\n~NBTX";
   @override
+  String get hex => "Hex";
+  @override
   String get one_episode => "1 aflevering";
   @override
   String get security_warnings_have_been_disabled => "Veiligheidswaarschuwingen zijn uitgezet!";
@@ -6875,6 +6883,8 @@ class nl extends S {
   String get okay => "Oké";
   @override
   String get dismiss => "Afwijzen";
+  @override
+  String get content_suggestions_description => "Verbeter uw ervaring met onze samengestelde lijsten! Als u geïntereseerd bent in een lijst, tap erop.";
   @override
   String get loading => "Laden...";
   @override
@@ -6900,7 +6910,7 @@ class nl extends S {
   @override
   String get syncing => "Synchroniseren...";
   @override
-  String get well_dont_say_you_didnt_ask => "U heeft er zelf om gevraagd!!";
+  String get well_dont_say_you_didnt_ask => "U heeft er zelf om gevraagd!";
   @override
   String get youre_offline => "U bent offline...";
   @override
@@ -6919,6 +6929,8 @@ class nl extends S {
   String get this_feature_has_not_yet_been_implemented => "Deze functie is nog niet geïmplementeerd.";
   @override
   String get unknown => "Onbekend";
+  @override
+  String get content_suggestions => "Content Suggesties";
   @override
   String get source_autoplay => "Autoplay Bronnen Toestaan";
   @override
@@ -6987,6 +6999,8 @@ class nl extends S {
   String get $_language_name_english => "Dutch";
   @override
   String get blog => "Blog";
+  @override
+  String get your_request_has_been_saved => "Uw verzoek is opgeslagen.";
   @override
   String get descending => "Aflopend";
   @override
@@ -7072,6 +7086,8 @@ class nl extends S {
   @override
   String get show_more => "Meer laten zien...";
   @override
+  String get no_sources_found => "Geen bronnen gevonden.";
+  @override
   String get update_failed_please_try_again_later => "Update mislukt. Probeer alstublieft later opnieuw";
   @override
   String get no_results_found => "Geen resultaten gevonden.";
@@ -7081,6 +7097,8 @@ class nl extends S {
   String get searching_for_cast_devices => "Zoeken naar Cast apparaten...";
   @override
   String get choose_a_theme => "Kies een thema...";
+  @override
+  String get chooser => "Kiezer";
   @override
   String get trakt_synchronization => "Trakt Synchroniseren...";
   @override
@@ -7101,6 +7119,8 @@ class nl extends S {
   String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName heeft succesvol Trakt.tv geauthenticeerd!";
   @override
   String welcome_to_appname(String appName) => "Welkom bij $appName";
+  @override
+  String we_couldnt_find_any_sources_for_content(String content) => "Wij konden geen bronnen vinden voor '$content'.";
   @override
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName werd mogelijk gemaakt door al deze geweldige mensen:";
   @override
