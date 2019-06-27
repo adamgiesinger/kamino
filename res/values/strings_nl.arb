@@ -315,4 +315,15 @@
   "throw_error": "Maak Fout",
   "intentionally_throws_an_error_to_test_error_handling": "Opzettelijk een fout maken om foutafhandeling te testen.",
   "well_dont_say_you_didnt_ask": "U heeft er zelf om gevraagd!!"
+  
+   "content_trackers": "Content Trackers",
+  "premium_hosts": "Premium Hosts",
+  "simkl_description": "Al uw favoriete TV shows, anime en films - in een plek. Stop zoeken, markeren en inchecken. Start met kijken.",
+  "hex": "Hex",
+  "chooser": "Kiezer",
+  "content_suggestions": "Content Suggesties",
+  "content_suggestions_description": "Verbeter uw ervaring met onze samengestelde lijsten! Als u geïntereseerd bent in een lijst, tap erop.",
+  "no_sources_found": "Geen bronnen gevonden.",
+  "we_couldnt_find_any_sources_for_content": "Wij konden geen bronnen vinden voor '$content'.",
+  "your_request_has_been_saved": "Uw verzoek is opgeslagen."
 }
