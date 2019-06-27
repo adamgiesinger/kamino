@@ -28,6 +28,7 @@ import 'package:kamino/vendor/index.dart';
 
 import 'package:kamino/interface/settings/settings.dart';
 import 'package:package_info/package_info.dart';
+import 'package:http/http.dart' as http;
 
 const appName = "ApolloTV";
 const appCastID = "6569632D";
@@ -551,7 +552,11 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
   void prepare(){
     OTA.updateApp(context, true);
     connectivityCheck = Connectivity().onConnectivityChanged.listen((ConnectivityResult result){
-      isConnected = result != ConnectivityResult.none;
+      http.head("https://static.apollotv.xyz/generate_204").then((http.Response response){
+        if(response == null || response.statusCode != 204) {
+          isConnected = false;
+        }
+      });
     });
   }
 
