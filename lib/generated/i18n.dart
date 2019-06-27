@@ -80,6 +80,7 @@ class S implements WidgetsLocalizations {
   String get content_suggestions_description => "Tailor your experience with our curated watchlists! If you're interested in a curated list, tap on it.";
   String get content_trackers => "Content Trackers";
   String get continue_watching => "Continue Watching";
+  String get converting_realdebrid_fidelity_points => "Converting Real-Debrid fidelity points...";
   String get copy_to_clipboard => "Copy to Clipboard";
   String get core => "CORE";
   String get create_profile => "Create Profile";
@@ -113,6 +114,7 @@ class S implements WidgetsLocalizations {
   String get error_loading_search => "Well this is awkward... An error occurred whilst loading search results.";
   String get error_updating_app => "Error updating app...";
   String get experimental => "Experimental";
+  String get expires => "Expires";
   String get extensions => "Extensions";
   String get favorites => "Favorites";
   String get file_size => "File Size";
@@ -176,6 +178,8 @@ class S implements WidgetsLocalizations {
   String get quality => "Quality";
   String get rd_description => "Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet.";
   String get real_debrid_authenticator => "Real-Debrid Authenticator";
+  String get real_debrid_convert_points => "Convert Points";
+  String get real_debrid_purchase_premium => "Purchase Premium";
   String get realdebrid => "Real-Debrid";
   String get realdebrid_service_info => "If you have a RealDebrid subscription, ApolloTV can use it to obtain high-speed download results.";
   String get recommended_movies => "Recommended Movies";
@@ -295,6 +299,7 @@ class S implements WidgetsLocalizations {
   String n_ratings(String n) => "$n ratings";
   String n_sources(String n) => "$n sources";
   String now_connected_to_device(String device) => "Now connected to $device";
+  String real_debrid_n_points(String points) => "$points points";
   String seasons_n(String n) => "Seasons ($n)";
   String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "The $appName server is currently offline for server upgrades.";
   String this_x_has_no_synopsis_available(String x) => "This $x has no synopsis available.";

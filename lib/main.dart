@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:dart_chromecast/casting/cast.dart';
 import 'package:kamino/animation/transition.dart';
 import 'package:kamino/generated/i18n.dart';
@@ -507,6 +508,8 @@ class KaminoAppPage extends StatefulWidget {
 
 class KaminoAppHomeState extends State<KaminoAppHome> {
 
+  bool isConnected;
+
   final List<KaminoAppPage> _pages = [
     Launchpad2(),
     BrowseTVShowsPage(),
@@ -523,6 +526,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
   @override
   void initState() {
     _activePage = 0;
+    isConnected = true;
     
     (() async {
 
@@ -531,16 +535,30 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) => KaminoIntro(then: () async {
             setState(() {});
-            OTA.updateApp(context, true);
+            prepare();
           })
         ));
       }else{
-        OTA.updateApp(context, true);
+        prepare();
       }
 
     })();
     
     super.initState();
+  }
+
+  StreamSubscription connectivityCheck;
+  void prepare(){
+    OTA.updateApp(context, true);
+    connectivityCheck = Connectivity().onConnectivityChanged.listen((ConnectivityResult result){
+      isConnected = result != ConnectivityResult.none;
+    });
+  }
+
+  @override
+  void dispose(){
+    connectivityCheck.cancel();
+    super.dispose();
   }
 
   @override
@@ -623,7 +641,17 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
         ),
 
           // Body content
-        body: _pages.elementAt(_activePage),
+        body: Builder(builder: (BuildContext context){
+          if(!isConnected) return OfflineMixin(
+            reloadAction: () async {
+              /*_launchpadMemoizer = new AsyncMemoizer();
+              await _launchpadMemoizer.runOnce(load).catchError((error){});*/
+              setState(() {});
+            },
+          );
+
+          return _pages.elementAt(_activePage);
+        }),
 
         bottomNavigationBar: BottomNavigationBar(
           elevation: 0,

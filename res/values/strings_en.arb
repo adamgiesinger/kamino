@@ -312,5 +312,11 @@
   "content_suggestions_description": "Tailor your experience with our curated watchlists! If you're interested in a curated list, tap on it.",
   "no_sources_found": "No sources found.",
   "we_couldnt_find_any_sources_for_content": "We couldn't find any sources for '$content'.",
-  "your_request_has_been_saved": "Your request has been saved."
+  "your_request_has_been_saved": "Your request has been saved.",
+
+  "expires": "Expires",
+  "real_debrid_n_points": "$points points",
+  "real_debrid_convert_points": "Convert Points",
+  "converting_realdebrid_fidelity_points": "Converting Real-Debrid fidelity points...",
+  "real_debrid_purchase_premium": "Purchase Premium"
 }
