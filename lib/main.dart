@@ -644,8 +644,6 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
         body: Builder(builder: (BuildContext context){
           if(!isConnected) return OfflineMixin(
             reloadAction: () async {
-              /*_launchpadMemoizer = new AsyncMemoizer();
-              await _launchpadMemoizer.runOnce(load).catchError((error){});*/
               setState(() {});
             },
           );

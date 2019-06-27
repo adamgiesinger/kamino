@@ -130,7 +130,7 @@ class Launchpad2State extends State<Launchpad2> {
             reloadAction: () async {
               _launchpadMemoizer = new AsyncMemoizer();
               await _launchpadMemoizer.runOnce(load).catchError((error){});
-              setState(() {});
+              if(mounted) setState(() {});
             },
           );
 
@@ -141,7 +141,7 @@ class Launchpad2State extends State<Launchpad2> {
             action: () async {
               _launchpadMemoizer = new AsyncMemoizer();
               await _launchpadMemoizer.runOnce(load).catchError((error){});
-              setState(() {});
+              if(mounted) setState(() {});
             },
           );
         }
