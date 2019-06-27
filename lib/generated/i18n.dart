@@ -1348,11 +1348,19 @@ class fi extends S {
   @override
   String get set_primary_color => "Aseta pääväri...";
   @override
+  String get throw_error => "Luo virhe";
+  @override
+  String get premium_hosts => "Premium-palvelut";
+  @override
   String get playback => "Toisto";
   @override
   String get released => "Julkaistu";
   @override
+  String get simkl_description => "Kaikki suosikkisi TV-sarjoista, animist ja elokuvista - yhdessä paikassa. Lopeta etsiminen ja korvamerkintä. Aloita katsominen.";
+  @override
   String get recommended_movies => "Suositeltuja elokuvia";
+  @override
+  String get welcome_to_apollo_skyspace => "Tervetuloa Apollo Skyspaceen!";
   @override
   String get create_profile => "Luo profiili";
   @override
@@ -1368,6 +1376,8 @@ class fi extends S {
   @override
   String get general_application_settings => "Yleiset sovellusasetukset.";
   @override
+  String get thank_you => "Kiitos!";
+  @override
   String get see_all => "Näytä kaikki";
   @override
   String get is_your_connection_too_slow => "Onko yhteytesi liian hidas?";
@@ -1376,6 +1386,8 @@ class fi extends S {
   @override
   String get miscellaneous => "Sekalaista";
   @override
+  String get houston_stand_by => "Houston, odota...";
+  @override
   String get source_autoplay_description => "Valitsee automaattisesti toistettavan lähteen eikä näytä lähdelistausta.";
   @override
   String get grid_layout => "Ruudukkoasettelu";
@@ -1383,6 +1395,8 @@ class fi extends S {
   String get server_key => "Palvelinavain";
   @override
   String get connect_your_trakt_account => "Yhdistä Trakt-tili";
+  @override
+  String get search => "Haku";
   @override
   String get with_thanks => "Kiitokset...";
   @override
@@ -1405,6 +1419,10 @@ class fi extends S {
   String get select_language => "Valitse kieli";
   @override
   String get saving_content_information => "Tallennetaan sisältötietoja...";
+  @override
+  String get security_risk => "TURVALLISUUSRISKI:";
+  @override
+  String get apollo_skyspace_is_still_under_development => "Apollo Skyspace on vielä kehityksessä.";
   @override
   String get error_loading_search => "Onpa kiusallista... Tapahtui virhe hakutulosten latauksessa.";
   @override
@@ -1430,11 +1448,15 @@ class fi extends S {
   @override
   String get boost_your_experience => "BUUSTAA KOKEMUSTASI";
   @override
+  String get disable_security_warnings => "Poista turvallisuusvaroitukset käytöstä";
+  @override
   String get removed_from_favorites => "Poistettu suosikeista";
   @override
   String get change_theme => "Vaihda teemaa...";
   @override
   String get the_server_failed_to_verify_the_apps_integrity => "Palvelin epäonnistui sovelluksen eheyden varmistamisessa.";
+  @override
+  String get open_discord => "Avaa Discord";
   @override
   String get disconnect_your_realdebrid_account => "Katkaise yhteys Real-Debrid-tiliin";
   @override
@@ -1464,9 +1486,13 @@ class fi extends S {
   @override
   String get clears_all_application_settings => "Nollaa kaikki sovelluksen asetukset.";
   @override
+  String get discord => "Discord";
+  @override
   String get success => "Onnistui!";
   @override
   String get name => "Nimi";
+  @override
+  String get content_trackers => "Sisältölähteet";
   @override
   String get copy_to_clipboard => "Kopioi leikepöydälle";
   @override
@@ -1478,7 +1504,15 @@ class fi extends S {
   @override
   String get card_layout => "Korttiasettelu";
   @override
+  String get we_will_announce_it_on_our_social_pages_when_its => "Ilmoitamme sen valmistumisesta sivuillamme.";
+  @override
   String get back => "TAKAISIN";
+  @override
+  String get privacy => "Yksityisyys";
+  @override
+  String get updates => "Päivitykset";
+  @override
+  String get using_unofficial_servers_can_expose_your_ip_address => "Epävirallisten palvelimien käyttö voi paljastaa IP-osoitteesi. Jos tämä ei käy, ota käyttöön VPN.";
   @override
   String get trakt_renewal_failure_detailed => "Trakt-avaimen uusiminen epäonnistui. Tarkista tiedot.";
   @override
@@ -1494,7 +1528,13 @@ class fi extends S {
   @override
   String get real_debrid_authenticator => "Real-Debrid-todentaja";
   @override
+  String get hide_partial_unreleased_content_description => "Suodattaa sisällön, jolla on puutteelliset tiedot tai jota ei ole vielä julkaistu.";
+  @override
+  String get home => "Koti";
+  @override
   String get error_updating_app => "Virhe sovelluksen päivityksessä...";
+  @override
+  String get layout => "Ulkoasu";
   @override
   String get clear_search_history_description => "Poistaa aikasempiin hakuihin perustuvat hakuehdotukset.";
   @override
@@ -1518,6 +1558,8 @@ class fi extends S {
   @override
   String get an_error_occurred_whilst_casting => "Virhe suoratoistossa.";
   @override
+  String get localization => "Kieli";
+  @override
   String get disconnect => "Katkaise yhteys";
   @override
   String get manually_override_the_default_content_server => "Ohita oletuksena asetettu sisältöpalvelin manuaalisesti.";
@@ -1528,9 +1570,15 @@ class fi extends S {
   @override
   String get unknown_model => "Tuntematon malli";
   @override
+  String get this_disables_all_warnings_regarding_potential_security_concerns => "Tämä poistaa käytöstä kaikki mahdollisiin turvallisuusuhkiin liittyvät varoitukset.";
+  @override
   String get all_genres => "Kaikki lajit";
   @override
+  String get we_recommend_that_you_do_not_enable_this_option_unless => "Emme suosittele tätä ellet ole täysin varma siitä mitä olet tekemässä.";
+  @override
   String get experimental => "Kokeellinen";
+  @override
+  String get version_track_development_description => "Kun ominaisuus ladataan pääkehityslinjaan, siitä luodaan ja julkaistaan kehitysversio automaattisesti.";
   @override
   String get movies => "Elokuvat";
   @override
@@ -1550,13 +1598,21 @@ class fi extends S {
   @override
   String get successfully_refreshed_trakt_token => "Trakt-avain päivitetty.";
   @override
+  String get thank_you_notice => "ApolloTV on yhteisön ponnistus, ilman näitä ihmisiä tätä sovellusta ei olisi. Jokaisen pienestäkin osallistumisesta olen erittäin kiitollinen.\n\n~NBTX";
+  @override
+  String get hex => "Hex";
+  @override
   String get one_episode => "1 jakso";
+  @override
+  String get security_warnings_have_been_disabled => "Turvallisuusvaroitukset on poistettu käytöstä!";
   @override
   String get order => "JÄRJESTYS";
   @override
   String get okay => "OK";
   @override
   String get dismiss => "Hylkää";
+  @override
+  String get content_suggestions_description => "Räätälöi kokemustasi koostetuilla listoillamme! Napauta kiinnostavaa listaa.";
   @override
   String get loading => "Ladataan...";
   @override
@@ -1576,9 +1632,13 @@ class fi extends S {
   @override
   String get clears_the_application_database => "Tyhjentää sovelluksen tietokannan.";
   @override
+  String get version_track_stable_description => "Kun betaversiota on testattu riittävästi ja tietojemme mukaan vapaa bugeista, se korotetaan vakaaksi julkaisuksi.";
+  @override
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "Voit nyt painaa 'Synkronoi' synkronoidaksesi Trakt-suosikit ApolloTV-suosikkien kanssa.\n\n(Trakt-yhteensopivuus on rajoittunut ja sitä kehitetään yhä.)";
   @override
   String get syncing => "Synkronoidaan...";
+  @override
+  String get well_dont_say_you_didnt_ask => "No, itsehän pyysit!";
   @override
   String get youre_offline => "Olet offline-tilassa...";
   @override
@@ -1598,6 +1658,8 @@ class fi extends S {
   @override
   String get unknown => "Tuntematon";
   @override
+  String get content_suggestions => "Sisältösuosituksia";
+  @override
   String get source_autoplay => "Käytä lähteen automaattitoistoa";
   @override
   String get authentication_unsuccessful => "Todentaminen epäonnistui";
@@ -1611,6 +1673,8 @@ class fi extends S {
   String get general_settings_description => "Alla näet perusasetukset.";
   @override
   String get realdebrid_service_info => "Jos sinulla on Real-Debrid-tilaus, ApolloTV voi käyttää sitä huippunopeisiin latauksiin.";
+  @override
+  String get theme => "Teema";
   @override
   String get server_url => "Palvelimen URL";
   @override
@@ -1636,7 +1700,7 @@ class fi extends S {
   @override
   String get sorts_by_the_size_of_the_file => "Lajittelee tiedostokoon mukaan.";
   @override
-  String get curated => "Räätälöidyt";
+  String get curated => "Koostetut";
   @override
   String get connected_real_debrid_account => "Yhdistetty Real-Debrid-tiliin.";
   @override
@@ -1650,7 +1714,13 @@ class fi extends S {
   @override
   String get google_cast_prompt => "Suoratoista";
   @override
+  String get version_track => "Julkaisulinja";
+  @override
+  String get credits_description => "Tämän sovelluksen tarjoaa sinulle \u2764 nämä upeat ihmiset!";
+  @override
   String get dump_database => "Vedosta tietokanta";
+  @override
+  String get version_track_beta_description => "Kun muutamat kehitysversiot ominaisuuksineen ovat valmiina, niistä poimitaan parhaat ja julkaistaan betaversioina.";
   @override
   String get networking => "VERKKO";
   @override
@@ -1658,9 +1728,13 @@ class fi extends S {
   @override
   String get blog => "Blogi";
   @override
+  String get your_request_has_been_saved => "Pyyntösi on tallennettu.";
+  @override
   String get descending => "Laskeva";
   @override
   String get sorts_by_source_quality => "Lajittelee lähteen laadun mukaan.";
+  @override
+  String get run_command => "Suorita komento ";
   @override
   String get updating => "Päivitetään...";
   @override
@@ -1698,6 +1772,8 @@ class fi extends S {
   @override
   String get core => "YDIN";
   @override
+  String get intentionally_throws_an_error_to_test_error_handling => "Luo virheen tarkoituksellisesti virheenkäsittelyä varten.";
+  @override
   String get the_key_must_be_32_characters_in_length => "Avaimen pitää olla 32 merkkiä pitkä.";
   @override
   String get link_copied_to_clipboard => "Linkki kopioitu työpöydälle.";
@@ -1724,6 +1800,10 @@ class fi extends S {
   @override
   String get tv_shows => "TV-sarjat";
   @override
+  String get hide_partial_unreleased_content => "Piilota keskeneräinen/julkaisematon sisältö";
+  @override
+  String get security => "Turvallisuus";
+  @override
   String get reload => "Lataa uudelleen";
   @override
   String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "Käynnistää asennustoiminnon, joka avautuu sovelluksen ensimmäisessä käynnistyksessä.";
@@ -1733,6 +1813,8 @@ class fi extends S {
   String get the_request_timed_out => "Pyyntö aikakatkaistu.";
   @override
   String get show_more => "Näytä enemmän...";
+  @override
+  String get no_sources_found => "Lähteitä ei löytynyt.";
   @override
   String get update_failed_please_try_again_later => "Päivitys epäonnistui. Yritä myöhemmin uudelleen.";
   @override
@@ -1744,9 +1826,13 @@ class fi extends S {
   @override
   String get choose_a_theme => "Valitse teema...";
   @override
+  String get chooser => "Poimija";
+  @override
   String get trakt_synchronization => "Traktin synkronisaatio...";
   @override
   String get vote_average => "Arvioiden keskiarvo";
+  @override
+  String get waiting_for_input => "Odotetaan syötettä...";
   @override
   String get the_socket_connection_timed_out => "Socket-yhteys aikakatkaistu.";
   @override
@@ -1761,6 +1847,8 @@ class fi extends S {
   String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName on todennettu Trakt.tv:n kanssa!";
   @override
   String welcome_to_appname(String appName) => "Tervetuloa $appName:hen";
+  @override
+  String we_couldnt_find_any_sources_for_content(String content) => "Emme löytänyt lähteitä kohteelle '$content'.";
   @override
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName:n mahdollistivat seuraavat upeat ihmiset:";
   @override
@@ -7113,9 +7201,13 @@ class tr extends S {
   @override
   String get throw_error => "Hata Gönder";
   @override
+  String get premium_hosts => "Premium Sunucular";
+  @override
   String get playback => "Oynatma";
   @override
   String get released => "Yayınlandı";
+  @override
+  String get simkl_description => "En sevdiğiniz TV şovları, anime ve filmler. Aramayı, işaretlemeyi ve kontrol etmeyi durdurun.İzlemeye başlayın.";
   @override
   String get recommended_movies => "Önerilen Filmler";
   @override
@@ -7251,6 +7343,8 @@ class tr extends S {
   @override
   String get name => "Ad";
   @override
+  String get content_trackers => "İçerik İzleyiciler";
+  @override
   String get copy_to_clipboard => "Panoya Kopyala";
   @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Bu sorun devam ederse, lütfen Discord'da personel üyesi ile iletişime geçin.";
@@ -7357,6 +7451,8 @@ class tr extends S {
   @override
   String get thank_you_notice => "ApolloTV bir topluluk çalışmasıdır ve bu insanlar olmadan bu uygulama olmazdı. Herkesin katkısı için, ne kadar küçük olursa olsun, minnettarım.\n\n~NBTX";
   @override
+  String get hex => "Hex";
+  @override
   String get one_episode => "1 bölüm";
   @override
   String get security_warnings_have_been_disabled => "Güvenlik uyarıları devre dışı bırakıldı!";
@@ -7366,6 +7462,8 @@ class tr extends S {
   String get okay => "Tamam";
   @override
   String get dismiss => "Reddet";
+  @override
+  String get content_suggestions_description => "Tecrübenizi düzenlenmiş izleme listelerimizle düzenleyin! Düzenlenmiş bir listeyle ilgileniyorsanız,üzerine dokunun.";
   @override
   String get loading => "Yükleniyor...";
   @override
@@ -7410,6 +7508,8 @@ class tr extends S {
   String get this_feature_has_not_yet_been_implemented => "Bu özellik henüz uygulanmadı.";
   @override
   String get unknown => "Bilinmeyen";
+  @override
+  String get content_suggestions => "İçerik Önerileri";
   @override
   String get source_autoplay => "Kaynak Otomatik Oynatmayı Etkinleştir";
   @override
@@ -7478,6 +7578,8 @@ class tr extends S {
   String get $_language_name_english => "Turkish";
   @override
   String get blog => "Blog";
+  @override
+  String get your_request_has_been_saved => "İsteğiniz kaydedildi.";
   @override
   String get descending => "Azalan";
   @override
@@ -7563,6 +7665,8 @@ class tr extends S {
   @override
   String get show_more => "Daha fazla göster...";
   @override
+  String get no_sources_found => "Kaynak bulunamadı.";
+  @override
   String get update_failed_please_try_again_later => "Güncelleme başarısız oldu.  Lütfen daha sonra tekrar deneyiniz.";
   @override
   String get no_results_found => "Sonuç bulunamadı.";
@@ -7572,6 +7676,8 @@ class tr extends S {
   String get searching_for_cast_devices => "Yayın cihazı aranıyor...";
   @override
   String get choose_a_theme => "Tema seçin...";
+  @override
+  String get chooser => "Seçici";
   @override
   String get trakt_synchronization => "Trakt Senkronizasyonu...";
   @override
@@ -7592,6 +7698,8 @@ class tr extends S {
   String appname_has_successfully_authenticated_with_trakttv(String appName) => "$appName Trakt.tv ile başarıyla doğrulandı! ";
   @override
   String welcome_to_appname(String appName) => "$appName 'ye Hoş Geldiniz";
+  @override
+  String we_couldnt_find_any_sources_for_content(String content) => " '$content için kaynak bulunamadı'.";
   @override
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName  bu harika insanların tümü tarafından mümkün oldu:";
   @override

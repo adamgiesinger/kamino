@@ -302,5 +302,15 @@
   "open_discord": "Discord'u Aç",
   "throw_error": "Hata Gönder",
   "intentionally_throws_an_error_to_test_error_handling": "İsteyerek hata işlemeyi sınamak için bir hata atar. ",
-  "well_dont_say_you_didnt_ask": "Sorma deme!"
+  "well_dont_say_you_didnt_ask": "Sorma deme!",
+  "content_trackers": "İçerik İzleyiciler",
+  "premium_hosts": "Premium Sunucular",
+  "simkl_description": "En sevdiğiniz TV şovları, anime ve filmler. Aramayı, işaretlemeyi ve kontrol etmeyi durdurun.İzlemeye başlayın.",
+  "hex": "Hex",
+  "chooser": "Seçici",
+  "content_suggestions": "İçerik Önerileri",
+  "content_suggestions_description": "Tecrübenizi düzenlenmiş izleme listelerimizle düzenleyin! Düzenlenmiş bir listeyle ilgileniyorsanız,üzerine dokunun.",
+  "no_sources_found": "Kaynak bulunamadı.",
+  "we_couldnt_find_any_sources_for_content": " '$content için kaynak bulunamadı'.",
+  "your_request_has_been_saved": "İsteğiniz kaydedildi."
 }
