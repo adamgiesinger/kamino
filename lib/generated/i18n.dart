@@ -221,6 +221,7 @@ class S implements WidgetsLocalizations {
   String get sorts_by_the_time_the_server_took_to_respond => "Sorts by the time the server took to respond.";
   String get source_autoplay => "Enable Source Autoplay";
   String get source_autoplay_description => "Automatically selects a source to play instead of showing a dialog containing the source list.";
+  String get submit_request => "Submit Request";
   String get success => "Success!";
   String get successfully_refreshed_trakt_token => "Successfully refreshed Trakt token.";
   String get sync => "Sync";
@@ -307,6 +308,7 @@ class S implements WidgetsLocalizations {
   String version_x(String version) => "Version $version";
   String we_couldnt_find_any_sources_for_content(String content) => "We couldn't find any sources for '$content'.";
   String welcome_to_appname(String appName) => "Welcome to $appName";
+  String x_found_in_y(String x, String y) => "$x found in $y";
   String choose_n_categories(String n) {
     switch (n) {
       case "0":
