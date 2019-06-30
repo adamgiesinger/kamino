@@ -540,7 +540,7 @@ class KaminoAppHomeState extends State<KaminoAppHome> {
 
       // If the initial setup is not complete, show the setup guide.
       if(!await Settings.initialSetupComplete){
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).push(ApolloTransitionRoute(
           builder: (BuildContext context) => KaminoIntro(then: () async {
             setState(() {});
             prepare();
