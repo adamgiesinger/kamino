@@ -32,6 +32,7 @@ import 'package:http/http.dart' as http;
 
 const appName = "ApolloTV";
 const appCastID = "6569632D";
+const tvSupportEnabled = false;
 Logger log;
 
 PlatformType currentPlatform;
@@ -393,7 +394,7 @@ class KaminoAppState extends State<KaminoApp> {
     ErrorWidget.builder = (FlutterErrorDetails error) => _getErrorWidget(error);
 
     StatefulWidget applicationHome;
-    if(currentPlatform == PlatformType.TV) {
+    if(currentPlatform == PlatformType.TV && tvSupportEnabled) {
       applicationHome = KaminoSkyspace();
     }else{
       applicationHome = KaminoAppHome();
