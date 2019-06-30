@@ -331,5 +331,7 @@
   "does_nothing_in_release_mode": "Does nothing in release mode.",
   "please_follow_the_instructions_shown_to_log_in_via_your_browser": "Please follow the instructions shown to log in via your browser.",
   "expires_in_x_daysOther": "expires in $days days",
-  "expires_in_x_daysOne": "expires in $days day"
+  "expires_in_x_daysOne": "expires in $days day",
+  "sorts_by_date_added": "Sorts by date added.",
+  "date_added": "Date Added"
 }

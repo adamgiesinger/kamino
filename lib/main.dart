@@ -101,6 +101,7 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
     bool shouldShowErrors = false;
     assert((){
       shouldShowErrors = true;
+      return true;
     }());
     if(!packageInfo.buildNumber.endsWith("3")) shouldShowErrors = true;
     if(!shouldShowErrors) return;

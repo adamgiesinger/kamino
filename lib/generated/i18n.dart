@@ -90,6 +90,7 @@ class S implements WidgetsLocalizations {
   String get customize_appearance => "Customize Appearance";
   String get customize_the_theme_and_primary_colors => "Customize the theme and primary colors.";
   String get customize_your_launchpad => "Customize your launchpad.";
+  String get date_added => "Date Added";
   String get debug_only_logs_the_application_database_in_the_console => "(Debug only) Logs the application database in the console.";
   String get debug_only_logs_the_application_preferences_in_the_console => "(Debug only) Logs the application preferences in the console.";
   String get default_ => "Default";
@@ -221,6 +222,7 @@ class S implements WidgetsLocalizations {
   String get sort => "Sort";
   String get sort_by => "Sort By...";
   String get sorts_alphabetically_by_name => "Sorts alphabetically by name.";
+  String get sorts_by_date_added => "Sorts by date added.";
   String get sorts_by_source_quality => "Sorts by source quality.";
   String get sorts_by_the_size_of_the_file => "Sorts by the size of the file.";
   String get sorts_by_the_time_the_server_took_to_respond => "Sorts by the time the server took to respond.";
