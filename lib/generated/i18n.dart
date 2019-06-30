@@ -6075,6 +6075,8 @@ class he extends S {
   @override
   String get play_movie => "נגן סרט";
   @override
+  String get converting_realdebrid_fidelity_points => "ממיר נקודות Real-Debrid...";
+  @override
   String get ongoing => "מתמשך";
   @override
   String get not_yet_implemented => "עדיין לא מיושם...";
@@ -6083,11 +6085,19 @@ class he extends S {
   @override
   String get set_primary_color => "שנה צבע ראשוני...";
   @override
+  String get throw_error => "בדיקת שגיאה";
+  @override
+  String get premium_hosts => "אחסוני פרימיום";
+  @override
   String get playback => "ניגון";
   @override
   String get released => "שוחרר";
   @override
+  String get simkl_description => "כל תוכניות הטלוויזיה האהובות עליך, אנימה וסרטים - במקום אחד. הפסק לחפש, לסמן ולבדוק. התחל לצפות.";
+  @override
   String get recommended_movies => "סרטים מומלצים";
+  @override
+  String get welcome_to_apollo_skyspace => "ברוכים הבאים ל- Apollo Skyspace!";
   @override
   String get create_profile => "יצירת פרופיל";
   @override
@@ -6103,6 +6113,8 @@ class he extends S {
   @override
   String get general_application_settings => "הגדרות יישום בסיסיות.";
   @override
+  String get thank_you => "תודה רבה!";
+  @override
   String get see_all => "הצג הכל";
   @override
   String get is_your_connection_too_slow => "האם החיבור שלך איטי מדי?";
@@ -6111,6 +6123,8 @@ class he extends S {
   @override
   String get miscellaneous => "שונות";
   @override
+  String get houston_stand_by => "יוסטון, המתן קטנה...";
+  @override
   String get source_autoplay_description => "בוחר מקור וידאו באופן אוטומטי במקום להראות את רשימת המקורות.";
   @override
   String get grid_layout => "פריסת רשת";
@@ -6118,6 +6132,8 @@ class he extends S {
   String get server_key => "המפתח חייב להיות באורך 32 תווים.";
   @override
   String get connect_your_trakt_account => "התחבר אל Trakt";
+  @override
+  String get search => "חיפוש";
   @override
   String get with_thanks => "עם תודות...";
   @override
@@ -6133,9 +6149,15 @@ class he extends S {
   @override
   String get whats_your_favorite_color_description => "הזן את הצבע האהוב שלך, הצבע ישמש לצבעי לחצנים, סמלים, וכו'...";
   @override
+  String get set => "בחר";
+  @override
   String get select_language => "בחר שפה...";
   @override
   String get saving_content_information => "שמירת פרטי תוכן...";
+  @override
+  String get security_risk => "סיכון ביטחוני:";
+  @override
+  String get apollo_skyspace_is_still_under_development => "Apollo Skyspace עדיין בפיתוח.";
   @override
   String get error_loading_search => "אירעה שגיאה בעת טעינת תוצאות החיפוש.";
   @override
@@ -6161,11 +6183,15 @@ class he extends S {
   @override
   String get boost_your_experience => "הגבר את החוויה שלך";
   @override
+  String get disable_security_warnings => "כבה התראות אבטחה";
+  @override
   String get removed_from_favorites => "הוסר מהמועדפים";
   @override
   String get change_theme => "שנה ערכת נושא...";
   @override
   String get the_server_failed_to_verify_the_apps_integrity => "השרת לא הצליח לאמת את תקינות היישום.";
+  @override
+  String get open_discord => "פתח דיסקורד";
   @override
   String get disconnect_your_realdebrid_account => "נתק את חשבון הReal-Debrid שלך";
   @override
@@ -6193,9 +6219,13 @@ class he extends S {
   @override
   String get clears_all_application_settings => "מאפס את כל הגדרות היישום.";
   @override
+  String get discord => "דיסקורד";
+  @override
   String get success => "הוצלח!";
   @override
   String get name => "שם";
+  @override
+  String get content_trackers => "עוקבי תוכן";
   @override
   String get copy_to_clipboard => "העתק";
   @override
@@ -6203,11 +6233,23 @@ class he extends S {
   @override
   String get next => "הבא";
   @override
+  String get expires => "יפוג";
+  @override
+  String get real_debrid_convert_points => "המר נקודות";
+  @override
   String get cast_settings => "הגרות שידור Cast";
   @override
   String get card_layout => "פריסת כרטיסים";
   @override
+  String get we_will_announce_it_on_our_social_pages_when_its => "אנו נודיע על כך בדפים החברתיים שלנו כאשר יהיה עדכונים.";
+  @override
   String get back => "הקודם";
+  @override
+  String get privacy => "פרטיות";
+  @override
+  String get updates => "עדכונים";
+  @override
+  String get using_unofficial_servers_can_expose_your_ip_address => "שימוש בשרתים לא רשמיים יכול לחשוף את כתובת ה- IP שלך. אם זהו חשש, עליך להשתמש ב- VPN.";
   @override
   String get trakt_renewal_failure_detailed => "רענון של אימות Trakt כשל. בצע/י בדיקה של פרטיך.";
   @override
@@ -6223,7 +6265,13 @@ class he extends S {
   @override
   String get real_debrid_authenticator => "מאמת Real-Debrid";
   @override
+  String get hide_partial_unreleased_content_description => "מסנן תוכן חסר מידע או שטרם פורסם.";
+  @override
+  String get home => "בית";
+  @override
   String get error_updating_app => "שגיעה בביצוע עדכון.";
+  @override
+  String get layout => "פריסה";
   @override
   String get clear_search_history_description => "מנקה את כל היסטוריית החיפוש.";
   @override
@@ -6245,6 +6293,10 @@ class he extends S {
   @override
   String get disconnect_your_trakt_account => "התנתק מחשבון Trakt";
   @override
+  String get an_error_occurred_whilst_casting => "אירעה שגיאה בחיבור.";
+  @override
+  String get localization => "לוקליזציה";
+  @override
   String get disconnect => "התנתק";
   @override
   String get manually_override_the_default_content_server => "העבר ידנית את שרת התוכן המוגדר כברירת מחדל.";
@@ -6253,9 +6305,17 @@ class he extends S {
   @override
   String get advanced => "מתקדם";
   @override
+  String get unknown_model => "מודל לא מוכר";
+  @override
+  String get this_disables_all_warnings_regarding_potential_security_concerns => "משבית את כל האזהרות לגבי חששות בטיחותיים.";
+  @override
   String get all_genres => "כל הז'אנרים";
   @override
+  String get we_recommend_that_you_do_not_enable_this_option_unless => "אנו ממליצים שלא תפעיל אפשרות זו, אלא אם אתה בטוח שאתה יודע מה אתה עושה.";
+  @override
   String get experimental => "נסיוני";
+  @override
+  String get version_track_development_description => "ברגע שמשהו חדש קודד ע''י המפתחים והוצא לאור ב GITHUB, גרסא נסיונית חדשה תיווצר באופן אוטומטי.";
   @override
   String get movies => "סרטים";
   @override
@@ -6275,13 +6335,23 @@ class he extends S {
   @override
   String get successfully_refreshed_trakt_token => "רענון של אימות Trakt בוצע בהצלחה";
   @override
+  String get thank_you_notice => "ApolloTV הוא מאמץ קהילתי וללא האנשים האלה, אפליקציה זאת לא הייתה קמה לתחייה. לכל מי שעזר, לא משנה כמה קצת, אני אסיר תודה.\n\n~NBTX";
+  @override
+  String get hex => "Hex";
+  @override
   String get one_episode => "פרק 1";
   @override
+  String get security_warnings_have_been_disabled => "אזהרות אבטחה הושבתו!";
+  @override
   String get order => "סדר";
+  @override
+  String get real_debrid_purchase_premium => "רכישת פרמיום";
   @override
   String get okay => "אישור";
   @override
   String get dismiss => "הסתר";
+  @override
+  String get content_suggestions_description => "התאם את החוויה שלך עם רשימות השמירה המאוגדים שלנו! אם אתה מעוניין ברשימה כלשהי, הקש עליה.";
   @override
   String get loading => "טוען...";
   @override
@@ -6291,6 +6361,8 @@ class he extends S {
   @override
   String get action_completed_successfully => "הפעולה הושלמה בהצלחה.";
   @override
+  String get reset => "אפס";
+  @override
   String get change_content_playback_settings => "שנה את הגדרות ניגון הוידאו.";
   @override
   String get please_check_the_announcements_channel_in_our_discord_server_for => "אנא בדוק את חדר ה#announcements בדיסקורד שלנו לקבלת מידע נוסף.";
@@ -6299,9 +6371,13 @@ class he extends S {
   @override
   String get clears_the_application_database => "מנקה את נתוני היישום.";
   @override
+  String get version_track_stable_description => "כאשר גרסאת בטא כלשאי נבדקת כמו שצריך, ולמיטב ידיעתנו עובדת ללא באגים, גרסאת הבטא תהפוך לגרסא יציבה.";
+  @override
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "הנך יכול/ה ללחוץ על 'סנכרן' על מנת לסנכרן את מועדפי הTrakt עם מועדפי הApolloTV שלך.\n\n(אינטגרציית Trakt עדיין מוגבלת בגלל שהיא עדיין בשלבי פיתוח.)";
   @override
   String get syncing => "מסנכרן...";
+  @override
+  String get well_dont_say_you_didnt_ask => "אל תגיד שלא שאלת!";
   @override
   String get youre_offline => "אין רשת...";
   @override
@@ -6319,6 +6395,8 @@ class he extends S {
   @override
   String get unknown => "לא ידוע";
   @override
+  String get content_suggestions => "הצעות תוכן";
+  @override
   String get source_autoplay => "הפעלת ניגון אוטומטי";
   @override
   String get authentication_unsuccessful => "האימות נכשל";
@@ -6332,6 +6410,8 @@ class he extends S {
   String get general_settings_description => "הגדרות נפוצות ששווה להעיף בהם מבט מהיר.";
   @override
   String get realdebrid_service_info => "אם ברשותך מנוי של Real-Debrid, ApolloTV יכול להשתמש בו כדי להשיג תוכן במהירות גבוהה יותר.";
+  @override
+  String get theme => "ערכת נושא";
   @override
   String get server_url => "כתובת השרת";
   @override
@@ -6369,7 +6449,15 @@ class he extends S {
   @override
   String get connecting => "מתחבר...";
   @override
+  String get google_cast_prompt => "שדר";
+  @override
+  String get version_track => "מסלול הגרסאות";
+  @override
+  String get credits_description => "אפליקציה זו הוכנה ב \u2764 ע''י האנשים המדהימים האלו!";
+  @override
   String get dump_database => "מאגר נתוני זבל";
+  @override
+  String get version_track_beta_description => "ברגע שכמה גרסאות ניסיוניות למיניהן מושלמות, הן יבחרו באופן ידני וישוחררו כגרסאות בטא.";
   @override
   String get networking => "רשת";
   @override
@@ -6377,9 +6465,15 @@ class he extends S {
   @override
   String get blog => "בלוג";
   @override
+  String get your_request_has_been_saved => "הבקשה שלך נשמרה.";
+  @override
+  String get submit_request => "שלח בקשה";
+  @override
   String get descending => "סדר יורד";
   @override
   String get sorts_by_source_quality => "מיין לפי איכות המקור.";
+  @override
+  String get run_command => "הפעל פקודה";
   @override
   String get updating => "מעדכן....";
   @override
@@ -6417,6 +6511,8 @@ class he extends S {
   @override
   String get core => "ליבה";
   @override
+  String get intentionally_throws_an_error_to_test_error_handling => "בכוונה נותן שגיאה כדי לצרכי בדיקה.";
+  @override
   String get the_key_must_be_32_characters_in_length => "המפתח חייב להיות באורך 32 תווים.";
   @override
   String get link_copied_to_clipboard => "קישור הועתק.";
@@ -6443,6 +6539,10 @@ class he extends S {
   @override
   String get tv_shows => "סדרות";
   @override
+  String get hide_partial_unreleased_content => "הסתר תוכן חלקי / שלא פורסם";
+  @override
+  String get security => "אבטחה";
+  @override
   String get reload => "רענן";
   @override
   String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "מתחיל את תהליך ההגדרה הראשונית המוצג כאשר היישום נפתח בפעם הראשונה.";
@@ -6453,15 +6553,25 @@ class he extends S {
   @override
   String get show_more => "עוד...";
   @override
+  String get no_sources_found => "לא נמצאו מקורות.";
+  @override
   String get update_failed_please_try_again_later => "עדכון נכשל. נסה שוב מאוחר יותר.";
   @override
   String get no_results_found => "לא נמצאו תוצאות.";
   @override
+  String get clear => "נקה";
+  @override
+  String get searching_for_cast_devices => "מחפש התקני שידור";
+  @override
   String get choose_a_theme => "בחר ערכת נושא...";
+  @override
+  String get chooser => "בוחר";
   @override
   String get trakt_synchronization => "סנכרון Trakt...";
   @override
   String get vote_average => "הצבעה ממוצעת";
+  @override
+  String get waiting_for_input => "ממתין לקלט ...";
   @override
   String get the_socket_connection_timed_out => "חיבור socket קרס.";
   @override
@@ -6477,6 +6587,8 @@ class he extends S {
   @override
   String welcome_to_appname(String appName) => "ברוכים הבאים ל $appName";
   @override
+  String we_couldnt_find_any_sources_for_content(String content) => "לא הצלחנו למצוא מקורות עבור '$content'";
+  @override
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName נוצר בזכות כל האנשים המדהימים האלו:";
   @override
   String by_x(String x) => "על ידי $x";
@@ -6490,6 +6602,10 @@ class he extends S {
   String n_ratings(String n) => "$n רייטינג";
   @override
   String this_x_has_no_synopsis_available(String x) => "אין תקציר ל$x הזה";
+  @override
+  String x_found_in_y(String x, String y) => "$x נמצא בתוך $y";
+  @override
+  String disconnected_from_device(String device) => "מנותק מ$device";
   @override
   String seasons_n(String n) => "עונה ($n)";
   @override
@@ -6507,7 +6623,11 @@ class he extends S {
   @override
   String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName נכשל בעת אימות עם Real-Debrid.";
   @override
+  String now_connected_to_device(String device) => "מחובר כעת ל$device";
+  @override
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "אירעה שגיאה בעת ניתוק מTrakt.tv (שגיאה: $errorCode)";
+  @override
+  String real_debrid_n_points(String points) => "$points נקודות";
   @override
   String real_debrid_n_sources(String n) {
     switch (n) {
@@ -6770,6 +6890,8 @@ class tr extends S {
   @override
   String get play_movie => "Filmi Oynat";
   @override
+  String get converting_realdebrid_fidelity_points => "Real-Debrid sadakat puanları dönüştürülüyor...";
+  @override
   String get ongoing => "Devam Eden";
   @override
   String get not_yet_implemented => "Henüz uygulanmadı...";
@@ -6930,6 +7052,10 @@ class tr extends S {
   @override
   String get next => "İLERİ";
   @override
+  String get expires => "Süre sonu";
+  @override
+  String get real_debrid_convert_points => "Puanları Dönüştür";
+  @override
   String get cast_settings => "Kast Ayarları";
   @override
   String get card_layout => "Kart Düzeni";
@@ -7037,6 +7163,8 @@ class tr extends S {
   String get security_warnings_have_been_disabled => "Güvenlik uyarıları devre dışı bırakıldı!";
   @override
   String get order => "DÜZEN";
+  @override
+  String get real_debrid_purchase_premium => "Premium Satın Al";
   @override
   String get okay => "Tamam";
   @override
@@ -7315,6 +7443,8 @@ class tr extends S {
   String now_connected_to_device(String device) => "Şimdi $device bağlandı";
   @override
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "Trakt.tv ile gizlice iletişim kurarken bir hata oluştu. ($errorCode)";
+  @override
+  String real_debrid_n_points(String points) => "$points puan";
   @override
   String real_debrid_n_sources(String n) {
     switch (n) {
