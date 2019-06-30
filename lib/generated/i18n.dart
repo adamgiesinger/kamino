@@ -5372,197 +5372,35 @@ class en_GB extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get cancel => "Cancel";
+  String get favorites => "Favourites";
   @override
-  String get disconnect => "Disconnect";
-  @override
-  String get manually_override_the_default_content_server => "Manually override the default content server.";
-  @override
-  String get year => "Year";
-  @override
-  String get advanced => "Advanced";
-  @override
-  String get disconnected_trakt_account => "Disconnected Trakt account.";
-  @override
-  String get manage_third_party_integrations => "Manage third party integrations.";
-  @override
-  String get movies => "Movies";
-  @override
-  String get coming_soon => "Coming Soon";
-  @override
-  String get play_episode => "Play Episode";
-  @override
-  String get play_movie => "Play Movie";
-  @override
-  String get show_less => "Show less...";
-  @override
-  String get search_history_cleared => "Search history cleared.";
-  @override
-  String get ongoing => "Ongoing";
-  @override
-  String get set_primary_color => "Set Primary Color...";
-  @override
-  String get successfully_refreshed_trakt_token => "Successfully refreshed Trakt token.";
-  @override
-  String get one_episode => "1 episode";
-  @override
-  String get released => "Released";
-  @override
-  String get order => "ORDER";
-  @override
-  String get okay => "Okay";
-  @override
-  String get dismiss => "Dismiss";
-  @override
-  String get loading => "Loading...";
-  @override
-  String get url_copied => "URL copied!";
-  @override
-  String get air_date => "Air date";
-  @override
-  String get extensions => "Extensions";
-  @override
-  String get general_application_settings => "General application settings.";
+  String get customize_your_launchpad => "Customise your launchpad.";
   @override
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "You can now tap 'Sync' to synchronise your Trakt favourites with your ApolloTV favourites.\n\n(Trakt integration is limited as it is still in development.)";
   @override
-  String get miscellaneous => "MISCELLANEOUS";
+  String get $_language_name => "English (United Kingdom)";
   @override
-  String get update_failed_storage_permission_denied => "Update failed. Storage permission denied.";
-  @override
-  String get customize_the_theme_and_primary_colors => "Customise the theme and primary colors.";
-  @override
-  String get unknown => "Unknown";
-  @override
-  String get authentication_unsuccessful => "Authentication Unsuccessful";
-  @override
-  String get change_default_server => "Change Default Server";
-  @override
-  String get with_thanks => "With thanks...";
-  @override
-  String get popularity => "Popularity";
-  @override
-  String get default_ => "Default";
-  @override
-  String get run_connectivity_test => "Run Connectivity Test";
-  @override
-  String get connect => "Connect";
-  @override
-  String get search_tv_shows_and_movies => "Search TV shows and movies...";
-  @override
-  String get synopsis => "Synopsis";
-  @override
-  String get ascending => "Ascending";
-  @override
-  String get power_user_settings_for_rocket_scientists => "Power user settings for rocket scientists.";
-  @override
-  String get clear_search_history => "Clear Search History";
-  @override
-  String get appearance => "Appearance";
-  @override
-  String get rd_description => "Real-Debrid is an unrestricted downloader that allows you to quickly download files hosted on the Internet.";
-  @override
-  String get boost_your_experience => "BOOST YOUR EXPERIENCE";
+  String get no_favorites_description => "You can add an item to favourites by tapping the heart on the top right of a content overview page.";
   @override
   String get $_language_name_english => "English (United Kingdom)";
   @override
-  String get blog => "Blog";
-  @override
-  String get descending => "Descending";
+  String get customize_the_theme_and_primary_colors => "Customise the theme and primary colours.";
   @override
   String get removed_from_favorites => "Removed from favourites";
   @override
   String get change_theme => "Change Theme...";
   @override
-  String get updating => "Updating...";
+  String get trakt_favorites_sync_detailed => "Please wait while we synchronize your favourites with Trakt. This dialog will close automatically when synchronization is complete.";
   @override
-  String get the_default_configuration_has_been_restored => "The default configuration has been restored.";
+  String get uploading_favorites => "Uploading favourites...";
   @override
-  String get legal => "Legal";
+  String get set_primary_color => "Set Primary Colour...";
   @override
-  String get donate => "Donate";
+  String get no_favorites_header => "No favourites here!";
   @override
   String get added_to_favorites => "Added to favourites";
   @override
-  String get check_for_updates => "Check for Updates";
-  @override
-  String get settings => "Settings";
-  @override
-  String get authentication_successful => "Authentication Successful";
-  @override
-  String get customize_your_launchpad => "Customise your launchpad.";
-  @override
-  String get language_settings => "Language Settings";
-  @override
-  String get $_language_name => "English (United Kingdom)";
-  @override
-  String get permission_denied => "Permission denied.";
-  @override
-  String get trakt_authenticator => "Trakt Authenticator";
-  @override
-  String get sort => "Sort";
-  @override
-  String get sync => "Sync";
-  @override
-  String get done => "Done";
-  @override
-  String get other_ => "Other";
-  @override
-  String get link_copied_to_clipboard => "Link copied to clipboard.";
-  @override
-  String get favorites => "Favourites";
-  @override
-  String get checks_whether_sources_can_be_reached => "Checks whether sources can be reached.";
-  @override
-  String get launchpad => "Launchpad";
-  @override
-  String get restore_defaults => "Restore Defaults";
-  @override
-  String get trakt_description => "Automatically track what you're watching, synchronise playlists across devices and more...";
-  @override
-  String get tv_shows => "TV Shows";
-  @override
-  String get trakt_renewal_failure_detailed => "Failed to renew Trakt token. Please check your details.";
-  @override
-  String get show_more => "Show more...";
-  @override
-  String get update_failed_please_try_again_later => "Update failed. Please try again later.";
-  @override
-  String get no_results_found => "No results found.";
-  @override
-  String get get_device_information => "Get Device Information";
-  @override
-  String get trakt_synchronization => "Trakt Synchronization...";
-  @override
-  String get error_updating_app => "Error updating app...";
-  @override
-  String get clear_search_history_description => "Removes search suggestions based on past searches.";
-  @override
-  String get vote_average => "Vote Average";
-  @override
-  String get gathers_useful_information_for_debugging => "Gathers useful information for debugging.";
-  @override
-  String get downloading_update_file => "Downloading update file...";
-  @override
-  String general_error(String error) => "An error occurred ($error)\nPlease report this error.";
-  @override
-  String n_ratings(String n) => "$n ratings";
-  @override
-  String this_x_has_no_synopsis_available(String x) => "This $x has no synopsis available.";
-  @override
-  String seasons_n(String n) => "Seasons ($n)";
-  @override
-  String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName was made possible by all of these amazing people:";
-  @override
-  String unknown_x(String x) => "Unknown $x";
-  @override
-  String n_episodes(String n) => "$n episodes";
-  @override
-  String by_x(String x) => "by $x";
-  @override
-  String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName was unable to authenticate with Trakt.tv.";
-  @override
-  String make_appname_yours(String appName) => "MAKE $appName YOURS";
+  String appname_can_synchronise_your_watch_history_and_favorites_from_trakttv(String appName) => "$appName can synchronise your watch history and favourites from Trakt.tv...";
 }
 
 class pl extends S {
