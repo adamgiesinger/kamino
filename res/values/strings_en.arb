@@ -314,7 +314,6 @@
   "we_couldnt_find_any_sources_for_content": "We couldn't find any sources for '$content'.",
   "your_request_has_been_saved": "Your request has been saved.",
 
-  "expires": "Expires",
   "real_debrid_n_points": "$points points",
   "real_debrid_convert_points": "Convert Points",
   "converting_realdebrid_fidelity_points": "Converting Real-Debrid fidelity points...",
@@ -329,6 +328,8 @@
   "or": "or",
   "enter_the_following_code": "Enter the following code:",
   "visit_the_following_url_in_your_browser": "Visit the following URL in your browser:",
-  "does_nothing_in_release_mode": "(Does nothing in release mode.)",
-  "please_follow_the_instructions_shown_to_log_in_via_your_browser": "Please follow the instructions shown to log in via your browser."
+  "does_nothing_in_release_mode": "Does nothing in release mode.",
+  "please_follow_the_instructions_shown_to_log_in_via_your_browser": "Please follow the instructions shown to log in via your browser.",
+  "expires_in_x_daysOther": "expires in $days days",
+  "expires_in_x_daysOne": "expires in $days day"
 }

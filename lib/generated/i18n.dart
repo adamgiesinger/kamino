@@ -103,7 +103,7 @@ class S implements WidgetsLocalizations {
   String get disconnected_trakt_account => "Disconnected Trakt account.";
   String get discord => "Discord";
   String get dismiss => "Dismiss";
-  String get does_nothing_in_release_mode => "(Does nothing in release mode.)";
+  String get does_nothing_in_release_mode => "Does nothing in release mode.";
   String get donate => "Donate";
   String get done => "Done";
   String get downloading_trakt_data => "Downloading Trakt data...";
@@ -116,7 +116,6 @@ class S implements WidgetsLocalizations {
   String get error_loading_search => "Well this is awkward... An error occurred whilst loading search results.";
   String get error_updating_app => "Error updating app...";
   String get experimental => "Experimental";
-  String get expires => "Expires";
   String get extensions => "Extensions";
   String get favorites => "Favorites";
   String get file_size => "File Size";
@@ -327,6 +326,14 @@ class S implements WidgetsLocalizations {
         return "Choose $n category...";
       default:
         return "Choose $n categories...";
+    }
+  }
+  String expires_in_x_days(String days) {
+    switch (days) {
+      case "1":
+        return "expires in $days day";
+      default:
+        return "expires in $days days";
     }
   }
   String real_debrid_n_sources(String n) {
@@ -2711,8 +2718,6 @@ class sv extends S {
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Om detta problem fortsätter, kontakta vänligen en personal på Discord.";
   @override
   String get next => "Nästa";
-  @override
-  String get expires => "Förfaller";
   @override
   String get real_debrid_convert_points => "Konvertera Poäng";
   @override
@@ -6071,8 +6076,6 @@ class he extends S {
   @override
   String get next => "הבא";
   @override
-  String get expires => "יפוג";
-  @override
   String get real_debrid_convert_points => "המר נקודות";
   @override
   String get cast_settings => "הגרות שידור Cast";
@@ -6889,8 +6892,6 @@ class tr extends S {
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Bu sorun devam ederse, lütfen Discord'da personel üyesi ile iletişime geçin.";
   @override
   String get next => "İLERİ";
-  @override
-  String get expires => "Süre sonu";
   @override
   String get real_debrid_convert_points => "Puanları Dönüştür";
   @override

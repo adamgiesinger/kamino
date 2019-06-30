@@ -553,4 +553,12 @@ class RealDebridUser {
     return this.type.toLowerCase() == "premium";
   }
 
+  int get premiumDaysRemaining {
+    return new DateTime.fromMillisecondsSinceEpoch(
+      new DateTime.now().millisecondsSinceEpoch + (premiumSecondsRemaining * 1000)
+    ).difference(
+      new DateTime.now()
+    ).inDays;
+  }
+
 }
