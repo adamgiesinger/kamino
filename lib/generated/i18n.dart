@@ -103,6 +103,7 @@ class S implements WidgetsLocalizations {
   String get disconnected_trakt_account => "Disconnected Trakt account.";
   String get discord => "Discord";
   String get dismiss => "Dismiss";
+  String get does_nothing_in_release_mode => "(Does nothing in release mode.)";
   String get donate => "Donate";
   String get done => "Done";
   String get downloading_trakt_data => "Downloading Trakt data...";
@@ -110,6 +111,7 @@ class S implements WidgetsLocalizations {
   String get dump_database => "Dump Database";
   String get dump_preferences => "Dump Preferences";
   String get editors_choice => "Editor's Choice";
+  String get enter_the_following_code => "Enter the following code:";
   String get error_loading_launchpad => "Well this is awkward... An error occurred whilst loading your launchpad.";
   String get error_loading_search => "Well this is awkward... An error occurred whilst loading search results.";
   String get error_updating_app => "Error updating app...";
@@ -131,6 +133,7 @@ class S implements WidgetsLocalizations {
   String get home => "Home";
   String get houston_stand_by => "Houston, Stand by...";
   String get if_this_problem_persists_please_contact_a_member_of_staff => "If this problem persists, please contact a member of staff on Discord.";
+  String get if_youre_not_sure_what_these_options_are_just_use_login => "If you're not sure what these options are, just use LOGIN.";
   String get information => "Information";
   String get install => "Install";
   String get intentionally_throws_an_error_to_test_error_handling => "Intentionally throws an error to test error handling.";
@@ -145,6 +148,7 @@ class S implements WidgetsLocalizations {
   String get link_copied_to_clipboard => "Link copied to clipboard.";
   String get loading => "Loading...";
   String get localization => "Localization";
+  String get login => "Login";
   String get manage_third_party_integrations => "Manage third party integrations.";
   String get manually_override_the_default_content_server => "Manually override the default content server.";
   String get miscellaneous => "MISCELLANEOUS";
@@ -161,6 +165,7 @@ class S implements WidgetsLocalizations {
   String get one_episode => "1 episode";
   String get ongoing => "Ongoing";
   String get open_discord => "Open Discord";
+  String get or => "or";
   String get order => "ORDER";
   String get other_ => "Other";
   String get permission_denied => "Permission denied.";
@@ -170,6 +175,7 @@ class S implements WidgetsLocalizations {
   String get play_trailer => "Play Trailer";
   String get playback => "Playback";
   String get please_check_the_announcements_channel_in_our_discord_server_for => "Please check the #announcements channel in our Discord server for more information.";
+  String get please_follow_the_instructions_shown_to_log_in_via_your_browser => "Please follow the instructions shown to log in via your browser.";
   String get please_wait => "Please wait...";
   String get popularity => "Popularity";
   String get power_user_settings_for_rocket_scientists => "Power user settings for rocket scientists.";
@@ -260,11 +266,13 @@ class S implements WidgetsLocalizations {
   String get updating => "Updating...";
   String get uploading_favorites => "Uploading favorites...";
   String get url_copied => "URL copied!";
+  String get use_code => "Use Code";
   String get using_unofficial_servers_can_expose_your_ip_address => "Using unofficial servers can expose your IP address. If this is a concern, you should use a VPN.";
   String get version_track => "Version Track";
   String get version_track_beta_description => "Once a few development-build features are complete, they will be cherry-picked and released as beta builds.";
   String get version_track_development_description => "As soon as a feature has been pushed to the master branch a development build will be automatically generated and released.";
   String get version_track_stable_description => "When a beta build is well-tested and is, to the best of our knowledge bug-free, the build will graduate to a stable release.";
+  String get visit_the_following_url_in_your_browser => "Visit the following URL in your browser:";
   String get vote_average => "Vote Average";
   String get waiting_for_input => "Waiting for input...";
   String get we_recommend_that_you_do_not_enable_this_option_unless => "We recommend that you do not enable this option unless you are positive that you know what you're doing.";
@@ -279,6 +287,7 @@ class S implements WidgetsLocalizations {
   String get wiping_database => "Wiping database...";
   String get with_thanks => "With thanks...";
   String get year => "Year";
+  String get you_can_log_into_realdebrid_in_two_ways => "You can log into Real-Debrid in two ways:";
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "You can now tap 'Sync' to synchronise your Trakt favorites with your ApolloTV favorites.\n\n(Trakt integration is limited as it is still in development.)";
   String get your_request_has_been_saved => "Your request has been saved.";
   String get youre_offline => "You're offline...";
@@ -291,6 +300,7 @@ class S implements WidgetsLocalizations {
   String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName was unable to authenticate with Real-Debrid.";
   String appname_was_unable_to_authenticate_with_trakttv(String appName) => "$appName was unable to authenticate with Trakt.tv.";
   String by_x(String x) => "by $x";
+  String code_x(String code) => "Code: $code";
   String customize_appearance_description(String appName) => "$appName is all about customization. Let's get started by choosing your favorite theme!";
   String disconnected_from_device(String device) => "Disconnected from $device";
   String extensions_description(String appName) => "If you use these any of these third party services, you can connect them to $appName.";

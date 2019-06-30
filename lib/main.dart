@@ -59,8 +59,6 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
     if(overlay == null || overlay.context == null || !shouldShowDialog) return;
     BuildContext context = overlay.context;
 
-    if(Navigator.of(context).canPop() && !cancelPop) Navigator.of(context).pop();
-
     if(error is SocketException){
       showDialog(context: context, builder: (BuildContext context){
         return AlertDialog(
@@ -98,6 +96,15 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
 
       return;
     }
+
+    bool shouldShowErrors = false;
+    assert((){
+      shouldShowErrors = true;
+    }());
+    if(!packageInfo.buildNumber.endsWith("3")) shouldShowErrors = true;
+    if(!shouldShowErrors) return;
+
+    if(Navigator.of(context).canPop() && !cancelPop) Navigator.of(context).pop();
 
     String _errorReference;
     try {

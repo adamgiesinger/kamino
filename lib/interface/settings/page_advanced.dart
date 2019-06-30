@@ -357,9 +357,10 @@ class AdvancedSettingsPageState extends SettingsPageState {
         Material(
           color: widget.isPartial ? Theme.of(context).cardColor : Theme.of(context).backgroundColor,
           child: ListTile(
+            isThreeLine: true,
             leading: Icon(Icons.error),
             title: TitleText(S.of(context).throw_error),
-            subtitle: Text(S.of(context).intentionally_throws_an_error_to_test_error_handling),
+            subtitle: Text(S.of(context).intentionally_throws_an_error_to_test_error_handling + "\n" + S.of(context).does_nothing_in_release_mode),
             enabled: true,
             onTap: () async {
               throw new Exception(S.of(context).well_dont_say_you_didnt_ask);
