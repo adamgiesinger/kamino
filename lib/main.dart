@@ -103,7 +103,7 @@ Future<void> reportError(error, StackTrace stacktrace, {shouldShowDialog = false
       shouldShowErrors = true;
       return true;
     }());
-    if(!packageInfo.buildNumber.endsWith("3")) shouldShowErrors = true;
+    if(!packageInfo.buildNumber.endsWith("2") || !packageInfo.buildNumber.endsWith("3")) shouldShowErrors = true;
     if(!shouldShowErrors) return;
 
     if(Navigator.of(context).canPop() && !cancelPop) Navigator.of(context).pop();
