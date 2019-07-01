@@ -435,7 +435,11 @@ class FavoriteAuthority {
   }
 
   static valueOf(String value){
-    return values.firstWhere((authority) => authority.value == value, orElse: null);
+    return valueOr(value, null);
+  }
+
+  static valueOr(String value, FavoriteAuthority orValue){
+    return values.firstWhere((authority) => authority.value == value, orElse: () => orValue);
   }
 }
 
@@ -456,7 +460,7 @@ class FavoriteDocument {
     imageUrl = data['imageUrl'],
     year = data['year'],
     savedOn = DateTime.parse(data['saved_on']),
-    authority = FavoriteAuthority.valueOf(data['authority']);
+    authority = FavoriteAuthority.valueOr(data['authority'], FavoriteAuthority.LOCAL);
 
   FavoriteDocument.fromModel(ContentModel model, { FavoriteAuthority authority = FavoriteAuthority.LOCAL }) :
     tmdbId = model.id,
