@@ -11,6 +11,7 @@ import 'package:kamino/main.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
 import 'package:kamino/ui/interface.dart';
+import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/filesize.dart';
 import 'package:kamino/util/player.dart';
 import 'package:kamino/util/settings.dart';
@@ -48,6 +49,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
   bool _disableSecurityMessages = false;
 
   Stopwatch stopwatch;
+  int _currentIndex;
 
   @override
   void dispose() {
@@ -58,6 +60,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
   @override
   void initState() {
+    _currentIndex = 0;
+
     (() async {
       stopwatch = new Stopwatch()..start();
       rdEnabled = await RealDebrid.isAuthenticated();
@@ -102,6 +106,8 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
     return false;
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     widget.service.sourceList.forEach((model) {
@@ -121,108 +127,110 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
     return WillPopScope(
       onWillPop: _handlePop,
       child: Scaffold(
-          backgroundColor: Theme
-              .of(context)
-              .backgroundColor,
-          appBar: AppBar(
-            backgroundColor: !isShimVendor || _disableSecurityMessages ? Theme.of(context).backgroundColor
+        backgroundColor: Theme
+            .of(context)
+            .backgroundColor,
+        appBar: AppBar(
+          backgroundColor: !isShimVendor || _disableSecurityMessages ? Theme.of(context).backgroundColor
               : Colors.red,
-            title: TitleText(
-                widget.title
+          title: TitleText(
+              widget.title
+          ),
+          centerTitle: false,
+          titleSpacing: NavigationToolbar.kMiddleSpacing,
+          bottom: PreferredSize(
+            preferredSize: Size(
+                double.infinity,
+                SourceSelectionView._kAppBarProgressHeight + 20
             ),
-            centerTitle: false,
-            titleSpacing: NavigationToolbar.kMiddleSpacing,
-            bottom: PreferredSize(
-              preferredSize: Size(
-                  double.infinity,
-                  SourceSelectionView._kAppBarProgressHeight + 20
-              ),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: Builder(builder: (BuildContext context){
-                      String elapsed = formatTimestamp(stopwatch.elapsed.inMilliseconds);
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: Builder(builder: (BuildContext context){
+                    String elapsed = formatTimestamp(stopwatch.elapsed.inMilliseconds);
 
-                      return Text(
-                        S.of(context).x_found_in_y(
+                    return Text(
+                      S.of(context).x_found_in_y(
                           S.of(context).n_sources(sourceList.length.toString()),
                           elapsed
-                        ),
-                        style: TextStyle(
-                            fontFamily: 'GlacialIndifference',
-                            fontSize: 16
-                        ),
-                      );
-                    }),
-                  ),
-                  PreferredSize(
-                      child: (
-                          widget.service.status != VendorServiceStatus.DONE &&
-                              widget.service.status != VendorServiceStatus.IDLE
-                      )
-                          ? Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: SourceSelectionView._kAppBarProgressHeight,
-                            child: LinearProgressIndicator(
-                              backgroundColor: !isShimVendor || _disableSecurityMessages ? null : Colors.red,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  !isShimVendor || _disableSecurityMessages ? Theme.of(context).primaryColor
-                                      : Colors.white
-                              ),
+                      ),
+                      style: TextStyle(
+                          fontFamily: 'GlacialIndifference',
+                          fontSize: 16
+                      ),
+                    );
+                  }),
+                ),
+                PreferredSize(
+                    child: (
+                        widget.service.status != VendorServiceStatus.DONE &&
+                            widget.service.status != VendorServiceStatus.IDLE
+                    )
+                        ? Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: SourceSelectionView._kAppBarProgressHeight,
+                          child: LinearProgressIndicator(
+                            backgroundColor: !isShimVendor || _disableSecurityMessages ? null : Colors.red,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                !isShimVendor || _disableSecurityMessages ? Theme.of(context).primaryColor
+                                    : Colors.white
                             ),
-                          )
-                        ],
-                      )
-                          : Container(),
-                      preferredSize: Size(
-                          double.infinity, SourceSelectionView._kAppBarProgressHeight)
-                  )
-                ],
-              ),
+                          ),
+                        )
+                      ],
+                    )
+                        : Container(),
+                    preferredSize: Size(
+                        double.infinity, SourceSelectionView._kAppBarProgressHeight)
+                )
+              ],
             ),
-            actions: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: CastButton(),
-              ),
-              IconButton(icon: Icon(Icons.sort), onPressed: () => _showSortingDialog(context))
-            ],
           ),
-          body: Container(
-              child: NotificationListener<OverscrollIndicatorNotification>(
-                  onNotification: (notification){
-                    if(notification.leading){
-                      notification.disallowGlow();
-                    }
-                  },
-                  child: (widget.service.status == VendorServiceStatus.DONE && sourceList.length == 0) ?
-                    ErrorLoadingMixin(
-                      partialForm: true,
-                      errorTitle: S.of(context).no_sources_found,
-                      errorMessage: S.of(context).we_couldnt_find_any_sources_for_content(widget.title),
-                      action: (){
-                        final FlutterWebviewPlugin webview = FlutterWebviewPlugin();
-                        webview.close();
+          actions: <Widget>[
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: CastButton(),
+            ),
+            IconButton(icon: Icon(Icons.sort), onPressed: (_currentIndex == 0) ? () => _showSortingDialog(context) : null)
+          ],
+        ),
+        body: Container(
+            child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (notification){
+                  if(notification.leading){
+                    notification.disallowGlow();
+                  }
+                },
+                child: Builder(builder: (BuildContext context){
+                  // Sources
+                  if(_currentIndex == 0) return (widget.service.status == VendorServiceStatus.DONE && sourceList.length == 0) ?
+                  ErrorLoadingMixin(
+                    partialForm: true,
+                    errorTitle: S.of(context).no_sources_found,
+                    errorMessage: S.of(context).we_couldnt_find_any_sources_for_content(widget.title),
+                    action: (){
+                      final FlutterWebviewPlugin webview = FlutterWebviewPlugin();
+                      webview.close();
 
-                        webview.onStateChanged.take(1).listen((_) async {
-                          webview.evalJavascript("window.onselect = window.oncontextmenu = function(event){ event.preventDefault(); return false; }");
-                          webview.evalJavascript("document.head.innerHTML+='<style>*{user-select:none !important;}</style>'");
+                      webview.onStateChanged.take(1).listen((_) async {
+                        webview.evalJavascript("window.onselect = window.oncontextmenu = function(event){ event.preventDefault(); return false; }");
+                        webview.evalJavascript("document.head.innerHTML+='<style>*{user-select:none !important;}</style>'");
 
-                          webview.onUrlChanged.listen((data) async {
-                            if(await webview.evalJavascript("document.body.innerHTML.indexOf('Submit another response') > -1") == 'true'){
-                              webview.stopLoading();
-                              webview.dispose();
-                              Navigator.of(context).pop();
+                        webview.onUrlChanged.listen((data) async {
+                          if(await webview.evalJavascript("document.body.innerHTML.indexOf('Submit another response') > -1") == 'true'){
+                            webview.stopLoading();
+                            webview.dispose();
+                            Navigator.of(context).pop();
 
-                              Interface.showSimpleSuccessDialog(context, message: S.of(context).your_request_has_been_saved);
-                            }
-                          });
+                            Interface.showSimpleSuccessDialog(context, message: S.of(context).your_request_has_been_saved);
+                          }
                         });
+                      });
 
-                        Navigator.push(context, ApolloTransitionRoute(builder: (_){
-                          return WebviewScaffold(
+                      Navigator.push(context, ApolloTransitionRoute(builder: (_){
+                        return WebviewScaffold(
                             appBar: AppBar(
                               leading: IconButton(
                                 icon: Icon(Icons.close),
@@ -234,12 +242,12 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                             withJavascript: true,
                             supportMultipleWindows: false,
                             allowFileURLs: false
-                          );
-                        }));
-                      },
-                      actionLabel: S.of(context).submit_request,
-                    )
-                  : ListView(
+                        );
+                      }));
+                    },
+                    actionLabel: S.of(context).submit_request,
+                  )
+                      : ListView(
                     primary: true,
                     children: <Widget>[
                       isShimVendor && !_disableSecurityMessages ? Container(
@@ -269,9 +277,40 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
                       Container(margin: EdgeInsets.only(bottom: 15))
                     ],
-                  )
+                  );
+
+                  // Subtitles
+                  if(_currentIndex == 1) return Container(
+                    child: Center(
+                      child: ApolloLoadingSpinner(),
+                    ),
+                  );
+                })
+            )
+        ),
+        bottomNavigationBar: BottomAppBar(
+          child: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (int index){
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            type: BottomNavigationBarType.fixed,
+            elevation: 16,
+            backgroundColor: Theme.of(context).cardColor,
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.subscriptions),
+                  title: TitleText("Sources")
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.subtitles),
+                  title: TitleText("Subtitles")
               )
-          )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -339,7 +378,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
     });
 
     if(this.sortReversed) sourceList = sourceList.reversed.toList();
-    if(mounted) setState(() {});
+    /*if(mounted) setState(() {});*/
 
     return sourceList;
   }

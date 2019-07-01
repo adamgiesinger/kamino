@@ -2068,6 +2068,8 @@ class ru extends S {
   @override
   String get play_movie => "Играть в кино";
   @override
+  String get converting_realdebrid_fidelity_points => "Преобразование точек верности в реальную дебридскую эпоху...";
+  @override
   String get ongoing => "Текущий";
   @override
   String get not_yet_implemented => "Ещё не реализован....";
@@ -2076,11 +2078,19 @@ class ru extends S {
   @override
   String get set_primary_color => "Установить основной цвет...";
   @override
+  String get throw_error => "Бросить ошибку";
+  @override
+  String get premium_hosts => "высококлассные хостинг-провайдеры";
+  @override
   String get playback => "Воспроизведение";
   @override
   String get released => "Выпущен";
   @override
+  String get simkl_description => "Все ваши любимые телепередачи, аниме и фильмы - в одном месте. Прекратить поиск, маркировку и проверку. Начинай смотреть.";
+  @override
   String get recommended_movies => "Рекомендуемые фильмы";
+  @override
+  String get welcome_to_apollo_skyspace => "Добро пожаловать в Аполлон Скайспейс!";
   @override
   String get create_profile => "Создать профиль";
   @override
@@ -2092,9 +2102,13 @@ class ru extends S {
   @override
   String get quality => "Качество";
   @override
+  String get date_added => "Дата добавления";
+  @override
   String get extensions => "Расширения";
   @override
   String get general_application_settings => "Общие настройки приложения.";
+  @override
+  String get thank_you => "Спасибо!";
   @override
   String get see_all => "Смотреть все";
   @override
@@ -2104,6 +2118,8 @@ class ru extends S {
   @override
   String get miscellaneous => "МИКЕЛЛАНЕОУС";
   @override
+  String get houston_stand_by => "Хьюстон, приготовься...";
+  @override
   String get source_autoplay_description => "Автоматически выбирает источник для воспроизведения вместо отображения диалога, содержащего список источников.";
   @override
   String get grid_layout => "Схема расположения сеток";
@@ -2111,6 +2127,8 @@ class ru extends S {
   String get server_key => "Ключ сервера";
   @override
   String get connect_your_trakt_account => "Подключение учетной записи Trakt";
+  @override
+  String get search => "Поиск";
   @override
   String get with_thanks => "Спасибо";
   @override
@@ -2128,9 +2146,15 @@ class ru extends S {
   @override
   String get whats_your_favorite_color_description => "Нажмите, чтобы задать цвет акцента; он используется для придания всплеска цвета кнопкам, значкам и т.д.....";
   @override
+  String get set => "Набор";
+  @override
   String get select_language => "Выберите Язык...";
   @override
   String get saving_content_information => "Сохранение информации о содержании...";
+  @override
+  String get security_risk => "СЕКЬЮРИТИ РИСК:";
+  @override
+  String get apollo_skyspace_is_still_under_development => "Аполлон Скайспейс все еще находится в стадии разработки.";
   @override
   String get error_loading_search => "Ну, это неловко... При загрузке результатов поиска возникла ошибка.";
   @override
@@ -2156,11 +2180,17 @@ class ru extends S {
   @override
   String get boost_your_experience => "ПОВЫСИТЬ СВОЙ ОПЫТ";
   @override
+  String get disable_security_warnings => "Отключить предупреждения безопасности";
+  @override
+  String get does_nothing_in_release_mode => "Ничего не делает в режиме отпускания.";
+  @override
   String get removed_from_favorites => "Удален из избранного";
   @override
   String get change_theme => "Смени тему...";
   @override
   String get the_server_failed_to_verify_the_apps_integrity => "Сервер не смог проверить целостность приложения.";
+  @override
+  String get open_discord => "Открытые разногласия";
   @override
   String get disconnect_your_realdebrid_account => "Отключите ваш Real-Debrid аккаунт";
   @override
@@ -2182,27 +2212,49 @@ class ru extends S {
   @override
   String get editors_choice => "Выбор редактора";
   @override
+  String get visit_the_following_url_in_your_browser => "Посетите следующий URL-адрес в вашем браузере:";
+  @override
   String get sync => "Синхронизация";
   @override
   String get downloading_trakt_data => "Загрузка Trakt данных....";
+  @override
+  String get if_youre_not_sure_what_these_options_are_just_use_login => "Если вы не знаете, что это за варианты, просто воспользуйтесь LOGIN-кодом.";
   @override
   String get other_ => "Другое";
   @override
   String get clears_all_application_settings => "Удаляет все настройки приложения.";
   @override
+  String get discord => "Разногласия";
+  @override
   String get success => "Успех!";
   @override
   String get name => "Имя";
+  @override
+  String get content_trackers => "Отслеживатели содержимого";
+  @override
+  String get copy_to_clipboard => "Копировать в буфер обмена";
+  @override
+  String get use_code => "Использовать код";
   @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "Если эта проблема сохраняется, пожалуйста, свяжитесь с сотрудником отдела Разногласий.";
   @override
   String get next => "стандартный";
   @override
+  String get real_debrid_convert_points => "Пункты преобразования";
+  @override
   String get cast_settings => "Литые настройки";
   @override
   String get card_layout => "Макет карты";
   @override
+  String get we_will_announce_it_on_our_social_pages_when_its => "Мы объявим об этом на наших социальных страницах, когда он будет готов.";
+  @override
   String get back => "обратно";
+  @override
+  String get privacy => "Конфиденциальность";
+  @override
+  String get updates => "Обновления";
+  @override
+  String get using_unofficial_servers_can_expose_your_ip_address => "Использование неофициальных серверов может раскрыть ваш IP-адрес. Если это проблема, вам следует использовать VPN.";
   @override
   String get trakt_renewal_failure_detailed => "Не удалось обновить токен Trakt. Пожалуйста, проверьте свои данные.";
   @override
@@ -2218,7 +2270,13 @@ class ru extends S {
   @override
   String get real_debrid_authenticator => "Real Debrid Аутентификатор";
   @override
+  String get hide_partial_unreleased_content_description => "Отфильтровывает контент, по которому отсутствует информация или еще не был выпущен.";
+  @override
+  String get home => "Главная";
+  @override
   String get error_updating_app => "Ошибка обновления приложения....";
+  @override
+  String get layout => "раскладка";
   @override
   String get clear_search_history_description => "Удаляет предложения по поиску, основанные на предыдущих поисках.";
   @override
@@ -2240,6 +2298,10 @@ class ru extends S {
   @override
   String get disconnect_your_trakt_account => "Отключите ваш Trakt-аккаунт";
   @override
+  String get an_error_occurred_whilst_casting => "Во время кастинга произошла ошибка.";
+  @override
+  String get localization => "Локализация";
+  @override
   String get disconnect => "Отключить";
   @override
   String get manually_override_the_default_content_server => "Вручную переопределить сервер содержимого по умолчанию.";
@@ -2248,9 +2310,17 @@ class ru extends S {
   @override
   String get advanced => "Расширенный";
   @override
+  String get unknown_model => "Неизвестная модель";
+  @override
+  String get this_disables_all_warnings_regarding_potential_security_concerns => "Это отключает все предупреждения о возможных проблемах безопасности.";
+  @override
   String get all_genres => "Все жанры";
   @override
+  String get we_recommend_that_you_do_not_enable_this_option_unless => "Мы рекомендуем не включать эту опцию, если вы не уверены, что знаете, что делаете.";
+  @override
   String get experimental => "экспериментальный";
+  @override
+  String get version_track_development_description => "Как только какая-либо функция будет перенесена в ветвь мастера, автоматически будет сгенерирована и выпущена разработка сборки.";
   @override
   String get movies => "Фильмы";
   @override
@@ -2270,13 +2340,23 @@ class ru extends S {
   @override
   String get successfully_refreshed_trakt_token => "Успешно обновленный маркер Trakt.";
   @override
+  String get thank_you_notice => "ApolloTV - это общественная инициатива, и без этих людей это приложение было бы невозможно. За вклад каждого, каким бы малым он ни был, я чрезвычайно благодарен.\n\n~NBTX";
+  @override
+  String get hex => "Гекс";
+  @override
   String get one_episode => "один эпизод";
   @override
+  String get security_warnings_have_been_disabled => "Предупреждения системы безопасности отключены!";
+  @override
   String get order => "ПРЕДПРЕЖДЕНИЕ";
+  @override
+  String get real_debrid_purchase_premium => "Приобретение премиум-класса";
   @override
   String get okay => "подходящий";
   @override
   String get dismiss => "закройте ";
+  @override
+  String get content_suggestions_description => "Приспосабливайте свой опыт работы с нашими курируемыми списками часов! Если вас интересует курируемый список, нажмите на него.";
   @override
   String get loading => "Загрузка...";
   @override
@@ -2286,6 +2366,8 @@ class ru extends S {
   @override
   String get action_completed_successfully => "Действие успешно завершено.";
   @override
+  String get reset => "Сброс";
+  @override
   String get change_content_playback_settings => "Изменение настроек воспроизведения содержимого.";
   @override
   String get please_check_the_announcements_channel_in_our_discord_server_for => "Пожалуйста, проверьте канал #announcements на нашем сервере для получения дополнительной информации.";
@@ -2294,9 +2376,13 @@ class ru extends S {
   @override
   String get clears_the_application_database => "Очищает базу данных приложения.";
   @override
+  String get version_track_stable_description => "Когда бета-версия хорошо протестирована и, насколько нам известно, безошибочна, сборка перейдет в стабильный выпуск.";
+  @override
   String get you_can_now_tap_sync_to_synchronise_your_trakt_favorites => "Теперь вы можете нажать 'Sync', чтобы синхронизировать избранное Trakt с избранным ApolloTV.\n\n(Интеграция Trakt ограничена, поскольку он еще находится в разработке).";
   @override
   String get syncing => "Синхронизация...";
+  @override
+  String get well_dont_say_you_didnt_ask => "Ну, не говори, что не спрашивал!";
   @override
   String get youre_offline => "Ты вне сети....";
   @override
@@ -2310,11 +2396,15 @@ class ru extends S {
   @override
   String get customize_the_theme_and_primary_colors => "Настройка темы и основных цветов.";
   @override
+  String get login => "логин";
+  @override
   String get authentication_failed => "Аутентификация не прошла...";
   @override
   String get this_feature_has_not_yet_been_implemented => "Эта функция еще не реализована.";
   @override
   String get unknown => "Неизвестный";
+  @override
+  String get content_suggestions => "Содержание Предложения по контенту";
   @override
   String get source_autoplay => "Включить автоигру с исходным кодом";
   @override
@@ -2329,6 +2419,8 @@ class ru extends S {
   String get general_settings_description => "Ниже приведены некоторые часто используемые опции настройки, на которые вы, возможно, захотите взглянуть.";
   @override
   String get realdebrid_service_info => "Если у вас есть подписка RealDebrid, ApolloTV может использовать ее для получения результатов высокоскоростной загрузки.";
+  @override
+  String get theme => "сюжет";
   @override
   String get server_url => "URL-адрес сервера";
   @override
@@ -2346,6 +2438,8 @@ class ru extends S {
   @override
   String get file_size => "Размер файла";
   @override
+  String get sorts_by_date_added => "Сортировка по дате добавления.";
+  @override
   String get app_tagline => "Потоковое приложение, созданное для сообщества сообществом.";
   @override
   String get debug_only_logs_the_application_database_in_the_console => "(Только отладка) Ведет журнал базы данных приложения в консоли.";
@@ -2355,6 +2449,8 @@ class ru extends S {
   String get sorts_by_the_size_of_the_file => "Сортировка по размеру файла.";
   @override
   String get curated => "Курируемый";
+  @override
+  String get please_follow_the_instructions_shown_to_log_in_via_your_browser => "Пожалуйста, следуйте инструкциям, показанным для входа в систему через браузер.";
   @override
   String get connected_real_debrid_account => "Подключен Real Debrid отзыв.";
   @override
@@ -2366,7 +2462,17 @@ class ru extends S {
   @override
   String get connecting => "Подключение...";
   @override
+  String get you_can_log_into_realdebrid_in_two_ways => "Вы можете войти в Real-Debrid двумя способами:";
+  @override
+  String get google_cast_prompt => "Литой";
+  @override
+  String get version_track => "Версия Путь";
+  @override
+  String get credits_description => "Это приложение пришло к вам с \u2764 от этих удивительных людей!";
+  @override
   String get dump_database => "База данных по свалкам";
+  @override
+  String get version_track_beta_description => "После завершения разработки нескольких функций сборки, они будут выбраны и выпущены в виде бета-версий.";
   @override
   String get networking => "СЕТЬ";
   @override
@@ -2374,9 +2480,15 @@ class ru extends S {
   @override
   String get blog => "Блог";
   @override
+  String get your_request_has_been_saved => "Ваш запрос был сохранен.";
+  @override
+  String get submit_request => "Отправить запрос";
+  @override
   String get descending => "Понижение";
   @override
   String get sorts_by_source_quality => "Сортировка по качеству источника.";
+  @override
+  String get run_command => "Запустить команду";
   @override
   String get updating => "Обновление...";
   @override
@@ -2414,6 +2526,8 @@ class ru extends S {
   @override
   String get core => "ОБЪЯВЛЕНИЕ";
   @override
+  String get intentionally_throws_an_error_to_test_error_handling => "Намеренно бросает ошибку для тестирования обработки ошибок.";
+  @override
   String get the_key_must_be_32_characters_in_length => "Длина ключа должна составлять 32 символа.";
   @override
   String get link_copied_to_clipboard => "Ссылка скопирована в буфер обмена.";
@@ -2425,6 +2539,8 @@ class ru extends S {
   String get checks_whether_sources_can_be_reached => "Проверяет, можно ли получить доступ к источникам.";
   @override
   String get launchpad => "Запусковая площадка";
+  @override
+  String get enter_the_following_code => "Введите следующий код:";
   @override
   String get restore_defaults => "Восстановление значений по умолчанию";
   @override
@@ -2440,6 +2556,10 @@ class ru extends S {
   @override
   String get tv_shows => "ТВ-шоу";
   @override
+  String get hide_partial_unreleased_content => "Скрыть частичное/неудаленное содержимое";
+  @override
+  String get security => "Безопасность";
+  @override
   String get reload => "Перезагрузка";
   @override
   String get begins_the_initial_setup_procedure_that_is_displayed_when_the => "Начинается процедура первоначальной настройки, которая отображается при первом открытии приложения.";
@@ -2450,15 +2570,27 @@ class ru extends S {
   @override
   String get show_more => "Покажи еще...";
   @override
+  String get no_sources_found => "Источников не найдено.";
+  @override
   String get update_failed_please_try_again_later => "Обновление не прошло успешно. Пожалуйста, попробуйте еще раз позже.";
+  @override
+  String get or => "или";
   @override
   String get no_results_found => "Результаты не найдены.";
   @override
+  String get clear => "Чисто";
+  @override
+  String get searching_for_cast_devices => "Поиск литых устройств...";
+  @override
   String get choose_a_theme => "Выберите тему...";
+  @override
+  String get chooser => "Выбиратель";
   @override
   String get trakt_synchronization => "Трект Синхронизация....";
   @override
   String get vote_average => "Среднее число голосов";
+  @override
+  String get waiting_for_input => "Ждём ответа...";
   @override
   String get the_socket_connection_timed_out => "Сбой соединения разъема.";
   @override
@@ -2474,6 +2606,8 @@ class ru extends S {
   @override
   String welcome_to_appname(String appName) => "Добро пожаловать в $appName";
   @override
+  String we_couldnt_find_any_sources_for_content(String content) => "Мы не смогли найти никаких источников для '$content'.";
+  @override
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName стало возможным благодаря всем этим удивительным людям:";
   @override
   String by_x(String x) => "на $x";
@@ -2488,11 +2622,17 @@ class ru extends S {
   @override
   String this_x_has_no_synopsis_available(String x) => "У этого $x нет резюме.";
   @override
+  String x_found_in_y(String x, String y) => "$x найденный в $y";
+  @override
+  String disconnected_from_device(String device) => "Отключен от устройства $device";
+  @override
   String seasons_n(String n) => "Сезоны года ($n)";
   @override
   String unknown_x(String x) => "Неизвестный $x";
   @override
   String n_sources(String n) => "$n источники";
+  @override
+  String code_x(String code) => "Код: $code";
   @override
   String n_episodes(String n) => "$n эпизоды";
   @override
@@ -2504,7 +2644,11 @@ class ru extends S {
   @override
   String appname_was_unable_to_authenticate_with_real_debrid(String appName) => "$appName не смог аутентифицироваться с Real Debrid.";
   @override
+  String now_connected_to_device(String device) => "Теперь подключен к устройству $device";
+  @override
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "Во время аутентификации на Trakt.tv возникла ошибка. ($errorCode)";
+  @override
+  String real_debrid_n_points(String points) => "$points баллы";
   @override
   String real_debrid_n_sources(String n) {
     switch (n) {
@@ -2521,6 +2665,15 @@ class ru extends S {
         return "Стандарт ($n sources)";
       default:
         return "Стандарт ($n sources)";
+    }
+  }
+  @override
+  String expires_in_x_days(String days) {
+    switch (days) {
+      case "1":
+        return "истекает в $days день";
+      default:
+        return "истекает в $days дни";
     }
   }
   @override
@@ -4333,6 +4486,8 @@ class zh extends S {
   @override
   String get play_movie => "播放电影";
   @override
+  String get converting_realdebrid_fidelity_points => "转换Real-Debrid保真度点...";
+  @override
   String get ongoing => "不断的";
   @override
   String get not_yet_implemented => "尚未实现...";
@@ -4343,9 +4498,13 @@ class zh extends S {
   @override
   String get throw_error => "扔错误";
   @override
+  String get premium_hosts => "高级主机";
+  @override
   String get playback => "回放";
   @override
   String get released => "发布";
+  @override
+  String get simkl_description => "所有你喜欢的电视节目，动漫和电影 - 在一个地方.停止搜索，标记和登记。开始观看.";
   @override
   String get recommended_movies => "推荐电影";
   @override
@@ -4360,6 +4519,8 @@ class zh extends S {
   String get debug_only_logs_the_application_preferences_in_the_console => "（仅限调试）在控制台中记录应用程序首选项.";
   @override
   String get quality => "质量";
+  @override
+  String get date_added => "添加日期";
   @override
   String get extensions => "扩展";
   @override
@@ -4439,6 +4600,8 @@ class zh extends S {
   @override
   String get disable_security_warnings => "禁用安全警告";
   @override
+  String get does_nothing_in_release_mode => "在发布模式下无效.";
+  @override
   String get removed_from_favorites => "已删除收藏夹";
   @override
   String get change_theme => "改变主题...";
@@ -4467,9 +4630,13 @@ class zh extends S {
   @override
   String get editors_choice => "编辑选择";
   @override
+  String get visit_the_following_url_in_your_browser => "在浏览器中访问以下网址：";
+  @override
   String get sync => "同步";
   @override
   String get downloading_trakt_data => "正在下载Trakt数据...";
+  @override
+  String get if_youre_not_sure_what_these_options_are_just_use_login => "如果您不确定这些选项是什么，请使用登录.";
   @override
   String get other_ => "其他";
   @override
@@ -4481,11 +4648,17 @@ class zh extends S {
   @override
   String get name => "名称";
   @override
+  String get content_trackers => "内容跟踪器";
+  @override
   String get copy_to_clipboard => "复制到剪贴板";
+  @override
+  String get use_code => "使用代码";
   @override
   String get if_this_problem_persists_please_contact_a_member_of_staff => "如果此问题仍然存在，请联系Discord的工作人员.";
   @override
   String get next => "下一个";
+  @override
+  String get real_debrid_convert_points => "转换点";
   @override
   String get cast_settings => "投射设置";
   @override
@@ -4587,15 +4760,21 @@ class zh extends S {
   @override
   String get thank_you_notice => "ApolloTV是一项社区活动，没有这些人，这个应用程序就不存在了. 对于每个人的贡献，无论多小，我都非常感激.\n\n~NBTX";
   @override
+  String get hex => "十六进制";
+  @override
   String get one_episode => "一集";
   @override
   String get security_warnings_have_been_disabled => "安全警告已被禁用！";
   @override
   String get order => "订购";
   @override
+  String get real_debrid_purchase_premium => "购买Premium";
+  @override
   String get okay => "好的";
   @override
   String get dismiss => "解雇";
+  @override
+  String get content_suggestions_description => "通过我们精选的名单量身定制您的体验！如果您对精选列表感兴趣，请点按它.";
   @override
   String get loading => "装载...";
   @override
@@ -4635,11 +4814,15 @@ class zh extends S {
   @override
   String get customize_the_theme_and_primary_colors => "自定义主题和主要颜色.";
   @override
+  String get login => "登录";
+  @override
   String get authentication_failed => "验证失败...";
   @override
   String get this_feature_has_not_yet_been_implemented => "此功能尚未实施.";
   @override
   String get unknown => "未知";
+  @override
+  String get content_suggestions => "内容建议";
   @override
   String get source_autoplay => "启用源自动播放";
   @override
@@ -4673,6 +4856,8 @@ class zh extends S {
   @override
   String get file_size => "文件大小";
   @override
+  String get sorts_by_date_added => "按日期排序.";
+  @override
   String get app_tagline => "流媒体应用程序由社区为社区构建.";
   @override
   String get debug_only_logs_the_application_database_in_the_console => "（仅限调试）在控制台中记录应用程序数据库.";
@@ -4683,6 +4868,8 @@ class zh extends S {
   @override
   String get curated => "已策划";
   @override
+  String get please_follow_the_instructions_shown_to_log_in_via_your_browser => "请按照显示的说明通过浏览器登录.";
+  @override
   String get connected_real_debrid_account => "已连接Real-Debrid账户.";
   @override
   String get apollotv_builtin_player => "ApolloTV内置播放器.";
@@ -4692,6 +4879,8 @@ class zh extends S {
   String get rd_description => "Real-Debrid是一个不受限制的下载器，允许您快速下载托管在Internet上的文件.";
   @override
   String get connecting => "连...";
+  @override
+  String get you_can_log_into_realdebrid_in_two_ways => "您可以通过两种方式登录Real-Debrid：";
   @override
   String get google_cast_prompt => "投射";
   @override
@@ -4708,6 +4897,10 @@ class zh extends S {
   String get $_language_name_english => "Chinese";
   @override
   String get blog => "博客";
+  @override
+  String get your_request_has_been_saved => "您的请求已保存.";
+  @override
+  String get submit_request => "提交请求";
   @override
   String get descending => "大到小";
   @override
@@ -4765,6 +4958,8 @@ class zh extends S {
   @override
   String get launchpad => "发射台";
   @override
+  String get enter_the_following_code => "输入以下代码：";
+  @override
   String get restore_defaults => "恢复默认值";
   @override
   String get connect_your_realdebrid_account => "连接您的Real-debrid帐户";
@@ -4793,7 +4988,11 @@ class zh extends S {
   @override
   String get show_more => "显示更多...";
   @override
+  String get no_sources_found => "找不到任何来源.";
+  @override
   String get update_failed_please_try_again_later => "更新失败.请稍后再试.";
+  @override
+  String get or => "要么";
   @override
   String get no_results_found => "未找到结果.";
   @override
@@ -4802,6 +5001,8 @@ class zh extends S {
   String get searching_for_cast_devices => "正在搜索投影设备...";
   @override
   String get choose_a_theme => "选择一个主题...";
+  @override
+  String get chooser => "选配";
   @override
   String get trakt_synchronization => "Trakt同步...";
   @override
@@ -4823,6 +5024,8 @@ class zh extends S {
   @override
   String welcome_to_appname(String appName) => "欢迎使用$appName";
   @override
+  String we_couldnt_find_any_sources_for_content(String content) => "我们找不到'$content'的任何来源。";
+  @override
   String appname_was_made_possible_by_all_of_these_amazing_people(String appName) => "$appName是由所有这些了不起的人成为可能的:";
   @override
   String by_x(String x) => "创作者是$x";
@@ -4837,6 +5040,8 @@ class zh extends S {
   @override
   String this_x_has_no_synopsis_available(String x) => "这个$x没有概要.";
   @override
+  String x_found_in_y(String y, String x) => "在$y找到$x";
+  @override
   String disconnected_from_device(String device) => "断开连接$device";
   @override
   String seasons_n(String n) => "四季 ($n)";
@@ -4844,6 +5049,8 @@ class zh extends S {
   String unknown_x(String x) => "未知$x";
   @override
   String n_sources(String n) => "$n来源";
+  @override
+  String code_x(String code) => "码：$code";
   @override
   String n_episodes(String n) => "$n剧集";
   @override
@@ -4858,6 +5065,8 @@ class zh extends S {
   String now_connected_to_device(String device) => "现在连接到$device";
   @override
   String an_error_occurred_whilst_deauthenticating_with_trakttv(String errorCode) => "使用Trakt.tv取消验证时发生错误. ($errorCode).";
+  @override
+  String real_debrid_n_points(String points) => "$points点";
   @override
   String real_debrid_n_sources(String n) {
     switch (n) {
@@ -4874,6 +5083,15 @@ class zh extends S {
         return "标准 ($n sources)";
       default:
         return "标准 ($n sources)";
+    }
+  }
+  @override
+  String expires_in_x_days(String days) {
+    switch (days) {
+      case "1":
+        return "$days天后到期";
+      default:
+        return "$days天后到期";
     }
   }
   @override
