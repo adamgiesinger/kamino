@@ -415,9 +415,6 @@ class KaminoAppState extends State<KaminoApp> {
       home: applicationHome,
       theme: getActiveThemeData(),
 
-      // Show performance overlay.
-      showPerformanceOverlay: true,
-
       // Hide annoying debug banner
       debugShowCheckedModeBanner: false
     ));

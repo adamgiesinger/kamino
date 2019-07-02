@@ -15,7 +15,6 @@ import 'package:kamino/interface/search/curated_search.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/list.dart';
-import 'package:kamino/partials/carousel.dart';
 import 'package:kamino/partials/carousel_card.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/ui/elements.dart';
@@ -25,6 +24,7 @@ import 'package:kamino/util/database_helper.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:simple_moment/simple_moment.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Launchpad2 extends KaminoAppPage {
 
