@@ -49,7 +49,7 @@ class ClawsVendorService extends VendorService {
     if (_webSocket != null) _webSocket.close();
     clearSourceList();
 
-    _userHasRd = await RealDebrid.isAuthenticated();
+    _userHasRd = await RealDebrid.isAuthenticated() && (await RealDebrid.getUserInfo()).isPremium();
     if (_userHasRd) {
       await RealDebrid.validateToken();
     }

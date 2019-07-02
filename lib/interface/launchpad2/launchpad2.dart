@@ -65,6 +65,14 @@ class Launchpad2State extends State<Launchpad2> {
   }
 
   @override
+  void didChangeDependencies() {
+    _loadTrakt();
+    _loadWatchLists();
+
+    super.didChangeDependencies();
+  }
+
+  @override
   void initState() {
     _watchlistsLoaded = false;
 
@@ -118,9 +126,6 @@ class Launchpad2State extends State<Launchpad2> {
 
   @override
   Widget build(BuildContext context) {
-    _loadTrakt();
-    _loadWatchLists();
-
     return FutureBuilder(
       future: _launchpadMemoizer.runOnce(load),
       builder: (BuildContext context, AsyncSnapshot snapshot){

@@ -16,6 +16,7 @@ import 'package:kamino/util/filesize.dart';
 import 'package:kamino/util/player.dart';
 import 'package:kamino/util/settings.dart';
 import 'package:kamino/vendor/struct/VendorService.dart';
+import 'package:kamino/vendor/view/SubtitleSelectionView.dart';
 
 class SourceSelectionView extends StatefulWidget {
 
@@ -49,7 +50,6 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
   bool _disableSecurityMessages = false;
 
   Stopwatch stopwatch;
-  int _currentIndex;
 
   @override
   void dispose() {
@@ -60,8 +60,6 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
 
   @override
   void initState() {
-    _currentIndex = 0;
-
     (() async {
       stopwatch = new Stopwatch()..start();
       rdEnabled = await RealDebrid.isAuthenticated();
@@ -193,7 +191,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
               padding: EdgeInsets.symmetric(horizontal: 5),
               child: CastButton(),
             ),
-            IconButton(icon: Icon(Icons.sort), onPressed: (_currentIndex == 0) ? () => _showSortingDialog(context) : null)
+            IconButton(icon: Icon(Icons.sort), onPressed: () => _showSortingDialog(context))
           ],
         ),
         body: Container(
@@ -203,113 +201,92 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
                     notification.disallowGlow();
                   }
                 },
-                child: Builder(builder: (BuildContext context){
-                  // Sources
-                  if(_currentIndex == 0) return (widget.service.status == VendorServiceStatus.DONE && sourceList.length == 0) ?
-                  ErrorLoadingMixin(
-                    partialForm: true,
-                    errorTitle: S.of(context).no_sources_found,
-                    errorMessage: S.of(context).we_couldnt_find_any_sources_for_content(widget.title),
-                    action: (){
-                      final FlutterWebviewPlugin webview = FlutterWebviewPlugin();
-                      webview.close();
+                child: (widget.service.status == VendorServiceStatus.DONE && sourceList.length == 0) ?
+                ErrorLoadingMixin(
+                  partialForm: true,
+                  errorTitle: S.of(context).no_sources_found,
+                  errorMessage: S.of(context).we_couldnt_find_any_sources_for_content(widget.title),
+                  action: (){
+                    final FlutterWebviewPlugin webview = FlutterWebviewPlugin();
+                    webview.close();
 
-                      webview.onStateChanged.take(1).listen((_) async {
-                        webview.evalJavascript("window.onselect = window.oncontextmenu = function(event){ event.preventDefault(); return false; }");
-                        webview.evalJavascript("document.head.innerHTML+='<style>*{user-select:none !important;}</style>'");
+                    webview.onStateChanged.take(1).listen((_) async {
+                      webview.evalJavascript("window.onselect = window.oncontextmenu = function(event){ event.preventDefault(); return false; }");
+                      webview.evalJavascript("document.head.innerHTML+='<style>*{user-select:none !important;}</style>'");
 
-                        webview.onUrlChanged.listen((data) async {
-                          if(await webview.evalJavascript("document.body.innerHTML.indexOf('Submit another response') > -1") == 'true'){
-                            webview.stopLoading();
-                            webview.dispose();
-                            Navigator.of(context).pop();
+                      webview.onUrlChanged.listen((data) async {
+                        if(await webview.evalJavascript("document.body.innerHTML.indexOf('Submit another response') > -1") == 'true'){
+                          webview.stopLoading();
+                          webview.dispose();
+                          Navigator.of(context).pop();
 
-                            Interface.showSimpleSuccessDialog(context, message: S.of(context).your_request_has_been_saved);
-                          }
-                        });
+                          Interface.showSimpleSuccessDialog(context, message: S.of(context).your_request_has_been_saved);
+                        }
                       });
+                    });
 
-                      Navigator.push(context, ApolloTransitionRoute(builder: (_){
-                        return WebviewScaffold(
-                            appBar: AppBar(
-                              leading: IconButton(
-                                icon: Icon(Icons.close),
-                                tooltip: "Close",
-                                onPressed: () => Navigator.of(context).pop(),
-                              ),
+                    Navigator.push(context, ApolloTransitionRoute(builder: (_){
+                      return WebviewScaffold(
+                          appBar: AppBar(
+                            leading: IconButton(
+                              icon: Icon(Icons.close),
+                              tooltip: "Close",
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
-                            url: "https://docs.google.com/forms/d/e/1FAIpQLScMfEYwPtmIi3z-pUVnxD8IRjGEwMNLNYwz4lkOVA0Mn9Liuw/viewform",
-                            withJavascript: true,
-                            supportMultipleWindows: false,
-                            allowFileURLs: false
-                        );
-                      }));
-                    },
-                    actionLabel: S.of(context).submit_request,
-                  )
-                      : ListView(
-                    primary: true,
-                    children: <Widget>[
-                      isShimVendor && !_disableSecurityMessages ? Container(
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        color: Colors.red,
-                        child: Text("SECURITY RISK: You are using an unoffical server. Use of unofficial servers is at your own risk. They have not been vetted or inspected by the ApolloTV team and are not guaranteed to be running official code. By connecting to a server on the internet, you are sharing your IP address. If this is a concern, use a VPN or do not use unofficial servers."),
-                      ) : Container(),
+                          ),
+                          url: "https://docs.google.com/forms/d/e/1FAIpQLScMfEYwPtmIi3z-pUVnxD8IRjGEwMNLNYwz4lkOVA0Mn9Liuw/viewform",
+                          withJavascript: true,
+                          supportMultipleWindows: false,
+                          allowFileURLs: false
+                      );
+                    }));
+                  },
+                  actionLabel: S.of(context).submit_request,
+                )
+                    : ListView(
+                  primary: true,
+                  children: <Widget>[
+                    isShimVendor && !_disableSecurityMessages ? Container(
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      color: Colors.red,
+                      child: Text("SECURITY RISK: You are using an unoffical server. Use of unofficial servers is at your own risk. They have not been vetted or inspected by the ApolloTV team and are not guaranteed to be running official code. By connecting to a server on the internet, you are sharing your IP address. If this is a concern, use a VPN or do not use unofficial servers."),
+                    ) : Container(),
 
-                      rdEnabled ? _buildSourceList(
-                          _rdSources,
-                          title: S.of(context).real_debrid_n_sources(_rdSources.length.toString()),
-                          sectionExpanded: rdExpanded,
-                          onToggleExpanded: () => setState((){
-                            rdExpanded = !rdExpanded;
-                          })
-                      ) : Container(),
-                      _buildSourceList(
-                          _sources,
-                          title: rdEnabled
-                              ? S.of(context).standard_n_sources(_sources.length.toString())
-                              : null,
-                          sectionExpanded: generalExpanded,
-                          onToggleExpanded: () => setState((){
-                            generalExpanded = !generalExpanded;
-                          })
-                      ),
-
-                      Container(margin: EdgeInsets.only(bottom: 15))
-                    ],
-                  );
-
-                  // Subtitles
-                  if(_currentIndex == 1) return Container(
-                    child: Center(
-                      child: ApolloLoadingSpinner(),
+                    rdEnabled && _rdSources.length > 0 ? _buildSourceList(
+                        _rdSources,
+                        title: S.of(context).real_debrid_n_sources(_rdSources.length.toString()),
+                        sectionExpanded: rdExpanded,
+                        onToggleExpanded: () => setState((){
+                          rdExpanded = !rdExpanded;
+                        })
+                    ) : Container(),
+                    _buildSourceList(
+                        _sources,
+                        title: rdEnabled && _rdSources.length > 0
+                            ? S.of(context).standard_n_sources(_sources.length.toString())
+                            : null,
+                        sectionExpanded: generalExpanded,
+                        onToggleExpanded: () => setState((){
+                          generalExpanded = !generalExpanded;
+                        })
                     ),
-                  );
-                })
+
+                    Container(margin: EdgeInsets.only(bottom: 15))
+                  ],
+                )
             )
         ),
-        bottomNavigationBar: BottomAppBar(
-          child: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: (int index){
-              setState(() {
-                _currentIndex = index;
-              });
+        floatingActionButton: FloatingActionButton.extended(
+            onPressed: (){
+              Navigator.of(context).push(ApolloTransitionRoute(
+                builder: (BuildContext context) => SubtitleSelectionView(),
+                isFullscreenDialog: true
+              ));
             },
-            type: BottomNavigationBarType.fixed,
-            elevation: 16,
-            backgroundColor: Theme.of(context).cardColor,
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.subscriptions),
-                  title: TitleText("Sources")
-              ),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.subtitles),
-                  title: TitleText("Subtitles")
-              )
-            ],
-          ),
+            label: TitleText("Subtitles", style: TextStyle(
+              letterSpacing: 0
+            ), fontSize: 18),
+            icon: Icon(Icons.subtitles)
         ),
       ),
     );
