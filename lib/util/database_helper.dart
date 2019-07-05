@@ -4,7 +4,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/external/ExternalService.dart';
+import 'package:kamino/external/api/tmdb.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/list.dart';
 import 'package:objectdb/objectdb.dart';
@@ -91,8 +92,8 @@ class DatabaseHelper {
     if(canAvoidCheck) return;
 
     // Fetch comments and content data from TMDB.
-    var editorsChoiceComments = jsonDecode((await TMDB.getList(context, 109986, raw: true)))['comments'] as Map;
-    List<ContentModel> editorsChoiceContentList = (await TMDB.getList(context, 109986, loadFully: true)).content;
+    var editorsChoiceComments = jsonDecode((await Service.get<TMDB>().getList(context, 109986, raw: true)))['comments'] as Map;
+    List<ContentModel> editorsChoiceContentList = (await Service.get<TMDB>().getList(context, 109986, loadFully: true)).content;
 
     // Map the data to EditorsChoice objects.
     List<EditorsChoice> editorsChoice = new List();
@@ -164,7 +165,7 @@ class DatabaseHelper {
 
     //TODO: do not get TMDB data if already have it
     await setWatchProgress(
-      await TMDB.getContentInfo(context, type, tmdbID),
+      await Service.get<TMDB>().getContentInfo(context, type, tmdbID),
       millisecondsWatched: millisecondsWatched,
       totalMilliseconds: totalMilliseconds,
       season: season,
@@ -288,7 +289,7 @@ class DatabaseHelper {
 
   // FAVORITES //
   static Future<void> saveFavoriteById(BuildContext context, ContentType type, int id) async {
-    await saveFavorite(await TMDB.getContentInfo(context, type, id));
+    await saveFavorite(await Service.get<TMDB>().getContentInfo(context, type, id));
   }
   
   static Future<void> saveFavorite(ContentModel content) async {

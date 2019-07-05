@@ -6,13 +6,14 @@ import 'package:flutter_rating/flutter_rating.dart';
 
 import 'package:flutter/material.dart';
 import 'package:kamino/animation/transition.dart';
-import 'package:kamino/api/trakt.dart';
+import 'package:kamino/external/ExternalService.dart';
+import 'package:kamino/external/api/tmdb.dart';
+import 'package:kamino/external/api/trakt.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/crew.dart';
 
-import 'package:kamino/api/tmdb.dart';
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/res/bottom_gradient.dart';
 import 'package:kamino/ui/elements.dart';
@@ -70,7 +71,7 @@ class _ContentOverviewState extends State<ContentOverview> {
   Future<ContentModel> fetchOverviewData() async {
     isFavorite = await DatabaseHelper.isFavorite(widget.contentId);
 
-    ContentModel contentInfo = await TMDB.getContentInfo(
+    ContentModel contentInfo = await Service.get<TMDB>().getContentInfo(
         context,
         widget.contentType,
         widget.contentId,
@@ -99,7 +100,7 @@ class _ContentOverviewState extends State<ContentOverview> {
       //remove the show from the database
       DatabaseHelper.removeFavoriteById(widget.contentId);
 
-      if(await Trakt.isAuthenticated()) Trakt.removeFavoriteFromTrakt(
+      if(await Service.get<Trakt>().isAuthenticated()) Service.get<Trakt>().removeFavoriteFromTrakt(
         context,
         id: widget.contentId,
         type: widget.contentType,
@@ -117,7 +118,7 @@ class _ContentOverviewState extends State<ContentOverview> {
       //add the show to the database
       DatabaseHelper.saveFavorite(content);
 
-      if(await Trakt.isAuthenticated()) Trakt.sendFavoriteToTrakt(
+      if(await Service.get<Trakt>().isAuthenticated()) Service.get<Trakt>().sendFavoriteToTrakt(
         context,
         id: widget.contentId,
         type: widget.contentType,

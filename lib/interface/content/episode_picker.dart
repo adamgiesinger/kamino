@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:kamino/api/tmdb.dart';
+import 'package:kamino/external/ExternalService.dart';
+import 'package:kamino/external/api/tmdb.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/tv_show.dart';
@@ -50,7 +51,7 @@ class _EpisodePickerState extends State<EpisodePicker> {
   // Load the data from the source.
   Future<SeasonModel> loadDataAsync() async {
     String url = "${TMDB.ROOT_URL}/tv/${widget.contentId}/season/"
-        "${widget.seasonIndex}${TMDB.getDefaultArguments(context)}";
+        "${widget.seasonIndex}${Service.get<TMDB>().getDefaultArguments(context)}";
 
     http.Response response  = await http.get(url);
 

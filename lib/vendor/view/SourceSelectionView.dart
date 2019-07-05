@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:kamino/animation/transition.dart';
-import 'package:kamino/api/realdebrid.dart';
+import 'package:kamino/external/ExternalService.dart';
+import 'package:kamino/external/api/realdebrid.dart';
 import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/ui/elements.dart';
 import "package:kamino/models/source.dart";
 import 'package:kamino/ui/interface.dart';
-import 'package:kamino/ui/loading.dart';
 import 'package:kamino/util/filesize.dart';
 import 'package:kamino/util/player.dart';
 import 'package:kamino/util/settings.dart';
@@ -62,7 +62,7 @@ class SourceSelectionViewState extends State<SourceSelectionView> {
   void initState() {
     (() async {
       stopwatch = new Stopwatch()..start();
-      rdEnabled = await RealDebrid.isAuthenticated();
+      rdEnabled = await Service.get<RealDebrid>().isAuthenticated();
 
       List sortingSettings = await Settings.contentSortSettings;
 
