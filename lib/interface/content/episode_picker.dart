@@ -136,7 +136,6 @@ class _EpisodePickerState extends State<EpisodePicker> {
                             episode["overview"],
                             revealLabel: S.of(context).show_more,
                             concealLabel: S.of(context).show_less,
-
                             maxLines: 4
                         )
                     ),

@@ -50,7 +50,7 @@ class OfficialVendorConfiguration extends VendorConfiguration {
   );
 
   @override
-  Future<VendorService> getService() async {
+  Future<VendorService> getVendorService() async {
       return ClawsVendorService(
           server: "`echo $CLAWS_URL_BETA`",
           clawsKey: "`echo $CLAWS_KEY_BETA`",

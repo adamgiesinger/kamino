@@ -195,6 +195,7 @@ class S implements WidgetsLocalizations {
   String get removed_from_favorites => "Removed from favorites";
   String get reset => "Reset";
   String get restore_defaults => "Restore Defaults";
+  String get reviews => "Reviews";
   String get run_command => "Run Command";
   String get run_connectivity_test => "Run Connectivity Test";
   String get run_initial_setup_procedure => "Run Initial Setup Procedure";
@@ -312,6 +313,7 @@ class S implements WidgetsLocalizations {
   String n_sources(String n) => "$n sources";
   String now_connected_to_device(String device) => "Now connected to $device";
   String real_debrid_n_points(String points) => "$points points";
+  String reviews_n(String n) => "Reviews ($n)";
   String seasons_n(String n) => "Seasons ($n)";
   String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "The $appName server is currently offline for server upgrades.";
   String this_x_has_no_synopsis_available(String x) => "This $x has no synopsis available.";

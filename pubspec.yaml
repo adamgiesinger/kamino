@@ -71,6 +71,8 @@ dependencies:
       ref: dev
       path: flare_flutter
 
+  flutter_markdown: ^0.2.0
+
 # Compile-only dependencies
 dev_dependencies:
   flutter_launcher_icons: ^0.7.2

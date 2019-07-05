@@ -13,6 +13,7 @@ import 'package:kamino/generated/i18n.dart';
 import 'package:kamino/main.dart';
 import 'package:kamino/models/content.dart';
 import 'package:kamino/models/crew.dart';
+import 'package:kamino/models/review.dart';
 
 import 'package:kamino/partials/content_poster.dart';
 import 'package:kamino/res/bottom_gradient.dart';
@@ -25,6 +26,7 @@ import 'package:kamino/ui/loading.dart';
 
 import 'package:kamino/util/database_helper.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 /*  CONTENT OVERVIEW WIDGET  */
 ///
@@ -75,7 +77,7 @@ class _ContentOverviewState extends State<ContentOverview> {
         context,
         widget.contentType,
         widget.contentId,
-        appendToResponse: "credits,videos,recommendations"
+        appendToResponse: "credits,videos,recommendations,reviews"
     );
 
     // Load trailer
@@ -279,7 +281,8 @@ class _ContentOverviewState extends State<ContentOverview> {
                                             // Context-specific layout
                                             _generateLayout(widget.contentType, content),
 
-                                            _generateRecommendedContentCards(context, content)
+                                            _generateRecommendedContentCards(context, content),
+                                            _generateReviewsSection(context, content)
                                           ],
                                         )
                                     )
@@ -763,6 +766,50 @@ class _ContentOverviewState extends State<ContentOverview> {
               ]
           ),
         )
+    );
+  }
+
+  Widget _generateReviewsSection(BuildContext context, ContentModel model){
+    if(model.reviews == null || model.reviews.length < 1) return Container();
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20).copyWith(bottom: 10),
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SubtitleText(S.of(context).reviews),
+
+            Column(children: List.generate(3, (int index){
+              if(model.reviews.length <= index) return Container();
+
+              ReviewModel review = model.reviews[index];
+              return Container(
+                margin: EdgeInsets.only(bottom: 20),
+                child: ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 5),
+                  title: TitleText("${review.author} \u2022 TMDB"),
+                  subtitle: Container(
+                    padding: EdgeInsets.only(top: 5),
+                    child: ConcealableMarkdownText(
+                      MarkdownBody(
+                        styleSheet: MarkdownStyleSheet(
+                          p: Theme.of(context).textTheme.caption,
+                          strong: Theme.of(context).textTheme.caption.copyWith(fontWeight: FontWeight.bold),
+                          em: Theme.of(context).textTheme.caption.copyWith(fontStyle: FontStyle.italic),
+                        ),
+                        data: review.content.replaceAll("\n", "  \n\n"),
+                        onTapLink: (String link) => {}
+                      ),
+                      revealLabel: S.of(context).show_more,
+                      concealLabel: S.of(context).show_less,
+                      maxLines: 5,
+                    ),
+                  ),
+                ),
+              );
+            }))
+          ]
+      )
     );
   }
 
