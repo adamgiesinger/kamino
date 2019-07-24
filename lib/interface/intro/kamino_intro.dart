@@ -71,35 +71,13 @@ class KaminoIntroState extends State<KaminoIntro> with SingleTickerProviderState
         BoxHitTestResult result = BoxHitTestResult();
         renderObject.hitTest(result, position: focusedNode.rect.center);
 
-        // Generate the appropriate pointer event.
-        PointerEvent pointerEvent;
-        if(event is RawKeyDownEvent) pointerEvent = PointerDownEvent(
-          timeStamp: new DateTime.now().timeZoneOffset,
-          device: 0,
-          kind: PointerDeviceKind.touch,
-          //pointer: 1,
-          buttons: kPrimaryButton,
-          position: focusedNode.rect.center,
-          size: 0.1
-        );
-
-        if(event is RawKeyUpEvent) pointerEvent = PointerUpEvent(
-          timeStamp: new DateTime.now().timeZoneOffset,
-          device: 0,
-          kind: PointerDeviceKind.touch,
-          //pointer: 1,
-          pressure: 0,
-          position: focusedNode.rect.center,
-          size: 0
-        );
-
         // Call handleEvent on that pointer event.
         result.path.forEach((entry){
           print(entry.target.runtimeType);
 
           if(entry.target is RenderSemanticsGestureHandler){
             var target = entry.target as RenderSemanticsGestureHandler;
-            if(pointerEvent is PointerDownEvent) target.onTap();
+            if(event is RawKeyDownEvent) target.onTap();
           }
         });
 

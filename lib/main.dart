@@ -32,7 +32,7 @@ import 'package:http/http.dart' as http;
 
 const appName = "ApolloTV";
 const appCastID = "6569632D";
-const tvSupportEnabled = false;
+const tvSupportEnabled = true;
 Logger log;
 
 PlatformType currentPlatform;
