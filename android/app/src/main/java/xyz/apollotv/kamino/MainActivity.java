@@ -196,6 +196,7 @@ public class MainActivity extends FlutterActivity {
                         activity.activityInfo.applicationInfo.packageName,
                         0
                     ).versionName);
+                    infoObject.put("description", activity.activityInfo.loadLabel(getPackageManager()));
                     infoObject.put("isDefault", activity.isDefault);
 
                     // Convert app icon to bitmap

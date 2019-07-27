@@ -59,8 +59,10 @@ class TMDB extends ContentDatabaseService {
       "110825",
       // Other Exclusives
       "109260",
+      // Season Premieres
+      "117689",
       // TV Top Picks
-      "107032"
+      "107032",
     ],
 
     ContentType.MOVIE: [

@@ -107,6 +107,7 @@ class S implements WidgetsLocalizations {
   String get does_nothing_in_release_mode => "Does nothing in release mode.";
   String get donate => "Donate";
   String get done => "Done";
+  String get downloading_content_suggestions_index => "Downloading content suggestions index.";
   String get downloading_trakt_data => "Downloading Trakt data...";
   String get downloading_update_file => "Downloading update file...";
   String get dump_database => "Dump Database";
@@ -316,6 +317,7 @@ class S implements WidgetsLocalizations {
   String reviews_n(String n) => "Reviews ($n)";
   String seasons_n(String n) => "Seasons ($n)";
   String the_appname_server_is_currently_offline_for_server_upgrades(String appName) => "The $appName server is currently offline for server upgrades.";
+  String this_may_take_up_to_n_seconds(String n) => "This may take up to $n seconds.";
   String this_x_has_no_synopsis_available(String x) => "This $x has no synopsis available.";
   String unknown_x(String x) => "Unknown $x";
   String version_x(String version) => "Version $version";
