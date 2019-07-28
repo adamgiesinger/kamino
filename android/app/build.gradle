@@ -1,0 +1,16 @@
+/*
+
+    Dummy Build File
+    ----------------
+
+    https://github.com/ApolloTVofficial/kamino/wiki/Setting-up-Kamino
+
+ */
+
+ant.fail (
+        "You have not created the build configuration Android project.\n" +
+                "For a simple debug build, simply copy the example file:\n" +
+                "copy android/app/build.gradle.example android/app/build.gradle\n" +
+                "\n\n" +
+                "For more information: https://github.com/ApolloTVofficial/kamino/wiki/Setting-up-Kamino"
+)
